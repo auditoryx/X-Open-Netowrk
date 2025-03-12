@@ -1,0 +1,138 @@
+.
+|-- app
+|   |-- about
+|   |   `-- page.js
+|   |-- api
+|   |   `-- auth
+|   |-- auth
+|   |   `-- page.js
+|   |-- beats
+|   |   `-- page.js
+|   |-- booking
+|   |   `-- page.js
+|   |-- components
+|   |   |-- BookingForm.js
+|   |   |-- DarkModeToggle.js
+|   |   |-- FloatingCTA.js
+|   |   `-- Footer.js
+|   |-- contact
+|   |   `-- page.js
+|   |-- creators
+|   |   `-- page.js
+|   |-- dashboard
+|   |   `-- page.js
+|   |-- layout.js
+|   |-- loading.js
+|   |-- not-found
+|   |   `-- page.js
+|   |-- not-found.js
+|   |-- page.js
+|   |-- producers
+|   |   `-- page.js
+|   |-- profile
+|   |   |-- [id].js
+|   |   `-- page.js
+|   |-- services
+|   |   |-- [id]
+|   |   |   `-- page.js
+|   |   `-- page.js
+|   `-- studios
+|       `-- page.js
+|-- auditoryx-frontend
+|   |-- README.md
+|   |-- app
+|   |   |-- favicon.ico
+|   |   |-- globals.css
+|   |   |-- layout.js
+|   |   |-- page.js
+|   |   `-- page.module.css
+|   |-- components
+|   |   |-- Footer.js
+|   |   `-- Navbar.js
+|   |-- eslint.config.mjs
+|   |-- jsconfig.json
+|   |-- next.config.mjs
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- postcss.config.js
+|   |-- public
+|   |   |-- file.svg
+|   |   |-- globe.svg
+|   |   |-- next.svg
+|   |   |-- vercel.svg
+|   |   `-- window.svg
+|   |-- styles
+|   |   `-- globals.css
+|   `-- tailwind.config.js
+|-- backend
+|   |-- README.md
+|   |-- backend-auth.js
+|   |-- firebase-setup.js
+|   |-- middleware
+|   |   `-- authMiddleware.js
+|   |-- models
+|   |   |-- Service.js
+|   |   `-- User.js
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- routes
+|   |   |-- auth.js
+|   |   `-- services.js
+|   |-- server.js
+|   `-- service-listings-model.js
+|-- components
+|   |-- Footer.js
+|   |-- Hero.js
+|   |-- HeroSection.js
+|   |-- Layout.js
+|   |-- Navbar.js
+|   `-- Services.js
+|-- data
+|   `-- profiles.json
+|-- debug.log
+|-- frontend
+|   |-- README.md
+|   |-- frontend
+|   |   `-- public
+|   |       `-- index.html
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- public
+|   |   |-- <!DOCTYPE\ html>\ <html\ lang="en">\ <head>\ \ \ \ \ <meta\ charset="UTF-8">\ \ \ \ \ <meta\ name="viewport"\ content="width=device-width,\ initial-scale=1.0">\ \ \ \ \ <title>AuditoryX\ Network<
+|   |   `-- index.html
+|   `-- src
+|       |-- App.js
+|       |-- apiTest.js
+|       |-- index.js
+|       `-- pages
+|           |-- ServiceForm.js
+|           `-- ServiceList.js
+|-- js_files.txt
+|-- lib
+|   |-- db.js
+|   `-- prisma.js
+|-- my_project.zip
+|-- next.config.js
+|-- package-lock.json
+|-- package.json
+|-- pages
+|   |-- about.js
+|   `-- services.js
+|-- postcss.config.js
+|-- prisma
+|   `-- schema.prisma
+|-- project-structure.txt
+|-- project_code.txt
+|-- project_structure.txt
+|-- providers
+|   `-- SessionProvider.js
+|-- styles
+|   |-- globals.css
+|   |-- output.css
+|   `-- tailwind.css
+|-- tailwind.config.js
+|-- tailwind_help.txt
+|-- user-authentication.js
+`-- zikQWevq
+
+41 directories, 95 files

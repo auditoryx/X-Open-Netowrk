@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "role": "Producer",
+    "location": "Los Angeles, USA",
+    "image": "/images/john-doe.jpg",
+    "bio": "Grammy-nominated producer specializing in hip-hop & R&B.",
+    "portfolio": "https://soundcloud.com/johndoe",
+    "contact": "johndoe@gmail.com"
+  },
+  {
+    "id": 2,
+    "name": "Studio Tokyo",
+    "role": "Studio",
+    "location": "Tokyo, Japan",
+    "image": "/images/studio-tokyo.jpg",
+    "bio": "State-of-the-art recording studio in Shibuya.",
+    "portfolio": "https://studiotokyo.com",
+    "contact": "booking@studiotokyo.com"
+  }
+]
