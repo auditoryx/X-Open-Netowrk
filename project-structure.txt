@@ -1,27 +1,68 @@
 .
+|-- .env
+|-- .env.local
+|-- .gitignore
 |-- app
 |   |-- about
 |   |   `-- page.js
 |   |-- api
-|   |   `-- auth
-|   |-- auth
+|   |   |-- auth
+|   |   |-- checkout
+|   |   |   `-- route.js
+|   |   `-- create-checkout-session
+|   |       `-- route.js
+|   |-- apply
+|   |   |-- artist
+|   |   |   `-- page.js
+|   |   |-- creative
+|   |   |   `-- page.js
 |   |   `-- page.js
+|   |-- auth
+|   |   |-- login.js
+|   |   |-- page.js
+|   |   `-- signup.js
 |   |-- beats
 |   |   `-- page.js
 |   |-- booking
 |   |   `-- page.js
 |   |-- components
+|   |   |-- AuthModal.js
+|   |   |-- BackgroundAnimation.js
 |   |   |-- BookingForm.js
+|   |   |-- BookingHistory.js
+|   |   |-- BookingRequestForm.js
+|   |   |-- BookingsViewer.js
+|   |   |-- ClientBookings.js
+|   |   |-- CreativeDropdown.js
 |   |   |-- DarkModeToggle.js
+|   |   |-- EditProfileForm.js
+|   |   |-- EditServicesForm.js
 |   |   |-- FloatingCTA.js
-|   |   `-- Footer.js
+|   |   |-- Footer.js
+|   |   |-- Inbox.js
+|   |   |-- LogoutButton.js
+|   |   |-- MessageCenter.js
+|   |   |-- Navbar.js
+|   |   |-- Notifications.js
+|   |   |-- PayButton.js
+|   |   |-- ProviderBookings.js
+|   |   `-- ServiceManager.js
 |   |-- contact
 |   |   `-- page.js
 |   |-- creators
 |   |   `-- page.js
 |   |-- dashboard
+|   |   |-- edit
+|   |   |   `-- page.js
 |   |   `-- page.js
+|   |-- firebase
+|   |   `-- index.js
+|   |-- firebase.js
+|   |-- globals.css
 |   |-- layout.js
+|   |-- lib
+|   |   |-- firestoreHelpers.js
+|   |   `-- messageHelpers.js
 |   |-- loading.js
 |   |-- not-found
 |   |   `-- page.js
@@ -36,9 +77,13 @@
 |   |   |-- [id]
 |   |   |   `-- page.js
 |   |   `-- page.js
-|   `-- studios
-|       `-- page.js
+|   |-- studios
+|   |   `-- page.js
+|   `-- utils
+|       |-- sendWelcomeMessage.js
+|       `-- withAuth.js
 |-- auditoryx-frontend
+|   |-- .gitignore
 |   |-- README.md
 |   |-- app
 |   |   |-- favicon.ico
@@ -65,6 +110,9 @@
 |   |   `-- globals.css
 |   `-- tailwind.config.js
 |-- backend
+|   |-- .env
+|   |-- .gitignore
+|   |-- .server.js.swp
 |   |-- README.md
 |   |-- backend-auth.js
 |   |-- firebase-setup.js
@@ -86,10 +134,15 @@
 |   |-- HeroSection.js
 |   |-- Layout.js
 |   |-- Navbar.js
-|   `-- Services.js
+|   |-- Services.js
+|   `-- dashboard
+|       |-- Bookings.js
+|       |-- Messages.js
+|       |-- Notifications.js
+|       |-- ProfileCard.js
+|       `-- ServicesList.js
 |-- data
 |   `-- profiles.json
-|-- debug.log
 |-- frontend
 |   |-- README.md
 |   |-- frontend
@@ -111,21 +164,19 @@
 |-- lib
 |   |-- db.js
 |   `-- prisma.js
-|-- my_project.zip
 |-- next.config.js
 |-- package-lock.json
 |-- package.json
 |-- pages
-|   |-- about.js
-|   `-- services.js
 |-- postcss.config.js
 |-- prisma
 |   `-- schema.prisma
 |-- project-structure.txt
 |-- project_code.txt
-|-- project_structure.txt
 |-- providers
 |   `-- SessionProvider.js
+|-- public
+|   `-- images
 |-- styles
 |   |-- globals.css
 |   |-- output.css
@@ -135,4 +186,4 @@
 |-- user-authentication.js
 `-- zikQWevq
 
-41 directories, 95 files
+53 directories, 134 files

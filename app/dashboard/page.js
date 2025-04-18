@@ -1,22 +1,45 @@
-"use client";
+'use client';
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { getAuth } from 'firebase/auth';
+import { app } from '@/lib/firebase';
+
+import ArtistDashboard from './components/roles/ArtistDashboard';
+import ProducerDashboard from './components/roles/ProducerDashboard';
+import StudioDashboard from './components/roles/StudioDashboard';
+import VideographerDashboard from './components/roles/VideographerDashboard';
+import EngineerDashboard from './components/roles/EngineerDashboard';
+import DefaultDashboard from './components/roles/DefaultDashboard';
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "unauthenticated") router.push("/auth");
-  }, [status, router]);
+    const auth = getAuth(app);
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) return;
+      const token = await user.getIdTokenResult();
+      setRole(token.claims.role || null);
+      setLoading(false);
+    });
 
-  if (status === "loading") return <div>Loading...</div>;
+    return () => unsubscribe();
+  }, []);
 
-  return (
-    <div className="min-h-screen p-6 text-white">
-      <h1 className="text-4xl font-bold">Welcome, {session.user.name}</h1>
-      <p className="mt-2 text-gray-400">Manage your profile, availability, and bookings here.</p>
-    </div>
-  );
+  if (loading) return <p>Loading...</p>;
+
+  switch (role) {
+    case 'artist':
+      return <ArtistDashboard />;
+    case 'producer':
+      return <ProducerDashboard />;
+    case 'studio':
+      return <StudioDashboard />;
+    case 'videographer':
+      return <VideographerDashboard />;
+    case 'engineer':
+      return <EngineerDashboard />;
+    default:
+      return <DefaultDashboard />;
+  }
 }

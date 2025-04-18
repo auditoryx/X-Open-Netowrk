@@ -1,57 +1,62 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { motion } from "framer-motion";
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+import PayButton from '../components/PayButton';
 
 export default function ServicesPage() {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const servicesSnapshot = await getDocs(collection(db, 'services'));
+        const servicesList = servicesSnapshot.docs.map(doc => ({ 
+          id: doc.id, 
+          ...doc.data() 
+        }));
+        setServices(servicesList);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchServices();
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-6 text-center"
-    >
-      <h1 className="text-4xl font-bold">Our Services</h1>
-      <p className="mt-4 text-lg text-gray-400 max-w-xl">
-        Explore our range of services designed to support **artists, producers, and creatives** at every level.
-      </p>
-
-      <div className="mt-6 text-left space-y-4 max-w-lg">
-        <div>
-          🎼 <strong>Beat Marketplace</strong>  
-          <p className="text-gray-400">Buy high-quality beats directly from top producers.</p>
+    <div className="p-6 max-w-4xl mx-auto text-white">
+      <h1 className="text-3xl font-bold mb-4">Available Services</h1>
+      
+      {loading ? (
+        <p className="text-gray-400">Loading services...</p>
+      ) : services.length > 0 ? (
+        <ul className="space-y-4">
+          {services.map(service => (
+            <li key={service.id} className="border border-gray-700 p-4 rounded-lg bg-gray-900">
+              <h2 className="text-xl font-semibold">{service.name}</h2>
+              <p className="text-gray-400">{service.description}</p>
+              <div className="mt-2 flex justify-between items-center">
+                <p className="text-blue-400 font-bold">${service.price}</p>
+                <PayButton 
+                  serviceName={service.name} 
+                  price={service.price} 
+                  providerId={service.ownerId || 'admin'} 
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="text-center py-8">
+          <p className="text-gray-400 mb-4">No services available yet.</p>
+          <p className="text-sm text-gray-500">Check back later or contact an admin to add services.</p>
         </div>
-
-        <div>
-          🎤 <strong>Buy a Feature from an Artist</strong>  
-          <p className="text-gray-400">Secure official collaborations with **major & underground artists**.</p>
-        </div>
-
-        <div>
-          🎚️ <strong>Mixing & Mastering</strong>  
-          <p className="text-gray-400">Get your songs professionally mixed and mastered.</p>
-        </div>
-
-        <div>
-          🎬 <strong>Music Video Services</strong>  
-          <p className="text-gray-400">Hire videographers, editors, and creative directors.</p>
-        </div>
-
-        <div>
-          🎙️ <strong>Studio Bookings</strong>  
-          <p className="text-gray-400">Find and book **recording studios** in major cities worldwide.</p>
-        </div>
-      </div>
-
-      <Link href="/apply">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-6 px-6 py-3 bg-blue-500 rounded-md hover:bg-blue-600 transition text-lg"
-        >
-          Get Started 🚀
-        </motion.button>
-      </Link>
-    </motion.div>
+      )}
+    </div>
   );
 }

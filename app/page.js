@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import CreativeDropdown from "./components/CreativeDropdown";
+import AuthModal from "./components/AuthModal";
 
 export default function Home() {
   return (
@@ -20,7 +21,7 @@ export default function Home() {
       >
         Auditory<span className="text-blue-500">X</span> Open Network
       </motion.h1>
-      
+
       <motion.p 
         initial={{ opacity: 0, y: 10 }} 
         animate={{ opacity: 1, y: 0 }} 
@@ -29,7 +30,7 @@ export default function Home() {
       >
         Powering the Future of Music Collaboration. Instantly Connect, Create, and Monetize.
       </motion.p>
-      
+
       <motion.div 
         initial={{ opacity: 0, y: 10 }} 
         animate={{ opacity: 1, y: 0 }} 
@@ -51,6 +52,15 @@ export default function Home() {
         <img src="/images/feature1.png" alt="Feature" className="w-16 h-16 opacity-90" />
         <img src="/images/feature2.png" alt="Feature" className="w-16 h-16 opacity-90" />
         <img src="/images/feature3.png" alt="Feature" className="w-16 h-16 opacity-90" />
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ delay: 1.2, duration: 0.7 }}
+        className="mt-10"
+      >
+        <AuthModal />
       </motion.div>
     </motion.div>
   );
