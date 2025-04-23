@@ -4,18 +4,32 @@
 |-- .gitignore
 |-- app
 |   |-- about
-|   |   `-- page.js
+|   |   `-- page.tsx
+|   |-- admin
+|   |   `-- applications
+|   |       `-- page.tsx
 |   |-- api
+<<<<<<< HEAD
 |   |   |-- auth
 |   |   |-- checkout
 |   |   |   `-- route.js
 |   |   `-- create-checkout-session
+=======
+|   |   `-- bookings
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |   |       `-- route.js
 |   |-- apply
 |   |   |-- artist
 |   |   |   `-- page.js
 |   |   |-- creative
 |   |   |   `-- page.js
+<<<<<<< HEAD
+=======
+|   |   `-- page.tsx
+|   |-- auth
+|   |   `-- page.tsx
+|   |-- availability
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |   |   `-- page.js
 |   |-- auth
 |   |   |-- login.js
@@ -26,6 +40,7 @@
 |   |-- booking
 |   |   `-- page.js
 |   |-- components
+<<<<<<< HEAD
 |   |   |-- AuthModal.js
 |   |   |-- BackgroundAnimation.js
 |   |   |-- BookingForm.js
@@ -33,12 +48,17 @@
 |   |   |-- BookingRequestForm.js
 |   |   |-- BookingsViewer.js
 |   |   |-- ClientBookings.js
+=======
+|   |   |-- BackgroundAnimation.js
+|   |   |-- BookingForm.js
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |   |   |-- CreativeDropdown.js
 |   |   |-- DarkModeToggle.js
 |   |   |-- EditProfileForm.js
 |   |   |-- EditServicesForm.js
 |   |   |-- FloatingCTA.js
 |   |   |-- Footer.js
+<<<<<<< HEAD
 |   |   |-- Inbox.js
 |   |   |-- LogoutButton.js
 |   |   |-- MessageCenter.js
@@ -47,11 +67,15 @@
 |   |   |-- PayButton.js
 |   |   |-- ProviderBookings.js
 |   |   `-- ServiceManager.js
+=======
+|   |   `-- Navbar.js
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |   |-- contact
-|   |   `-- page.js
+|   |   `-- page.tsx
 |   |-- creators
 |   |   `-- page.js
 |   |-- dashboard
+<<<<<<< HEAD
 |   |   |-- edit
 |   |   |   `-- page.js
 |   |   `-- page.js
@@ -63,32 +87,65 @@
 |   |-- lib
 |   |   |-- firestoreHelpers.js
 |   |   `-- messageHelpers.js
+=======
+|   |   |-- artist
+|   |   |   `-- page.js
+|   |   |-- engineer
+|   |   |   `-- page.js
+|   |   |-- page.js
+|   |   |-- producer
+|   |   |   `-- page.js
+|   |   |-- studio
+|   |   |   `-- page.js
+|   |   `-- videographer
+|   |       `-- page.js
+|   |-- explore
+|   |   `-- [role]
+|   |       `-- page.js
+|   |-- globals.css
+|   |-- layout.tsx
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |   |-- loading.js
 |   |-- not-found
 |   |   `-- page.js
 |   |-- not-found.js
-|   |-- page.js
+|   |-- page.tsx
 |   |-- producers
 |   |   `-- page.js
 |   |-- profile
+|   |   |-- [id]
+|   |   |   `-- page.js
 |   |   |-- [id].js
+|   |   |-- edit
+|   |   |   `-- page.js
 |   |   `-- page.js
 |   |-- services
 |   |   |-- [id]
 |   |   |   `-- page.js
+|   |   |-- add
+|   |   |   `-- page.js
+|   |   |-- manage
+|   |   |   `-- page.js
+|   |   `-- page.tsx
+|   |-- set-role
 |   |   `-- page.js
+<<<<<<< HEAD
 |   |-- studios
 |   |   `-- page.js
 |   `-- utils
 |       |-- sendWelcomeMessage.js
 |       `-- withAuth.js
+=======
+|   |-- signup
+|   |   `-- page.tsx
+|   `-- studios
+|       `-- page.js
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |-- auditoryx-frontend
 |   |-- .gitignore
 |   |-- README.md
 |   |-- app
 |   |   |-- favicon.ico
-|   |   |-- globals.css
-|   |   |-- layout.js
 |   |   |-- page.js
 |   |   `-- page.module.css
 |   |-- components
@@ -107,7 +164,6 @@
 |   |   |-- vercel.svg
 |   |   `-- window.svg
 |   |-- styles
-|   |   `-- globals.css
 |   `-- tailwind.config.js
 |-- backend
 |   |-- .env
@@ -129,11 +185,20 @@
 |   |-- server.js
 |   `-- service-listings-model.js
 |-- components
+|   |-- AvailabilityForm.js
+|   |-- BookingForm.js
+|   |-- BookingsViewer.js
+|   |-- ClientBookings.js
+|   |-- DashboardHeader.js
+|   |-- EditProfileForm.js
+|   |-- ExploreServices.js
 |   |-- Footer.js
 |   |-- Hero.js
 |   |-- HeroSection.js
+|   |-- IncomingRequests.js
 |   |-- Layout.js
 |   |-- Navbar.js
+<<<<<<< HEAD
 |   |-- Services.js
 |   `-- dashboard
 |       |-- Bookings.js
@@ -143,6 +208,24 @@
 |       `-- ServicesList.js
 |-- data
 |   `-- profiles.json
+=======
+|   |-- ProviderBookings.js
+|   |-- RoleToggle.js
+|   |-- SendServiceRequest.js
+|   |-- ServiceCard.js
+|   |-- ServiceFilter.js
+|   |-- ServiceForm.js
+|   |-- ServiceList.js
+|   |-- ServiceManager.js
+|   |-- ServiceProfileModal.js
+|   |-- ServiceSubmissionForm.js
+|   `-- Services.js
+|-- data
+|   `-- profiles.json
+|-- debug.log
+|-- firebase
+|   `-- firebaseConfig.js
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |-- frontend
 |   |-- README.md
 |   |-- frontend
@@ -151,7 +234,6 @@
 |   |-- package-lock.json
 |   |-- package.json
 |   |-- public
-|   |   |-- <!DOCTYPE\ html>\ <html\ lang="en">\ <head>\ \ \ \ \ <meta\ charset="UTF-8">\ \ \ \ \ <meta\ name="viewport"\ content="width=device-width,\ initial-scale=1.0">\ \ \ \ \ <title>AuditoryX\ Network<
 |   |   `-- index.html
 |   `-- src
 |       |-- App.js
@@ -160,14 +242,25 @@
 |       `-- pages
 |           |-- ServiceForm.js
 |           `-- ServiceList.js
+|-- functions
 |-- js_files.txt
 |-- lib
+|   |-- bookingHelpers.js
 |   |-- db.js
+|   |-- getUserRole.js
 |   `-- prisma.js
+<<<<<<< HEAD
 |-- next.config.js
 |-- package-lock.json
 |-- package.json
 |-- pages
+=======
+|-- my_project.zip
+|-- next-env.d.ts
+|-- next.config.js
+|-- package-lock.json
+|-- package.json
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |-- postcss.config.js
 |-- prisma
 |   `-- schema.prisma
@@ -177,13 +270,22 @@
 |   `-- SessionProvider.js
 |-- public
 |   `-- images
+<<<<<<< HEAD
+=======
+|-- structure-app.txt
+|-- structure-components.txt
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 |-- styles
-|   |-- globals.css
 |   |-- output.css
 |   `-- tailwind.css
 |-- tailwind.config.js
 |-- tailwind_help.txt
+|-- tsconfig.json
 |-- user-authentication.js
 `-- zikQWevq
 
+<<<<<<< HEAD
 53 directories, 134 files
+=======
+62 directories, 135 files
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)

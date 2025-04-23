@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { adminApp } from '@/lib/firebaseAdmin';
@@ -32,5 +33,19 @@ export async function POST(req) {
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+=======
+import { sendBookingRequest } from "../../../lib/bookingHelpers";
+
+export async function POST(req) {
+  const body = await req.json();
+  const { senderId, recipientId, date, time, notes } = body;
+
+  try {
+    const bookingId = await sendBookingRequest({ senderId, recipientId, date, time, notes });
+    return new Response(JSON.stringify({ bookingId }), { status: 200 });
+  } catch (err) {
+    console.error("Booking error:", err);
+    return new Response("Failed to create booking", { status: 500 });
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
   }
 }

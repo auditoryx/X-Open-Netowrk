@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
@@ -42,4 +43,16 @@ export default function Dashboard() {
     default:
       return <DefaultDashboard />;
   }
+=======
+"use client";
+import RoleToggle from "../../components/RoleToggle";
+
+export default function DashboardHome() {
+  return (
+    <div className="p-10 min-h-screen bg-black text-white">
+      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <RoleToggle />
+    </div>
+  );
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
 }

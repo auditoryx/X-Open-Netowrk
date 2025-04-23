@@ -1,0 +1,205 @@
+.
+|-- .env
+|-- .env.local
+|-- .gitignore
+|-- app
+|   |-- about
+|   |   `-- page.tsx
+|   |-- admin
+|   |   `-- applications
+|   |       `-- page.tsx
+|   |-- api
+|   |   `-- bookings
+|   |       `-- route.js
+|   |-- apply
+|   |   |-- artist
+|   |   |   `-- page.js
+|   |   |-- creative
+|   |   |   `-- page.js
+|   |   `-- page.tsx
+|   |-- auth
+|   |   `-- page.tsx
+|   |-- availability
+|   |   `-- page.js
+|   |-- beats
+|   |   `-- page.js
+|   |-- booking
+|   |   `-- page.js
+|   |-- components
+|   |   |-- BackgroundAnimation.js
+|   |   |-- BookingForm.js
+|   |   |-- CreativeDropdown.js
+|   |   |-- DarkModeToggle.js
+|   |   |-- FloatingCTA.js
+|   |   |-- Footer.js
+|   |   `-- Navbar.js
+|   |-- contact
+|   |   `-- page.tsx
+|   |-- creators
+|   |   `-- page.js
+|   |-- dashboard
+|   |   |-- artist
+|   |   |   `-- page.js
+|   |   |-- engineer
+|   |   |   `-- page.js
+|   |   |-- page.js
+|   |   |-- producer
+|   |   |   `-- page.js
+|   |   |-- studio
+|   |   |   `-- page.js
+|   |   `-- videographer
+|   |       `-- page.js
+|   |-- explore
+|   |   `-- [role]
+|   |       `-- page.js
+|   |-- globals.css
+|   |-- layout.tsx
+|   |-- loading.js
+|   |-- not-found
+|   |   `-- page.js
+|   |-- not-found.js
+|   |-- page.tsx
+|   |-- producers
+|   |   `-- page.js
+|   |-- profile
+|   |   |-- [id]
+|   |   |   `-- page.js
+|   |   |-- [id].js
+|   |   |-- edit
+|   |   |   `-- page.js
+|   |   `-- page.js
+|   |-- services
+|   |   |-- [id]
+|   |   |   `-- page.js
+|   |   |-- add
+|   |   |   `-- page.js
+|   |   |-- manage
+|   |   |   `-- page.js
+|   |   `-- page.tsx
+|   |-- set-role
+|   |   `-- page.js
+|   |-- signup
+|   |   `-- page.tsx
+|   `-- studios
+|       `-- page.js
+|-- auditoryx-frontend
+|   |-- .gitignore
+|   |-- README.md
+|   |-- app
+|   |   |-- favicon.ico
+|   |   |-- page.js
+|   |   `-- page.module.css
+|   |-- components
+|   |   |-- Footer.js
+|   |   `-- Navbar.js
+|   |-- eslint.config.mjs
+|   |-- jsconfig.json
+|   |-- next.config.mjs
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- postcss.config.js
+|   |-- public
+|   |   |-- file.svg
+|   |   |-- globe.svg
+|   |   |-- next.svg
+|   |   |-- vercel.svg
+|   |   `-- window.svg
+|   |-- styles
+|   `-- tailwind.config.js
+|-- backend
+|   |-- .env
+|   |-- .gitignore
+|   |-- .server.js.swp
+|   |-- README.md
+|   |-- backend-auth.js
+|   |-- firebase-setup.js
+|   |-- middleware
+|   |   `-- authMiddleware.js
+|   |-- models
+|   |   |-- Service.js
+|   |   `-- User.js
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- routes
+|   |   |-- auth.js
+|   |   `-- services.js
+|   |-- server.js
+|   `-- service-listings-model.js
+|-- components
+|   |-- AvailabilityForm.js
+|   |-- BookingForm.js
+|   |-- BookingsViewer.js
+|   |-- ClientBookings.js
+|   |-- DashboardHeader.js
+|   |-- EditProfileForm.js
+|   |-- ExploreServices.js
+|   |-- Footer.js
+|   |-- Hero.js
+|   |-- HeroSection.js
+|   |-- IncomingRequests.js
+|   |-- Layout.js
+|   |-- Navbar.js
+|   |-- ProviderBookings.js
+|   |-- RoleToggle.js
+|   |-- SendServiceRequest.js
+|   |-- ServiceCard.js
+|   |-- ServiceFilter.js
+|   |-- ServiceForm.js
+|   |-- ServiceList.js
+|   |-- ServiceManager.js
+|   |-- ServiceProfileModal.js
+|   |-- ServiceSubmissionForm.js
+|   `-- Services.js
+|-- data
+|   `-- profiles.json
+|-- firebase
+|   `-- firebaseConfig.js
+|-- frontend
+|   |-- README.md
+|   |-- frontend
+|   |   `-- public
+|   |       `-- index.html
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- public
+|   |   `-- index.html
+|   `-- src
+|       |-- App.js
+|       |-- apiTest.js
+|       |-- index.js
+|       `-- pages
+|           |-- ServiceForm.js
+|           `-- ServiceList.js
+|-- full-project-structure.txt
+|-- functions
+|-- js_files.txt
+|-- lib
+|   |-- bookingHelpers.js
+|   |-- db.js
+|   |-- getUserRole.js
+|   `-- prisma.js
+|-- next-env.d.ts
+|-- next.config.js
+|-- package-lock.json
+|-- package.json
+|-- postcss.config.js
+|-- prisma
+|   `-- schema.prisma
+|-- project-structure.txt
+|-- project_code.txt
+|-- providers
+|   `-- SessionProvider.js
+|-- public
+|   `-- images
+|-- structure-app.txt
+|-- structure-components.txt
+|-- styles
+|   |-- output.css
+|   `-- tailwind.css
+|-- tailwind.config.js
+|-- tailwind_help.txt
+|-- tsconfig.json
+|-- user-authentication.js
+`-- zikQWevq
+
+62 directories, 141 files
