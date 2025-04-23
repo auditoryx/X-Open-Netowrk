@@ -1,0 +1,56 @@
+app
+|-- about
+|   |-- page.js
+|   `-- page.tsx
+|-- apply
+|   |-- artist
+|   |   `-- page.js
+|   |-- creative
+|   |   `-- page.js
+|   |-- page.js
+|   `-- page.tsx
+|-- auth
+|   `-- page.js
+|-- beats
+|   `-- page.js
+|-- booking
+|   `-- page.js
+|-- components
+|   |-- BackgroundAnimation.js
+|   |-- BookingForm.js
+|   |-- CreativeDropdown.js
+|   |-- DarkModeToggle.js
+|   |-- FloatingCTA.js
+|   |-- Footer.js
+|   `-- Navbar.js
+|-- contact
+|   |-- page.js
+|   `-- page.tsx
+|-- creators
+|   `-- page.js
+|-- dashboard
+|   `-- page.js
+|-- globals.css
+|-- layout.js
+|-- loading.js
+|-- not-found
+|   `-- page.js
+|-- not-found.js
+|-- page.js
+|-- page.tsx
+|-- producers
+|   `-- page.js
+|-- profile
+|   |-- [id].js
+|   `-- page.js
+|-- services
+|   |-- [id]
+|   |   `-- page.js
+|   |-- page.js
+|   `-- page.tsx
+|-- signup
+|   `-- page.tsx
+`-- studios
+    `-- page.js
+
+19 directories, 35 files

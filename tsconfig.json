@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+<<<<<<< HEAD
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -24,6 +25,35 @@
     "incremental": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+=======
+    "target": "ES2020",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "incremental": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "types": [
+      "node"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
     "plugins": [
       {
         "name": "next"
@@ -31,7 +61,13 @@
     ]
   },
   "include": [
+<<<<<<< HEAD
     "src",
+=======
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
     ".next/types/**/*.ts"
   ],
   "exclude": [

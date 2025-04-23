@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 import { useState } from 'react';
 import { auth, db } from '../firebase';
@@ -68,5 +69,16 @@ export default function BookingPage() {
 
       {message && <p className="mt-4">{message}</p>}
     </div>
+=======
+import SendServiceRequest from "../../components/SendServiceRequest";
+
+export default function BookingPage() {
+  return (
+    <main className="p-10 text-white space-y-10">
+      <h1 className="text-3xl font-bold">Request Any Service</h1>
+      <SendServiceRequest recipientId="USER123" recipientRole="studio" />
+      <SendServiceRequest recipientId="USER456" recipientRole="artist" />
+    </main>
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
   );
 }

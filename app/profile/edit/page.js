@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -59,5 +60,15 @@ export default function EditProfilePage() {
         <button type="submit" className="bg-blue-600 px-4 py-2 rounded">Save</button>
       </form>
     </div>
+=======
+import EditProfileForm from "../../../components/EditProfileForm";
+
+export default function EditProfilePage() {
+  return (
+    <main className="p-10 text-white">
+      <h1 className="text-3xl font-bold mb-6">Edit Your Profile</h1>
+      <EditProfileForm />
+    </main>
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
   );
 }

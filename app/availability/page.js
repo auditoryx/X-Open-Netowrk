@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 import { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
@@ -49,5 +50,15 @@ export default function AvailabilityViewer() {
         </div>
       ))}
     </div>
+=======
+import AvailabilityForm from "../../components/AvailabilityForm";
+
+export default function AvailabilityPage() {
+  return (
+    <main className="p-10 text-white">
+      <h1 className="text-3xl font-bold mb-6">Set Your Availability</h1>
+      <AvailabilityForm />
+    </main>
+>>>>>>> 3126253 (chore: finalize migration prep for rebase)
   );
 }
