@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "auditory-x-open-network"
-  }
+    "default": "auditory-x-open-network",
+    "dev": "auditory-x-dev-f"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -1,0 +1,71 @@
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { getUserBookings } from '@/lib/firestore/getUserBookings';
+import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
+import { updateAvailability } from '@/lib/firestore/updateAvailability';
+import toast from 'react-hot-toast';
+import StripeCheckout from '@/components/StripeCheckout';
+
+export default function ProviderBookings() {
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [provider, setProvider] = useState<any>(null);
+
+  const fetchBookings = async () => {
+    const data = await getUserBookings(user.uid, 'provider');
+    setBookings(data);
+  };
+
+  const fetchProvider = async () => {
+    const providerData = await getUserBookings(user.uid, 'provider'); // Adjust if needed
+    setProvider(providerData);
+  };
+
+  useEffect(() => {
+    fetchBookings();
+    fetchProvider();
+  }, [user]);
+
+  const handleStatusChange = async (id: string, status: 'accepted' | 'rejected' | 'completed', dateTime?: string) => {
+    await updateBookingStatus(id, status);
+    if (status === 'accepted' && provider?.availability && dateTime) {
+      const updatedAvailability = provider.availability.filter((slot: string) => slot !== dateTime);
+      await updateAvailability(user.uid, updatedAvailability);
+    }
+    fetchBookings(); // refresh after update
+  };
+
+  return (
+    <div>
+      <h2 className='text-lg font-semibold mb-2'>Bookings You Received</h2>
+      {bookings.map((b) => (
+        <div key={b.id} className='border p-3 rounded mb-2'>
+          <p><strong>From:</strong> {b.clientId}</p>
+          <p><strong>Service:</strong> {b.service}</p>
+          <p><strong>Date:</strong> {b.dateTime}</p>
+          <p><strong>Status:</strong> {b.status}</p>
+
+          {b.status === 'pending' && (
+            <div className='flex gap-2 mt-2'>
+              <button onClick={() => handleStatusChange(b.id, 'accepted', b.dateTime)} className='px-3 py-1 bg-green-600 text-white rounded'>Accept</button>
+              <button onClick={() => handleStatusChange(b.id, 'rejected')} className='px-3 py-1 bg-red-600 text-white rounded'>Reject</button>
+            </div>
+          )}
+
+          {b.status === 'accepted' && (
+            <StripeCheckout amount={b.amount} bookingId={b.id} />
+          )}
+
+          {b.status === 'confirmed' && (
+            <button
+              onClick={() => handleStatusChange(b.id, 'completed')}
+              className='mt-2 px-3 py-1 bg-blue-600 text-white rounded'
+            >
+              Mark as Completed
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}

@@ -1,3 +1,6 @@
+/* ✅ MUST be the first line */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,7 +11,6 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-/* Custom Button Styling */
 .btn {
   @apply px-6 py-3 rounded-md font-medium transition-all;
 }
@@ -19,14 +21,6 @@ body {
 
 .btn-secondary {
   @apply bg-gray-700 hover:bg-gray-600 active:scale-95 shadow-lg shadow-gray-700/30;
-}
-
-
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
-body {
-  font-family: 'Inter', sans-serif;
 }
 
 h1 {
@@ -44,4 +38,3 @@ h3 {
 p {
   @apply text-lg text-gray-400 leading-relaxed;
 }
-
