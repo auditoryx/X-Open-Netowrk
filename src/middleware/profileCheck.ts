@@ -1,30 +1,37 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getAuth } from 'firebase-admin/auth'
-import { admin } from '@/lib/firebase-admin'
-import { doc, getDoc } from 'firebase-admin/firestore'
+import { NextRequest, NextResponse } from "next/server";
+import { getAuth } from "firebase-admin/auth";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
 
-export async function middleware(req: NextRequest) {
-  const token = req.cookies.get('__session')?.value
-  const pathname = req.nextUrl.pathname
-
-  if (!token) return NextResponse.next()
-
-  try {
-    const decoded = await getAuth(admin).verifyIdToken(token)
-    const ref = doc(admin.firestore(), 'users', decoded.uid)
-    const snap = await getDoc(ref)
-
-    if (!snap.exists() && pathname !== '/dashboard/settings') {
-      const url = new URL('/dashboard/settings', req.url)
-      return NextResponse.redirect(url)
-    }
-  } catch (e) {
-    console.error(e)
-  }
-
-  return NextResponse.next()
+if (!getApps().length) {
+  initializeApp({
+    credential: cert({
+      projectId: "auditory-x-open-network",
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
+  });
 }
 
-export const config = {
-  matcher: ['/dashboard/:path*'],
+export async function middleware(req: NextRequest) {
+  const session = req.cookies.get("__session")?.value;
+  const url = new URL(req.url);
+
+  if (!session) {
+    return NextResponse.redirect(new URL("/auth", req.url));
+  }
+
+  try {
+    const decoded = await getAuth().verifySessionCookie(session, true);
+    const role = decoded.role;
+
+    const dashboardPath = url.pathname.split("/")[2];
+
+    if (url.pathname.startsWith("/dashboard") && dashboardPath && role !== dashboardPath) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    return NextResponse.next();
+  } catch {
+    return NextResponse.redirect(new URL("/auth", req.url));
+  }
 }
