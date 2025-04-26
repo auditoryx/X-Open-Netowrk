@@ -1,7 +1,8 @@
-import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
-import { app } from "@/firebase/firebaseConfig";
+import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore"
+import { app } from "../firebase/firebaseConfig"
+import { getStripe } from "@/lib/utils/stripe"
 
-const db = getFirestore(app);
+const db = getFirestore(app)
 
 export async function createBooking({
   providerId,
@@ -11,16 +12,16 @@ export async function createBooking({
   time,
   message
 }: {
-  providerId: string;
-  serviceId: string;
-  userId: string;
-  date: string;
-  time: string;
-  message: string;
+  providerId: string
+  serviceId: string
+  userId: string
+  date: string
+  time: string
+  message: string
 }) {
   try {
-    const bookingRef = collection(db, "bookings");
-    const doc = await addDoc(bookingRef, {
+    const bookingRef = collection(db, "bookings")
+    const docRef = await addDoc(bookingRef, {
       providerId,
       serviceId,
       userId,
@@ -29,10 +30,33 @@ export async function createBooking({
       message,
       status: "pending",
       createdAt: Timestamp.now()
-    });
-    return { success: true, id: doc.id };
+    })
+
+    const bookingId = docRef.id
+
+    // Store contract info too (optional)
+    const contractRef = collection(db, "contracts")
+    await addDoc(contractRef, {
+      clientId: userId,
+      providerId,
+      bookingId,
+      status: "pending",
+      createdAt: Timestamp.now()
+    })
+
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId })
+    })
+
+    const { sessionId } = await res.json()
+    const stripe = await getStripe()
+    await stripe.redirectToCheckout({ sessionId })
+
+    return { success: true, id: bookingId }
   } catch (err) {
-    console.error("Booking error:", err);
-    return { success: false, error: err };
+    console.error("Booking error:", err)
+    return { success: false, error: err }
   }
 }

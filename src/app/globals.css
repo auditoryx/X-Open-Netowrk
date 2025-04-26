@@ -1,0 +1,40 @@
+/* ✅ MUST be the first line */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: linear-gradient(135deg, #000000, #121212, #1a1a1a);
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn {
+  @apply px-6 py-3 rounded-md font-medium transition-all;
+}
+
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-600 active:scale-95 shadow-lg shadow-blue-500/20;
+}
+
+.btn-secondary {
+  @apply bg-gray-700 hover:bg-gray-600 active:scale-95 shadow-lg shadow-gray-700/30;
+}
+
+h1 {
+  @apply text-5xl font-extrabold tracking-tight leading-tight;
+}
+
+h2 {
+  @apply text-4xl font-bold tracking-tight;
+}
+
+h3 {
+  @apply text-3xl font-semibold tracking-wide;
+}
+
+p {
+  @apply text-lg text-gray-400 leading-relaxed;
+}

@@ -1,0 +1,323 @@
+.
+|-- .env
+|-- .env.local
+|-- .firebaserc
+|-- .gitignore
+|-- .vscode
+|   `-- settings.json
+|-- TypeScript:
+|-- app
+|   |-- about
+|   |   `-- page.tsx
+|   |-- admin
+|   |   |-- applications
+|   |   |-- components
+|   |   `-- logout
+|   |-- api
+|   |   |-- artist-services
+|   |   |-- auth
+|   |   |-- availability
+|   |   |-- bookings
+|   |   |-- checkout
+|   |   |-- create-checkout-session
+|   |   |-- engineer-services
+|   |   |-- logout
+|   |   |-- producer-services
+|   |   |-- profile
+|   |   |-- services
+|   |   |-- set-role
+|   |   |-- studio-availability
+|   |   |-- studio-services
+|   |   `-- videographer-services
+|   |-- apply
+|   |   |-- [role]
+|   |   `-- page.tsx
+|   |-- artists
+|   |   `-- page.jsx
+|   |-- auth
+|   |   |-- login.js
+|   |   |-- page.tsx
+|   |   `-- signup.js
+|   |-- availability
+|   |   `-- page.js
+|   |-- beats
+|   |   `-- page.js
+|   |-- booking
+|   |   `-- page.tsx
+|   |-- client
+|   |   `-- page.jsx
+|   |-- components
+|   |   |-- AuthModal.js
+|   |   |-- AvailabilityForm.js
+|   |   |-- BackgroundAnimation.js
+|   |   |-- BookingForm.js
+|   |   |-- BookingForm.tsx
+|   |   |-- BookingHistory.js
+|   |   |-- BookingRequestForm.js
+|   |   |-- BookingRequestForm.jsx
+|   |   |-- BookingsViewer.js
+|   |   |-- ClientBookings.js
+|   |   |-- CreativeDropdown.js
+|   |   |-- DarkModeToggle.js
+|   |   |-- EditServicesForm.js
+|   |   |-- FloatingCTA.js
+|   |   |-- Footer.js
+|   |   |-- Inbox.js
+|   |   |-- LogoutButton.js
+|   |   |-- MessageCenter.js
+|   |   |-- Navbar.js
+|   |   |-- Notifications.js
+|   |   |-- PayButton.js
+|   |   |-- ProviderBookings.js
+|   |   `-- ServiceManager.js
+|   |-- contact
+|   |   `-- page.tsx
+|   |-- create-profile
+|   |   `-- page.tsx
+|   |-- creators
+|   |   `-- page.jsx
+|   |-- dashboard
+|   |   |-- artist
+|   |   |-- availability
+|   |   |-- components
+|   |   |-- designer
+|   |   |-- edit
+|   |   |-- engineer
+|   |   |-- page.js
+|   |   |-- producer
+|   |   |-- studio
+|   |   `-- videographer
+|   |-- engineers
+|   |   `-- page.jsx
+|   |-- explore
+|   |   `-- [role]
+|   |-- firebase
+|   |   `-- index.js
+|   |-- firebase.js
+|   |-- globals.css
+|   |-- layout.js
+|   |-- layout.tsx
+|   |-- lib
+|   |   |-- firestoreHelpers.js
+|   |   |-- messageHelpers.js
+|   |   `-- profileHelpers.js
+|   |-- loading.js
+|   |-- not-found
+|   |   `-- page.js
+|   |-- not-found.js
+|   |-- page.tsx
+|   |-- producers
+|   |   `-- page.jsx
+|   |-- profile
+|   |   |-- [uid]
+|   |   |-- edit
+|   |   |-- edit.js
+|   |   `-- page.js
+|   |-- services
+|   |   |-- [id]
+|   |   |-- add
+|   |   |-- authService.js
+|   |   |-- manage
+|   |   `-- page.tsx
+|   |-- set-role
+|   |   `-- page.js
+|   |-- signup
+|   |   `-- page.tsx
+|   |-- studios
+|   |   `-- page.jsx
+|   |-- top-creators
+|   |   `-- page.tsx
+|   |-- utils
+|   |   |-- sendWelcomeMessage.js
+|   |   |-- withAuth.js
+|   |   `-- withRoleProtection.js
+|   `-- videographers
+|       `-- page.jsx
+|-- backend
+|   |-- .env
+|   |-- .gitignore
+|   |-- .server.js.swp
+|   |-- README.md
+|   |-- backend-auth.js
+|   |-- firebase-setup.js
+|   |-- middleware
+|   |   `-- authMiddleware.js
+|   |-- models
+|   |   |-- Service.js
+|   |   `-- User.js
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- routes
+|   |   |-- auth.js
+|   |   `-- services.js
+|   |-- server.js
+|   `-- service-listings-model.js
+|-- components
+|   |-- AvailabilityForm.js
+|   |-- BookingForm.js
+|   |-- BookingsViewer.js
+|   |-- ClientBookings.js
+|   |-- ClientBookings.tsx
+|   |-- DashboardHeader.js
+|   |-- EditProfileForm.js
+|   |-- ExploreServices.js
+|   |-- Footer.js
+|   |-- Hero.js
+|   |-- HeroSection.js
+|   |-- IncomingRequests.js
+|   |-- Layout.js
+|   |-- Navbar.js
+|   |-- ProviderBookings.js
+|   |-- ProviderBookings.tsx
+|   |-- RoleToggle.js
+|   |-- SendServiceRequest.js
+|   |-- ServiceCard.js
+|   |-- ServiceFilter.js
+|   |-- ServiceForm.js
+|   |-- ServiceList.js
+|   |-- ServiceManager.js
+|   |-- ServiceProfileModal.js
+|   |-- ServiceSubmissionForm.js
+|   |-- Services.js
+|   |-- StripeCheckout.tsx
+|   |-- dashboard
+|   |   |-- Bookings.js
+|   |   |-- Messages.js
+|   |   |-- Notifications.js
+|   |   |-- ProfileCard.js
+|   |   `-- ServicesList.js
+|   |-- forms
+|   |   `-- BookingForm.tsx
+|   `-- ui
+|       |-- AvailabilitySelector.tsx
+|       `-- DragDropUpload.tsx
+|-- context
+|   `-- AuthContext.tsx
+|-- data
+|   `-- profiles.json
+|-- debug.log
+|-- firebase
+|   |-- firebaseConfig.js
+|   |-- firebaseConfig.ts
+|   `-- firestoreHelpers.ts
+|-- firebase.json
+|-- firebaseAdminServer
+|   |-- index.ts
+|   `-- key.json
+|-- firestore.indexes.json
+|-- firestore.rules
+|-- full-project-structure.txt
+|-- functions
+|   |-- .gcloudignore
+|   |-- index.js
+|   |-- package-lock.json
+|   `-- package.json
+|-- grant-admin.js
+|-- index.js
+|-- js_files.txt
+|-- jsconfig.json
+|-- lib
+|   |-- bookingHelpers.js
+|   |-- createBooking.ts
+|   |-- db.js
+|   |-- email
+|   |   `-- sendBookingConfirmation.ts
+|   |-- firebase
+|   |   |-- index.ts
+|   |   |-- init.ts
+|   |   `-- uploadMedia.ts
+|   |-- firestore
+|   |   |-- createBooking.ts
+|   |   |-- getCreatorReviews.ts
+|   |   |-- getTopCreators.ts
+|   |   |-- getUserBookings.ts
+|   |   |-- saveUserProfile.ts
+|   |   |-- updateAvailability.ts
+|   |   `-- updateBookingStatus.ts
+|   |-- getUserProfile.ts
+|   |-- getUserRole.js
+|   |-- hooks
+|   |   `-- useAuth.ts
+|   |-- prisma.js
+|   `-- submitApplication.ts
+|-- middleware.ts
+|-- my_project.zip
+|-- next-env.d.ts
+|-- next.config.js
+|-- open-network-structure.txt
+|-- package-lock.json
+|-- package.json
+|-- pages
+|   `-- api
+|       `-- stripe
+|-- postcss.config.js
+|-- prisma
+|   `-- schema.prisma
+|-- project-structure.txt
+|-- project_code.txt
+|-- providers
+|   |-- AuthProvider.js
+|   `-- SessionProvider.js
+|-- public
+|   `-- images
+|-- scripts
+|   |-- addTestBooking.ts
+|   |-- addTestUser.ts
+|   |-- seedProfiles.mjs
+|   `-- seedServices.mjs
+|-- set-admin.js
+|-- setAdminClaim.js
+|-- setRoleClaim.js
+|-- setUserRoleClaim.js
+|-- src
+|   |-- app
+|   |   |-- (dashboard)
+|   |   |-- api
+|   |   |-- book
+|   |   |-- dashboard
+|   |   |-- explore
+|   |   |-- profile
+|   |   `-- saved
+|   |-- client
+|   |   `-- components
+|   |-- components
+|   |   |-- RoleToggle.tsx
+|   |   |-- admin
+|   |   |-- booking
+|   |   |-- bookings
+|   |   |-- chat
+|   |   |-- contract
+|   |   |-- dashboard
+|   |   |-- explore
+|   |   |-- profile
+|   |   `-- roles
+|   |-- context
+|   |   `-- AuthContext.tsx
+|   |-- lib
+|   |   |-- assignRole.ts
+|   |   |-- fetchUsers.ts
+|   |   |-- firebase
+|   |   |-- firebase-admin.ts
+|   |   |-- firebase.ts
+|   |   |-- firestore
+|   |   |-- getServerUser.ts
+|   |   `-- stripe
+|   `-- middleware
+|       `-- profileCheck.ts
+|-- stripe.tar.gz
+|-- structure-app.txt
+|-- structure-components.txt
+|-- styles
+|   |-- output.css
+|   `-- tailwind.css
+|-- tailwind.config.js
+|-- tailwind_help.txt
+|-- tree-final.txt
+|-- tree.txt
+|-- tsconfig.json
+|-- types
+|   `-- user.ts
+|-- user-authentication.js
+`-- zikQWevq
+
+121 directories, 200 files
