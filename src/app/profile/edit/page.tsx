@@ -1,42 +1,96 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { app, db } from '@/app/firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { uploadProfilePic } from '@/lib/firebase/uploadProfilePic';
 
 export default function EditProfilePage() {
   const router = useRouter();
+  const [name, setName] = useState('');
+  const [bio, setBio] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [form, setForm] = useState({
-    name: "",
-    role: "",
-    location: "",
-    bio: "",
-    portfolio: "",
-    image: "",
-  });
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.push('/login');
+        return;
+      }
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+      const userRef = doc(db, 'users', user.uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        setName(data.name || '');
+        setBio(data.bio || '');
+        setInstagram(data.socials?.instagram || '');
+        setTwitter(data.socials?.twitter || '');
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleSave = async () => {
+    const auth = getAuth(app);
+    const user = auth.currentUser;
+    if (!user) return;
+
+    let profilePicUrl = undefined;
+    if (profilePic) {
+      profilePicUrl = await uploadProfilePic(profilePic, user.uid);
+    }
+
+    const userRef = doc(db, 'users', user.uid);
+    await setDoc(userRef, {
+      name,
+      bio,
+      socials: {
+        instagram,
+        twitter,
+      },
+      ...(profilePicUrl && { profilePicUrl }),
+    }, { merge: true });
+
+    router.push(`/profile/${user.uid}`);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // 🔒 Replace this with Firestore update later
-    alert("Profile updated (mock)");
-    router.push("/dashboard");
-  };
+  if (loading) {
+    return <div className="text-center mt-10">Loading...</div>;
+  }
 
   return (
-    <div className="min-h-screen p-6 text-white">
-      <h1 className="text-3xl font-bold mb-6">Edit Profile</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
-        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="w-full p-2 rounded bg-gray-800" />
-        <input name="role" placeholder="Role" value={form.role} onChange={handleChange} className="w-full p-2 rounded bg-gray-800" />
-        <input name="location" placeholder="Location" value={form.location} onChange={handleChange} className="w-full p-2 rounded bg-gray-800" />
-        <input name="portfolio" placeholder="Portfolio Link" value={form.portfolio} onChange={handleChange} className="w-full p-2 rounded bg-gray-800" />
-        <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} className="w-full p-2 rounded bg-gray-800" />
-        <textarea name="bio" placeholder="Bio" value={form.bio} onChange={handleChange} className="w-full p-2 rounded bg-gray-800 h-40" />
-        <button type="submit" className="bg-blue-600 px-4 py-2 rounded">Save Changes</button>
-      </form>
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Edit Your Profile</h1>
+      <div className="mb-4">
+        <label className="block mb-2 font-semibold">Name</label>
+        <input className="w-full p-2 border rounded" value={name} onChange={e => setName(e.target.value)} />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2 font-semibold">Bio</label>
+        <textarea className="w-full p-2 border rounded" value={bio} onChange={e => setBio(e.target.value)} />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2 font-semibold">Instagram</label>
+        <input className="w-full p-2 border rounded" value={instagram} onChange={e => setInstagram(e.target.value)} />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2 font-semibold">Twitter</label>
+        <input className="w-full p-2 border rounded" value={twitter} onChange={e => setTwitter(e.target.value)} />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2 font-semibold">Profile Picture</label>
+        <input type="file" accept="image/*" onChange={e => setProfilePic(e.target.files?.[0] || null)} />
+      </div>
+      <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Profile</button>
     </div>
   );
 }
