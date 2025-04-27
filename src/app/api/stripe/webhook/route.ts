@@ -1,6 +1,7 @@
 import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
-import { admin } from '@/lib/firebase-admin'; // Make sure your admin SDK is setup
+import { admin } from '@/lib/firebase-admin'; // Ensure Firebase Admin SDK is initialized
+import 'firebase-admin/firestore'; // Import Firestore explicitly if needed
 
 export async function POST(req: Request) {
   const buf = await req.arrayBuffer();
@@ -20,7 +21,8 @@ export async function POST(req: Request) {
     const session = event.data.object as any;
     if (session.mode === 'subscription') {
       const uid = session.metadata?.uid;
-      if (uid) {
+        const firestore = admin.firestore();
+        await firestore.collection('users').doc(uid).update({
         await admin.firestore().collection('users').doc(uid).update({
           subscriptionStatus: 'pro',
         });
