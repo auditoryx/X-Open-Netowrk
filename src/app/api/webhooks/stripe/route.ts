@@ -1,55 +1,43 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
-import { initializeApp, getApps, getApp } from 'firebase/app';
+import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
+import { stripe } from '@/lib/stripe/createCheckoutSession';
 
-// Initialize Firebase app (avoid duplicate apps)
-import { firebaseConfig } from '@/app/firebase';
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2022-11-15',
-});
-
-export const config = {
-  api: { bodyParser: false }
-};
-
-export async function POST(req: Request) {
-  const sig = req.headers.get('stripe-signature')!;
-  const buf = await req.arrayBuffer();
-  const body = Buffer.from(buf);
+export async function POST(req: NextRequest) {
+  const rawBody = await req.text();
+  const sig = req.headers.get('stripe-signature');
 
   let event: Stripe.Event;
+
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-  } catch (err: any) {
-    console.error('Webhook Error:', err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    event = stripe.webhooks.constructEvent(rawBody, sig!, endpointSecret);
+  } catch (err) {
+    console.error('❌ Stripe webhook signature verification failed.', err);
+    return new NextResponse('Webhook Error', { status: 400 });
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const buyerId = session.metadata?.buyerId;
-    const providerId = session.metadata?.providerId;
-    const serviceId = session.metadata?.serviceId;
+  switch (event.type) {
+    case 'checkout.session.completed': {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const bookingId = session?.metadata?.bookingId;
 
-    if (buyerId && providerId && serviceId) {
-      await addDoc(collection(db, 'bookingRequests'), {
-        buyerId,
-        providerId,
-        serviceId,
-        status: 'pending',
-        createdAt: Timestamp.now(),
-      });
-      console.log('Booking request auto‐created from Stripe webhook.');
+      if (bookingId) {
+        await updateBookingStatus(bookingId, 'paid');
+        console.log(\`✅ Booking \${bookingId} marked as paid.\`);
+      }
+      break;
     }
+
+    case 'payment_intent.succeeded': {
+      console.log('✅ Payment intent succeeded.');
+      break;
+    }
+
+    default:
+      console.log(\`Unhandled event type \${event.type}\`);
   }
 
-  return NextResponse.json({ received: true });
+  return new NextResponse('Received', { status: 200 });
 }
