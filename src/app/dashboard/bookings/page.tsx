@@ -1,37 +1,70 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
-import { useAuth } from '../../../lib/hooks/useAuth'
-import { getUserBookings } from '@/lib/firestore/getUserBookings'
-import BookingChatThread from '@/components/chat/BookingChatThread'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-const BookingsDashboard = () => {
-  const { user } = useAuth()
-  const [bookings, setBookings] = useState<any[]>([])
+export default function DashboardBookingsPage() {
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (!user) return
-    getUserBookings(user.uid).then(setBookings)
-  }, [user])
+    const fetchBookings = async () => {
+      const res = await fetch('/api/bookings');
+      const data = await res.json();
+      setBookings(data);
+      setLoading(false);
+    };
+    fetchBookings();
+  }, []);
 
-  if (!user) return <p>Loading…</p>
-  if (!bookings.length) return <p>No bookings found.</p>
+  const handleUpdateStatus = async (id: string, status: string) => {
+    await fetch('/api/bookings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    });
+    setBookings(prev =>
+      prev.map(b => (b.id === id ? { ...b, status } : b))
+    );
+  };
+
+  if (loading) return <div className="p-6 text-white">Loading bookings...</div>;
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Your Bookings</h1>
-      <div className="grid gap-6">
-        {bookings.map((b) => (
-          <div key={b.id} className="border rounded-xl p-4">
-            <p className="font-medium">{b.date} at {b.time}</p>
-            <p className="text-sm text-gray-600">Client: {b.clientId}</p>
-            <p className="text-sm text-gray-600">Status: {b.status}</p>
-            <BookingChatThread bookingId={b.id} />
-          </div>
-        ))}
-      </div>
+    <div className="min-h-screen bg-black text-white p-8">
+      <h1 className="text-3xl font-bold mb-6">Manage Bookings</h1>
+      {bookings.length === 0 ? (
+        <p>No bookings yet.</p>
+      ) : (
+        <ul className="space-y-4">
+          {bookings.map(booking => (
+            <li key={booking.id} className="border p-4 rounded">
+              <p><strong>Service:</strong> {booking.serviceId}</p>
+              <p><strong>Buyer:</strong> {booking.buyerId}</p>
+              <p><strong>Status:</strong> {booking.status}</p>
+              <div className="flex space-x-4 mt-2">
+                {booking.status === 'pending' && (
+                  <>
+                    <button
+                      onClick={() => handleUpdateStatus(booking.id, 'accepted')}
+                      className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(booking.id, 'rejected')}
+                      className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+                    >
+                      Reject
+                    </button>
+                  </>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
-  )
+  );
 }
-
-export default BookingsDashboard

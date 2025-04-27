@@ -1,42 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { app } from '@/app/firebase';
+import Navbar from '@/app/components/Navbar';
 
 export default function SignupPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSignup = async () => {
-    const auth = getAuth(app);
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push('/profile/edit');
-    } catch (err: any) {
-      setError(err.message || 'Signup failed');
-    }
-  };
-
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Sign Up</h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Email</label>
-        <input type="email" className="w-full p-2 border rounded" value={email} onChange={e => setEmail(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Password</label>
-        <input type="password" className="w-full p-2 border rounded" value={password} onChange={e => setPassword(e.target.value)} />
-      </div>
-      <button onClick={handleSignup} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Sign Up</button>
-      <p className="mt-4">
-        Already have an account? <a href="/login" className="text-blue-500 underline">Login</a>
-      </p>
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
+      <h1 className="text-4xl font-bold mb-6">Sign Up</h1>
+      <p className="text-lg text-gray-400">Create your AuditoryX account.</p>
     </div>
   );
 }

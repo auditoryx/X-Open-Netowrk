@@ -1,5 +1,6 @@
 'use client';
 
+import Navbar from '@/app/components/Navbar';
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
@@ -21,41 +22,25 @@ export default function OrdersPage() {
       }
 
       const db = getFirestore(app);
+      const q = query(collection(db, 'orders'), where('sellerId', '==', user.uid));
+      const snap = await getDocs(q);
 
-      // Fetch services created by this user
-      const servicesRef = collection(db, 'services');
-      const q = query(servicesRef, where('creatorId', '==', user.uid));
-      const servicesSnap = await getDocs(q);
-      const serviceIds = servicesSnap.docs.map(doc => doc.id);
+      const tempOrders = [];
 
-      if (serviceIds.length === 0) {
-        setOrders([]);
-        setLoading(false);
-        return;
+      for (const docSnap of snap.docs) {
+        const orderData = docSnap.data();
+        const serviceRef = doc(db, 'services', orderData.serviceId);
+        const serviceSnap = await getDoc(serviceRef);
+        const serviceData = serviceSnap.data();
+
+        tempOrders.push({
+          id: docSnap.id,
+          ...orderData,
+          serviceTitle: serviceData?.title || 'Unknown Service',
+        });
       }
 
-      // Fetch orders for those services
-      const ordersRef = collection(db, 'orders');
-      const ordersSnap = await getDocs(ordersRef);
-
-      const filteredOrders = [];
-
-      for (const order of ordersSnap.docs) {
-        const data = order.data();
-        if (serviceIds.includes(data.serviceId)) {
-          // Fetch service title
-          const serviceRef = doc(db, 'services', data.serviceId);
-          const serviceSnap = await getDoc(serviceRef);
-          const serviceData = serviceSnap.data();
-          filteredOrders.push({
-            id: order.id,
-            ...data,
-            serviceTitle: serviceData?.title || 'Unknown Service',
-          });
-        }
-      }
-
-      setOrders(filteredOrders);
+      setOrders(tempOrders);
       setLoading(false);
     };
 
@@ -63,26 +48,29 @@ export default function OrdersPage() {
   }, []);
 
   if (loading) {
-    return <div className="text-center mt-10">Loading orders...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading your orders...</div>;
   }
 
   if (orders.length === 0) {
-    return <div className="text-center mt-10">No orders yet.</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">You haven't sold any services yet.</div>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Your Orders</h1>
-      <ul className="space-y-6">
-        {orders.map((order) => (
-          <li key={order.id} className="border p-4 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">{order.serviceTitle}</h2>
-            <p className="text-gray-600 mb-1">Service ID: {order.serviceId}</p>
-            <p className="text-gray-800 font-bold mb-1">${order.amountPaid}</p>
-            <p className="text-sm text-gray-400">Order ID: {order.id}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-8 text-center">My Orders (Sales)</h1>
+        <ul className="space-y-6">
+          {orders.map(order => (
+            <li key={order.id} className="border border-white p-6 rounded shadow">
+              <h2 className="text-2xl font-semibold mb-2">{order.serviceTitle}</h2>
+              <p className="text-gray-400 mb-1">Buyer: {order.buyerName || 'Unknown Buyer'}</p>
+              <p className="text-gray-500 text-sm mb-1">Amount Paid: ${order.amountPaid}</p>
+              <p className="text-gray-500 text-sm">Order ID: {order.id}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

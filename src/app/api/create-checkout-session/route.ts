@@ -1,14 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
+import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
-})
+  apiVersion: '2022-11-15',
+});
 
 export async function POST(req: NextRequest) {
-  const { bookingId } = await req.json()
+  const { serviceId, buyerId, amount } = await req.json();
 
-  if (!bookingId) return NextResponse.json({ error: 'Missing bookingId' }, { status: 400 })
+  if (!serviceId || !buyerId || !amount) {
+    return new NextResponse('Missing checkout parameters.', { status: 400 });
+  }
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -17,18 +19,21 @@ export async function POST(req: NextRequest) {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: 'Creative Service Booking',
+            name: `Service ID: ${serviceId}`,
           },
-          unit_amount: 5000,
+          unit_amount: Math.round(amount * 100), // Stripe expects cents
         },
         quantity: 1,
       },
     ],
-    metadata: { bookingId },
     mode: 'payment',
-    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
-  })
+    metadata: {
+      serviceId,
+      buyerId,
+    },
+    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/purchases?success=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/services/${serviceId}?canceled=true`,
+  });
 
-  return NextResponse.json({ sessionId: session.id })
+  return NextResponse.json({ url: session.url });
 }

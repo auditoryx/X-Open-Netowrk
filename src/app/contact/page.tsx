@@ -1,10 +1,13 @@
+'use client';
+import Navbar from '@/app/components/Navbar';
 export default function ContactPage() {
   return (
-    <main className="p-10 text-white">
-      <h1 className="text-3xl font-bold mb-4">Contact Us</h1>
-      <p>
-        Got questions or partnership inquiries? Reach out to us and we’ll get back ASAP.
-      </p>
-    </main>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center text-center p-8">
+        <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
+        <p className="text-gray-400">For support or inquiries, email us at support@auditoryx.com.</p>
+      </div>
+    </div>
   );
 }

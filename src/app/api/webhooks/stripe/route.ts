@@ -1,33 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+
+// Initialize Firebase app (avoid duplicate apps)
+import { firebaseConfig } from '@/app/firebase';
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const db = getFirestore(app);
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2022-11-15',
 });
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+export const config = {
+  api: { bodyParser: false }
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
-
-export async function POST(req: NextRequest) {
-  const buf = await req.text();
+export async function POST(req: Request) {
   const sig = req.headers.get('stripe-signature')!;
+  const buf = await req.arrayBuffer();
+  const body = Buffer.from(buf);
 
   let event: Stripe.Event;
-
   try {
     event = stripe.webhooks.constructEvent(
-      buf,
+      body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
@@ -38,23 +35,21 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
-
-    const serviceId = session.metadata?.serviceId;
     const buyerId = session.metadata?.buyerId;
-    const amountPaid = session.amount_total! / 100;
+    const providerId = session.metadata?.providerId;
+    const serviceId = session.metadata?.serviceId;
 
-    try {
-      await addDoc(collection(db, 'orders'), {
-        serviceId,
+    if (buyerId && providerId && serviceId) {
+      await addDoc(collection(db, 'bookingRequests'), {
         buyerId,
-        amountPaid,
+        providerId,
+        serviceId,
+        status: 'pending',
         createdAt: Timestamp.now(),
       });
-      console.log('Order saved successfully');
-    } catch (error) {
-      console.error('Error saving order:', error);
+      console.log('Booking request auto‐created from Stripe webhook.');
     }
   }
 
-  return new NextResponse('Webhook received', { status: 200 });
+  return NextResponse.json({ received: true });
 }

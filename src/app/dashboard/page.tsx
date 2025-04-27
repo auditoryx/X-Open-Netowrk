@@ -1,5 +1,6 @@
 'use client';
 
+import Navbar from '@/app/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/app/firebase';
@@ -28,19 +29,31 @@ export default function DashboardPage() {
   };
 
   if (loading) {
-    return <div className="text-center mt-10">Loading...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading...</div>;
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-      <div className="flex flex-col space-y-4">
-        <button onClick={() => router.push('/profile/edit')} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Edit Your Profile
-        </button>
-        <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-          Logout
-        </button>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="max-w-3xl mx-auto p-6">
+        <h1 className="text-4xl font-bold mb-10 text-center">Dashboard</h1>
+        <div className="flex flex-col space-y-6">
+          <button onClick={() => router.push('/dashboard/services')} className="border border-white p-4 rounded hover:bg-white hover:text-black transition">
+            Manage My Services
+          </button>
+          <button onClick={() => router.push('/services/add')} className="border border-white p-4 rounded hover:bg-white hover:text-black transition">
+            Add New Service
+          </button>
+          <button onClick={() => router.push('/dashboard/orders')} className="border border-white p-4 rounded hover:bg-white hover:text-black transition">
+            View Orders (Sales)
+          </button>
+          <button onClick={() => router.push('/dashboard/purchases')} className="border border-white p-4 rounded hover:bg-white hover:text-black transition">
+            View Purchases (Buy History)
+          </button>
+          <button onClick={handleLogout} className="border border-white p-4 rounded hover:bg-white hover:text-black transition">
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

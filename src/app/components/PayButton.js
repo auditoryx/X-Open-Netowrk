@@ -1,31 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function PayButton({ serviceName, price, userId }) {
-  const [loading, setLoading] = useState(false);
+export default function PayButton({ service, buyerId }) {
+  const router = useRouter();
 
   const handleCheckout = async () => {
-    setLoading(true);
-    const res = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      body: JSON.stringify({ serviceName, price, userId }),
-    });
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serviceId: service.id,
+          serviceTitle: service.title,
+          price: service.price,
+          providerId: service.creatorId,
+          buyerId: buyerId,
+        }),
+      });
 
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
+      if (res.ok) {
+        const { url } = await res.json();
+        router.push(url);
+      } else {
+        console.error('Failed to create checkout session');
+      }
+    } catch (err) {
+      console.error('Error during checkout', err);
     }
-    setLoading(false);
   };
 
   return (
     <button
       onClick={handleCheckout}
-      disabled={loading}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      className="border border-white text-white px-6 py-3 rounded hover:bg-white hover:text-black transition"
     >
-      {loading ? 'Redirecting...' : `Pay $${price}`}
+      Book Now
     </button>
   );
 }

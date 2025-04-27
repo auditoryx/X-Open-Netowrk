@@ -1,15 +1,18 @@
 'use client';
 
+import Navbar from '@/app/components/Navbar';
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/app/firebase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function PurchasesPage() {
   const [purchases, setPurchases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const params = useSearchParams();
+  const success = params ? params.get('success') : null;
 
   useEffect(() => {
     const fetchPurchases = async () => {
@@ -21,20 +24,20 @@ export default function PurchasesPage() {
       }
 
       const db = getFirestore(app);
-
       const q = query(collection(db, 'orders'), where('buyerId', '==', user.uid));
       const snap = await getDocs(q);
 
       const tempPurchases = [];
 
-      for (const order of snap.docs) {
-        const data = order.data();
-        const serviceRef = doc(db, 'services', data.serviceId);
+      for (const docSnap of snap.docs) {
+        const orderData = docSnap.data();
+        const serviceRef = doc(db, 'services', orderData.serviceId);
         const serviceSnap = await getDoc(serviceRef);
         const serviceData = serviceSnap.data();
+
         tempPurchases.push({
-          id: order.id,
-          ...data,
+          id: docSnap.id,
+          ...orderData,
           serviceTitle: serviceData?.title || 'Unknown Service',
         });
       }
@@ -47,26 +50,33 @@ export default function PurchasesPage() {
   }, []);
 
   if (loading) {
-    return <div className="text-center mt-10">Loading purchases...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading your purchases...</div>;
   }
 
   if (purchases.length === 0) {
-    return <div className="text-center mt-10">No purchases yet.</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">You haven't purchased anything yet.</div>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Your Purchases</h1>
-      <ul className="space-y-6">
-        {purchases.map((purchase) => (
-          <li key={purchase.id} className="border p-4 rounded shadow">
-            <h2 className="text-xl font-semibold mb-2">{purchase.serviceTitle}</h2>
-            <p className="text-gray-600 mb-1">Service ID: {purchase.serviceId}</p>
-            <p className="text-gray-800 font-bold mb-1">${purchase.amountPaid}</p>
-            <p className="text-sm text-gray-400">Purchase ID: {purchase.id}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-8 text-center">My Purchases</h1>
+        {success && (
+          <div className="bg-green-600 p-4 mb-6 text-white rounded text-center">
+            Payment successful! Your order has been recorded.
+          </div>
+        )}
+        <ul className="space-y-6">
+          {purchases.map(purchase => (
+            <li key={purchase.id} className="border border-white p-6 rounded shadow">
+              <h2 className="text-2xl font-semibold mb-2">{purchase.serviceTitle}</h2>
+              <p className="text-gray-400 mb-1">Amount Paid: ${purchase.amountPaid}</p>
+              <p className="text-gray-500 text-sm">Order ID: {purchase.id}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

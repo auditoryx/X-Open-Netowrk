@@ -1,0 +1,618 @@
+[34;42m.[0m
+|-- .env
+|-- .env.local
+|-- .firebaserc
+|-- .gitignore
+|-- [34;42m.vscode[0m
+|   `-- settings.json
+|-- TypeScript:
+|-- app-structure.txt
+|-- [01;34mapp_backup_before_migration[0m
+|   |-- [01;34mabout[0m
+|   |   `-- page.tsx
+|   |-- [01;34madmin[0m
+|   |   |-- [01;34mapplications[0m
+|   |   |   `-- page.tsx
+|   |   |-- [01;34mcomponents[0m
+|   |   |   `-- AdminNavbar.tsx
+|   |   `-- [01;34mlogout[0m
+|   |       `-- page.tsx
+|   |-- [01;34mapi[0m
+|   |   |-- [01;34martist-services[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mauth[0m
+|   |   |   |-- [01;34mlogout[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [01;34mregister[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [01;34msession[0m
+|   |   |   |   `-- route.js
+|   |   |   `-- [01;34mverify[0m
+|   |   |       `-- route.js
+|   |   |-- [01;34mavailability[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mbookings[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mcheckout[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mcreate-checkout-session[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mengineer-services[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mlogout[0m
+|   |   |   `-- route.ts
+|   |   |-- [01;34mproducer-services[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mprofile[0m
+|   |   |   `-- [01;34mavailability[0m
+|   |   |       `-- route.js
+|   |   |-- [01;34mservices[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mset-role[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mstudio-availability[0m
+|   |   |   `-- route.js
+|   |   |-- [01;34mstudio-services[0m
+|   |   |   `-- route.js
+|   |   `-- [01;34mvideographer-services[0m
+|   |       `-- route.js
+|   |-- [01;34mapply[0m
+|   |   |-- [01;34m[role][0m
+|   |   |   `-- page.tsx
+|   |   `-- page.tsx
+|   |-- [01;34martists[0m
+|   |   `-- page.jsx
+|   |-- [01;34mauth[0m
+|   |   |-- login.js
+|   |   |-- page.tsx
+|   |   `-- signup.js
+|   |-- [01;34mavailability[0m
+|   |   `-- page.js
+|   |-- [01;34mbeats[0m
+|   |   `-- page.js
+|   |-- [01;34mbooking[0m
+|   |   `-- page.tsx
+|   |-- [01;34mclient[0m
+|   |   `-- page.jsx
+|   |-- [01;34mcomponents[0m
+|   |   |-- AuthModal.js
+|   |   |-- AvailabilityForm.js
+|   |   |-- BackgroundAnimation.js
+|   |   |-- BookingForm.js
+|   |   |-- BookingForm.tsx
+|   |   |-- BookingHistory.js
+|   |   |-- BookingRequestForm.js
+|   |   |-- BookingRequestForm.jsx
+|   |   |-- BookingsViewer.js
+|   |   |-- ClientBookings.js
+|   |   |-- CreativeDropdown.js
+|   |   |-- DarkModeToggle.js
+|   |   |-- EditServicesForm.js
+|   |   |-- FloatingCTA.js
+|   |   |-- Footer.js
+|   |   |-- Inbox.js
+|   |   |-- LogoutButton.js
+|   |   |-- MessageCenter.js
+|   |   |-- Navbar.js
+|   |   |-- Notifications.js
+|   |   |-- PayButton.js
+|   |   |-- ProviderBookings.js
+|   |   `-- ServiceManager.js
+|   |-- [01;34mcontact[0m
+|   |   `-- page.tsx
+|   |-- [01;34mcreate-profile[0m
+|   |   `-- page.tsx
+|   |-- [01;34mcreators[0m
+|   |   `-- page.jsx
+|   |-- [01;34mdashboard[0m
+|   |   |-- [01;34martist[0m
+|   |   |   `-- page.tsx
+|   |   |-- [01;34mavailability[0m
+|   |   |   `-- page.js
+|   |   |-- [01;34mcomponents[0m
+|   |   |   |-- RoleRouter.js
+|   |   |   `-- [01;34mroles[0m
+|   |   |       |-- ArtistDashboard.js
+|   |   |       |-- DefaultDashboard.js
+|   |   |       |-- EngineerDashboard.js
+|   |   |       |-- ProducerDashboard.js
+|   |   |       |-- StudioDashboard.js
+|   |   |       `-- VideographerDashboard.js
+|   |   |-- [01;34mdesigner[0m
+|   |   |   `-- page.tsx
+|   |   |-- [01;34medit[0m
+|   |   |   `-- page.js
+|   |   |-- [01;34mengineer[0m
+|   |   |   `-- page.tsx
+|   |   |-- page.js
+|   |   |-- [01;34mproducer[0m
+|   |   |   `-- page.tsx
+|   |   |-- [01;34mstudio[0m
+|   |   |   `-- page.tsx
+|   |   `-- [01;34mvideographer[0m
+|   |       `-- page.tsx
+|   |-- [01;34mengineers[0m
+|   |   `-- page.jsx
+|   |-- [01;34mexplore[0m
+|   |   `-- [01;34m[role][0m
+|   |       `-- page.js
+|   |-- [01;34mfirebase[0m
+|   |   `-- index.js
+|   |-- firebase.js
+|   |-- globals.css
+|   |-- layout.js
+|   |-- layout.tsx
+|   |-- [01;34mlib[0m
+|   |   |-- firestoreHelpers.js
+|   |   |-- messageHelpers.js
+|   |   `-- profileHelpers.js
+|   |-- loading.js
+|   |-- [01;34mnot-found[0m
+|   |   `-- page.js
+|   |-- not-found.js
+|   |-- page.tsx
+|   |-- [01;34mproducers[0m
+|   |   `-- page.jsx
+|   |-- [01;34mprofile[0m
+|   |   |-- [01;34m[uid][0m
+|   |   |   `-- page.tsx
+|   |   |-- [01;34medit[0m
+|   |   |   `-- page.js
+|   |   |-- edit.js
+|   |   `-- page.js
+|   |-- [01;34mservices[0m
+|   |   |-- [01;34m[id][0m
+|   |   |   `-- page.js
+|   |   |-- [01;34madd[0m
+|   |   |   `-- page.js
+|   |   |-- authService.js
+|   |   |-- [01;34mmanage[0m
+|   |   |   `-- page.js
+|   |   `-- page.tsx
+|   |-- [01;34mset-role[0m
+|   |   `-- page.js
+|   |-- [01;34msignup[0m
+|   |   `-- page.tsx
+|   |-- [01;34mstudios[0m
+|   |   `-- page.jsx
+|   |-- [01;34mtest-booking[0m
+|   |   `-- page.tsx
+|   |-- [01;34mtop-creators[0m
+|   |   `-- page.tsx
+|   |-- [01;34mutils[0m
+|   |   |-- sendWelcomeMessage.js
+|   |   |-- withAuth.js
+|   |   `-- withRoleProtection.js
+|   `-- [01;34mvideographers[0m
+|       `-- page.jsx
+|-- [34;42mbackend[0m
+|   |-- .env
+|   |-- .gitignore
+|   |-- .server.js.swp
+|   |-- README.md
+|   |-- backend-auth.js
+|   |-- firebase-setup.js
+|   |-- [34;42mmiddleware[0m
+|   |   `-- authMiddleware.js
+|   |-- [34;42mmodels[0m
+|   |   |-- Service.js
+|   |   `-- User.js
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- [34;42mroutes[0m
+|   |   |-- auth.js
+|   |   `-- services.js
+|   |-- server.js
+|   `-- service-listings-model.js
+|-- [34;42mcomponents[0m
+|   |-- AvailabilityForm.js
+|   |-- BookingForm.js
+|   |-- BookingsViewer.js
+|   |-- ClientBookings.js
+|   |-- ClientBookings.tsx
+|   |-- DashboardHeader.js
+|   |-- EditProfileForm.js
+|   |-- ExploreServices.js
+|   |-- Footer.js
+|   |-- Hero.js
+|   |-- HeroSection.js
+|   |-- IncomingRequests.js
+|   |-- Layout.js
+|   |-- Navbar.js
+|   |-- ProviderBookings.js
+|   |-- ProviderBookings.tsx
+|   |-- RoleToggle.js
+|   |-- SendServiceRequest.js
+|   |-- ServiceCard.js
+|   |-- ServiceFilter.js
+|   |-- ServiceForm.js
+|   |-- ServiceList.js
+|   |-- ServiceManager.js
+|   |-- ServiceProfileModal.js
+|   |-- ServiceSubmissionForm.js
+|   |-- Services.js
+|   |-- StripeCheckout.tsx
+|   |-- [34;42mdashboard[0m
+|   |   |-- Bookings.js
+|   |   |-- Messages.js
+|   |   |-- Notifications.js
+|   |   |-- ProfileCard.js
+|   |   `-- ServicesList.js
+|   |-- [34;42mforms[0m
+|   |   `-- BookingForm.tsx
+|   `-- [34;42mui[0m
+|       |-- AvailabilitySelector.tsx
+|       `-- DragDropUpload.tsx
+|-- [34;42mcontext[0m
+|   `-- AuthContext.tsx
+|-- [34;42mdata[0m
+|   `-- profiles.json
+|-- debug.log
+|-- [34;42mfirebase[0m
+|   |-- firebaseConfig.js
+|   |-- firebaseConfig.ts
+|   `-- firestoreHelpers.ts
+|-- firebase.json
+|-- [34;42mfirebaseAdminServer[0m
+|   |-- index.ts
+|   `-- key.json
+|-- firestore.indexes.json
+|-- firestore.rules
+|-- full-project-structure.txt
+|-- full-project-tree.txt
+|-- [34;42mfunctions[0m
+|   |-- .gcloudignore
+|   |-- index.js
+|   |-- package-lock.json
+|   `-- package.json
+|-- grant-admin.js
+|-- index.js
+|-- js_files.txt
+|-- jsconfig.json
+|-- [34;42mlib[0m
+|   |-- bookingHelpers.js
+|   |-- createBooking.ts
+|   |-- db.js
+|   |-- [34;42memail[0m
+|   |   `-- sendBookingConfirmation.ts
+|   |-- [34;42mfirebase[0m
+|   |   |-- index.ts
+|   |   |-- init.ts
+|   |   `-- uploadMedia.ts
+|   |-- [34;42mfirestore[0m
+|   |   |-- createBooking.ts
+|   |   |-- getCreatorReviews.ts
+|   |   |-- getTopCreators.ts
+|   |   |-- getUserBookings.ts
+|   |   |-- saveUserProfile.ts
+|   |   |-- updateAvailability.ts
+|   |   `-- updateBookingStatus.ts
+|   |-- getUserProfile.ts
+|   |-- getUserRole.js
+|   |-- [34;42mhooks[0m
+|   |   `-- useAuth.ts
+|   |-- prisma.js
+|   `-- submitApplication.ts
+|-- middleware.ts
+|-- [01;31mmy_project.zip[0m
+|-- next-env.d.ts
+|-- next.config.js
+|-- open-network-structure.txt
+|-- package-lock.json
+|-- package.json
+|-- [34;42mpages[0m
+|   `-- [34;42mapi[0m
+|       `-- [34;42mstripe[0m
+|           |-- create-checkout-session.ts
+|           `-- webhook.ts
+|-- postcss.config.js
+|-- [34;42mprisma[0m
+|   `-- schema.prisma
+|-- project-structure.txt
+|-- project-tree-2025-04-27_07-01-41.txt
+|-- project_code.txt
+|-- [34;42mproviders[0m
+|   |-- AuthProvider.js
+|   `-- SessionProvider.js
+|-- [34;42mpublic[0m
+|   `-- [34;42mimages[0m
+|-- [34;42mscripts[0m
+|   |-- addTestBooking.ts
+|   |-- addTestUser.ts
+|   |-- seedProfiles.mjs
+|   `-- seedServices.mjs
+|-- set-admin.js
+|-- setAdminClaim.js
+|-- setRoleClaim.js
+|-- setUserRoleClaim.js
+|-- [34;42msrc[0m
+|   |-- [34;42mapp[0m
+|   |   |-- [34;42m(dashboard)[0m
+|   |   |   `-- [34;42mlayout[0m
+|   |   |       `-- layout.tsx
+|   |   |-- [34;42mabout[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42madmin[0m
+|   |   |   |-- [34;42mapplications[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- [34;42mcomponents[0m
+|   |   |   |   `-- AdminNavbar.tsx
+|   |   |   `-- [34;42mlogout[0m
+|   |   |       `-- page.tsx
+|   |   |-- [34;42mapi[0m
+|   |   |   |-- [34;42martist-services[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42massign-role[0m
+|   |   |   |   `-- route.ts
+|   |   |   |-- [34;42mauth[0m
+|   |   |   |   |-- [34;42mlogout[0m
+|   |   |   |   |   `-- route.js
+|   |   |   |   |-- [34;42mregister[0m
+|   |   |   |   |   `-- route.js
+|   |   |   |   |-- [34;42msession[0m
+|   |   |   |   |   `-- route.js
+|   |   |   |   `-- [34;42mverify[0m
+|   |   |   |       `-- route.js
+|   |   |   |-- [34;42mavailability[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mbook[0m
+|   |   |   |   `-- route.ts
+|   |   |   |-- [34;42mbookings[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mcheckout[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mcreate-checkout-session[0m
+|   |   |   |   `-- route.ts
+|   |   |   |-- [34;42mengineer-services[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mlogout[0m
+|   |   |   |   `-- route.ts
+|   |   |   |-- [34;42mproducer-services[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mprofile[0m
+|   |   |   |   `-- [34;42mavailability[0m
+|   |   |   |       `-- route.js
+|   |   |   |-- [34;42mservices[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mset-role[0m
+|   |   |   |   `-- route.ts
+|   |   |   |-- [34;42mstudio-availability[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mstudio-services[0m
+|   |   |   |   `-- route.js
+|   |   |   |-- [34;42mvideographer-services[0m
+|   |   |   |   `-- route.js
+|   |   |   `-- [34;42mwebhooks[0m
+|   |   |       `-- [34;42mstripe[0m
+|   |   |           `-- route.ts
+|   |   |-- [34;42mapply[0m
+|   |   |   |-- [34;42m[role][0m
+|   |   |   |   `-- page.tsx
+|   |   |   `-- page.tsx
+|   |   |-- [34;42martists[0m
+|   |   |   `-- page.jsx
+|   |   |-- [34;42mauth[0m
+|   |   |   |-- login.js
+|   |   |   |-- page.tsx
+|   |   |   `-- signup.js
+|   |   |-- [34;42mavailability[0m
+|   |   |   `-- page.js
+|   |   |-- [34;42mbeats[0m
+|   |   |   `-- page.js
+|   |   |-- [34;42mbook[0m
+|   |   |   `-- [34;42m[uid][0m
+|   |   |       `-- page.tsx
+|   |   |-- [34;42mbooking[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mcancel[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mclient[0m
+|   |   |   `-- page.jsx
+|   |   |-- [34;42mcomponents[0m
+|   |   |   |-- AuthModal.js
+|   |   |   |-- AvailabilityForm.js
+|   |   |   |-- BackgroundAnimation.js
+|   |   |   |-- BookingForm.js
+|   |   |   |-- BookingForm.tsx
+|   |   |   |-- BookingHistory.js
+|   |   |   |-- BookingRequestForm.js
+|   |   |   |-- BookingRequestForm.jsx
+|   |   |   |-- BookingsViewer.js
+|   |   |   |-- ClientBookings.js
+|   |   |   |-- CreativeDropdown.js
+|   |   |   |-- DarkModeToggle.js
+|   |   |   |-- EditServicesForm.js
+|   |   |   |-- FloatingCTA.js
+|   |   |   |-- Footer.js
+|   |   |   |-- Inbox.js
+|   |   |   |-- LogoutButton.js
+|   |   |   |-- MessageCenter.js
+|   |   |   |-- Navbar.js
+|   |   |   |-- Navbar.tsx
+|   |   |   |-- Notifications.js
+|   |   |   |-- PayButton.js
+|   |   |   |-- ProviderBookings.js
+|   |   |   `-- ServiceManager.js
+|   |   |-- [34;42mcontact[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mcreate-profile[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mcreators[0m
+|   |   |   `-- page.jsx
+|   |   |-- [34;42mdashboard[0m
+|   |   |   |-- [34;42martist[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- [34;42mavailability[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- [34;42mbookings[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- [34;42mcomponents[0m
+|   |   |   |   `-- RoleRouter.js
+|   |   |   |-- [34;42medit[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- [34;42morders[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- page.tsx
+|   |   |   |-- [34;42mpurchases[0m
+|   |   |   |   `-- page.tsx
+|   |   |   `-- [34;42mservices[0m
+|   |   |       `-- page.tsx
+|   |   |-- [34;42mengineers[0m
+|   |   |   `-- page.jsx
+|   |   |-- [34;42mexplore[0m
+|   |   |   |-- [34;42m[role][0m
+|   |   |   |   `-- page.tsx
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mfirebase[0m
+|   |   |   `-- index.js
+|   |   |-- firebase.js
+|   |   |-- firebase.ts
+|   |   |-- globals.css
+|   |   |-- layout.js
+|   |   |-- layout.tsx
+|   |   |-- [34;42mlib[0m
+|   |   |   |-- firestoreHelpers.js
+|   |   |   |-- messageHelpers.js
+|   |   |   `-- profileHelpers.js
+|   |   |-- loading.js
+|   |   |-- [34;42mlogin[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mnot-found[0m
+|   |   |   `-- page.js
+|   |   |-- not-found.js
+|   |   |-- not-found.tsx
+|   |   |-- page.tsx
+|   |   |-- [34;42mproducers[0m
+|   |   |   `-- page.jsx
+|   |   |-- [34;42mprofile[0m
+|   |   |   |-- [34;42m[uid][0m
+|   |   |   |   `-- page.tsx
+|   |   |   `-- [34;42medit[0m
+|   |   |       `-- page.tsx
+|   |   |-- [34;42msaved[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mservices[0m
+|   |   |   |-- [34;42m[id][0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- [34;42madd[0m
+|   |   |   |   `-- page.tsx
+|   |   |   |-- authService.js
+|   |   |   |-- [34;42medit[0m
+|   |   |   |   `-- [34;42m[id][0m
+|   |   |   |       `-- page.tsx
+|   |   |   |-- [34;42mmanage[0m
+|   |   |   |   `-- page.js
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mset-role[0m
+|   |   |   `-- page.js
+|   |   |-- [34;42msignup[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mstudios[0m
+|   |   |   `-- page.jsx
+|   |   |-- [34;42msuccess[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mtest-booking[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mtop-creators[0m
+|   |   |   `-- page.tsx
+|   |   |-- [34;42mutils[0m
+|   |   |   |-- sendWelcomeMessage.js
+|   |   |   |-- withAuth.js
+|   |   |   `-- withRoleProtection.js
+|   |   `-- [34;42mvideographers[0m
+|   |       `-- page.jsx
+|   |-- [34;42mclient[0m
+|   |   `-- [34;42mcomponents[0m
+|   |       |-- client-page.jsx
+|   |       `-- client-page.tsx
+|   |-- [34;42mcomponents[0m
+|   |   |-- RoleToggle.tsx
+|   |   |-- [34;42madmin[0m
+|   |   |   `-- AssignRoleForm.tsx
+|   |   |-- [34;42mbooking[0m
+|   |   |   |-- BookingCalendar.tsx
+|   |   |   |-- BookingForm.tsx
+|   |   |   `-- ReviewForm.tsx
+|   |   |-- [34;42mbookings[0m
+|   |   |   `-- BookingsList.tsx
+|   |   |-- [34;42mchat[0m
+|   |   |   `-- BookingChatThread.tsx
+|   |   |-- [34;42mcontract[0m
+|   |   |   `-- ContractViewer.tsx
+|   |   |-- [34;42mdashboard[0m
+|   |   |   `-- Sidebar.tsx
+|   |   |-- [34;42mexplore[0m
+|   |   |   |-- DiscoveryGrid.tsx
+|   |   |   |-- DiscoveryWrapper.tsx
+|   |   |   |-- FilterPanel.tsx
+|   |   |   `-- SaveButton.tsx
+|   |   |-- [34;42mprofile[0m
+|   |   |   |-- AvailabilitySelector.tsx
+|   |   |   |-- MediaGallery.tsx
+|   |   |   |-- MediaUploader.tsx
+|   |   |   |-- ProfileCompletionMeter.tsx
+|   |   |   |-- ProfileForm.tsx
+|   |   |   `-- ProfileTrustStats.tsx
+|   |   `-- [34;42mroles[0m
+|   |       |-- ArtistDashboard.tsx
+|   |       |-- DefaultDashboard.tsx
+|   |       |-- EngineerDashboard.tsx
+|   |       |-- ProducerDashboard.tsx
+|   |       |-- StudioDashboard.tsx
+|   |       `-- VideographerDashboard.tsx
+|   |-- [34;42mcontext[0m
+|   |   `-- AuthContext.tsx
+|   |-- [34;42mlib[0m
+|   |   |-- assignRole.ts
+|   |   |-- createBooking.ts
+|   |   |-- fetchUsers.ts
+|   |   |-- [34;42mfirebase[0m
+|   |   |   |-- uploadMedia.ts
+|   |   |   `-- uploadProfilePic.ts
+|   |   |-- firebase-admin.ts
+|   |   |-- firebase.ts
+|   |   |-- [34;42mfirestore[0m
+|   |   |   |-- [34;42mchat[0m
+|   |   |   |   |-- getMessages.ts
+|   |   |   |   `-- sendMessage.ts
+|   |   |   |-- [34;42mcontracts[0m
+|   |   |   |   `-- generateContract.ts
+|   |   |   |-- createBooking.ts
+|   |   |   |-- getAllCreators.ts
+|   |   |   |-- getAvailabilityTemplate.ts
+|   |   |   |-- getMediaSamples.ts
+|   |   |   |-- getTrustStats.ts
+|   |   |   |-- getUserBookings.ts
+|   |   |   |-- saveAvailabilityTemplate.ts
+|   |   |   |-- saveMediaSamples.ts
+|   |   |   |-- submitReview.ts
+|   |   |   `-- toggleFavorite.ts
+|   |   |-- getServerUser.ts
+|   |   |-- getStripe.ts
+|   |   |-- [34;42mhooks[0m
+|   |   |   `-- useAuth.ts
+|   |   |-- [34;42mstripe[0m
+|   |   |   `-- createCheckoutSession.ts
+|   |   `-- [34;42mutils[0m
+|   |       |-- getStripe.ts
+|   |       `-- stripe.ts
+|   `-- [34;42mmiddleware[0m
+|       `-- profileCheck.ts.bak
+|-- [01;31mstripe.tar.gz[0m
+|-- structure-app.txt
+|-- structure-components.txt
+|-- [34;42mstyles[0m
+|   |-- output.css
+|   `-- tailwind.css
+|-- tailwind.config.js
+|-- tailwind_help.txt
+|-- tmp.ts
+|-- tree-final.txt
+|-- tree.txt
+|-- tsconfig.json
+|-- [34;42mtypes[0m
+|   `-- user.ts
+|-- user-authentication.js
+`-- zikQWevq
+
+207 directories, 409 files

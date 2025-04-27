@@ -1,85 +1,72 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
-import { db, auth } from "@/firebase/firebaseConfig";
-import { useRouter } from "next/navigation";
-import AdminNavbar from "../components/AdminNavbar";
-
-interface Application {
-  id: string;
-  name: string;
-  email: string;
-  experience: string;
-  role: string;
-}
-
-const ADMIN_UID = "MGBCYJHGVHXHXRXmUv8f64WCQuB2"; // zenji@auditoryx.com
+import { useEffect, useState } from 'react';
+import Navbar from '@/app/components/Navbar';
 
 export default function AdminApplicationsPage() {
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [apps, setApps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-
-      if (user.uid === ADMIN_UID) {
-        setIsAdmin(true);
-      } else {
-        router.push("/");
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!isAdmin) return;
-    const fetchApplications = async () => {
-      const snapshot = await getDocs(collection(db, "applications"));
-      const apps = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<Application, "id">),
-      }));
-      setApplications(apps);
+    const fetchApps = async () => {
+      const res = await fetch('/api/applications'); // your existing applications route
+      const data = await res.json();
+      setApps(data);
       setLoading(false);
     };
-    fetchApplications();
-  }, [isAdmin]);
+    fetchApps();
+  }, []);
 
-  if (!isAdmin) {
-    return <main className="p-10 text-white">Checking permissions...</main>;
-  }
+  const handleApprove = async (uid: string, role: string) => {
+    await fetch('/api/set-role', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid, role }),
+    });
+    setApps(prev => prev.filter(a => a.userId !== uid));
+  };
+
+  const handleBan = async (uid: string) => {
+    await fetch('/api/users/ban', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid }),
+    });
+    setApps(prev => prev.filter(a => a.userId !== uid));
+  };
+
+  if (loading) return <div className="p-6 text-white">Loading applications...</div>;
 
   return (
-    <>
-      <AdminNavbar />
-      <main className="min-h-screen bg-black text-white p-8">
-        <h1 className="text-3xl font-bold mb-6">Admin Applications Dashboard</h1>
-        {loading ? (
-          <p>Loading...</p>
-        ) : applications.length === 0 ? (
-          <p className="text-gray-500">No applications submitted yet.</p>
-        ) : (
-          <div className="space-y-6">
-            {applications.map((app) => (
-              <div key={app.id} className="border border-gray-700 p-4 rounded bg-gray-900">
-                <h2 className="text-xl font-semibold">{app.name}</h2>
-                <p className="text-sm text-gray-400">{app.email}</p>
-                <p className="text-sm text-blue-400">Role: {app.role}</p>
-                <p className="mt-2 text-gray-300 whitespace-pre-line">{app.experience}</p>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-6">User Applications</h1>
+        <ul className="space-y-4">
+          {apps.map(app => (
+            <li key={app.id} className="border border-white p-4 rounded flex justify-between items-center">
+              <div>
+                <p><strong>User:</strong> {app.userId}</p>
+                <p><strong>Role:</strong> {app.role}</p>
               </div>
-            ))}
-          </div>
-        )}
-      </main>
-    </>
+              <div className="space-x-2">
+                <button
+                  onClick={() => handleApprove(app.userId, app.role)}
+                  className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => handleBan(app.userId)}
+                  className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+                >
+                  Ban
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }

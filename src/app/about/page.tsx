@@ -1,10 +1,13 @@
+'use client';
+import Navbar from '@/app/components/Navbar';
 export default function AboutPage() {
   return (
-    <main className="p-10 text-white">
-      <h1 className="text-3xl font-bold mb-4">About AuditoryX</h1>
-      <p>
-        AuditoryX is building the future of music collaboration — instantly connect, create, and monetize with a global network of creators.
-      </p>
-    </main>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center text-center p-8">
+        <h1 className="text-4xl font-bold mb-4">About AuditoryX</h1>
+        <p className="text-gray-400">We connect creators worldwide with studios, engineers, videographers, and more.</p>
+      </div>
+    </div>
   );
 }

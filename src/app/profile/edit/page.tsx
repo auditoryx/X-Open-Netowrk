@@ -1,96 +1,80 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import { app, db } from '@/app/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { uploadProfilePic } from '@/lib/firebase/uploadProfilePic';
+import { app } from '@/app/firebase';
 
 export default function EditProfilePage() {
-  const router = useRouter();
-  const [name, setName] = useState('');
   const [bio, setBio] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [twitter, setTwitter] = useState('');
-  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const [socialLink, setSocialLink] = useState('');
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const auth = getAuth(app);
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const fetchProfile = async () => {
+      const auth = getAuth(app);
+      const user = auth.currentUser;
       if (!user) {
         router.push('/login');
         return;
       }
-
-      const userRef = doc(db, 'users', user.uid);
-      const snap = await getDoc(userRef);
+      const db = getFirestore(app);
+      const ref = doc(db, 'users', user.uid);
+      const snap = await getDoc(ref);
       if (snap.exists()) {
         const data = snap.data();
-        setName(data.name || '');
         setBio(data.bio || '');
-        setInstagram(data.socials?.instagram || '');
-        setTwitter(data.socials?.twitter || '');
+        setSocialLink(data.socialLink || '');
       }
       setLoading(false);
-    });
+    };
+    fetchProfile();
+  }, [router]);
 
-    return () => unsubscribe();
-  }, []);
-
-  const handleSave = async () => {
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
     const auth = getAuth(app);
     const user = auth.currentUser;
     if (!user) return;
-
-    let profilePicUrl = undefined;
-    if (profilePic) {
-      profilePicUrl = await uploadProfilePic(profilePic, user.uid);
-    }
-
-    const userRef = doc(db, 'users', user.uid);
-    await setDoc(userRef, {
-      name,
+    const db = getFirestore(app);
+    const ref = doc(db, 'users', user.uid);
+    await setDoc(ref, {
       bio,
-      socials: {
-        instagram,
-        twitter,
-      },
-      ...(profilePicUrl && { profilePicUrl }),
+      socialLink,
     }, { merge: true });
-
     router.push(`/profile/${user.uid}`);
   };
 
-  if (loading) {
-    return <div className="text-center mt-10">Loading...</div>;
-  }
+  if (loading) return <div className="p-6 text-white">Loading profile...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">Edit Your Profile</h1>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Name</label>
-        <input className="w-full p-2 border rounded" value={name} onChange={e => setName(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Bio</label>
-        <textarea className="w-full p-2 border rounded" value={bio} onChange={e => setBio(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Instagram</label>
-        <input className="w-full p-2 border rounded" value={instagram} onChange={e => setInstagram(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Twitter</label>
-        <input className="w-full p-2 border rounded" value={twitter} onChange={e => setTwitter(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold">Profile Picture</label>
-        <input type="file" accept="image/*" onChange={e => setProfilePic(e.target.files?.[0] || null)} />
-      </div>
-      <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Profile</button>
+      <form onSubmit={handleSave} className="space-y-4 w-full max-w-md">
+        <textarea
+          placeholder="Your bio..."
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          className="w-full p-2 rounded text-black"
+          rows={4}
+          required
+        />
+        <input
+          type="url"
+          placeholder="Social link (optional)"
+          value={socialLink}
+          onChange={(e) => setSocialLink(e.target.value)}
+          className="w-full p-2 rounded text-black"
+        />
+        <button
+          type="submit"
+          className="w-full bg-white text-black px-6 py-2 rounded hover:bg-gray-300"
+        >
+          Save Profile
+        </button>
+      </form>
     </div>
   );
 }

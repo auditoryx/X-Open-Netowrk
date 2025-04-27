@@ -1,8 +1,7 @@
 import './globals.css';
-import type { Metadata } from 'next';
+import Navbar from './components/Navbar';
 import { Inter } from 'next/font/google';
-import { AuthProvider } from '@/context/AuthContext';
-import { Toaster } from 'react-hot-toast';
+import { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,14 +10,16 @@ export const metadata: Metadata = {
   description: 'Global platform for artists, producers, creatives, and studios',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
-          <Toaster position="top-right" />
-          {children}
-        </AuthProvider>
+      <body className={`${inter.className} bg-black text-white`}>
+        <Navbar />
+        {children}
       </body>
     </html>
   );

@@ -1,9 +1,14 @@
-export default function Beats() {
+'use client';
+import Navbar from '@/app/components/Navbar';
+
+export default function BeatsPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold tracking-tight">Browse Exclusive Beats</h1>
-      <p className="mt-4 text-lg text-gray-400">Buy and license beats from top producers worldwide.</p>
-      <a href="/" className="mt-6 px-5 py-3 bg-white text-black rounded-lg hover:bg-gray-300 transition">Back to Home</a>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center text-center p-8">
+        <h1 className="text-4xl font-bold mb-4">Beats Marketplace</h1>
+        <p className="text-lg text-gray-400">Discover exclusive beats ready for licensing.</p>
+      </div>
     </div>
   );
 }
