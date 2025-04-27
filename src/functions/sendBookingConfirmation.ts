@@ -1,3 +1,7 @@
+import { sendEmail } from '@/lib/email/sendEmail';
+
 export async function sendBookingConfirmation(toEmail: string, bookingId: string) {
-  console.log(`Sending booking confirmation to ${toEmail} for booking ${bookingId}`);
+  await sendEmail(toEmail, 'Booking Confirmation', 'booking-confirmation.html', {
+    bookingId,
+  });
 }

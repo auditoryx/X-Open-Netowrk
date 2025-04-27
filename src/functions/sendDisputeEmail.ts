@@ -1,3 +1,7 @@
+import { sendEmail } from '@/lib/email/sendEmail';
+
 export async function sendDisputeEmail(toEmail: string, disputeId: string) {
-  console.log(`Sending dispute opened notification to ${toEmail} for dispute ${disputeId}`);
+  await sendEmail(toEmail, 'Dispute Opened', 'dispute-opened.html', {
+    disputeId,
+  });
 }

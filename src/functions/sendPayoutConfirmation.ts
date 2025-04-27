@@ -1,3 +1,7 @@
+import { sendEmail } from '@/lib/email/sendEmail';
+
 export async function sendPayoutConfirmation(toEmail: string, payoutId: string) {
-  console.log(`Sending payout confirmation to ${toEmail} for payout ${payoutId}`);
+  await sendEmail(toEmail, 'Payout Received', 'payment-received.html', {
+    payoutId,
+  });
 }
