@@ -1,19 +1,37 @@
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
-import { app } from '@/lib/firebase'
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export async function getTrustStats(uid: string) {
-  const db = getFirestore(app)
+  const userDoc = await getDoc(doc(db, 'users', uid));
+  if (!userDoc.exists()) return { badges: [], level: 'Bronze' };
 
-  const bookingsRef = collection(db, 'bookings')
-  const bookingsSnap = await getDocs(query(bookingsRef, where('providerId', '==', uid), where('status', '==', 'completed')))
-  const total = bookingsSnap.size
+  const userData = userDoc.data();
+  const badges: string[] = [];
+  let level = 'Bronze';
 
-  const reviewsRef = collection(db, 'reviews')
-  const reviewsSnap = await getDocs(query(reviewsRef, where('providerId', '==', uid)))
-  const reviews = reviewsSnap.docs.map((d) => d.data())
-  const rating = reviews.length
-    ? reviews.reduce((acc, cur) => acc + cur.rating, 0) / reviews.length
-    : 0
+  const completedBookings = userData.completedBookings || 0;
+  const averageRating = userData.averageRating || 0;
+  const createdAt = userData.createdAt?.toDate?.() || new Date();
 
-  return { total, rating }
+  if (createdAt < new Date('2025-07-01')) {
+    badges.push('early_adopter');
+  }
+  if (averageRating >= 4.8) {
+    badges.push('five_star');
+  }
+  if (completedBookings >= 10) {
+    badges.push('super_collaborator');
+  }
+
+  if (completedBookings >= 20) {
+    level = 'Platinum';
+  } else if (completedBookings >= 10) {
+    level = 'Gold';
+  } else if (completedBookings >= 5) {
+    level = 'Silver';
+  } else {
+    level = 'Bronze';
+  }
+
+  return { badges, level };
 }

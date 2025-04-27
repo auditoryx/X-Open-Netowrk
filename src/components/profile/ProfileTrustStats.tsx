@@ -1,31 +1,36 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from 'react'
-import { getTrustStats } from '@/lib/firestore/getTrustStats'
+import { useEffect, useState } from 'react';
+import { getTrustStats } from '@/lib/firestore/getTrustStats';
+import { useAuth } from '@/lib/hooks/useAuth';
 
-type Props = {
-  uid: string
-  verified?: boolean
-  proTier?: boolean
-  lastActive?: string
-}
-
-const ProfileTrustStats = ({ uid, verified, proTier, lastActive }: Props) => {
-  const [stats, setStats] = useState<{ rating: number; total: number }>({ rating: 0, total: 0 })
+export function ProfileTrustStats() {
+  const { user } = useAuth();
+  const [stats, setStats] = useState({ badges: [], level: '' });
 
   useEffect(() => {
-    getTrustStats(uid).then(setStats)
-  }, [uid])
+    async function fetchStats() {
+      if (user?.uid) {
+        const fetched = await getTrustStats(user.uid);
+        setStats(fetched);
+      }
+    }
+    fetchStats();
+  }, [user]);
+
+  if (!user) return null;
 
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-700">
-      {verified && <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded">✔ Verified</span>}
-      {proTier && <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded">🌟 Pro</span>}
-      <span>{stats.total} bookings</span>
-      <span>{stats.rating.toFixed(1)} ★</span>
-      {lastActive && <span>Last active: {lastActive}</span>}
+    <div className="p-4 rounded-md border mt-4">
+      <h2 className="text-lg font-bold mb-2">Profile Trust Stats</h2>
+      <p className="text-sm">Level: {stats.level}</p>
+      <div className="flex gap-2 mt-2">
+        {stats.badges.map((badge, idx) => (
+          <span key={idx} className="text-xs bg-gray-200 rounded-full px-2 py-1">
+            {badge.replace('_', ' ').toUpperCase()}
+          </span>
+        ))}
+      </div>
     </div>
-  )
+  );
 }
-
-export default ProfileTrustStats
