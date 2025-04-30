@@ -8,9 +8,10 @@ import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter'
 import AvailabilitySelector from '@/components/profile/AvailabilitySelector';
 import { PortfolioEditor } from '@/components/profile/PortfolioEditor';
 
-const EditDashboard = () => {
+export default function EditDashboard() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<any>(null);
+  const [availability, setAvailability] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,7 +20,9 @@ const EditDashboard = () => {
       const ref = doc(db, 'users', user.uid);
       const snap = await getDoc(ref);
       if (snap.exists()) {
-        setProfile(snap.data());
+        const data = snap.data();
+        setProfile(data);
+        setAvailability(data.availability || []);
       }
     };
     fetchProfile();
@@ -33,15 +36,14 @@ const EditDashboard = () => {
 
       <ProfileCompletionMeter />
 
+      {/* 🗓️ Editable Availability Grid */}
       <AvailabilitySelector
-        availability={profile.availability || []}
-        setAvailability={() => {}}
+        availability={availability}
+        setAvailability={setAvailability}
       />
 
-      {/* 🎨 Add portfolio editor */}
+      {/* 🎨 Portfolio Upload Area */}
       <PortfolioEditor uid={user.uid} initial={profile.portfolio || []} />
     </div>
   );
-};
-
-export default EditDashboard;
+}

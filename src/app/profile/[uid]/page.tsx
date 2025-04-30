@@ -33,7 +33,11 @@ export default function PublicProfilePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-2">{profile.name || 'Unnamed User'}</h1>
-      <p className="mb-4 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
+      <p className="mb-2 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
+
+      {profile.location && (
+        <p className="text-gray-400 text-sm mb-2">📍 {profile.location}</p>
+      )}
 
       {profile.socialLink && (
         <a
@@ -46,12 +50,10 @@ export default function PublicProfilePage() {
         </a>
       )}
 
-      {/* ⭐ Save Button */}
       <div className="mb-6">
         <SaveButton providerId={uid} />
       </div>
 
-      {/* 🗓️ Show Availability */}
       {profile.availability && profile.availability.length > 0 && (
         <div className="mb-6 w-full max-w-xl">
           <h2 className="text-xl font-semibold mb-2">🗓️ Availability</h2>

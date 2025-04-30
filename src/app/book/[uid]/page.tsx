@@ -21,6 +21,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
   const [loading, setLoading] = useState(false);
   const [availability, setAvailability] = useState<string[]>([]);
   const [providerEmail, setProviderEmail] = useState<string>('');
+  const [providerLocation, setProviderLocation] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const router = useRouter();
   const { user } = useAuth();
@@ -34,6 +35,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
         const data = snap.data();
         setAvailability(data.availability || []);
         setProviderEmail(data.email || 'admin@auditoryx.com');
+        setProviderLocation(data.location || '');
       }
     };
     fetchAvailability();
@@ -46,27 +48,25 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
     const db = getFirestore(app);
 
-    // 1. Add booking request
     await addDoc(collection(db, 'bookingRequests'), {
       providerId: params.uid,
+      clientId: user?.uid || 'anon',
       message,
       selectedTime,
+      providerLocation,
       createdAt: new Date(),
       status: 'pending',
-      clientId: user?.uid || 'anon',
     });
 
-    // 2. Remove selected time from availability
     const updated = availability.filter((a) => a !== selectedTime);
     await updateDoc(doc(db, 'users', params.uid), {
       availability: updated,
     });
 
-    // 3. Send confirmation email
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
     setLoading(false);
-    router.push('/success');
+    router.push(`/success?time=${selectedTime}`);
   };
 
   return (
@@ -101,9 +101,3 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     </div>
   );
 }
-// import { useState, useEffect } from 'react';
-// import { useRouter } from 'next/router';
-// import { getFirestore, doc, getDoc, collection, addDoc, updateDoc } from 'firebase/firestore';
-// import { app } from '@/app/firebase';
-// import Navbar from '@/app/components/Navbar';
-// import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
