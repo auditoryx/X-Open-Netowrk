@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { app } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export function ReviewList({ providerId }: { providerId: string }) {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -10,31 +10,37 @@ export function ReviewList({ providerId }: { providerId: string }) {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const db = getFirestore(app);
-      const ref = collection(db, 'users', providerId, 'reviews');
-      const snap = await getDocs(ref);
-      setReviews(snap.docs.map((doc) => doc.data()));
+      const q = query(collection(db, 'reviews'), where('providerId', '==', providerId));
+      const snap = await getDocs(q);
+      const data = snap.docs.map(doc => doc.data());
+      setReviews(data);
       setLoading(false);
     };
 
     fetchReviews();
   }, [providerId]);
 
-  if (loading) return <p>Loading reviews...</p>;
-  if (reviews.length === 0) return <p>No reviews yet.</p>;
+  if (loading) return <div className="text-sm text-gray-400">Loading reviews...</div>;
+  if (reviews.length === 0) return <div className="text-sm text-gray-400">No reviews yet.</div>;
+
+  const avgRating =
+    reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length;
 
   return (
-    <div className="mt-6 w-full max-w-xl space-y-4">
-      <h2 className="text-xl font-bold mb-2">Reviews</h2>
-      {reviews.map((r, i) => (
-        <div key={i} className="border rounded p-3 bg-white text-black">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-yellow-500">{"⭐".repeat(r.rating)}</span>
-            <span className="text-sm text-gray-600">{r.rating} / 5</span>
+    <div className="mt-8 w-full max-w-xl">
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold mb-1">⭐ {avgRating.toFixed(1)} / 5.0</h3>
+        <p className="text-sm text-gray-400">{reviews.length} review(s)</p>
+      </div>
+
+      <div className="space-y-4">
+        {reviews.map((r, idx) => (
+          <div key={idx} className="bg-gray-800 p-4 rounded">
+            <p className="text-yellow-400 text-sm mb-1">Rating: {r.rating} / 5</p>
+            <p className="text-sm text-white">{r.comment || 'No comment.'}</p>
           </div>
-          <p className="text-sm">{r.text}</p>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
