@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import DisputeButton from '@/components/disputes/DisputeButton'; // ✅ Add this import
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -43,6 +44,7 @@ export default function DashboardBookingsPage() {
               <p><strong>Service:</strong> {booking.serviceId}</p>
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
+
               <div className="flex space-x-4 mt-2">
                 {booking.status === 'pending' && (
                   <>
@@ -60,6 +62,11 @@ export default function DashboardBookingsPage() {
                     </button>
                   </>
                 )}
+              </div>
+
+              {/* ✅ Add Dispute Button */}
+              <div className="mt-4">
+                <DisputeButton bookingId={booking.id} />
               </div>
             </li>
           ))}
