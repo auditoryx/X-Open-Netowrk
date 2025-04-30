@@ -7,10 +7,10 @@ import { app } from '@/app/firebase';
 import { useRouter } from 'next/navigation';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
+import { getReviewCount } from '../../../lib/reviews/getReviewCount';
 
 export default function ExploreRolePage({ params }: { params: { role: string } }) {
   const [creators, setCreators] = useState<any[]>([]);
-  const [minRating, setMinRating] = useState<number>(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,8 +24,9 @@ export default function ExploreRolePage({ params }: { params: { role: string } }
 
       const withRatings = await Promise.all(
         rawCreators.map(async (creator) => {
-          const avg = await getAverageRating(creator.id);
-          return { ...creator, averageRating: avg };
+          const averageRating = await getAverageRating(creator.id);
+          const reviewCount = await getReviewCount(creator.id);
+          return { ...creator, averageRating, reviewCount };
         })
       );
 
@@ -35,37 +36,18 @@ export default function ExploreRolePage({ params }: { params: { role: string } }
     fetchCreators();
   }, [params.role]);
 
-  const filteredCreators = creators.filter(c => c.averageRating >= minRating);
-
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <div className="max-w-6xl mx-auto p-6">
         <h1 className="text-4xl font-bold mb-6 capitalize">{params.role} Services</h1>
 
-        <div className="mb-4">
-          <label className="mr-2 text-sm text-gray-400">Minimum Rating:</label>
-          <select
-            className="bg-black border border-white px-2 py-1 rounded text-white"
-            value={minRating}
-            onChange={(e) => setMinRating(Number(e.target.value))}
-          >
-            <option value={0}>All</option>
-            <option value={3}>3.0+</option>
-            <option value={4}>4.0+</option>
-            <option value={4.5}>4.5+</option>
-          </select>
-        </div>
-
-        {filteredCreators.length === 0 ? (
-          <p>No creators found with the selected rating.</p>
+        {creators.length === 0 ? (
+          <p>No creators found.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCreators.map((creator) => (
-              <div
-                key={creator.id}
-                className="border p-4 rounded hover:bg-white hover:text-black transition"
-              >
+            {creators.map((creator) => (
+              <div key={creator.id} className="border p-4 rounded hover:bg-white hover:text-black transition">
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold">{creator.name || 'Unnamed Creator'}</h2>
                   <SaveButton providerId={creator.id} />
@@ -74,6 +56,7 @@ export default function ExploreRolePage({ params }: { params: { role: string } }
                 {creator.averageRating !== null && (
                   <p className="text-yellow-400 text-sm mb-1">
                     ⭐ {creator.averageRating.toFixed(1)} / 5.0
+                    <span className="text-gray-400"> ({creator.reviewCount} reviews)</span>
                   </p>
                 )}
 
