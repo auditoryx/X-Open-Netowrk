@@ -1,55 +1,65 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { format, addDays, startOfWeek, parse } from 'date-fns'
 
-const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00']
 
 export function WeeklyCalendarSelector({
   availability,
   onSelect,
 }: {
-  availability: string[];
-  onSelect: (datetime: string) => void;
+  availability: string[]
+  onSelect: (datetime: string) => void
 }) {
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null)
+  const start = startOfWeek(new Date(), { weekStartsOn: 1 })
 
-  const handleSelect = (slot: string) => {
-    setSelected(slot);
-    onSelect(slot);
-  };
+  const now = new Date()
+
+  const handleSelect = (datetime: string) => {
+    setSelected(datetime)
+    onSelect(datetime)
+  }
 
   return (
-    <div className="space-y-4">
-      {DAYS.map((day) => (
-        <div key={day}>
-          <h3 className="text-lg font-semibold text-white mb-1">{day}</h3>
-          <div className="flex flex-wrap gap-2">
-            {HOURS.map((hour) => {
-              const slot = `${day} ${hour}`;
-              const isAvailable = availability.includes(slot);
-              const isSelected = selected === slot;
+    <div className="mt-6">
+      <h2 className="text-lg font-semibold mb-4">Choose a time</h2>
+      <div className="grid grid-cols-7 gap-2 text-sm">
+        {[...Array(7)].map((_, dayIndex) => {
+          const date = addDays(start, dayIndex)
+          const dateStr = format(date, 'yyyy-MM-dd')
 
-              return (
-                <button
-                  key={slot}
-                  disabled={!isAvailable}
-                  onClick={() => handleSelect(slot)}
-                  className={`px-3 py-1 rounded border text-sm transition
-                    ${!isAvailable
-                      ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                      : isSelected
-                      ? 'bg-white text-black border-white'
-                      : 'bg-gray-900 text-white hover:bg-white hover:text-black'}
-                  `}
-                >
-                  {hour}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ))}
+          return (
+            <div key={dayIndex} className="border p-2 rounded">
+              <div className="font-bold text-center mb-2">{format(date, 'EEE')}</div>
+              {HOURS.map((hour) => {
+                const datetime = `${dateStr}T${hour}`
+                const slotDate = parse(datetime, "yyyy-MM-dd'T'HH:mm", new Date())
+                const isAvailable = availability.includes(datetime)
+                const isPast = slotDate < now
+
+                return (
+                  <button
+                    key={hour}
+                    onClick={() => handleSelect(datetime)}
+                    disabled={!isAvailable || isPast}
+                    className={`block w-full text-xs px-2 py-1 mb-1 rounded ${
+                      !isAvailable || isPast
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                        : selected === datetime
+                        ? 'bg-green-600 text-white'
+                        : 'bg-white text-black hover:bg-green-100'
+                    }`}
+                  >
+                    {hour}
+                  </button>
+                )
+              })}
+            </div>
+          )
+        })}
+      </div>
     </div>
-  );
+  )
 }
