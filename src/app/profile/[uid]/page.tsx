@@ -4,9 +4,11 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/app/firebase';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { ReviewList } from '@/components/reviews/ReviewList';
 
 export default function PublicProfilePage() {
-  const { uid } = useParams();
+  const params = useParams();
+  const uid = params?.uid as string;
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,11 +37,14 @@ export default function PublicProfilePage() {
           href={profile.socialLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-400 underline"
+          className="text-blue-400 underline mb-4"
         >
           Visit My Link
         </a>
       )}
+
+      {/* 📝 Injected ReviewList here */}
+      <ReviewList providerId={uid as string} />
     </div>
   );
 }
