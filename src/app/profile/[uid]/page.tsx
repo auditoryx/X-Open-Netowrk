@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
+import { SaveButton } from '@/components/profile/SaveButton'; // ✅ NEW
 
 export default function PublicProfilePage() {
   const params = useParams();
@@ -31,7 +32,7 @@ export default function PublicProfilePage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-4">{profile.name || 'Unnamed User'}</h1>
+      <h1 className="text-3xl font-bold mb-2">{profile.name || 'Unnamed User'}</h1>
       <p className="mb-4 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
 
       {profile.socialLink && (
@@ -45,9 +46,12 @@ export default function PublicProfilePage() {
         </a>
       )}
 
-      <ReviewList providerId={uid} />
+      {/* ⭐ Save Button */}
+      <div className="mb-6">
+        <SaveButton providerId={uid} />
+      </div>
 
-      {/* 🎨 Portfolio Media Display */}
+      <ReviewList providerId={uid} />
       <PortfolioGrid items={profile.portfolio || []} />
     </div>
   );
