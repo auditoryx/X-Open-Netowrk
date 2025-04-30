@@ -37,7 +37,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       if (snap.exists()) {
         const data = snap.data();
         setAvailability(data.availability || []);
-        setProviderEmail(data.email || 'admin@auditoryx.com');
+        setProviderEmail(data.email || 'Zenji@auditoryx.com');
         setProviderLocation(data.location || '');
       }
     };
