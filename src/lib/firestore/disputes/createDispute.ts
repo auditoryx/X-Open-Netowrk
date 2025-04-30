@@ -14,3 +14,14 @@ export async function createDispute(disputeData: any, clientEmail: string, clien
   await sendDisputeEmail(clientEmail, docRef.id);
   await createNotification(clientId, 'dispute_opened', 'You have opened a dispute.', docRef.id);
 }
+
+// Top of file:
+import { logActivity } from '@/lib/firestore/logging/logActivity';
+
+...
+
+// After dispute is created:
+await logActivity(dispute.userId, 'dispute_opened', {
+  bookingId: dispute.bookingId,
+  reason: dispute.reason,
+});

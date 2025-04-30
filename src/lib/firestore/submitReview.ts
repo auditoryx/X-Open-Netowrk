@@ -17,3 +17,14 @@ export async function submitReview(review: Review) {
     createdAt: serverTimestamp(),
   })
 }
+
+// Top of file:
+import { logActivity } from '@/lib/firestore/logging/logActivity';
+
+...
+
+// After saving the review:
+await logActivity(review.clientId, 'review_submitted', {
+  projectId: review.projectId,
+  rating: review.rating,
+});

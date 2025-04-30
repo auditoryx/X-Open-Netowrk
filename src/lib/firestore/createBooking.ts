@@ -16,3 +16,15 @@ export async function createBooking(bookingData: any, clientEmail: string, clien
   await sendBookingConfirmation(clientEmail, bookingId);
   await createNotification(clientId, 'booking_created', 'Your booking request has been sent!', bookingId);
 }
+
+// Top of file:
+import { logActivity } from '@/lib/firestore/logging/logActivity';
+
+...
+
+// After booking creation:
+await logActivity(booking.clientId, 'booking_created', {
+  providerId: booking.providerId,
+  serviceId: booking.serviceId,
+  date: booking.date,
+});

@@ -76,3 +76,13 @@ export default function ProfileForm() {
 // This component allows users to update their profile information.
 // It includes fields for name, role, bio, Instagram handle, and availability.
 // The visibility toggle allows users to set their profile as public or private.  
+// near the top
+import { logActivity } from '@/lib/firestore/logging/logActivity'
+
+...
+
+// inside your handleSubmit function
+await logActivity(uid, 'profile_update', {
+  name: form.name,
+  role: form.role,
+})
