@@ -1,31 +1,35 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/app/firebase';
-import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
+import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
 export default function PublicProfilePage() {
   const params = useParams();
   const uid = params?.uid as string;
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
       const db = getFirestore(app);
       const ref = doc(db, 'users', uid);
       const snap = await getDoc(ref);
+
       if (snap.exists()) {
-        setProfile(snap.data());
+        const data = snap.data();
+        const avg = await getAverageRating(uid);
+        const count = await getReviewCount(uid);
+
+        setProfile({ ...data, averageRating: avg, reviewCount: count });
       }
-      const avg = await getAverageRating(uid);
-      setAverageRating(avg);
+
       setLoading(false);
     };
     fetchProfile();
@@ -38,9 +42,10 @@ export default function PublicProfilePage() {
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-1">{profile.name || 'Unnamed User'}</h1>
 
-      {averageRating !== null && (
-        <p className="text-yellow-400 mb-2 text-sm">
-          ⭐ {averageRating.toFixed(1)} / 5.0
+      {profile.averageRating !== undefined && (
+        <p className="text-yellow-400 text-sm mb-2">
+          ⭐ {profile.averageRating.toFixed(1)} / 5.0
+          <span className="text-gray-400"> ({profile.reviewCount} reviews)</span>
         </p>
       )}
 
@@ -65,7 +70,7 @@ export default function PublicProfilePage() {
         <SaveButton providerId={uid} />
       </div>
 
-      {profile.availability && profile.availability.length > 0 && (
+      {profile.availability?.length > 0 && (
         <div className="mb-6 w-full max-w-xl">
           <h2 className="text-xl font-semibold mb-2">🗓️ Availability</h2>
           <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
