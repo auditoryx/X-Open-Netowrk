@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
+import ReviewForm from '@/components/booking/ReviewForm'; // ✅ NEW
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -79,7 +80,31 @@ export default function DashboardBookingsPage() {
                 </div>
               )}
               {booking.status === 'completed' && (
-                <p className="text-green-400 mt-2">Funds have been released to the provider.</p>
+                <>
+                  <p className="text-green-400 mt-2">Funds have been released to the provider.</p>
+
+                  {/* 📝 Show review form if not yet reviewed */}
+                  {!booking.hasReview && (
+                    <div className="mt-4">
+                      <ReviewForm
+                        onSubmit={async (review) => {
+                          await fetch('/api/reviews', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              bookingId: booking.id,
+                              reviewerId: booking.buyerId,
+                              reviewedId: booking.providerId,
+                              ...review,
+                            }),
+                          });
+                          alert('Review submitted!');
+                          // Optionally update UI here if needed
+                        }}
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </li>
           ))}
@@ -88,7 +113,9 @@ export default function DashboardBookingsPage() {
     </div>
   );
 }
-// Compare this snippet from src/app/api/bookings/route.ts:
-// import { db } from '@/lib/firebase';
-// import { NextRequest, NextResponse } from 'next/server';
-// import { collection, getDocs, query, where } from 'firebase/firestore';    
+// Note: The above code assumes you have a backend API set up to handle the requests made in the useEffect and button click handlers.
+// The API endpoints should be implemented to handle the respective actions (fetching bookings, updating status, etc.).
+// The ReviewForm component is a simple form that takes a callback function onSubmit to handle the review submission.
+// The ContractViewer component is a simple viewer for the contract text.
+// The ReleaseFundsButton component handles the release of funds to the provider.
+// The code is structured to be modular and reusable, with clear separation of concerns for each component.
