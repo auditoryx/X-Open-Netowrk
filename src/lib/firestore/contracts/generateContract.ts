@@ -1,23 +1,42 @@
-import { getFirestore, doc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { app } from '@/lib/firebase'
+import { db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
-export async function generateContract({ bookingId, clientId, providerId, serviceName, price }: {
-  bookingId: string
-  clientId: string
-  providerId: string
-  serviceName: string
-  price: number
+export async function generateContract({
+  bookingId,
+  buyerId,
+  providerId,
+  serviceName,
+  price,
+  startDate,
+}: {
+  bookingId: string;
+  buyerId: string;
+  providerId: string;
+  serviceName: string;
+  price: number;
+  startDate: string;
 }) {
-  const db = getFirestore(app)
-  const ref = doc(db, 'contracts', bookingId)
-  await setDoc(ref, {
-    clientId,
+  const contractText = `
+    SERVICE AGREEMENT
+
+    This agreement is between ${buyerId} (Client) and ${providerId} (Provider).
+
+    The Provider agrees to deliver the service "${serviceName}" starting on ${startDate}, 
+    in exchange for payment of $${price}.
+
+    Booking ID: ${bookingId}
+
+    Both parties agree to the terms upon booking confirmation.
+  `;
+
+  await setDoc(doc(db, 'contracts', bookingId), {
+    bookingId,
+    buyerId,
     providerId,
     serviceName,
     price,
-    createdAt: serverTimestamp(),
-    status: 'pending',
-    platformCut: Math.round(price * 0.2),
-    providerCut: Math.round(price * 0.8),
-  })
+    startDate,
+    contractText,
+    createdAt: new Date(),
+  });
 }

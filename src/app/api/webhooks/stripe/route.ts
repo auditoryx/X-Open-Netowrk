@@ -66,3 +66,37 @@ export async function POST(req: NextRequest) {
 
   return new NextResponse('Received', { status: 200 });
 }
+
+// Add this import at the top with others
+import { generateContract } from '@/lib/firestore/contracts/generateContract';
+
+...
+
+    case 'checkout.session.completed': {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const bookingId = session?.metadata?.bookingId;
+      const buyerId = session?.metadata?.buyerId;
+      const providerId = session?.metadata?.providerId;
+      const serviceName = session?.metadata?.serviceName;
+      const price = session?.amount_total! / 100;
+      const startDate = new Date().toISOString().split('T')[0];
+
+      if (bookingId) {
+        await updateBookingStatus(bookingId, 'paid');
+        console.log(`✅ Booking ${bookingId} marked as paid.`);
+
+        // 📝 Auto-generate contract
+        await generateContract({
+          bookingId,
+          buyerId,
+          providerId,
+          serviceName,
+          price,
+          startDate,
+        });
+        console.log(`📄 Contract generated for booking ${bookingId}.`);
+      }
+      break;
+    }
+
+...
