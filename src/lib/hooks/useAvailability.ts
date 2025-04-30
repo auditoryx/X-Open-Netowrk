@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
+import { db } from '@/lib/firebase/client';
 import { useAuth } from './useAuth';
+
+type Slot = { day: string; time: string };
 
 export function useAvailability() {
   const { user } = useAuth();
-  const [availability, setAvailability] = useState<string[]>([]);
+  const [availability, setAvailability] = useState<Slot[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export function useAvailability() {
     fetchAvailability();
   }, [user]);
 
-  const saveAvailability = async (slots: string[]) => {
+  const saveAvailability = async (slots: Slot[]) => {
     if (!user) return;
     const ref = doc(db, 'availability', user.uid);
     await setDoc(ref, { slots }, { merge: true });
