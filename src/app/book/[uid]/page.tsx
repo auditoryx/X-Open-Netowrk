@@ -49,6 +49,13 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     if (!selectedTime) return alert('Please select a time slot.');
     setLoading(true);
 
+    // 🛑 Prevent past date bookings
+    if (new Date(selectedTime) < new Date()) {
+      alert('Cannot book a time in the past.');
+      setLoading(false);
+      return;
+    }
+
     const db = getFirestore(app);
 
     // 🔐 Check for overlapping requests
