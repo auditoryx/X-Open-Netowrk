@@ -1,15 +1,41 @@
 'use client';
 
-import Navbar from '@/app/components/Navbar';
+import { useEffect, useState } from 'react';
+import { toggleFavorite } from '@/lib/firestore/toggleFavorite';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
 
-export default function ExploreRolePage({ params }: { params: { role: string } }) {
+type Props = {
+  creatorId: string;
+};
+
+export default function SaveButton({ creatorId }: Props) {
+  const { user } = useAuth();
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+    setSaved(favorites[creatorId] === true);
+  }, [user, creatorId]);
+
+  const toggle = async () => {
+    if (!user) return;
+    const newState = !saved;
+    setSaved(newState);
+    localStorage.setItem(
+      'favorites',
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem('favorites') || '{}'),
+        [creatorId]: newState,
+      })
+    );
+    await toggleFavorite(user.uid, creatorId, newState);
+  };
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="flex flex-col items-center justify-center text-center p-8">
-        <h1 className="text-4xl font-bold mb-4 capitalize">{params.role} Services</h1>
-        <p className="text-lg text-gray-400">Browse all available {params.role} services.</p>
-      </div>
-    </div>
+    <button onClick={toggle} className="text-xl">
+      {saved ? <AiFillStar className="text-yellow-500" /> : <AiOutlineStar />}
+    </button>
   );
 }
