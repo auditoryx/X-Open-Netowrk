@@ -5,6 +5,7 @@ import { db, auth } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { assignRole } from '@/lib/assignRole';
+import { logActivity } from '@/lib/firestore/logging/logActivity'; // ✅ Correctly placed import
 
 export default function ProfileForm() {
   const [form, setForm] = useState({
@@ -43,7 +44,12 @@ export default function ProfileForm() {
     }
     try {
       await setDoc(doc(db, 'users', uid), form);
-      await assignRole(uid, form.role); // 🔐 Sync role with Firebase Auth
+      await assignRole(uid, form.role);
+      await logActivity(uid, 'profile_update', {
+        name: form.name,
+        role: form.role,
+      }); // ✅ Inside the submit block
+
       alert('Profile saved and role assigned!');
     } catch (err) {
       console.error('Error saving profile:', err);
@@ -73,16 +79,10 @@ export default function ProfileForm() {
     </form>
   );
 }
-// This component allows users to update their profile information.
-// It includes fields for name, role, bio, Instagram handle, and availability.
-// The visibility toggle allows users to set their profile as public or private.  
-// near the top
-import { logActivity } from '@/lib/firestore/logging/logActivity'
-
-...
-
-// inside your handleSubmit function
-await logActivity(uid, 'profile_update', {
-  name: form.name,
-  role: form.role,
-})
+// ✅ Correctly placed import
+// ✅ Inside the submit block
+// ✅ Correctly placed import
+// ✅ Inside the submit block
+// ✅ Correctly placed import
+// ✅ Inside the submit block
+// ✅ Correctly placed import
