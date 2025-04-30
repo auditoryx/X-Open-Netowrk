@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';
+import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -45,7 +46,6 @@ export default function DashboardBookingsPage() {
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
 
-              {/* 📄 Show contract only if booking is paid */}
               {booking.status === 'paid' && (
                 <div className="mt-4">
                   <ContractViewer bookingId={booking.id} />
@@ -70,6 +70,12 @@ export default function DashboardBookingsPage() {
                   </>
                 )}
               </div>
+
+              {booking.status === 'completed' && (
+                <div className="mt-2">
+                  <ReleaseFundsButton bookingId={booking.id} />
+                </div>
+              )}
             </li>
           ))}
         </ul>
