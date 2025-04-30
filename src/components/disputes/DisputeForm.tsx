@@ -3,12 +3,18 @@
 import { useState } from 'react';
 import { createDispute } from '@/lib/firestore/disputes/createDispute';
 
-export default function DisputeForm({ bookingId, uid }: { bookingId: string; uid: string }) {
+export default function DisputeForm({
+  bookingId,
+  clientId,
+}: {
+  bookingId: string;
+  clientId: string;
+}) {
   const [reason, setReason] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async () => {
-    await createDispute({ bookingId, fromUser: uid, reason });
+    await createDispute({ bookingId, fromUser: clientId, reason });
     setSubmitted(true);
   };
 

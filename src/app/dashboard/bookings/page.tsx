@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
-import ReviewForm from '@/components/booking/ReviewForm'; // ✅ Clean import
+import ReviewForm from '@/components/booking/ReviewForm';
+import DisputeForm from '@/components/disputes/DisputeForm';
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -88,6 +89,15 @@ export default function DashboardBookingsPage() {
                         bookingId={booking.id}
                         providerId={booking.providerId}
                         contractId={booking.contractId}
+                      />
+                    </div>
+                  )}
+
+                  {!booking.hasDispute && (
+                    <div className="mt-4">
+                      <DisputeForm
+                        bookingId={booking.id}
+                        clientId={booking.buyerId}
                       />
                     </div>
                   )}
