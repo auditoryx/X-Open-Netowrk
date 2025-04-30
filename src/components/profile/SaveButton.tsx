@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
 
 export function SaveButton({ providerId }: { providerId: string }) {
   const { user } = useAuth();
@@ -37,13 +38,8 @@ export function SaveButton({ providerId }: { providerId: string }) {
   if (loading) return null;
 
   return (
-    <button
-      onClick={toggleSave}
-      className={`px-4 py-2 rounded ${
-        isSaved ? 'bg-white text-black' : 'bg-transparent border border-white text-white'
-      }`}
-    >
-      {isSaved ? 'Saved' : 'Save'}
+    <button onClick={toggleSave} className="text-xl">
+      {isSaved ? <AiFillStar className="text-yellow-500" /> : <AiOutlineStar />}
     </button>
   );
 }
