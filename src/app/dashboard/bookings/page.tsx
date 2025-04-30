@@ -46,6 +46,7 @@ export default function DashboardBookingsPage() {
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
 
+              {/* 📄 Contract shown if paid */}
               {booking.status === 'paid' && (
                 <div className="mt-4">
                   <ContractViewer bookingId={booking.id} />
@@ -71,10 +72,14 @@ export default function DashboardBookingsPage() {
                 )}
               </div>
 
-              {booking.status === 'completed' && (
+              {/* 💸 Show Release Funds OR Confirmation */}
+              {booking.status === 'paid' && (
                 <div className="mt-2">
                   <ReleaseFundsButton bookingId={booking.id} />
                 </div>
+              )}
+              {booking.status === 'completed' && (
+                <p className="text-green-400 mt-2">Funds have been released to the provider.</p>
               )}
             </li>
           ))}
@@ -83,3 +88,7 @@ export default function DashboardBookingsPage() {
     </div>
   );
 }
+// Compare this snippet from src/app/api/bookings/route.ts:
+// import { db } from '@/lib/firebase';
+// import { NextRequest, NextResponse } from 'next/server';
+// import { collection, getDocs, query, where } from 'firebase/firestore';    

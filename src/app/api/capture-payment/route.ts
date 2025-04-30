@@ -1,7 +1,7 @@
 import { stripe } from '@/lib/stripe';
 import { db } from '@/lib/firebase';
 import { NextRequest, NextResponse } from 'next/server';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export async function POST(req: NextRequest) {
   const { bookingId } = await req.json();
@@ -15,9 +15,25 @@ export async function POST(req: NextRequest) {
 
   try {
     const captured = await stripe.paymentIntents.capture(paymentIntentId);
+
+    // ✅ Mark booking as completed in Firestore
+    await updateDoc(doc(db, 'bookings', bookingId), {
+      status: 'completed',
+      completedAt: new Date(),
+    });
+
     return NextResponse.json({ success: true, captured });
   } catch (err: any) {
     console.error('❌ Capture failed:', err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+// Compare this snippet from src/app/api/capture-payment/route.ts:
+// import { stripe } from '@/lib/stripe';
+// import { db } from '@/lib/firebase';
+// import { NextRequest, NextResponse } from 'next/server';
+// import { doc, getDoc, updateDoc } from 'firebase/firestore';
+//
+// export async function POST(req: NextRequest) {
+//   const { bookingId } = await req.json();
+//    
