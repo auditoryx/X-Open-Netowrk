@@ -238,7 +238,6 @@
 │   ├── forms
 │   │   └── BookingForm.tsx
 │   └── ui
-│       ├── AvailabilitySelector.tsx
 │       └── DragDropUpload.tsx
 ├── context
 │   └── AuthContext.tsx
@@ -302,8 +301,7 @@
 ├── pages
 │   └── api
 │       └── stripe
-│           ├── create-checkout-session.ts
-│           └── webhook.ts
+│           └── create-checkout-session.ts
 ├── postcss.config.js
 ├── prisma
 │   └── schema.prisma
@@ -317,6 +315,7 @@
 │   └── emails
 │       ├── booking-accepted.html
 │       ├── booking-confirmation.html
+│       ├── dispute-notification.html
 │       ├── dispute-opened.html
 │       ├── payment-received.html
 │       └── review-request.html
@@ -474,6 +473,8 @@
 │   │   │   │   └── page.tsx
 │   │   │   ├── engineer
 │   │   │   │   └── page.tsx
+│   │   │   ├── favorites
+│   │   │   │   └── page.tsx
 │   │   │   ├── orders
 │   │   │   │   └── page.tsx
 │   │   │   ├── page.tsx
@@ -484,6 +485,8 @@
 │   │   │   ├── services
 │   │   │   │   └── page.tsx
 │   │   │   ├── studio
+│   │   │   │   └── page.tsx
+│   │   │   ├── upcoming
 │   │   │   │   └── page.tsx
 │   │   │   └── videographer
 │   │   │       └── page.tsx
@@ -564,7 +567,8 @@
 │   │   │   ├── BookingForm.tsx
 │   │   │   ├── BookingStatusCard.tsx
 │   │   │   ├── ReleaseFundsButton.tsx
-│   │   │   └── ReviewForm.tsx
+│   │   │   ├── ReviewForm.tsx
+│   │   │   └── WeeklyCalendarSelector.tsx
 │   │   ├── bookings
 │   │   │   └── BookingsList.tsx
 │   │   ├── chat
@@ -592,10 +596,15 @@
 │   │   │   │   └── IDVerificationForm.tsx
 │   │   │   ├── MediaGallery.tsx
 │   │   │   ├── MediaUploader.tsx
+│   │   │   ├── PortfolioEditor.tsx
+│   │   │   ├── PortfolioGrid.tsx
 │   │   │   ├── ProfileCompletionMeter.tsx
 │   │   │   ├── ProfileForm.tsx
 │   │   │   ├── ProfileReviewList.tsx
-│   │   │   └── ProfileTrustStats.tsx
+│   │   │   ├── ProfileTrustStats.tsx
+│   │   │   └── SaveButton.tsx
+│   │   ├── reviews
+│   │   │   └── ReviewList.tsx
 │   │   ├── roles
 │   │   │   ├── ArtistDashboard.tsx
 │   │   │   ├── DefaultDashboard.tsx
@@ -627,6 +636,8 @@
 │   │   ├── assignRole.ts
 │   │   ├── createBooking.ts
 │   │   ├── email
+│   │   │   ├── sendBookingConfirmation.ts
+│   │   │   ├── sendDisputeEmail.ts
 │   │   │   └── sendEmail.ts
 │   │   ├── fetchUsers.ts
 │   │   ├── firebase
@@ -650,6 +661,7 @@
 │   │   │   │   └── resolveDispute.ts
 │   │   │   ├── getAllCreators.ts
 │   │   │   ├── getAvailabilityTemplate.ts
+│   │   │   ├── getFavoriteCreators.ts
 │   │   │   ├── getMediaSamples.ts
 │   │   │   ├── getTrustStats.ts
 │   │   │   ├── getUserBookings.ts
@@ -660,13 +672,15 @@
 │   │   │   │   └── submitReview.ts
 │   │   │   ├── saveAvailabilityTemplate.ts
 │   │   │   ├── saveMediaSamples.ts
-│   │   │   ├── submitReview.ts
 │   │   │   ├── toggleFavorite.ts
 │   │   │   └── updateBookingStatus.ts
 │   │   ├── getServerUser.ts
 │   │   ├── getStripe.ts
 │   │   ├── hooks
 │   │   │   └── useAuth.ts
+│   │   ├── reviews
+│   │   │   ├── getAverageRating.ts
+│   │   │   └── getReviewCount.ts
 │   │   ├── stripe
 │   │   │   ├── createCheckoutSession.ts
 │   │   │   ├── createSubscriptionSession.ts
@@ -695,4 +709,4 @@
 ├── user-authentication.js
 └── zikQWevq
 
-235 directories, 460 files
+239 directories, 470 files
