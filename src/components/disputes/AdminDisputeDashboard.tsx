@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { toast } from 'sonner';
 
 export default function AdminDisputeDashboard() {
   const [disputes, setDisputes] = useState<any[]>([]);
@@ -23,6 +24,7 @@ export default function AdminDisputeDashboard() {
     setDisputes((prev) =>
       prev.map((d) => (d.id === id ? { ...d, status: result } : d))
     );
+    toast.success(`Dispute ${result}`);
   };
 
   return (
