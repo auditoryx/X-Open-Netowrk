@@ -5,6 +5,7 @@ import { app } from '@/app/firebase';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
+import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 
 export default function PublicProfilePage() {
   const params = useParams();
@@ -32,6 +33,7 @@ export default function PublicProfilePage() {
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-4">{profile.name || 'Unnamed User'}</h1>
       <p className="mb-4 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
+
       {profile.socialLink && (
         <a
           href={profile.socialLink}
@@ -43,8 +45,10 @@ export default function PublicProfilePage() {
         </a>
       )}
 
-      {/* 📝 Injected ReviewList here */}
-      <ReviewList providerId={uid as string} />
+      <ReviewList providerId={uid} />
+
+      {/* 🎨 Portfolio Media Display */}
+      <PortfolioGrid items={profile.portfolio || []} />
     </div>
   );
 }
