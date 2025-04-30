@@ -9,6 +9,9 @@ import {
   collection,
   addDoc,
   updateDoc,
+  query,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 import { app } from '@/app/firebase';
 import Navbar from '@/app/components/Navbar';
@@ -48,6 +51,21 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
     const db = getFirestore(app);
 
+    // 🔐 Check for overlapping requests
+    const overlapQ = query(
+      collection(db, 'bookingRequests'),
+      where('providerId', '==', params.uid),
+      where('selectedTime', '==', selectedTime),
+      where('status', 'in', ['pending', 'confirmed'])
+    );
+    const overlapSnap = await getDocs(overlapQ);
+    if (!overlapSnap.empty) {
+      alert('This time slot was just booked by someone else. Please pick a new one.');
+      setLoading(false);
+      return;
+    }
+
+    // ✅ Booking
     await addDoc(collection(db, 'bookingRequests'), {
       providerId: params.uid,
       clientId: user?.uid || 'anon',
@@ -58,11 +76,13 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       status: 'pending',
     });
 
+    // 🧹 Clean up availability
     const updated = availability.filter((a) => a !== selectedTime);
     await updateDoc(doc(db, 'users', params.uid), {
       availability: updated,
     });
 
+    // 📧 Email
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
     setLoading(false);
