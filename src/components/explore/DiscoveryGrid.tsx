@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
 import Link from 'next/link'
 
 const DiscoveryGrid = ({ creators }: { creators: any[] }) => {
@@ -16,10 +17,13 @@ const DiscoveryGrid = ({ creators }: { creators: any[] }) => {
               {c.verified && <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">✔ Verified</span>}
               {c.proTier && <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded">🌟 Pro</span>}
               <span>{c.location}</span>
+{nextAvailable && (<p className="text-sm text-green-600">Next available: {nextAvailable}</p>)}
             </div>
+{nextAvailable && (<p className="text-sm text-green-600">Next available: {nextAvailable}</p>)}
           </div>
         </Link>
       ))}
+{nextAvailable && (<p className="text-sm text-green-600">Next available: {nextAvailable}</p>)}
     </div>
   )
 }
