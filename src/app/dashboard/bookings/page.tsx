@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 import ReviewForm from '@/components/booking/ReviewForm';
@@ -10,7 +10,8 @@ import DisputeForm from '@/components/disputes/DisputeForm';
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const highlightRef = useRef<{ [key: string]: HTMLLIElement | null }>({});
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -22,14 +23,23 @@ export default function DashboardBookingsPage() {
     fetchBookings();
   }, []);
 
+  useEffect(() => {
+    const targetId = searchParams ? searchParams.get('bookingId') : null;
+    if (targetId && highlightRef.current[targetId]) {
+      setTimeout(() => {
+        highlightRef.current[targetId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [bookings, searchParams]);
+
   const handleUpdateStatus = async (id: string, status: string) => {
     await fetch('/api/bookings', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, status }),
     });
-    setBookings(prev =>
-      prev.map(b => (b.id === id ? { ...b, status } : b))
+    setBookings((prev) =>
+      prev.map((b) => (b.id === id ? { ...b, status } : b))
     );
   };
 
@@ -42,8 +52,14 @@ export default function DashboardBookingsPage() {
         <p>No bookings yet.</p>
       ) : (
         <ul className="space-y-4">
-          {bookings.map(booking => (
-            <li key={booking.id} className="border p-4 rounded">
+          {bookings.map((booking) => (
+            <li
+              key={booking.id}
+              ref={(el) => {
+                highlightRef.current[booking.id] = el;
+              }}
+              className="border p-4 rounded"
+            >
               <p><strong>Service:</strong> {booking.serviceId}</p>
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
