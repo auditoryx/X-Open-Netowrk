@@ -49,7 +49,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     if (!selectedTime) return alert('Please select a time slot.');
     setLoading(true);
 
-    // 🛑 Prevent past date bookings
+    // ✅ Prevent past date bookings
     if (new Date(selectedTime) < new Date()) {
       alert('Cannot book a time in the past.');
       setLoading(false);
@@ -58,7 +58,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
     const db = getFirestore(app);
 
-    // 🔐 Check for overlapping requests
+    // 🔐 Prevent overlap
     const overlapQ = query(
       collection(db, 'bookingRequests'),
       where('providerId', '==', params.uid),
@@ -72,7 +72,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       return;
     }
 
-    // ✅ Booking
+    // ✅ Submit booking
     await addDoc(collection(db, 'bookingRequests'), {
       providerId: params.uid,
       clientId: user?.uid || 'anon',
@@ -83,17 +83,17 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       status: 'pending',
     });
 
-    // 🧹 Clean up availability
+    // 🧹 Update availability
     const updated = availability.filter((a) => a !== selectedTime);
     await updateDoc(doc(db, 'users', params.uid), {
       availability: updated,
     });
 
-    // 📧 Email
+    // 📧 Email notification
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
     setLoading(false);
-    router.push(`/success?time=${selectedTime}`);
+    router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}`);
   };
 
   return (
