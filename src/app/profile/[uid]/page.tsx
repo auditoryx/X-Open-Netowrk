@@ -7,12 +7,14 @@ import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
+import { getAverageRating } from '@/lib/reviews/getAverageRating';
 
 export default function PublicProfilePage() {
   const params = useParams();
   const uid = params?.uid as string;
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,6 +24,8 @@ export default function PublicProfilePage() {
       if (snap.exists()) {
         setProfile(snap.data());
       }
+      const avg = await getAverageRating(uid);
+      setAverageRating(avg);
       setLoading(false);
     };
     fetchProfile();
@@ -32,7 +36,14 @@ export default function PublicProfilePage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-2">{profile.name || 'Unnamed User'}</h1>
+      <h1 className="text-3xl font-bold mb-1">{profile.name || 'Unnamed User'}</h1>
+
+      {averageRating !== null && (
+        <p className="text-yellow-400 mb-2 text-sm">
+          ⭐ {averageRating.toFixed(1)} / 5.0
+        </p>
+      )}
+
       <p className="mb-2 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
 
       {profile.location && (
