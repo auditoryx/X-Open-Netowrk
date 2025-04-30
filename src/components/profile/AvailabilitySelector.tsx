@@ -1,52 +1,45 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { saveAvailabilityTemplate } from '@/lib/firestore/saveAvailabilityTemplate'
-import { getAvailabilityTemplate } from '@/lib/firestore/getAvailabilityTemplate'
-import { useAuth } from '@/lib/hooks/useAuth'
+import { useState } from 'react';
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+export default function AvailabilitySelector({ availability, setAvailability }: { availability: string[], setAvailability: (a: string[]) => void }) {
+  const [day, setDay] = useState('');
 
-const AvailabilitySelector = () => {
-  const { user } = useAuth()
-  const [availability, setAvailability] = useState<Record<string, string>>({})
-
-  useEffect(() => {
-    if (user) {
-      getAvailabilityTemplate(user.uid).then(setAvailability)
+  const addDay = () => {
+    if (day && !availability.includes(day)) {
+      setAvailability([...availability, day]);
+      setDay('');
     }
-  }, [user])
+  };
 
-  const handleChange = (day: string, value: string) => {
-    setAvailability((prev) => ({ ...prev, [day]: value }))
-  }
-
-  const handleSave = async () => {
-    if (!user) return
-    await saveAvailabilityTemplate(user.uid, availability)
-    alert('Availability saved!')
-  }
+  const removeDay = (d: string) => {
+    setAvailability(availability.filter((a) => a !== d));
+  };
 
   return (
-    <div className="mt-6 p-4 border rounded-xl">
-      <h2 className="text-lg font-semibold mb-2">Set Weekly Availability</h2>
-      {WEEKDAYS.map((day) => (
-        <div key={day} className="flex items-center gap-2 mb-2">
-          <label className="w-12">{day}</label>
-          <input
-            type="text"
-            placeholder="e.g. 13:00–18:00"
-            value={availability[day] || ''}
-            onChange={(e) => handleChange(day, e.target.value)}
-            className="border px-2 py-1 rounded w-48"
-          />
-        </div>
-      ))}
-      <button onClick={handleSave} className="mt-3 bg-black text-white px-4 py-2 rounded">
-        Save
-      </button>
-    </div>
-  )
-}
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <input
+          value={day}
+          onChange={(e) => setDay(e.target.value)}
+          placeholder="Enter available day (e.g., Monday)"
+          className="border p-2 rounded w-full"
+        />
+        <button type="button" onClick={addDay} className="bg-black text-white px-4 rounded">
+          Add
+        </button>
+      </div>
 
-export default AvailabilitySelector
+      <div className="flex flex-wrap gap-2">
+        {availability.map((d) => (
+          <div key={d} className="flex items-center gap-1 bg-gray-200 text-black px-2 py-1 rounded">
+            {d}
+            <button type="button" onClick={() => removeDay(d)} className="text-red-500">
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

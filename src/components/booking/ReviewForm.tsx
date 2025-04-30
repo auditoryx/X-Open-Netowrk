@@ -1,54 +1,34 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { submitReview } from '@/lib/firestore/submitReview'
-import { useAuth } from '@/lib/hooks/useAuth'
+import { useState } from 'react';
 
-type Props = {
-  bookingId: string
-  providerId: string
-}
+export default function ReviewForm({ onSubmit }: { onSubmit: (review: any) => void }) {
+  const [text, setText] = useState('');
+  const [rating, setRating] = useState(5);
 
-const ReviewForm = ({ bookingId, providerId }: Props) => {
-  const { user } = useAuth()
-  const [text, setText] = useState('')
-  const [rating, setRating] = useState(5)
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleSubmit = async () => {
-    if (!user || !text || !rating) return
-    await submitReview({ bookingId, providerId, clientId: user.uid, text, rating })
-    setSubmitted(true)
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ text, rating });
+  };
 
   return (
-    <div className="mt-4 p-4 border rounded-xl">
-      <h3 className="font-medium mb-2">Leave a Review</h3>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4 border rounded">
       <textarea
-        placeholder="Write your review..."
+        placeholder="Leave a review..."
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className="w-full p-2 border rounded mb-2"
+        className="p-2 border rounded"
       />
-      <div className="flex items-center gap-2 mb-2">
-        <label className="text-sm">Rating:</label>
-        <select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
-          {[5, 4, 3, 2, 1].map((r) => (
-            <option key={r} value={r}>
-              {r} ⭐
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        onClick={handleSubmit}
-        disabled={submitted}
-        className="bg-black text-white px-4 py-2 rounded"
-      >
-        {submitted ? 'Submitted' : 'Submit Review'}
+      <select value={rating} onChange={(e) => setRating(Number(e.target.value))} className="p-2 border rounded">
+        {[5, 4, 3, 2, 1].map((n) => (
+          <option key={n} value={n}>
+            {n} Stars
+          </option>
+        ))}
+      </select>
+      <button type="submit" className="bg-black text-white px-4 py-2 rounded">
+        Submit Review
       </button>
-    </div>
-  )
+    </form>
+  );
 }
-
-export default ReviewForm
