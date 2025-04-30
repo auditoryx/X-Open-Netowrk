@@ -24,7 +24,7 @@ export default function DashboardBookingsPage() {
   }, []);
 
   useEffect(() => {
-    const targetId = searchParams ? searchParams.get('bookingId') : null;
+    const targetId = searchParams?.get('bookingId');
     if (targetId && highlightRef.current[targetId]) {
       setTimeout(() => {
         highlightRef.current[targetId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -38,9 +38,7 @@ export default function DashboardBookingsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, status }),
     });
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status } : b))
-    );
+    setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
   };
 
   if (loading) return <div className="p-6 text-white">Loading bookings...</div>;
@@ -52,10 +50,10 @@ export default function DashboardBookingsPage() {
         <p>No bookings yet.</p>
       ) : (
         <ul className="space-y-4">
-          {bookings.map((booking) => (
+          {bookings.map(booking => (
             <li
               key={booking.id}
-              ref={(el) => {
+              ref={el => {
                 highlightRef.current[booking.id] = el;
               }}
               className="border p-4 rounded"
@@ -63,6 +61,11 @@ export default function DashboardBookingsPage() {
               <p><strong>Service:</strong> {booking.serviceId}</p>
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
+
+              {/* 💸 Fee Info */}
+              {booking.platformFee && (
+                <p><strong>Platform Fee:</strong> ${booking.platformFee}</p>
+              )}
 
               {booking.status === 'paid' && (
                 <div className="mt-4">
