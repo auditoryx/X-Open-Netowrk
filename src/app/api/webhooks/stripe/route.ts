@@ -22,11 +22,21 @@ export async function POST(req: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
       const bookingId = session?.metadata?.bookingId;
+      const uid = session?.metadata?.uid;
 
       if (bookingId) {
         await updateBookingStatus(bookingId, 'paid');
-        console.log(\`✅ Booking \${bookingId} marked as paid.\`);
+        console.log(`✅ Booking ${bookingId} marked as paid.`);
       }
+
+      if (session.mode === 'subscription' && uid) {
+        const admin = (await import('@/lib/firebase-admin')).default;
+        await admin.firestore().collection('users').doc(uid).update({
+          subscriptionStatus: 'pro',
+        });
+        console.log(`🌟 Subscription activated for user ${uid}`);
+      }
+
       break;
     }
 
@@ -35,8 +45,23 @@ export async function POST(req: NextRequest) {
       break;
     }
 
+    case 'payout.paid': {
+      const payout = event.data.object as any;
+      const bookingId = payout?.metadata?.bookingId;
+      const uid = payout?.metadata?.uid;
+
+      if (uid && bookingId) {
+        const admin = (await import('@/lib/firebase-admin')).default;
+        await admin.firestore().collection('users').doc(uid).collection('bookings').doc(bookingId).update({
+          payoutStatus: 'paid',
+        });
+        console.log(`💸 Payout confirmed for booking ${bookingId}`);
+      }
+      break;
+    }
+
     default:
-      console.log(\`Unhandled event type \${event.type}\`);
+      console.log(`Unhandled event type ${event.type}`);
   }
 
   return new NextResponse('Received', { status: 200 });
