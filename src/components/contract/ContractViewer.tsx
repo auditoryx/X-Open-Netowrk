@@ -1,41 +1,27 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
-import { useAuth } from '@/lib/hooks/useAuth'
-import { loadStripe } from '@stripe/stripe-js'
-import { createCheckoutSession } from '@/lib/stripe/createCheckoutSession'
+import { useEffect, useState } from 'react';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
+export default function ContractViewer({ bookingId }: { bookingId: string }) {
+  const [contract, setContract] = useState<string | null>(null);
 
-type Props = {
-  bookingId: string
-  serviceName: string
-  price: number
-}
+  useEffect(() => {
+    const fetchContract = async () => {
+      const snap = await getDoc(doc(db, 'contracts', bookingId));
+      if (snap.exists()) {
+        setContract(snap.data()?.contractText);
+      }
+    };
+    fetchContract();
+  }, [bookingId]);
 
-const ContractViewer = ({ bookingId, serviceName, price }: Props) => {
-  const { user } = useAuth()
-
-  const handleCheckout = async () => {
-    if (!user) return
-    const session = await createCheckoutSession({ bookingId, price })
-    const stripe = await stripePromise
-    await stripe?.redirectToCheckout({ sessionId: session.id })
-  }
+  if (!contract) return <p className="text-gray-400">Loading contract...</p>;
 
   return (
-    <div className="mt-4 p-4 border rounded-xl">
-      <h3 className="text-lg font-semibold mb-2">Service Agreement</h3>
-      <p className="text-sm mb-2">Booking for: {serviceName}</p>
-      <p className="text-sm mb-2">Total Price: ¥{price}</p>
-      <button
-        onClick={handleCheckout}
-        className="mt-2 bg-black text-white px-4 py-2 rounded"
-      >
-        Agree & Pay
-      </button>
+    <div className="whitespace-pre-wrap bg-white text-black p-6 rounded shadow">
+      {contract}
     </div>
-  )
+  );
 }
-
-export default ContractViewer
