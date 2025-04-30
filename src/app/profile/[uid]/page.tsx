@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
-import { SaveButton } from '@/components/profile/SaveButton'; // ✅ NEW
+import { SaveButton } from '@/components/profile/SaveButton';
 
 export default function PublicProfilePage() {
   const params = useParams();
@@ -50,6 +50,20 @@ export default function PublicProfilePage() {
       <div className="mb-6">
         <SaveButton providerId={uid} />
       </div>
+
+      {/* 🗓️ Show Availability */}
+      {profile.availability && profile.availability.length > 0 && (
+        <div className="mb-6 w-full max-w-xl">
+          <h2 className="text-xl font-semibold mb-2">🗓️ Availability</h2>
+          <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+            {profile.availability.map((slot: string, idx: number) => (
+              <li key={idx} className="bg-gray-800 px-3 py-1 rounded">
+                {slot}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <ReviewList providerId={uid} />
       <PortfolioGrid items={profile.portfolio || []} />

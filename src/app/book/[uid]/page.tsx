@@ -62,7 +62,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       availability: updated,
     });
 
-    // 3. Send email to provider
+    // 3. Send confirmation email
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
     setLoading(false);
@@ -101,6 +101,9 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     </div>
   );
 }
-// Note: Ensure to handle errors and edge cases in a production environment.
-//       <div className="max-w-md mx-auto p-6">
-//         <h1 className="text-3xl font-bold mb-6">Book a Service</h1>  
+// import { useState, useEffect } from 'react';
+// import { useRouter } from 'next/router';
+// import { getFirestore, doc, getDoc, collection, addDoc, updateDoc } from 'firebase/firestore';
+// import { app } from '@/app/firebase';
+// import Navbar from '@/app/components/Navbar';
+// import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
