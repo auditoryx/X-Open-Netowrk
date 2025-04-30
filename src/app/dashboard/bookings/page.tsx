@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DisputeButton from '@/components/disputes/DisputeButton'; // ✅ Add this import
+import ContractViewer from '@/components/contract/ContractViewer';
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -45,6 +45,13 @@ export default function DashboardBookingsPage() {
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
 
+              {/* 📄 Show contract only if booking is paid */}
+              {booking.status === 'paid' && (
+                <div className="mt-4">
+                  <ContractViewer bookingId={booking.id} />
+                </div>
+              )}
+
               <div className="flex space-x-4 mt-2">
                 {booking.status === 'pending' && (
                   <>
@@ -62,11 +69,6 @@ export default function DashboardBookingsPage() {
                     </button>
                   </>
                 )}
-              </div>
-
-              {/* ✅ Add Dispute Button */}
-              <div className="mt-4">
-                <DisputeButton bookingId={booking.id} />
               </div>
             </li>
           ))}
