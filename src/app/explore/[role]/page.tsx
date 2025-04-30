@@ -7,7 +7,7 @@ import { app } from '@/app/firebase';
 import { useRouter } from 'next/navigation';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
-import { getReviewCount } from '../../../lib/reviews/getReviewCount';
+import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
 export default function ExploreRolePage({ params }: { params: { role: string } }) {
   const [creators, setCreators] = useState<any[]>([]);
@@ -30,7 +30,14 @@ export default function ExploreRolePage({ params }: { params: { role: string } }
         })
       );
 
-      setCreators(withRatings);
+      const sorted = [...withRatings].sort((a, b) => {
+        if (b.averageRating === a.averageRating) {
+          return (b.reviewCount || 0) - (a.reviewCount || 0); // More reviews wins tie
+        }
+        return (b.averageRating || 0) - (a.averageRating || 0); // Higher rating first
+      });
+
+      setCreators(sorted);
     };
 
     fetchCreators();
@@ -47,7 +54,10 @@ export default function ExploreRolePage({ params }: { params: { role: string } }
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {creators.map((creator) => (
-              <div key={creator.id} className="border p-4 rounded hover:bg-white hover:text-black transition">
+              <div
+                key={creator.id}
+                className="border p-4 rounded hover:bg-white hover:text-black transition"
+              >
                 <div className="flex justify-between items-center mb-2">
                   <h2 className="text-xl font-semibold">{creator.name || 'Unnamed Creator'}</h2>
                   <SaveButton providerId={creator.id} />
