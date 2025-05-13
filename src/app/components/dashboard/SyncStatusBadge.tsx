@@ -8,17 +8,23 @@ type Props = {
 
 export default function SyncStatusBadge({ lastSynced }: Props) {
   if (!lastSynced) {
-    return <span className="text-sm text-red-600">🔴 Never synced</span>;
+    return (
+      <p className="text-sm text-gray-500">🔴 Not synced yet</p>
+    );
   }
 
-  const last = new Date(lastSynced).getTime();
-  const now = Date.now();
-  const diffMinutes = Math.floor((now - last) / 1000 / 60);
+  const last = new Date(lastSynced);
+  const now = new Date();
+  const diffMs = now.getTime() - last.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
 
-  let status = '🟢 Synced just now';
-  if (diffMinutes > 120) status = '🔴 Not synced recently';
-  else if (diffMinutes > 30) status = `🟡 Synced ${diffMinutes} mins ago`;
-  else if (diffMinutes > 5) status = `🟢 Synced ${diffMinutes} mins ago`;
+  let label = '';
+  if (diffMins < 1) label = '🟢 Just synced';
+  else if (diffMins < 60) label = `🟢 Synced ${diffMins} min ago`;
+  else if (diffHours < 24) label = `🟡 Synced ${diffHours}h ago`;
+  else label = `🔴 Not synced in ${diffDays}d`;
 
-  return <span className="text-sm text-gray-500">{status}</span>;
+  return <p className="text-sm text-gray-500">{label}</p>;
 }
