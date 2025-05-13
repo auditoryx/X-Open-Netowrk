@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAvailability } from '@/lib/hooks/useAvailability';
-import { signIn, getSession } from 'next-auth/react';
+import { signIn, getSession, useSession } from 'next-auth/react';
 import SlotSelectorGrid from './SlotSelectorGrid';
 import SyncStatusBadge from './SyncStatusBadge';
 import toast from 'react-hot-toast';
@@ -19,6 +19,18 @@ export default function AvailabilityEditor() {
     setTimezone,
     lastSynced,
   } = useAvailability();
+
+  const { data: session } = useSession();
+
+  // ✅ Auto-sync from Google Calendar after login if not recently synced
+  useEffect(() => {
+    const autoSync = async () => {
+      if (!lastSynced && session?.accessToken) {
+        await fetch('/api/calendar/sync');
+      }
+    };
+    autoSync();
+  }, [session, lastSynced]);
 
   const toggleSlot = (slot: { day: string; time: string }) => {
     const exists = availability.some(
