@@ -1,18 +1,43 @@
 'use client';
 
 import React from 'react';
+import { DateTime } from 'luxon';
 
 type Slot = { day: string; time: string };
+
 type Props = {
   availability: Slot[];
   busySlots?: Slot[];
   toggleSlot: (slot: Slot) => void;
+  originalTimezone?: string; // 🕓 Creator's saved timezone
 };
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const times = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 
-export default function SlotSelectorGrid({ availability, busySlots = [], toggleSlot }: Props) {
+function convertTime(day: string, time: string, fromTZ: string): string {
+  try {
+    const now = DateTime.local();
+    const target = now.set({ weekday: days.indexOf(day) + 1 })
+      .setZone(fromTZ)
+      .set({
+        hour: parseInt(time.split(':')[0]),
+        minute: parseInt(time.split(':')[1]),
+      });
+
+    const local = target.setZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    return local.toFormat('HH:mm');
+  } catch {
+    return time;
+  }
+}
+
+export default function SlotSelectorGrid({
+  availability,
+  busySlots = [],
+  toggleSlot,
+  originalTimezone,
+}: Props) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full table-auto border-collapse">
@@ -36,6 +61,10 @@ export default function SlotSelectorGrid({ availability, busySlots = [], toggleS
                 const busyClass = 'bg-red-300 text-white cursor-not-allowed';
                 const emptyClass = 'bg-gray-100 text-black hover:bg-gray-200 cursor-pointer';
 
+                const displayTime = originalTimezone
+                  ? convertTime(day, time, originalTimezone)
+                  : time;
+
                 return (
                   <td key={day + time}>
                     <button
@@ -43,7 +72,7 @@ export default function SlotSelectorGrid({ availability, busySlots = [], toggleS
                       onClick={() => toggleSlot({ day, time })}
                       className={`${baseClass} ${isBusy ? busyClass : isSelected ? selectedClass : emptyClass}`}
                     >
-                      {isBusy ? 'Busy' : isSelected ? '✓' : ''}
+                      {isBusy ? 'Busy' : isSelected ? `✔ ${displayTime}` : displayTime}
                     </button>
                   </td>
                 );

@@ -90,6 +90,7 @@ export default function AvailabilityEditor() {
         availability={availability}
         busySlots={busySlots}
         toggleSlot={toggleSlot}
+        originalTimezone={timezone}
       />
 
       <div className="space-y-2">
