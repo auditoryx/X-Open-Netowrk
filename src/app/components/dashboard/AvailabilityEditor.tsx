@@ -5,6 +5,7 @@ import { useAvailability } from '@/lib/hooks/useAvailability';
 import { signIn, getSession, useSession } from 'next-auth/react';
 import SlotSelectorGrid from './SlotSelectorGrid';
 import SyncStatusBadge from './SyncStatusBadge';
+import AvailabilitySummary from './AvailabilitySummary';
 import toast from 'react-hot-toast';
 
 export default function AvailabilityEditor() {
@@ -22,7 +23,6 @@ export default function AvailabilityEditor() {
 
   const { data: session } = useSession();
 
-  // ✅ Auto-sync from Google Calendar after login if not recently synced
   useEffect(() => {
     const autoSync = async () => {
       if (!lastSynced && session?.accessToken) {
@@ -92,6 +92,8 @@ export default function AvailabilityEditor() {
         toggleSlot={toggleSlot}
         originalTimezone={timezone}
       />
+
+      <AvailabilitySummary slots={availability} timezone={timezone} />
 
       <div className="space-y-2">
         <input
