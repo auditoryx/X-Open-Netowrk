@@ -2,7 +2,8 @@ import './globals.css';
 import Navbar from './components/Navbar';
 import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
-import { LanguageProvider } from '@/context/LanguageContext'; // <-- Add this line
+import { LanguageProvider } from '@/context/LanguageContext';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,7 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-black text-white`}>
-        <LanguageProvider> {/* <-- Wrap EVERYTHING inside this */}
+        <LanguageProvider>
+          <Toaster position="top-center" />
           <Navbar />
           {children}
         </LanguageProvider>
@@ -27,3 +29,8 @@ export default function RootLayout({
     </html>
   );
 }
+// import { getServerSession } from 'next-auth';
+// import { authOptions } from '@/lib/auth';
+// import { useEffect } from 'react';
+// import { useRouter } from 'next/router';
+// import { useSession } from 'next-auth/react';

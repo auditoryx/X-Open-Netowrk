@@ -5,7 +5,7 @@ import { db, auth } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { assignRole } from '@/lib/assignRole';
-import { logActivity } from '@/lib/firestore/logging/logActivity'; // ✅ Correctly placed import
+import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 export default function ProfileForm() {
   const [form, setForm] = useState({
@@ -15,7 +15,10 @@ export default function ProfileForm() {
     bio: '',
     instagram: '',
     availability: '',
+    location: '',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
   });
+
   const [uid, setUid] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function ProfileForm() {
         const ref = doc(db, 'users', user.uid);
         const snap = await getDoc(ref);
         if (snap.exists()) {
-          setForm(snap.data() as typeof form);
+          setForm((prev) => ({ ...prev, ...snap.data() }));
         }
       }
     });
@@ -42,13 +45,14 @@ export default function ProfileForm() {
       alert('User not authenticated.');
       return;
     }
+
     try {
-      await setDoc(doc(db, 'users', uid), form);
+      await setDoc(doc(db, 'users', uid), form, { merge: true });
       await assignRole(uid, form.role);
       await logActivity(uid, 'profile_update', {
         name: form.name,
         role: form.role,
-      }); // ✅ Inside the submit block
+      });
 
       alert('Profile saved and role assigned!');
     } catch (err) {
@@ -63,6 +67,8 @@ export default function ProfileForm() {
       <textarea name="bio" placeholder="Short Bio" value={form.bio} onChange={handleChange} className="w-full p-2 border rounded" />
       <input name="instagram" placeholder="Instagram Handle" value={form.instagram} onChange={handleChange} className="w-full p-2 border rounded" />
       <input name="availability" placeholder="Availability" value={form.availability} onChange={handleChange} className="w-full p-2 border rounded" />
+      <input name="location" placeholder="City, Country" value={form.location} onChange={handleChange} className="w-full p-2 border rounded" />
+      <input name="timezone" placeholder="Timezone" value={form.timezone} onChange={handleChange} className="w-full p-2 border rounded" />
       
       <div className="flex items-center space-x-2">
         <label htmlFor="visible" className="text-sm font-medium">Publicly Visible:</label>
@@ -79,10 +85,3 @@ export default function ProfileForm() {
     </form>
   );
 }
-// ✅ Correctly placed import
-// ✅ Inside the submit block
-// ✅ Correctly placed import
-// ✅ Inside the submit block
-// ✅ Correctly placed import
-// ✅ Inside the submit block
-// ✅ Correctly placed import
