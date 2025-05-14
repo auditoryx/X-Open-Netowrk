@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
+// Update the import path below if your firebaseConfig file is located elsewhere
+import { db } from '../../../firebase/firebaseConfig';
 import { useAuth } from './useAuth';
 
 type Slot = { day: string; time: string };
