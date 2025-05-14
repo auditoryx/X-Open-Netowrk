@@ -1,9 +1,13 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getUserBookings } from '@/lib/firestore/getUserBookings';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
 import { updateAvailability } from '@/lib/firestore/updateAvailability';
 import { markBookingAsCompleted } from '@/lib/firestore/bookings/markBookingAsCompleted';
+import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
+import ContractViewer from '@/components/contract/ContractViewer';
 import toast from 'react-hot-toast';
 import StripeCheckout from './StripeCheckout';
 
@@ -33,7 +37,7 @@ export default function ProviderBookings() {
       const updatedAvailability = provider.availability.filter((slot: string) => slot !== dateTime);
       await updateAvailability(user.uid, updatedAvailability);
     }
-    fetchBookings(); // refresh after update
+    fetchBookings();
   };
 
   const handleMarkCompleted = async (booking: any) => {
@@ -42,20 +46,47 @@ export default function ProviderBookings() {
     fetchBookings();
   };
 
+  const handleAgreeToContract = async (bookingId: string) => {
+    await agreeToContract(bookingId, 'provider');
+    toast.success('You agreed to the contract.');
+    fetchBookings();
+  };
+
   return (
     <div>
-      <h2 className='text-lg font-semibold mb-2'>Bookings You Received</h2>
+      <h2 className="text-lg font-semibold mb-2">Bookings You Received</h2>
       {bookings.map((b) => (
-        <div key={b.id} className='border p-3 rounded mb-2'>
+        <div key={b.id} className="border p-3 rounded mb-4 bg-white text-black">
           <p><strong>From:</strong> {b.clientId}</p>
           <p><strong>Service:</strong> {b.service}</p>
           <p><strong>Date:</strong> {b.dateTime}</p>
           <p><strong>Status:</strong> {b.status}</p>
 
+          {b.contract && (
+            <ContractViewer
+              bookingId={b.id}
+              terms={b.contract.terms}
+              agreedByClient={b.contract.agreedByClient}
+              agreedByProvider={b.contract.agreedByProvider}
+              userRole="provider"
+              onAgree={() => handleAgreeToContract(b.id)}
+            />
+          )}
+
           {b.status === 'pending' && (
-            <div className='flex gap-2 mt-2'>
-              <button onClick={() => handleStatusChange(b.id, 'accepted', b.dateTime)} className='px-3 py-1 bg-green-600 text-white rounded'>Accept</button>
-              <button onClick={() => handleStatusChange(b.id, 'rejected')} className='px-3 py-1 bg-red-600 text-white rounded'>Reject</button>
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => handleStatusChange(b.id, 'accepted', b.dateTime)}
+                className="px-3 py-1 bg-green-600 text-white rounded"
+              >
+                Accept
+              </button>
+              <button
+                onClick={() => handleStatusChange(b.id, 'rejected')}
+                className="px-3 py-1 bg-red-600 text-white rounded"
+              >
+                Reject
+              </button>
             </div>
           )}
 
@@ -66,7 +97,7 @@ export default function ProviderBookings() {
           {b.status === 'confirmed' && (
             <button
               onClick={() => handleMarkCompleted(b)}
-              className='mt-2 px-3 py-1 bg-blue-600 text-white rounded'
+              className="mt-2 px-3 py-1 bg-blue-600 text-white rounded"
             >
               Mark as Completed
             </button>
@@ -76,4 +107,3 @@ export default function ProviderBookings() {
     </div>
   );
 }
-// Note: Ensure to replace the placeholder functions and types with actual implementations as per your project structure.

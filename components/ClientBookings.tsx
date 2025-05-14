@@ -1,9 +1,16 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getUserBookings } from '@/lib/firestore/getUserBookings';
 import { doc, updateDoc } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase/init';
+// Update the import path below to the correct relative path where your firebaseConfig.ts is located.
+// For example, if firebaseConfig.ts is in /workspaces/X-Open-Netowrk/firebase/firebaseConfig.ts, use:
+import { db as firestore } from '../firebase/firebaseConfig';
+// Or adjust the path as needed based on your project structure.
 import toast from 'react-hot-toast';
+import ContractViewer from '@/components/contract/ContractViewer';
+import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
 
 export default function ClientBookings() {
   const { user } = useAuth();
@@ -11,8 +18,10 @@ export default function ClientBookings() {
   const [reviewText, setReviewText] = useState<{ [key: string]: string }>({});
   const [ratings, setRatings] = useState<{ [key: string]: number }>({});
 
+  const fetch = () => getUserBookings(user.uid, 'client').then(setBookings);
+
   useEffect(() => {
-    getUserBookings(user.uid, 'client').then(setBookings);
+    if (user?.uid) fetch();
   }, [user]);
 
   const submitReview = async (bookingId: string) => {
@@ -30,11 +39,17 @@ export default function ClientBookings() {
         },
       });
       toast.success('Review submitted!');
-      getUserBookings(user.uid, 'client').then(setBookings);
+      fetch();
     } catch (err) {
       toast.error('Failed to submit review.');
       console.error(err);
     }
+  };
+
+  const handleAgree = async (bookingId: string) => {
+    await agreeToContract(bookingId, 'client');
+    toast.success('You agreed to the contract.');
+    fetch();
   };
 
   return (
@@ -47,6 +62,18 @@ export default function ClientBookings() {
           <p><strong>Date:</strong> {b.dateTime}</p>
           <p><strong>Status:</strong> {b.status}</p>
 
+          {b.contract && (
+            <ContractViewer
+              bookingId={b.id}
+              terms={b.contract.terms}
+              agreedByClient={b.contract.agreedByClient}
+              agreedByProvider={b.contract.agreedByProvider}
+              userRole='client'
+              onAgree={() => handleAgree(b.id)}
+            />
+          )}
+
+          {b.status === 'completed' && !b.review && (
             <div className='mt-4'>
               <label className='block text-sm mb-1 text-white'>Rating (1–5 Stars)</label>
               <select
@@ -57,7 +84,7 @@ export default function ClientBookings() {
                 className='w-full bg-gray-800 text-white p-2 rounded border border-gray-600'
               >
                 <option value='' disabled>Select Rating</option>
-                {[1,2,3,4,5].map((n) => (
+                {[1, 2, 3, 4, 5].map((n) => (
                   <option key={n} value={n}>{n} Star{n > 1 ? 's' : ''}</option>
                 ))}
               </select>
