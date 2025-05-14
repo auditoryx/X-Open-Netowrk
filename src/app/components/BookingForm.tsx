@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createBooking } from "@/lib/createBooking";
+import { initiateBookingWithStripe } from "@/lib/initiateBookingWithStripe";
 
 export default function BookingForm({ providerId, serviceId, userId }: { providerId: string; serviceId: string; userId: string }) {
   const [date, setDate] = useState("");
@@ -12,7 +12,7 @@ export default function BookingForm({ providerId, serviceId, userId }: { provide
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createBooking({ providerId, serviceId, userId, date, time, message });
+      await initiateBookingWithStripe({ providerId, serviceId, userId, date, time, message });
       setStatus("success");
       setDate("");
       setTime("");
