@@ -43,6 +43,7 @@
     "util": "^0.12.5"
   },
   "devDependencies": {
+    "@types/luxon": "^3.6.2",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

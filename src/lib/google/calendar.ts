@@ -41,7 +41,7 @@ export async function pushToGoogleCalendar(token: string, uid: string, slots: Sl
   const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
 
   for (const slot of slots) {
-    const nextDate = getNextDateForWeekday(slot.day);
+    const nextDate = getNextDateForWeekday(slot.day as DayOfWeek);
 
     const start = new Date(`${nextDate}T${slot.time}:00`);
     const end = new Date(start.getTime() + 30 * 60 * 1000); // 30-min block

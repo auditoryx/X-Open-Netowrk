@@ -18,11 +18,14 @@ const times = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '1
 function convertTime(day: string, time: string, fromTZ: string): string {
   try {
     const now = DateTime.local();
-    const target = now.set({ weekday: days.indexOf(day) + 1 })
+    const weekday = (days.indexOf(day) + 1) as import('luxon').WeekdayNumbers;
+
+    const target = now
+      .set({ weekday })
       .setZone(fromTZ)
       .set({
-        hour: parseInt(time.split(':')[0]),
-        minute: parseInt(time.split(':')[1]),
+        hour: parseInt(time.split(':')[0], 10),
+        minute: parseInt(time.split(':')[1], 10),
       });
 
     const local = target.setZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
@@ -70,7 +73,9 @@ export default function SlotSelectorGrid({
                     <button
                       disabled={isBusy}
                       onClick={() => toggleSlot({ day, time })}
-                      className={`${baseClass} ${isBusy ? busyClass : isSelected ? selectedClass : emptyClass}`}
+                      className={`${baseClass} ${
+                        isBusy ? busyClass : isSelected ? selectedClass : emptyClass
+                      }`}
                     >
                       {isBusy ? 'Busy' : isSelected ? `✔ ${displayTime}` : displayTime}
                     </button>
