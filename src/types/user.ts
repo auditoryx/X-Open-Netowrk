@@ -32,5 +32,4 @@ export interface UserWithProfile extends User {
   isCreator: boolean;
   isAdmin: boolean;
   isUser: boolean;
-    isVerified: boolean;  
-  }
+  isVerified: boolean;  
