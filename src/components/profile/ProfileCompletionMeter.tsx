@@ -1,43 +1,51 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
-import { getUserProfile } from '@/lib/getUserProfile'
-import { useAuth } from '@/lib/hooks/useAuth'
+import React from 'react';
+import { UserProfile } from '@/types/user';
 
-const REQUIRED_FIELDS = ['displayName', 'bio', 'mediaSamples', 'location', 'services', 'availability', 'socialLinks']
+type Props = {
+  profile: UserProfile;
+};
 
-const ProfileCompletionMeter = () => {
-  const { user } = useAuth()
-  const [completion, setCompletion] = useState(0)
+const checks = [
+  { key: 'name', label: 'Name' },
+  { key: 'bio', label: 'Bio' },
+  { key: 'media', label: 'Profile Image' },
+  { key: 'services', label: 'At least 1 Service' },
+  { key: 'timezone', label: 'Timezone' },
+];
 
-  useEffect(() => {
-    const checkCompletion = async () => {
-      if (!user) return
-      const profile = await getUserProfile(user.uid)
-      const filled = REQUIRED_FIELDS.filter((field) => {
-        const val = profile?.[field]
-        return Array.isArray(val) ? val.length > 0 : !!val
-      })
-      const percent = Math.round((filled.length / REQUIRED_FIELDS.length) * 100)
-      setCompletion(percent)
-    }
+export default function ProfileCompletionMeter({ profile }: Props) {
+  const completed = checks.filter((item) => {
+    const value = profile[item.key as keyof UserProfile];
+    if (Array.isArray(value)) return value.length > 0;
+    return Boolean(value);
+  });
 
-    checkCompletion()
-  }, [user])
-
-  if (!user) return null
+  const percent = Math.round((completed.length / checks.length) * 100);
 
   return (
-    <div className="w-full mt-4">
-      <p className="text-sm font-medium">Profile Completion: {completion}%</p>
-      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+    <div className="bg-white p-4 rounded-xl shadow-md mb-6 text-sm">
+      <h3 className="text-lg font-semibold mb-2">Profile Completion</h3>
+
+      <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
         <div
-          className="bg-green-500 h-2 rounded-full"
-          style={{ width: \`\${completion}%\` }}
+          className="bg-blue-600 h-2 rounded-full"
+          style={{ width: \`\${percent}%\` }}
         />
       </div>
-    </div>
-  )
-}
 
-export default ProfileCompletionMeter
+      <ul className="space-y-1">
+        {checks.map((item) => {
+          const isDone = completed.some((c) => c.key === item.key);
+          return (
+            <li key={item.key} className="flex items-center gap-2">
+              <span>{isDone ? '✅' : '❌'}</span>
+              <span>{item.label}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}

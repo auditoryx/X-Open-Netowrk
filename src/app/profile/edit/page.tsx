@@ -5,8 +5,11 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { app } from '@/app/firebase';
+import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
+import { UserProfile } from '@/types/user';
 
 export default function EditProfilePage() {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [bio, setBio] = useState('');
   const [socialLink, setSocialLink] = useState('');
   const [loading, setLoading] = useState(true);
@@ -20,16 +23,21 @@ export default function EditProfilePage() {
         router.push('/login');
         return;
       }
+
       const db = getFirestore(app);
       const ref = doc(db, 'users', user.uid);
       const snap = await getDoc(ref);
+
       if (snap.exists()) {
         const data = snap.data();
+        setProfile({ uid: user.uid, ...data } as UserProfile);
         setBio(data.bio || '');
         setSocialLink(data.socialLink || '');
       }
+
       setLoading(false);
     };
+
     fetchProfile();
   }, [router]);
 
@@ -38,12 +46,15 @@ export default function EditProfilePage() {
     const auth = getAuth(app);
     const user = auth.currentUser;
     if (!user) return;
+
     const db = getFirestore(app);
     const ref = doc(db, 'users', user.uid);
+
     await setDoc(ref, {
       bio,
       socialLink,
     }, { merge: true });
+
     router.push(`/profile/${user.uid}`);
   };
 
@@ -52,6 +63,9 @@ export default function EditProfilePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">Edit Your Profile</h1>
+
+      {profile && <ProfileCompletionMeter profile={profile} />}
+
       <form onSubmit={handleSave} className="space-y-4 w-full max-w-md">
         <textarea
           placeholder="Your bio..."
@@ -78,3 +92,4 @@ export default function EditProfilePage() {
     </div>
   );
 }
+// This code is a React component for editing a user's profile. It fetches the user's current profile data from Firestore, allows the user to edit their bio and social link, and saves the changes back to Firestore. The component also includes a profile completion meter to show how complete the user's profile is.
