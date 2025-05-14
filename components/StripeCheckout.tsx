@@ -1,32 +1,51 @@
-import { useEffect } from 'react';
+'use client';
+
+import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import { useRouter } from 'next/navigation';
 
+// ✅ Define the stripePromise using your public key
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export default function StripeCheckout({ amount, bookingId }: { amount: number; bookingId: string }) {
-  useEffect(() => {
-    const handleCheckout = async () => {
-      const stripe = await stripePromise;
+interface Props {
+  amount: number;
+  bookingId: string;
+}
 
-      // Make a POST request to create a Checkout session
-      const res = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount, bookingId }),
-      });
+export default function StripeCheckout({ amount, bookingId }: Props) {
+  const router = useRouter();
 
-      const session = await res.json();
+  const handleClick = async () => {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ bookingId }),
+    });
 
-      // Redirect to Stripe Checkout
-      const { error } = await stripe?.redirectToCheckout({ sessionId: session.id });
-      if (error) {
-        console.error('Error during checkout:', error);
-      }
-    };
+    const data = await res.json();
+    if (!res.ok) {
+      console.error('Failed to create Stripe session');
+      return;
+    }
 
-    handleCheckout();
-  }, [amount, bookingId]);
+    const stripe = await stripePromise;
+    if (!stripe) {
+      console.error('Stripe failed to initialize');
+      return;
+    }
 
-  return <button className='px-4 py-2 bg-blue-600 text-white rounded'>Pay Now</button>;
+    await stripe.redirectToCheckout({ sessionId: data.sessionId });
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="mt-2 px-3 py-1 bg-purple-600 text-white rounded"
+    >
+      Pay ¥{amount}
+    </button>
+  );
 }

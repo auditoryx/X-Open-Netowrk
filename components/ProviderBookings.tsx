@@ -3,8 +3,9 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { getUserBookings } from '@/lib/firestore/getUserBookings';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
 import { updateAvailability } from '@/lib/firestore/updateAvailability';
+import { markBookingAsCompleted } from '@/lib/firestore/bookings/markBookingAsCompleted';
 import toast from 'react-hot-toast';
-import StripeCheckout from '@/components/StripeCheckout';
+import StripeCheckout from './StripeCheckout';
 
 export default function ProviderBookings() {
   const { user } = useAuth();
@@ -35,6 +36,12 @@ export default function ProviderBookings() {
     fetchBookings(); // refresh after update
   };
 
+  const handleMarkCompleted = async (booking: any) => {
+    await markBookingAsCompleted(booking.id, booking.clientUid, booking.providerUid);
+    toast.success('Booking marked as completed. Review prompts sent.');
+    fetchBookings();
+  };
+
   return (
     <div>
       <h2 className='text-lg font-semibold mb-2'>Bookings You Received</h2>
@@ -58,7 +65,7 @@ export default function ProviderBookings() {
 
           {b.status === 'confirmed' && (
             <button
-              onClick={() => handleStatusChange(b.id, 'completed')}
+              onClick={() => handleMarkCompleted(b)}
               className='mt-2 px-3 py-1 bg-blue-600 text-white rounded'
             >
               Mark as Completed
@@ -69,3 +76,4 @@ export default function ProviderBookings() {
     </div>
   );
 }
+// Note: Ensure to replace the placeholder functions and types with actual implementations as per your project structure.

@@ -1,0 +1,710 @@
+.
+|-- TypeScript:
+|-- app-structure.txt
+|-- app_backup_before_migration
+|   |-- about
+|   |   `-- page.tsx
+|   |-- admin
+|   |   |-- applications
+|   |   |   `-- page.tsx
+|   |   |-- components
+|   |   |   `-- AdminNavbar.tsx
+|   |   `-- logout
+|   |       `-- page.tsx
+|   |-- api
+|   |   |-- artist-services
+|   |   |   `-- route.js
+|   |   |-- auth
+|   |   |   |-- logout
+|   |   |   |   `-- route.js
+|   |   |   |-- register
+|   |   |   |   `-- route.js
+|   |   |   |-- session
+|   |   |   |   `-- route.js
+|   |   |   `-- verify
+|   |   |       `-- route.js
+|   |   |-- availability
+|   |   |   `-- route.js
+|   |   |-- bookings
+|   |   |   `-- route.js
+|   |   |-- checkout
+|   |   |   `-- route.js
+|   |   |-- create-checkout-session
+|   |   |   `-- route.js
+|   |   |-- engineer-services
+|   |   |   `-- route.js
+|   |   |-- logout
+|   |   |   `-- route.ts
+|   |   |-- producer-services
+|   |   |   `-- route.js
+|   |   |-- profile
+|   |   |   `-- availability
+|   |   |       `-- route.js
+|   |   |-- services
+|   |   |   `-- route.js
+|   |   |-- set-role
+|   |   |   `-- route.js
+|   |   |-- studio-availability
+|   |   |   `-- route.js
+|   |   |-- studio-services
+|   |   |   `-- route.js
+|   |   `-- videographer-services
+|   |       `-- route.js
+|   |-- apply
+|   |   |-- [role]
+|   |   |   `-- page.tsx
+|   |   `-- page.tsx
+|   |-- artists
+|   |   `-- page.jsx
+|   |-- auth
+|   |   |-- login.js
+|   |   |-- page.tsx
+|   |   `-- signup.js
+|   |-- availability
+|   |   `-- page.js
+|   |-- beats
+|   |   `-- page.js
+|   |-- booking
+|   |   `-- page.tsx
+|   |-- client
+|   |   `-- page.jsx
+|   |-- components
+|   |   |-- AuthModal.js
+|   |   |-- AvailabilityForm.js
+|   |   |-- BackgroundAnimation.js
+|   |   |-- BookingForm.js
+|   |   |-- BookingForm.tsx
+|   |   |-- BookingHistory.js
+|   |   |-- BookingRequestForm.js
+|   |   |-- BookingRequestForm.jsx
+|   |   |-- BookingsViewer.js
+|   |   |-- ClientBookings.js
+|   |   |-- CreativeDropdown.js
+|   |   |-- DarkModeToggle.js
+|   |   |-- EditServicesForm.js
+|   |   |-- FloatingCTA.js
+|   |   |-- Footer.js
+|   |   |-- Inbox.js
+|   |   |-- LogoutButton.js
+|   |   |-- MessageCenter.js
+|   |   |-- Navbar.js
+|   |   |-- Notifications.js
+|   |   |-- PayButton.js
+|   |   |-- ProviderBookings.js
+|   |   `-- ServiceManager.js
+|   |-- contact
+|   |   `-- page.tsx
+|   |-- create-profile
+|   |   `-- page.tsx
+|   |-- creators
+|   |   `-- page.jsx
+|   |-- dashboard
+|   |   |-- artist
+|   |   |   `-- page.tsx
+|   |   |-- availability
+|   |   |   `-- page.js
+|   |   |-- components
+|   |   |   |-- RoleRouter.js
+|   |   |   `-- roles
+|   |   |       |-- ArtistDashboard.js
+|   |   |       |-- DefaultDashboard.js
+|   |   |       |-- EngineerDashboard.js
+|   |   |       |-- ProducerDashboard.js
+|   |   |       |-- StudioDashboard.js
+|   |   |       `-- VideographerDashboard.js
+|   |   |-- designer
+|   |   |   `-- page.tsx
+|   |   |-- edit
+|   |   |   `-- page.js
+|   |   |-- engineer
+|   |   |   `-- page.tsx
+|   |   |-- page.js
+|   |   |-- producer
+|   |   |   `-- page.tsx
+|   |   |-- studio
+|   |   |   `-- page.tsx
+|   |   `-- videographer
+|   |       `-- page.tsx
+|   |-- engineers
+|   |   `-- page.jsx
+|   |-- explore
+|   |   `-- [role]
+|   |       `-- page.js
+|   |-- firebase
+|   |   `-- index.js
+|   |-- firebase.js
+|   |-- globals.css
+|   |-- layout.js
+|   |-- layout.tsx
+|   |-- lib
+|   |   |-- firestoreHelpers.js
+|   |   |-- messageHelpers.js
+|   |   `-- profileHelpers.js
+|   |-- loading.js
+|   |-- not-found
+|   |   `-- page.js
+|   |-- not-found.js
+|   |-- page.tsx
+|   |-- producers
+|   |   `-- page.jsx
+|   |-- profile
+|   |   |-- [uid]
+|   |   |   `-- page.tsx
+|   |   |-- edit
+|   |   |   `-- page.js
+|   |   |-- edit.js
+|   |   `-- page.js
+|   |-- services
+|   |   |-- [id]
+|   |   |   `-- page.js
+|   |   |-- add
+|   |   |   `-- page.js
+|   |   |-- authService.js
+|   |   |-- manage
+|   |   |   `-- page.js
+|   |   `-- page.tsx
+|   |-- set-role
+|   |   `-- page.js
+|   |-- signup
+|   |   `-- page.tsx
+|   |-- studios
+|   |   `-- page.jsx
+|   |-- test-booking
+|   |   `-- page.tsx
+|   |-- top-creators
+|   |   `-- page.tsx
+|   |-- utils
+|   |   |-- sendWelcomeMessage.js
+|   |   |-- withAuth.js
+|   |   `-- withRoleProtection.js
+|   `-- videographers
+|       `-- page.jsx
+|-- backend
+|   |-- README.md
+|   |-- backend-auth.js
+|   |-- firebase-setup.js
+|   |-- middleware
+|   |   `-- authMiddleware.js
+|   |-- models
+|   |   |-- Service.js
+|   |   `-- User.js
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- routes
+|   |   |-- auth.js
+|   |   `-- services.js
+|   |-- server.js
+|   `-- service-listings-model.js
+|-- components
+|   |-- AvailabilityForm.js
+|   |-- BookingForm.js
+|   |-- BookingsViewer.js
+|   |-- ClientBookings.js
+|   |-- ClientBookings.tsx
+|   |-- DashboardHeader.js
+|   |-- EditProfileForm.js
+|   |-- ExploreServices.js
+|   |-- Footer.js
+|   |-- Hero.js
+|   |-- HeroSection.js
+|   |-- IncomingRequests.js
+|   |-- Layout.js
+|   |-- Navbar.js
+|   |-- ProviderBookings.js
+|   |-- ProviderBookings.tsx
+|   |-- RoleToggle.js
+|   |-- SendServiceRequest.js
+|   |-- ServiceCard.js
+|   |-- ServiceFilter.js
+|   |-- ServiceForm.js
+|   |-- ServiceList.js
+|   |-- ServiceManager.js
+|   |-- ServiceProfileModal.js
+|   |-- ServiceSubmissionForm.js
+|   |-- Services.js
+|   |-- StripeCheckout.tsx
+|   |-- dashboard
+|   |   |-- Bookings.js
+|   |   |-- Messages.js
+|   |   |-- Notifications.js
+|   |   |-- ProfileCard.js
+|   |   `-- ServicesList.js
+|   |-- forms
+|   |   `-- BookingForm.tsx
+|   `-- ui
+|       `-- DragDropUpload.tsx
+|-- context
+|   `-- AuthContext.tsx
+|-- data
+|   `-- profiles.json
+|-- debug.log
+|-- firebase
+|   |-- firebaseConfig.js
+|   |-- firebaseConfig.ts
+|   `-- firestoreHelpers.ts
+|-- firebase.json
+|-- firebaseAdminServer
+|   |-- index.ts
+|   `-- key.json
+|-- firestore.indexes.json
+|-- firestore.rules
+|-- full-project-structure.txt
+|-- full-project-tree.txt
+|-- full_project_tree.txt
+|-- functions
+|   |-- index.js
+|   |-- package-lock.json
+|   `-- package.json
+|-- grant-admin.js
+|-- index.js
+|-- js_files.txt
+|-- jsconfig.json
+|-- lib
+|   |-- bookingHelpers.js
+|   |-- createBooking.ts
+|   |-- db.js
+|   |-- email
+|   |   `-- sendBookingConfirmation.ts
+|   |-- firebase
+|   |   |-- index.ts
+|   |   |-- init.ts
+|   |   `-- uploadMedia.ts
+|   |-- firestore
+|   |   |-- createBooking.ts
+|   |   |-- getCreatorReviews.ts
+|   |   |-- getTopCreators.ts
+|   |   |-- getUserBookings.ts
+|   |   |-- saveUserProfile.ts
+|   |   |-- updateAvailability.ts
+|   |   `-- updateBookingStatus.ts
+|   |-- getUserProfile.ts
+|   |-- getUserRole.js
+|   |-- hooks
+|   |   `-- useAuth.ts
+|   |-- prisma.js
+|   `-- submitApplication.ts
+|-- middleware.ts
+|-- my_project.zip
+|-- next-env.d.ts
+|-- next.config.js
+|-- open-network-structure.txt
+|-- package-lock.json
+|-- package.json
+|-- pages
+|   `-- api
+|       `-- stripe
+|           `-- create-checkout-session.ts
+|-- postcss.config.js
+|-- prisma
+|   `-- schema.prisma
+|-- project-structure.txt
+|-- project-tree-2025-04-27_07-01-41.txt
+|-- project_code.txt
+|-- providers
+|   |-- AuthProvider.js
+|   `-- SessionProvider.js
+|-- scripts
+|   |-- addTestBooking.ts
+|   |-- addTestUser.ts
+|   |-- seedProfiles.mjs
+|   `-- seedServices.mjs
+|-- set-admin.js
+|-- setAdminClaim.js
+|-- setRoleClaim.js
+|-- setUserRoleClaim.js
+|-- src
+|   |-- app
+|   |   |-- (dashboard)
+|   |   |   `-- layout
+|   |   |       `-- layout.tsx
+|   |   |-- about
+|   |   |   `-- page.tsx
+|   |   |-- admin
+|   |   |   |-- applications
+|   |   |   |   `-- page.tsx
+|   |   |   |-- components
+|   |   |   |   `-- AdminNavbar.tsx
+|   |   |   `-- logout
+|   |   |       `-- page.tsx
+|   |   |-- api
+|   |   |   |-- artist-services
+|   |   |   |   `-- route.js
+|   |   |   |-- assign-role
+|   |   |   |   `-- route.ts
+|   |   |   |-- auth
+|   |   |   |   |-- logout
+|   |   |   |   |-- register
+|   |   |   |   |-- session
+|   |   |   |   `-- verify
+|   |   |   |-- availability
+|   |   |   |   `-- route.js
+|   |   |   |-- book
+|   |   |   |   `-- route.ts
+|   |   |   |-- bookings
+|   |   |   |   `-- route.js
+|   |   |   |-- capture-payment
+|   |   |   |   `-- route.ts
+|   |   |   |-- checkout
+|   |   |   |   `-- route.js
+|   |   |   |-- create-checkout-session
+|   |   |   |   `-- route.ts
+|   |   |   |-- disputes
+|   |   |   |   `-- open
+|   |   |   |-- engineer-services
+|   |   |   |   `-- route.js
+|   |   |   |-- logout
+|   |   |   |   `-- route.ts
+|   |   |   |-- producer-services
+|   |   |   |   `-- route.js
+|   |   |   |-- profile
+|   |   |   |   `-- availability
+|   |   |   |-- reviews
+|   |   |   |   `-- route.ts
+|   |   |   |-- services
+|   |   |   |   `-- route.js
+|   |   |   |-- set-role
+|   |   |   |   `-- route.ts
+|   |   |   |-- stripe
+|   |   |   |   |-- subscribe
+|   |   |   |   `-- webhook
+|   |   |   |-- studio-availability
+|   |   |   |   `-- route.js
+|   |   |   |-- studio-services
+|   |   |   |   `-- route.js
+|   |   |   |-- videographer-services
+|   |   |   |   `-- route.js
+|   |   |   `-- webhooks
+|   |   |       `-- stripe
+|   |   |-- apply
+|   |   |   |-- [role]
+|   |   |   |   `-- page.tsx
+|   |   |   `-- page.tsx
+|   |   |-- artists
+|   |   |   `-- page.jsx
+|   |   |-- auth
+|   |   |   |-- login.js
+|   |   |   |-- page.tsx
+|   |   |   `-- signup.js
+|   |   |-- availability
+|   |   |   `-- page.js
+|   |   |-- beats
+|   |   |   `-- page.js
+|   |   |-- book
+|   |   |   `-- [uid]
+|   |   |       `-- page.tsx
+|   |   |-- booking
+|   |   |   `-- page.tsx
+|   |   |-- cancel
+|   |   |   `-- page.tsx
+|   |   |-- client
+|   |   |   `-- page.jsx
+|   |   |-- components
+|   |   |   |-- AuthModal.js
+|   |   |   |-- AvailabilityForm.js
+|   |   |   |-- BackgroundAnimation.js
+|   |   |   |-- BookingForm.js
+|   |   |   |-- BookingForm.tsx
+|   |   |   |-- BookingHistory.js
+|   |   |   |-- BookingRequestForm.js
+|   |   |   |-- BookingRequestForm.jsx
+|   |   |   |-- BookingsViewer.js
+|   |   |   |-- ClientBookings.js
+|   |   |   |-- CreativeDropdown.js
+|   |   |   |-- DarkModeToggle.js
+|   |   |   |-- EditServicesForm.js
+|   |   |   |-- FloatingCTA.js
+|   |   |   |-- Footer.js
+|   |   |   |-- Inbox.js
+|   |   |   |-- LogoutButton.js
+|   |   |   |-- MessageCenter.js
+|   |   |   |-- Navbar.js
+|   |   |   |-- Navbar.tsx
+|   |   |   |-- Notifications.js
+|   |   |   |-- PayButton.js
+|   |   |   |-- ProviderBookings.js
+|   |   |   |-- ServiceManager.js
+|   |   |   `-- dashboard
+|   |   |       |-- AvailabilityEditor.tsx
+|   |   |       |-- AvailabilitySummary.tsx
+|   |   |       |-- SlotSelectorGrid.tsx
+|   |   |       `-- SyncStatusBadge.tsx
+|   |   |-- contact
+|   |   |   `-- page.tsx
+|   |   |-- create-profile
+|   |   |   `-- page.tsx
+|   |   |-- creators
+|   |   |   `-- page.jsx
+|   |   |-- dashboard
+|   |   |   |-- admin
+|   |   |   |   |-- disputes
+|   |   |   |   `-- promoted
+|   |   |   |-- artist
+|   |   |   |   `-- page.tsx
+|   |   |   |-- availability
+|   |   |   |   `-- page.tsx
+|   |   |   |-- bookings
+|   |   |   |   |-- DisputeButton.tsx
+|   |   |   |   `-- page.tsx
+|   |   |   |-- components
+|   |   |   |   `-- RoleRouter.js
+|   |   |   |-- edit
+|   |   |   |   `-- page.tsx
+|   |   |   |-- engineer
+|   |   |   |   `-- page.tsx
+|   |   |   |-- favorites
+|   |   |   |   `-- page.tsx
+|   |   |   |-- orders
+|   |   |   |   `-- page.tsx
+|   |   |   |-- page.tsx
+|   |   |   |-- producer
+|   |   |   |   `-- page.tsx
+|   |   |   |-- purchases
+|   |   |   |   `-- page.tsx
+|   |   |   |-- services
+|   |   |   |   `-- page.tsx
+|   |   |   |-- studio
+|   |   |   |   `-- page.tsx
+|   |   |   |-- upcoming
+|   |   |   |   `-- page.tsx
+|   |   |   `-- videographer
+|   |   |       `-- page.tsx
+|   |   |-- engineers
+|   |   |   `-- page.jsx
+|   |   |-- explore
+|   |   |   |-- [role]
+|   |   |   |   `-- page.tsx
+|   |   |   `-- page.tsx
+|   |   |-- firebase
+|   |   |   `-- index.js
+|   |   |-- firebase.js
+|   |   |-- firebase.ts
+|   |   |-- globals.css
+|   |   |-- layout.js
+|   |   |-- layout.tsx
+|   |   |-- lib
+|   |   |   |-- firestoreHelpers.js
+|   |   |   |-- messageHelpers.js
+|   |   |   `-- profileHelpers.js
+|   |   |-- loading.js
+|   |   |-- login
+|   |   |   `-- page.tsx
+|   |   |-- not-found
+|   |   |   `-- page.js
+|   |   |-- not-found.js
+|   |   |-- not-found.tsx
+|   |   |-- page.tsx
+|   |   |-- producers
+|   |   |   `-- page.jsx
+|   |   |-- profile
+|   |   |   |-- [uid]
+|   |   |   |   `-- page.tsx
+|   |   |   `-- edit
+|   |   |       `-- page.tsx
+|   |   |-- saved
+|   |   |   `-- page.tsx
+|   |   |-- services
+|   |   |   |-- [id]
+|   |   |   |   `-- page.tsx
+|   |   |   |-- add
+|   |   |   |   `-- page.tsx
+|   |   |   |-- authService.js
+|   |   |   |-- edit
+|   |   |   |   `-- [id]
+|   |   |   |-- manage
+|   |   |   |   `-- page.js
+|   |   |   `-- page.tsx
+|   |   |-- set-role
+|   |   |   `-- page.js
+|   |   |-- signup
+|   |   |   `-- page.tsx
+|   |   |-- studios
+|   |   |   `-- page.jsx
+|   |   |-- success
+|   |   |   `-- page.tsx
+|   |   |-- test-booking
+|   |   |   `-- page.tsx
+|   |   |-- top-creators
+|   |   |   `-- page.tsx
+|   |   |-- utils
+|   |   |   |-- sendWelcomeMessage.js
+|   |   |   |-- withAuth.js
+|   |   |   `-- withRoleProtection.js
+|   |   `-- videographers
+|   |       `-- page.jsx
+|   |-- client
+|   |   `-- components
+|   |       |-- client-page.jsx
+|   |       `-- client-page.tsx
+|   |-- components
+|   |   |-- RoleToggle.tsx
+|   |   |-- admin
+|   |   |   `-- AssignRoleForm.tsx
+|   |   |-- booking
+|   |   |   |-- BookingCalendar.tsx
+|   |   |   |-- BookingForm.tsx
+|   |   |   |-- BookingStatusCard.tsx
+|   |   |   |-- ReleaseFundsButton.tsx
+|   |   |   |-- ReviewForm.tsx
+|   |   |   `-- WeeklyCalendarSelector.tsx
+|   |   |-- bookings
+|   |   |   `-- BookingsList.tsx
+|   |   |-- chat
+|   |   |   `-- BookingChatThread.tsx
+|   |   |-- contract
+|   |   |   `-- ContractViewer.tsx
+|   |   |-- contracts
+|   |   |   `-- ContractTemplate.tsx
+|   |   |-- dashboard
+|   |   |   `-- Sidebar.tsx
+|   |   |-- disputes
+|   |   |   |-- AdminDisputeDashboard.tsx
+|   |   |   |-- DisputeButton.tsx
+|   |   |   `-- DisputeForm.tsx
+|   |   |-- explore
+|   |   |   |-- DiscoveryGrid.tsx
+|   |   |   |-- DiscoveryWrapper.tsx
+|   |   |   |-- FilterPanel.tsx
+|   |   |   `-- SaveButton.tsx
+|   |   |-- forms
+|   |   |   `-- ValidationSchemas.ts
+|   |   |-- profile
+|   |   |   |-- AvailabilitySelector.tsx
+|   |   |   |-- IDVerificationForm
+|   |   |   |   `-- IDVerificationForm.tsx
+|   |   |   |-- MediaGallery.tsx
+|   |   |   |-- MediaUploader.tsx
+|   |   |   |-- PortfolioEditor.tsx
+|   |   |   |-- PortfolioGrid.tsx
+|   |   |   |-- ProfileCompletionMeter.tsx
+|   |   |   |-- ProfileForm.tsx
+|   |   |   |-- ProfileReviewList.tsx
+|   |   |   |-- ProfileTrustStats.tsx
+|   |   |   `-- SaveButton.tsx
+|   |   |-- reviews
+|   |   |   `-- ReviewList.tsx
+|   |   |-- roles
+|   |   |   |-- ArtistDashboard.tsx
+|   |   |   |-- DefaultDashboard.tsx
+|   |   |   |-- EngineerDashboard.tsx
+|   |   |   |-- ProducerDashboard.tsx
+|   |   |   |-- StudioDashboard.tsx
+|   |   |   `-- VideographerDashboard.tsx
+|   |   |-- settings
+|   |   |   `-- SubscriptionSettings.tsx
+|   |   `-- ui
+|   |       |-- LanguageSwitcher.tsx
+|   |       `-- WalkthroughOverlay.tsx
+|   |-- context
+|   |   |-- AuthContext.tsx
+|   |   `-- LanguageContext.tsx
+|   |-- functions
+|   |   |-- checkDisputeAndRelease.ts
+|   |   |-- sendBookingAccepted.ts
+|   |   |-- sendBookingConfirmation.ts
+|   |   |-- sendDisputeEmail.ts
+|   |   |-- sendPayoutConfirmation.ts
+|   |   `-- sendReviewRequest.ts
+|   |-- i18n
+|   |   |-- Translate.tsx
+|   |   |-- en.json
+|   |   |-- jp.json
+|   |   `-- kr.json
+|   |-- lib
+|   |   |-- assignRole.ts
+|   |   |-- email
+|   |   |   |-- sendBookingConfirmation.ts
+|   |   |   |-- sendDisputeEmail.ts
+|   |   |   `-- sendEmail.ts
+|   |   |-- fetchUsers.ts
+|   |   |-- firebase
+|   |   |   |-- client.ts
+|   |   |   |-- uploadMedia.ts
+|   |   |   `-- uploadProfilePic.ts
+|   |   |-- firebase-admin.ts
+|   |   |-- firebase.ts
+|   |   |-- firestore
+|   |   |   |-- bookings
+|   |   |   |   |-- markAsHeld.ts
+|   |   |   |   `-- markAsReleased.ts
+|   |   |   |-- chat
+|   |   |   |   |-- getMessages.ts
+|   |   |   |   `-- sendMessage.ts
+|   |   |   |-- contracts
+|   |   |   |   `-- generateContract.ts
+|   |   |   |-- createNotification.ts
+|   |   |   |-- disputes
+|   |   |   |   |-- createDispute.ts
+|   |   |   |   `-- resolveDispute.ts
+|   |   |   |-- explore
+|   |   |   |   `-- queryCreators.ts
+|   |   |   |-- getAllCreators.ts
+|   |   |   |-- getAvailabilityTemplate.ts
+|   |   |   |-- getFavoriteCreators.ts
+|   |   |   |-- getMediaSamples.ts
+|   |   |   |-- getNextAvailable.ts
+|   |   |   |-- getTrustStats.ts
+|   |   |   |-- getUserBookings.ts
+|   |   |   |-- logging
+|   |   |   |   `-- logActivity.ts
+|   |   |   |-- queryCreators.ts
+|   |   |   |-- reviews
+|   |   |   |   `-- submitReview.ts
+|   |   |   |-- saveAvailabilityTemplate.ts
+|   |   |   |-- saveBookingToFirestore.ts
+|   |   |   |-- saveMediaSamples.ts
+|   |   |   |-- saveUserProfile.ts
+|   |   |   |-- toggleFavorite.ts
+|   |   |   `-- updateBookingStatus.ts
+|   |   |-- getServerUser.ts
+|   |   |-- getStripe.ts
+|   |   |-- google
+|   |   |   `-- calendar.ts
+|   |   |-- hooks
+|   |   |   |-- useAuth.ts
+|   |   |   `-- useAvailability.ts
+|   |   |-- profile
+|   |   |   `-- isProfileComplete.ts
+|   |   |-- reviews
+|   |   |   |-- getAverageRating.ts
+|   |   |   `-- getReviewCount.ts
+|   |   |-- stripe
+|   |   |   |-- createCheckoutSession.ts
+|   |   |   |-- createSubscriptionSession.ts
+|   |   |   |-- initiateBookingWithStripe.ts
+|   |   |   `-- updatePayoutStatus.ts
+|   |   |-- stripe.ts
+|   |   `-- utils
+|   |       |-- getStripe.ts
+|   |       |-- stripe.ts
+|   |       `-- withRoleProtection.js
+|   |-- middleware
+|   |   `-- profileCheck.ts.bak
+|   |-- pages
+|   |   `-- api
+|   |       |-- auth
+|   |       |   `-- [...nextauth].ts
+|   |       `-- calendar
+|   |           |-- push.ts
+|   |           `-- sync.ts
+|   `-- types
+|       |-- booking.ts
+|       `-- user.ts
+|-- stripe.tar.gz
+|-- structure-app.txt
+|-- structure-components.txt
+|-- styles
+|   |-- output.css
+|   `-- tailwind.css
+|-- tailwind.config.js
+|-- tailwind_help.txt
+|-- tmp.ts
+|-- tree-final.txt
+|-- tree.txt
+|-- tree_phase9.txt
+|-- tsconfig.json
+|-- types
+|   `-- user.ts
+|-- user-authentication.js
+`-- zikQWevq
+
+244 directories, 464 files

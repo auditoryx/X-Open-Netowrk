@@ -1,7 +1,7 @@
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
 import { app } from '@/lib/firebase'
 
-export async function getUserBookings(uid: string) {
+export async function getUserBookings(uid: string, p0: string) {
   const db = getFirestore(app)
   const bookingsRef = collection(db, 'bookings')
   const q = query(bookingsRef, where('providerId', '==', uid), where('status', '!=', 'cancelled'))
