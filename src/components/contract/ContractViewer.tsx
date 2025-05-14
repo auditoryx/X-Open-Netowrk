@@ -1,27 +1,17 @@
 'use client';
+import React from 'react';
 
-import { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-
-export default function ContractViewer({ bookingId }: { bookingId: string }) {
-  const [contract, setContract] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchContract = async () => {
-      const snap = await getDoc(doc(db, 'contracts', bookingId));
-      if (snap.exists()) {
-        setContract(snap.data()?.contractText);
-      }
-    };
-    fetchContract();
-  }, [bookingId]);
-
-  if (!contract) return <p className="text-gray-400">Loading contract...</p>;
-
+export default function ContractViewer({ terms, agreedByClient, agreedByProvider }: {
+  terms: string;
+  agreedByClient: boolean;
+  agreedByProvider: boolean;
+}) {
   return (
-    <div className="whitespace-pre-wrap bg-white text-black p-6 rounded shadow">
-      {contract}
+    <div className="p-4 border rounded-lg bg-white text-black">
+      <h2 className="font-bold text-lg mb-2">📄 Booking Agreement</h2>
+      <p className="whitespace-pre-line mb-4">{terms}</p>
+      <p className="text-sm">✅ Client Agreed: {agreedByClient ? 'Yes' : 'No'}</p>
+      <p className="text-sm">✅ Provider Agreed: {agreedByProvider ? 'Yes' : 'No'}</p>
     </div>
   );
 }

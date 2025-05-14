@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase/init';
+import { db } from '../../../firebase/firebaseConfig';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { sendBookingConfirmation } from '@/functions/sendBookingConfirmation';
 import { createNotification } from '@/lib/firestore/createNotification';
@@ -30,6 +30,11 @@ export async function saveBookingToFirestore(bookingData: BookingData, clientEma
     title,
     createdAt: serverTimestamp(),
     status: 'pending',
+    contract: {
+      terms: `This booking represents a mutual agreement between client and provider. If cancelled within 24h, provider reserves the right to charge partial fee.`,
+      agreedByClient: false,
+      agreedByProvider: false,
+    },
   });
 
   await sendBookingConfirmation(clientEmail, bookingData.id);
