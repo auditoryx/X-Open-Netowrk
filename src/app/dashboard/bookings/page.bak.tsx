@@ -1,7 +1,5 @@
 'use client';
 
-import BookingChat from '../../../../components/chat/BookingChat';
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';
@@ -70,13 +68,11 @@ export default function DashboardBookingsPage() {
               )}
 
               {booking.status === 'paid' && (
-                <><div className="mt-4">
-                  <BookingChat bookingId={booking.id} />
-                </div><div className="mt-4">
-                    <ContractViewer bookingId={booking.id} terms={''} agreedByClient={false} agreedByProvider={false} userRole={'client'} onAgree={function (): void {
-                      throw new Error('Function not implemented.');
-                    } } />
-                  </div></>
+                <div className="mt-4">
+                  <ContractViewer bookingId={booking.id} terms={''} agreedByClient={false} agreedByProvider={false} userRole={'client'} onAgree={function (): void {
+                    throw new Error('Function not implemented.');
+                  } } />
+                </div>
               )}
 
               <div className="flex space-x-4 mt-2">

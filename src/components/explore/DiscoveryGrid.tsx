@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import FilterPanel from './FilterPanel';
 import { queryCreators } from '@/lib/firestore/explore/queryCreators';
 import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
+import CreatorCard from '@/components/cards/CreatorCard';
 
 const DiscoveryGrid = () => {
   const [creators, setCreators] = useState<any[]>([]);
@@ -37,33 +37,21 @@ const DiscoveryGrid = () => {
   return (
     <div>
       <FilterPanel filters={filters} setFilters={setFilters} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-6">
         {creators.map((c) => (
-          <Link key={c.uid} href={`/profile/${c.uid}`}>
-            <div className="p-4 border rounded-lg hover:shadow-md">
-              <h3 className="font-semibold text-lg">{c.displayName}</h3>
-              <p className="text-sm text-gray-600">{c.role}</p>
-              <p className="text-sm mt-1 line-clamp-2">{c.bio}</p>
-              <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                {c.verified && (
-                  <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-                    ✔ Verified
-                  </span>
-                )}
-                {c.proTier && (
-                  <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
-                    🌟 Pro
-                  </span>
-                )}
-                {c.location && <span>{c.location}</span>}
-              </div>
-              {nextAvailabilities[c.uid] && (
-                <p className="text-sm text-green-600 mt-1">
-                  Next available: {nextAvailabilities[c.uid]}
-                </p>
-              )}
-            </div>
-          </Link>
+          <CreatorCard
+            key={c.uid}
+            id={c.uid}
+            name={c.displayName}
+            price={c.price ?? 0}
+            tagline={c.bio || 'No description yet'}
+            location={c.location || 'Unknown'}
+            rating={c.rating}
+            reviewCount={c.reviewCount}
+            verified={c.verified}
+            imageUrl={c.profileImage || ''}
+          />
         ))}
       </div>
     </div>
