@@ -1,73 +1,70 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
-import { app } from '@/app/firebase';
-import { useRouter } from 'next/navigation';
+import Navbar from '@/app/components/Navbar';
+import Link from 'next/link';
+
+const services = [
+  {
+    title: '🎤 Artist Features',
+    description: 'Buy verses, hooks, or full tracks — or list your own features to get booked.',
+    href: '/explore?role=artist',
+  },
+  {
+    title: '🎛️ Mixing & Mastering',
+    description: 'Hire engineers — or offer your own tuning, mastering, and vocal services.',
+    href: '/explore?role=engineer',
+  },
+  {
+    title: '🎥 Music Videos & Visuals',
+    description: 'Book videographers — or sell your own shooting and editing packages.',
+    href: '/explore?role=videographer',
+  },
+  {
+    title: '🏢 Studio Time',
+    description: 'Book real studios — or rent out your space with availability and pricing.',
+    href: '/explore?role=studio',
+  },
+  {
+    title: '🎼 Beats Marketplace',
+    description: 'Buy exclusive/non-exclusive beats — or list your own in the marketplace.',
+    href: '/beats',
+  },
+  {
+    title: '🌍 Open Network',
+    description: 'Join AuditoryX to get discovered, booked, and paid by clients worldwide.',
+    href: '/apply',
+  },
+];
 
 export default function ServicesPage() {
-  const [services, setServices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      const db = getFirestore(app);
-      const servicesCollection = collection(db, 'services');
-      const serviceSnapshot = await getDocs(servicesCollection);
-      const serviceList = serviceSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setServices(serviceList);
-      setLoading(false);
-    };
-
-    fetchServices();
-  }, []);
-
-  const handleDelete = async (id: string) => {
-    const db = getFirestore(app);
-    await deleteDoc(doc(db, 'services', id));
-    setServices(prev => prev.filter(service => service.id !== id));
-  };
-
-  if (loading) return <div>Loading services...</div>;
-
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-white mb-6">Manage Services</h1>
-      <div className="mb-6">
-        <button
-          onClick={() => router.push('/dashboard/services/add')}
-          className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700"
-        >
-          Add New Service
-        </button>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="max-w-6xl mx-auto px-6 py-20 space-y-12">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-3">What You Can Do on AuditoryX</h1>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Whether you're looking to book talent or sell your services — AuditoryX is built to help you do both.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <Link key={service.title} href={service.href} className="border border-neutral-700 p-6 rounded-xl hover:border-white/80 transition">
+              <h2 className="text-xl font-semibold mb-2">{service.title}</h2>
+              <p className="text-sm text-gray-400">{service.description}</p>
+            </Link>
+          ))}
+        </div>
+
+        <div className="pt-12 text-center">
+          <h3 className="text-xl font-semibold">Ready to offer your own services?</h3>
+          <p className="text-sm text-gray-400 mb-4">Apply now to join the network and start getting booked globally.</p>
+          <Link href="/apply" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
+            Apply as a Creator
+          </Link>
+        </div>
       </div>
-      <ul className="space-y-6">
-        {services.map(service => (
-          <li key={service.id} className="border p-4 rounded shadow text-white">
-            <h2 className="text-xl font-semibold mb-2">{service.title}</h2>
-            <p className="text-gray-300 mb-1">${service.price}</p>
-            <p className="text-sm text-gray-400 mb-2">{service.description}</p>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => router.push(`/dashboard/services/edit/${service.id}`)}
-                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(service.id)}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

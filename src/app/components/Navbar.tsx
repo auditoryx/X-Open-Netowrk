@@ -1,16 +1,26 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   return (
-    <nav className="bg-black p-4 flex justify-between text-white">
-      <div className="font-bold text-2xl">
-        <Link href="/">AuditoryX</Link>
-      </div>
-      <div className="space-x-6">
-        <Link href="/explore">Explore</Link>
-        <Link href="/dashboard">Dashboard</Link>
+    <nav className="bg-black px-6 py-4 flex items-center justify-between text-white border-b border-neutral-800">
+      <Link href="/" className="flex items-center gap-3">
+        <Image
+          src="/images/4BA64246-AF86-41DB-A924-7BA56CA99655_1_105_c.jpeg"
+          alt="AuditoryX Logo"
+          width={40}
+          height={40}
+          className="rounded-md object-contain"
+        />
+        <span className="font-bold text-2xl tracking-tight">AuditoryX</span>
+      </Link>
+
+      <div className="space-x-6 text-sm">
+        <Link href="/explore" className="hover:underline">Explore</Link>
+        <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+        <Link href="/apply" className="hover:underline">Apply</Link>
       </div>
     </nav>
   );
