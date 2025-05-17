@@ -41,6 +41,8 @@ export default function GlobalMapPage() {
             <div style="font-size:14px">
               <strong>${c.displayName}</strong><br/>
               ${c.role} ${c.verified ? '✔️' : ''}<br/>
+              ${c.price ? `💸 Starting at $${c.price}<br/>` : ''}
+              ${c.nextAvailable ? `🗓️ Next Available: ${c.nextAvailable}<br/>` : ''}
               <a href="/profile/${c.uid}" target="_blank" class="underline text-blue-400">🔍 View Profile</a><br/>
               <a href="/book/${c.uid}" target="_blank" class="underline text-green-400">💬 Book Now</a>
             </div>
