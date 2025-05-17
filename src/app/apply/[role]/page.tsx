@@ -5,18 +5,33 @@ import Navbar from '@/app/components/Navbar';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { cityToCoords } from '@/lib/utils/cityToCoords';
 
 export default function ApplyRolePage({ params }: { params: { role: string } }) {
   const { user } = useAuth();
   const [bio, setBio] = useState('');
   const [links, setLinks] = useState('');
+  const [location, setLocation] = useState('');
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async () => {
     setError('');
     if (!user) return setError('You must be logged in to apply.');
-    if (!bio.trim() || !links.trim()) return setError('All fields are required.');
+    if (!bio.trim() || !links.trim() || !location.trim()) {
+      return setError('All fields are required.');
+    }
+
+    // Fallback coordinate logic
+    const cleanedCity = location.toLowerCase().replace(/\s+/g, '');
+    const fallbackCoords = cityToCoords[cleanedCity];
+    let locationLat = null;
+    let locationLng = null;
+
+    if (fallbackCoords) {
+      locationLng = fallbackCoords[0];
+      locationLat = fallbackCoords[1];
+    }
 
     await addDoc(collection(db, 'pendingVerifications'), {
       uid: user.uid,
@@ -25,6 +40,9 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
       role: params.role,
       bio,
       links,
+      location,
+      locationLat,
+      locationLng,
       timestamp: serverTimestamp(),
     });
 
@@ -68,6 +86,16 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
                   value={user?.email || ''}
                   disabled
                   className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-gray-300"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm mb-1 block">City / Location</label>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="e.g. Tokyo, NYC, Paris"
+                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
                 />
               </div>
 
