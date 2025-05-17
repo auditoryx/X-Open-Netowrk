@@ -9,8 +9,9 @@ import {
   doc,
   updateDoc,
 } from 'firebase/firestore';
+import withAdminProtection from '@/middleware/withAdminProtection';
 
-export default function VerificationsPage() {
+function VerificationsPage() {
   const [apps, setApps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,12 +52,16 @@ export default function VerificationsPage() {
       ) : (
         <div className="space-y-6">
           {apps.map((app) => (
-            <div key={app.id} className="border border-neutral-800 rounded-lg p-6">
+            <div
+              key={app.id}
+              className="border border-neutral-800 rounded-lg p-6 shadow hover:border-white/20 transition"
+            >
               <p><strong>Name:</strong> {app.name || 'Unknown'}</p>
               <p><strong>Email:</strong> {app.email}</p>
               <p><strong>Role:</strong> {app.role}</p>
               <p><strong>Bio:</strong> {app.bio}</p>
               <p><strong>Links:</strong> {app.links}</p>
+
               <div className="mt-4 flex gap-4">
                 <button
                   onClick={() => handleApprove(app)}
@@ -78,3 +83,5 @@ export default function VerificationsPage() {
     </div>
   );
 }
+
+export default withAdminProtection(VerificationsPage);
