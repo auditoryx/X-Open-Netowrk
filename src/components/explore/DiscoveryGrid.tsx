@@ -6,6 +6,19 @@ import { queryCreators } from '@/lib/firestore/explore/queryCreators';
 import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
 import CreatorCard from '@/components/cards/CreatorCard';
 
+const LOCATIONS = [
+  'Tokyo',
+  'Los Angeles',
+  'New York',
+  'Seoul',
+  'London',
+  'Paris',
+  'Toronto',
+  'Berlin',
+  'Sydney',
+  'Remote',
+];
+
 const DiscoveryGrid = () => {
   const [creators, setCreators] = useState<any[]>([]);
   const [nextAvailabilities, setNextAvailabilities] = useState<Record<string, string | null>>({});
@@ -21,7 +34,6 @@ const DiscoveryGrid = () => {
       const result = await queryCreators(filters);
       setCreators(result);
 
-      // Fetch next available slot per creator (optional optimization)
       const availabilityMap: Record<string, string | null> = {};
       await Promise.all(
         result.map(async (creator: any) => {
@@ -35,10 +47,37 @@ const DiscoveryGrid = () => {
   }, [filters]);
 
   return (
-    <div>
+    <div className="space-y-4">
+      {/* 🔍 Filters */}
       <FilterPanel filters={filters} setFilters={setFilters} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-6">
+      {/* 🌍 Location Filter Chips */}
+      <div className="flex flex-wrap gap-2 py-2">
+        {LOCATIONS.map((loc) => (
+          <button
+            key={loc}
+            onClick={() => setFilters((prev) => ({ ...prev, location: loc }))}
+            className={`px-4 py-1 rounded-full border text-sm ${
+              filters.location === loc
+                ? 'bg-white text-black border-white'
+                : 'bg-neutral-800 text-white border-neutral-600 hover:bg-neutral-700'
+            }`}
+          >
+            {loc}
+          </button>
+        ))}
+        {filters.location && (
+          <button
+            onClick={() => setFilters((prev) => ({ ...prev, location: '' }))}
+            className="ml-2 text-sm underline text-gray-400"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* 📡 Creator Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
         {creators.map((c) => (
           <CreatorCard
             key={c.uid}
@@ -59,3 +98,6 @@ const DiscoveryGrid = () => {
 };
 
 export default DiscoveryGrid;
+//
+// <div className="flex flex-wrap gap-2 py-2">
+//   {LOCATIONS.map((loc) => (  
