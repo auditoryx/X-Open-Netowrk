@@ -32,9 +32,13 @@ export default function CreatorCard({
           className="w-12 h-12 rounded-full object-cover bg-white"
         />
         <div className="flex flex-col">
-          <p className="font-semibold text-white">
+          <p className="font-semibold text-white flex items-center gap-2">
             {name}
-            {verified && <span className="text-blue-400 ml-2">✔</span>}
+            {verified && (
+              <span className="text-blue-400 text-xs bg-blue-400/10 px-2 py-0.5 rounded-full">
+                ✔ Verified
+              </span>
+            )}
           </p>
           <p className="text-xs text-gray-400">{location}</p>
         </div>
