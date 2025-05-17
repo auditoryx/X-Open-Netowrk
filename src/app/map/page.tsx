@@ -38,9 +38,12 @@ export default function GlobalMapPage() {
 
         if (lat && lng) {
           const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <strong>${c.displayName}</strong><br/>
-            ${c.role} ${c.verified ? '✔️' : ''}<br/>
-            <a href="/profile/${c.uid}" target="_blank" class="underline">View Profile</a>
+            <div style="font-size:14px">
+              <strong>${c.displayName}</strong><br/>
+              ${c.role} ${c.verified ? '✔️' : ''}<br/>
+              <a href="/profile/${c.uid}" target="_blank" class="underline text-blue-400">🔍 View Profile</a><br/>
+              <a href="/book/${c.uid}" target="_blank" class="underline text-green-400">💬 Book Now</a>
+            </div>
           `);
 
           new mapboxgl.Marker({ color: c.verified ? '#3B82F6' : '#aaa' })
