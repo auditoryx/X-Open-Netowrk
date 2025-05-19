@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase/init';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { sendBookingAccepted } from '@/functions/sendBookingAccepted';
 import { sendReviewRequest } from '@/functions/sendReviewRequest';
 import { createNotification } from '@/lib/firestore/createNotification';
@@ -8,7 +8,7 @@ export async function updateBookingStatus(bookingId: string, status: string, cli
   const bookingRef = doc(db, 'bookings', bookingId);
   await updateDoc(bookingRef, {
     status: status,
-    updatedAt: new Date(),
+    updatedAt: serverTimestamp(),
   });
 
   if (status === 'accepted' && clientEmail && clientId) {
