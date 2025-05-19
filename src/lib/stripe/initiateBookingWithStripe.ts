@@ -1,4 +1,4 @@
-import getStripe from './getStripe';
+import { getStripe } from '@/lib/utils/stripe';
 import { z } from 'zod';
 
 const formSchema = z.object({
