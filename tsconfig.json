@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": ["node"],
+    "types": ["node", "next-auth"],
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/types/next-auth.d.ts"
   ],
   "exclude": ["node_modules"]
 }
