@@ -1,6 +1,7 @@
 import { db } from '@/lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { z } from 'zod';
+import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 const contractSchema = z.object({
   bookingId: z.string().min(1),
@@ -17,7 +18,7 @@ export async function generateContract(
 ) {
   const parsed = contractSchema.safeParse(input);
   if (!parsed.success) {
-    console.error('Invalid contract input:', parsed.error.format());
+    console.error('❌ Invalid contract input:', parsed.error.format());
     return { error: 'Invalid contract data' };
   }
 
@@ -30,10 +31,10 @@ export async function generateContract(
     startDate,
   } = parsed.data;
 
-  // 🔐 Enforce that only buyer or provider can generate the contract
+  // 🔐 Authorization check
   if (![buyerId, providerId].includes(sessionUserId)) {
-    console.warn('Unauthorized contract generation attempt by:', sessionUserId);
-    return { error: 'You are not authorized to generate this contract.' };
+    console.warn('⚠️ Unauthorized contract generation attempt by:', sessionUserId);
+    return { error: 'Unauthorized' };
   }
 
   const contractText = `
@@ -61,32 +62,17 @@ export async function generateContract(
       createdAt: serverTimestamp(),
     });
 
+    await logActivity(sessionUserId, 'contract_generated', {
+      bookingId,
+      providerId,
+      buyerId,
+      price,
+      startDate,
+    });
+
     return { success: true };
   } catch (err: any) {
-    console.error('Failed to generate contract:', err.message);
-    return { error: 'Contract generation failed.' };
+    console.error('🔥 Failed to generate contract:', err.message);
+    return { error: 'Contract generation failed' };
   }
 }
-// This function generates a contract for a booking between a buyer and a provider.
-// It validates the input data, checks if the user is authorized to generate the contract,
-// and then creates a contract document in Firestore with the relevant details.
-// The contract includes the service name, price, start date, and a text representation of the agreement.
-// If successful, it returns a success message; otherwise, it logs the error and returns an error message.
-// The contract text is a simple template that outlines the agreement between the two parties.
-// The function uses Zod for input validation and Firestore for data storage.
-// The contract is stored in a Firestore collection named 'contracts' with the booking ID as the document ID.
-// The function also includes error handling to catch any issues during the Firestore operations.
-// The contract text is a simple template that outlines the agreement between the two parties.
-// The function uses Zod for input validation and Firestore for data storage.
-// The contract is stored in a Firestore collection named 'contracts' with the booking ID as the document ID.
-// The function also includes error handling to catch any issues during the Firestore operations.
-// The contract text is a simple template that outlines the agreement between the two parties.
-// The function uses Zod for input validation and Firestore for data storage.
-// The contract is stored in a Firestore collection named 'contracts' with the booking ID as the document ID.
-// The function also includes error handling to catch any issues during the Firestore operations.
-// The contract text is a simple template that outlines the agreement between the two parties.
-// The function uses Zod for input validation and Firestore for data storage.
-// The contract is stored in a Firestore collection named 'contracts' with the booking ID as the document ID.
-// The function also includes error handling to catch any issues during the Firestore operations.
-// The contract text is a simple template that outlines the agreement between the two parties.
-// The function uses Zod for input validation and Firestore for data storage.
