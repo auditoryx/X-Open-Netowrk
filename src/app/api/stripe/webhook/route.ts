@@ -1,53 +1,75 @@
 import { stripe } from '@/lib/stripe';
-import { NextResponse } from 'next/server';
 import { admin } from '@/lib/firebase-admin';
-import { doc, updateDoc } from 'firebase/firestore';
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
+import { logActivity } from '@/lib/firestore/logging/logActivity';
+import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
 
 export async function POST(req: Request) {
   const buf = await req.arrayBuffer();
   const payload = Buffer.from(buf).toString();
   const sig = req.headers.get('stripe-signature')!;
+  const firestore = admin.firestore();
 
-  let event;
+  let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(payload, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = stripe.webhooks.constructEvent(
+      payload,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
   } catch (err) {
-    console.error('Webhook Error:', err);
-    return NextResponse.json({ error: 'Webhook error' }, { status: 400 });
+    console.error('❌ Stripe webhook signature verification failed:', err);
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as any;
+    const session = event.data.object as Stripe.Checkout.Session;
 
-    // Subscription mode
-    if (session.mode === 'subscription') {
-      const uid = session.metadata?.uid;
-      if (uid) {
-        const firestore = admin.firestore();
-        await firestore.collection('users').doc(uid).update({
+    const metadata = session.metadata || {};
+    const mode = session.mode;
+    const email = session.customer_email || 'unknown@email.com';
+
+    try {
+      if (mode === 'subscription' && metadata.uid) {
+        await firestore.collection('users').doc(metadata.uid).update({
           subscriptionStatus: 'pro',
         });
-      }
-    }
 
-    // Booking mode
-    if (session.mode === 'payment') {
-      const bookingId = session.metadata?.bookingId;
-      if (bookingId) {
-        const db = admin.firestore();
-        await db.collection('bookings').doc(bookingId).update({
+        await logActivity(metadata.uid, 'subscription_activated', {
+          email,
+        });
+      }
+
+      if (mode === 'payment' && metadata.bookingId) {
+        await firestore.collection('bookings').doc(metadata.bookingId).update({
           paid: true,
           status: 'confirmed',
         });
 
-        const testEmail = 'zenji@example.com'; // Replace w/ real user email in production
-        await sendBookingConfirmation(testEmail, bookingId);
-        console.log('✅ Booking confirmed →', bookingId);
+        await sendBookingConfirmation(email, metadata.bookingId);
+        await logActivity(email, 'booking_paid', {
+          bookingId: metadata.bookingId,
+        });
+
+        console.log('✅ Booking confirmed:', metadata.bookingId);
       }
+    } catch (err: any) {
+      console.error('🔥 Failed to handle Stripe event:', err.message);
+      await firestore.collection('errorLogs').add({
+        type: 'webhook_handling_error',
+        message: err.message,
+        eventType: event.type,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
     }
   }
 
   return NextResponse.json({ received: true });
 }
+// Note: This webhook handler is not secured with authentication. Ensure to validate the event source and payload in production.
+// This is a simplified example. In a real-world application, you should implement proper error handling and logging.
+// Also, consider using a library like `stripe-webhook` for easier handling of Stripe webhooks.
+// This code is a basic example of how to handle Stripe webhooks in a Next.js API route.
+// It listens for the `checkout.session.completed` event, verifies the signature, and processes the event accordingly.
