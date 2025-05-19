@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { getMessages } from '@/lib/firestore/chat/getMessages'
 import { sendMessage } from '@/lib/firestore/chat/sendMessage'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { format } from 'date-fns'
 
 type Props = {
   bookingId: string
@@ -34,11 +35,26 @@ const BookingChatThread = ({ bookingId }: Props) => {
     <div className="border mt-4 rounded-xl p-4 max-w-xl">
       <h3 className="font-semibold text-lg mb-2">Messages</h3>
       <div className="max-h-64 overflow-y-auto mb-3 space-y-2">
-        {messages.map((m, i) => (
-          <div key={i} className={`text-sm p-2 rounded ${m.senderId === user?.uid ? 'bg-black text-white ml-auto' : 'bg-gray-200'}`}>
-            {m.text}
-          </div>
-        ))}
+        {messages.map((m, i) => {
+          const isMe = m.senderId === user?.uid
+          const time = m.timestamp?.toDate ? format(m.timestamp.toDate(), 'HH:mm') : ''
+
+          return (
+            <div
+              key={i}
+              className={`max-w-xs text-sm p-2 rounded relative ${
+                isMe ? 'bg-black text-white ml-auto' : 'bg-gray-200'
+              }`}
+            >
+              <div>{m.text}</div>
+              {time && (
+                <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-gray-400' : 'text-gray-500'}`}>
+                  {time}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
       <div className="flex gap-2">
         <input
