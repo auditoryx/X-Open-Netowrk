@@ -2,29 +2,47 @@ import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 
-export async function sendEmail(to: string, subject: string, templateName: string, replacements: Record<string, string>) {
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_EMAIL,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
-  const templatePath = path.join(process.cwd(), 'public', 'emails', templateName);
-  let html = fs.readFileSync(templatePath, 'utf-8');
+export async function sendEmail(
+  to: string,
+  subject: string,
+  templateName: string,
+  replacements: Record<string, string>
+) {
+  try {
+    const templatePath = path.join(process.cwd(), 'public', 'emails', templateName);
+    let html = fs.readFileSync(templatePath, 'utf-8');
 
-  // Replace all placeholders in the template
-  for (const [key, value] of Object.entries(replacements)) {
-    html = html.replaceAll(`{{${key}}}`, value);
+    for (const [key, value] of Object.entries(replacements)) {
+      html = html.replaceAll(`{{${key}}}`, value);
+    }
+
+    const info = await transporter.sendMail({
+      from: `"AuditoryX" <${process.env.SMTP_EMAIL}>`,
+      to,
+      subject,
+      html,
+      text: html.replace(/<[^>]*>/g, ''), // Basic fallback text
+    });
+
+    console.log('✅ Email sent:', info.messageId);
+    return { success: true };
+  } catch (err: any) {
+    console.error('❌ Email failed:', err.message);
+
+    // Optional: Log to Firestore or errorLogs later
+    // await logErrorToFirestore({ type: 'email', message: err.message, recipient: to });
+
+    return { error: 'Email send failed' };
   }
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    html,
-  };
-
-  await transporter.sendMail(mailOptions);
 }
+// Example usage
+// sendEmail(
+//   '  
