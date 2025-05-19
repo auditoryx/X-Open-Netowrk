@@ -2,10 +2,45 @@
 
 import { signOut } from 'firebase/auth';
 import { auth } from '@/firebase/firebaseConfig';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { submitSupportMessage } from '@/lib/firestore/support/submitSupportMessage';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function BannedNotice() {
   const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ uid: string; email: string } | null>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserInfo({ uid: user.uid, email: user.email || '' });
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleSubmit = async () => {
+    if (!message.trim() || !userInfo) return;
+    setSubmitting(true);
+
+    const res = await submitSupportMessage({
+      uid: userInfo.uid,
+      email: userInfo.email,
+      message,
+    });
+
+    setSubmitting(false);
+
+    if (res.success) {
+      setSubmitted(true);
+      setMessage('');
+    } else {
+      alert('There was an error. Try again.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 text-center">
@@ -22,7 +57,6 @@ export default function BannedNotice() {
         >
           Sign Out
         </button>
-
         <button
           onClick={() => setShowModal(true)}
           className="border border-white px-4 py-2 rounded hover:bg-white hover:text-black"
@@ -31,43 +65,40 @@ export default function BannedNotice() {
         </button>
       </div>
 
-      {/* 📩 Modal */}
+      {/* 🪟 Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
           <div className="bg-white text-black p-6 rounded max-w-md w-full space-y-4">
             <h2 className="text-xl font-bold">Contact Support</h2>
-            <p className="text-sm text-gray-600">
-              Email us at{' '}
-              <a
-                href="mailto:support@auditoryx.com"
-                className="text-blue-600 underline"
-              >
-                support@auditoryx.com
-              </a>{' '}
-              or describe your issue below.
-            </p>
-            <textarea
-              placeholder="Write your message here..."
-              className="w-full p-2 border rounded text-black"
-              rows={4}
-            />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-sm text-gray-600 hover:text-black"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  alert('📨 Message feature coming soon!');
-                  setShowModal(false);
-                }}
-                className="bg-black text-white px-4 py-2 rounded"
-              >
-                Send
-              </button>
-            </div>
+
+            {submitted ? (
+              <p className="text-green-600 text-sm">✅ Message submitted. We’ll review it soon.</p>
+            ) : (
+              <>
+                <textarea
+                  placeholder="Explain your situation..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full p-2 border rounded text-black"
+                  rows={4}
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="text-sm text-gray-600 hover:text-black"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-black text-white px-4 py-2 rounded"
+                    disabled={submitting}
+                  >
+                    {submitting ? 'Sending...' : 'Send'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
