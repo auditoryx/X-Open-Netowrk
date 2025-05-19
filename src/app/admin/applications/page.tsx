@@ -1,72 +1,80 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Navbar from '@/app/components/Navbar';
+import { db } from '@/lib/firebase';
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  orderBy,
+  query,
+} from 'firebase/firestore';
+import withAdminProtection from '@/middleware/withAdminProtection';
 
-export default function AdminApplicationsPage() {
+function ApplicationsPage() {
   const [apps, setApps] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchApps = async () => {
-      const res = await fetch('/api/applications'); // your existing applications route
-      const data = await res.json();
-      setApps(data);
-      setLoading(false);
-    };
-    fetchApps();
+    async function fetchApplications() {
+      const q = query(collection(db, 'applications'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      setApps(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    }
+
+    fetchApplications();
   }, []);
 
-  const handleApprove = async (uid: string, role: string) => {
-    await fetch('/api/set-role', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid, role }),
+  const handleDecision = async (id: string, uid: string, status: 'approved' | 'rejected') => {
+    await updateDoc(doc(db, 'applications', id), {
+      status,
+      reviewedAt: new Date(),
     });
-    setApps(prev => prev.filter(a => a.userId !== uid));
-  };
 
-  const handleBan = async (uid: string) => {
-    await fetch('/api/users/ban', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid }),
-    });
-    setApps(prev => prev.filter(a => a.userId !== uid));
-  };
+    if (status === 'approved') {
+      await updateDoc(doc(db, 'users', uid), {
+        isVerified: true,
+      });
+    }
 
-  if (loading) return <div className="p-6 text-white">Loading applications...</div>;
+    setApps((prev) => prev.filter((a) => a.id !== id));
+  };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">User Applications</h1>
-        <ul className="space-y-4">
-          {apps.map(app => (
-            <li key={app.id} className="border border-white p-4 rounded flex justify-between items-center">
-              <div>
-                <p><strong>User:</strong> {app.userId}</p>
-                <p><strong>Role:</strong> {app.role}</p>
-              </div>
-              <div className="space-x-2">
-                <button
-                  onClick={() => handleApprove(app.userId, app.role)}
-                  className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => handleBan(app.userId)}
-                  className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
-                >
-                  Ban
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">User Applications</h1>
+      {apps.length === 0 ? (
+        <p className="text-gray-400">No pending applications.</p>
+      ) : (
+        apps.map((app) => (
+          <div key={app.id} className="bg-gray-900 p-4 rounded">
+            <p><strong>User ID:</strong> {app.uid}</p>
+            <p><strong>Applied Role:</strong> {app.role}</p>
+            <p><strong>Bio:</strong> {app.bio}</p>
+            <p><strong>Socials:</strong> {app.socials?.join(', ')}</p>
+            <p className="text-sm text-gray-500">
+              Submitted: {new Date(app.createdAt?.seconds * 1000).toLocaleString()}
+            </p>
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => handleDecision(app.id, app.uid, 'approved')}
+                className="bg-green-600 text-white px-4 py-1 rounded text-sm"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => handleDecision(app.id, app.uid, 'rejected')}
+                className="bg-red-600 text-white px-4 py-1 rounded text-sm"
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   );
 }
+
+export default withAdminProtection(ApplicationsPage);
