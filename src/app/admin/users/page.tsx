@@ -7,24 +7,47 @@ import {
   getDocs,
   orderBy,
   query,
-  updateDoc,
-  doc,
 } from 'firebase/firestore';
 import withAdminProtection from '@/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
 
 function AdminUsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [allUsers, setAllUsers] = useState<any[]>([]);
+  const [filtered, setFiltered] = useState<any[]>([]);
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
 
   useEffect(() => {
     async function fetchUsers() {
       const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
       const snap = await getDocs(q);
-      setUsers(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const users = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setAllUsers(users);
+      setFiltered(users);
     }
 
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    const q = search.toLowerCase();
+    let f = allUsers;
+
+    if (roleFilter) {
+      f = f.filter((u) => u.role === roleFilter);
+    }
+
+    if (q) {
+      f = f.filter(
+        (u) =>
+          u.id.toLowerCase().includes(q) ||
+          u.email?.toLowerCase().includes(q) ||
+          u.name?.toLowerCase().includes(q)
+      );
+    }
+
+    setFiltered(f);
+  }, [search, roleFilter, allUsers]);
 
   const handleRoleChange = async (uid: string, newRole: string) => {
     try {
@@ -35,12 +58,11 @@ function AdminUsersPage() {
       });
 
       if (!res.ok) throw new Error();
+      toast.success(`User ${uid} promoted to ${newRole}`);
 
-      setUsers((prev) =>
+      setAllUsers((prev) =>
         prev.map((u) => (u.id === uid ? { ...u, role: newRole } : u))
       );
-
-      toast.success(`User ${uid} promoted to ${newRole}`);
     } catch {
       toast.error('Failed to update role');
     }
@@ -48,34 +70,61 @@ function AdminUsersPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">All Users</h1>
-      {users.map((user) => (
-        <div key={user.id} className="bg-gray-900 p-4 rounded space-y-1">
-          <p><strong>UID:</strong> {user.id}</p>
-          <p><strong>Email:</strong> {user.email || 'N/A'}</p>
-          <p><strong>Role:</strong> {user.role || 'user'}</p>
-          <p><strong>Created:</strong> {user.createdAt?.seconds ? new Date(user.createdAt.seconds * 1000).toLocaleString() : 'Unknown'}</p>
+      <h1 className="text-2xl font-bold">User Directory</h1>
 
-          <div className="flex items-center gap-2 mt-2">
-            <select
-              className="p-1 rounded text-black"
-              value={user.role || ''}
-              onChange={(e) => handleRoleChange(user.id, e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="verified">Verified</option>
-              <option value="pro">Pro</option>
-              <option value="admin">Admin</option>
-            </select>
-            <button
-              className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
-              onClick={() => handleRoleChange(user.id, user.role)}
-            >
-              Update
-            </button>
+      <div className="flex items-center gap-4">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search UID / Email / Name"
+          className="p-2 text-black rounded w-64"
+        />
+        <select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          className="p-2 rounded text-black"
+        >
+          <option value="">All Roles</option>
+          <option value="user">User</option>
+          <option value="verified">Verified</option>
+          <option value="pro">Pro</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className="text-gray-400">No users match your filters.</p>
+      ) : (
+        filtered.map((user) => (
+          <div key={user.id} className="bg-gray-900 p-4 rounded space-y-1">
+            <p><strong>UID:</strong> {user.id}</p>
+            <p><strong>Email:</strong> {user.email || 'N/A'}</p>
+            <p><strong>Name:</strong> {user.name || '—'}</p>
+            <p><strong>Role:</strong> {user.role || 'user'}</p>
+            <p><strong>Joined:</strong> {user.createdAt?.seconds ? new Date(user.createdAt.seconds * 1000).toLocaleString() : 'Unknown'}</p>
+
+            <div className="flex items-center gap-2 mt-2">
+              <select
+                className="p-1 rounded text-black"
+                value={user.role || ''}
+                onChange={(e) => handleRoleChange(user.id, e.target.value)}
+              >
+                <option value="user">User</option>
+                <option value="verified">Verified</option>
+                <option value="pro">Pro</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button
+                className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                onClick={() => handleRoleChange(user.id, user.role)}
+              >
+                Update
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }
