@@ -68,6 +68,23 @@ function AdminUsersPage() {
     }
   };
 
+  const toggleBan = async (uid: string, ban: boolean) => {
+    try {
+      await fetch('/api/ban-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid, banned: ban }),
+      });
+
+      toast.success(`User ${ban ? 'banned' : 'unbanned'}`);
+      setAllUsers((prev) =>
+        prev.map((u) => (u.id === uid ? { ...u, banned: ban } : u))
+      );
+    } catch {
+      toast.error('Failed to update ban status');
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">User Directory</h1>
@@ -102,6 +119,7 @@ function AdminUsersPage() {
             <p><strong>Email:</strong> {user.email || 'N/A'}</p>
             <p><strong>Name:</strong> {user.name || '—'}</p>
             <p><strong>Role:</strong> {user.role || 'user'}</p>
+            <p><strong>Banned:</strong> {user.banned ? 'Yes' : 'No'}</p>
             <p><strong>Joined:</strong> {user.createdAt?.seconds ? new Date(user.createdAt.seconds * 1000).toLocaleString() : 'Unknown'}</p>
 
             <div className="flex items-center gap-2 mt-2">
@@ -120,6 +138,14 @@ function AdminUsersPage() {
                 onClick={() => handleRoleChange(user.id, user.role)}
               >
                 Update
+              </button>
+              <button
+                className={`${
+                  user.banned ? 'bg-yellow-600' : 'bg-red-600'
+                } text-white px-3 py-1 rounded text-sm`}
+                onClick={() => toggleBan(user.id, !user.banned)}
+              >
+                {user.banned ? 'Unban' : 'Ban'}
               </button>
             </div>
           </div>

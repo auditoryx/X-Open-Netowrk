@@ -1,20 +1,17 @@
-import { cookies } from 'next/headers'
 import { getAuth } from 'firebase-admin/auth'
 import { admin } from './firebase-admin'
 
-export async function getServerUser() {
-  const token = cookies().get('__session')?.value
-  if (!token) return null
-
+export async function getServerUser(token: string) {
   try {
     const decoded = await getAuth(admin).verifyIdToken(token)
-    return {
-      uid: decoded.uid,
-      email: decoded.email,
-      role: decoded.role || null,
-    }
+    const uid = decoded.uid
+
+    const snap = await admin.firestore().collection('users').doc(uid).get()
+    const data = snap.data()
+
+    if (data?.banned) return null // 🔒 Block banned users
+    return { uid, email: decoded.email, ...data }
   } catch (err) {
-    console.error('getServerUser error:', err)
     return null
   }
 }
