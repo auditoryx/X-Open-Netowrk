@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { db } from '@/firebase/firebaseConfig';
 import {
   doc,
-  getDoc,
+  onSnapshot,
   updateDoc,
   arrayUnion,
   serverTimestamp,
@@ -19,12 +19,13 @@ export default function SupportTicketPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTicket = async () => {
-      const snap = await getDoc(doc(db, 'supportMessages', id as string));
-      if (snap.exists()) setTicket({ id: snap.id, ...snap.data() });
+    const unsub = onSnapshot(doc(db, 'supportMessages', id as string), (snap) => {
+      if (snap.exists()) {
+        setTicket({ id: snap.id, ...snap.data() });
+      }
       setLoading(false);
-    };
-    fetchTicket();
+    });
+    return () => unsub();
   }, [id]);
 
   const sendReply = async () => {
@@ -64,7 +65,10 @@ export default function SupportTicketPage() {
             <ul className="space-y-2 mt-2">
               {ticket.replies.map((r: any, i: number) => (
                 <li key={i} className="text-sm text-green-300">
-                  {r.text} — <span className="text-xs text-gray-400">{r.createdAt?.toDate?.().toLocaleString() || ''}</span>
+                  {r.text} —{' '}
+                  <span className="text-xs text-gray-400">
+                    {r.createdAt?.toDate?.().toLocaleString() || ''}
+                  </span>
                 </li>
               ))}
             </ul>
