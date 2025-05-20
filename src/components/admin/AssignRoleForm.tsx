@@ -1,12 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { assignRole } from '@/lib/assignRole'
+import { getAuth } from 'firebase/auth'
 
 export default function AssignRoleForm() {
   const [uid, setUid] = useState('')
   const [role, setRole] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const auth = getAuth()
+    const user = auth.currentUser
+    if (user && user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      setIsAdmin(true)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,6 +30,8 @@ export default function AssignRoleForm() {
       setLoading(false)
     }
   }
+
+  if (!isAdmin) return null
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
