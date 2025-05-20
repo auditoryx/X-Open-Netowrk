@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { getMessages } from '@/lib/firestore/chat/getMessages'
+import { listenToMessages } from '@/lib/firestore/chat/getMessages'
 import { sendMessage } from '@/lib/firestore/chat/sendMessage'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { format } from 'date-fns'
@@ -16,19 +16,21 @@ const BookingChatThread = ({ bookingId }: Props) => {
   const [text, setText] = useState('')
 
   useEffect(() => {
-    const load = async () => {
-      const msgs = await getMessages(bookingId)
+    const unsub = listenToMessages(bookingId, (msgs) => {
       setMessages(msgs)
-    }
-    load()
+      setTimeout(() => {
+        const el = document.getElementById('chat-scroll-anchor')
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }, 50)
+    })
+
+    return () => unsub()
   }, [bookingId])
 
   const handleSend = async () => {
     if (!text.trim() || !user) return
     await sendMessage({ bookingId, senderId: user.uid, text })
     setText('')
-    const msgs = await getMessages(bookingId)
-    setMessages(msgs)
   }
 
   return (
@@ -47,23 +49,27 @@ const BookingChatThread = ({ bookingId }: Props) => {
               }`}
             >
               <div>{m.text}</div>
-              {time && (
-                <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {time}
-                </div>
-              )}
+              <div className="text-[10px] opacity-60 mt-1">{time}</div>
             </div>
           )
         })}
+        <div id="chat-scroll-anchor" />
       </div>
+
       <div className="flex gap-2">
         <input
-          className="border p-2 flex-1 rounded"
+          type="text"
+          className="flex-1 border rounded px-2 py-1 text-sm"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Write a message..."
+          placeholder="Type a message..."
         />
-        <button onClick={handleSend} className="bg-black text-white px-3 py-2 rounded">Send</button>
+        <button
+          onClick={handleSend}
+          className="bg-black text-white px-4 py-1 text-sm rounded"
+        >
+          Send
+        </button>
       </div>
     </div>
   )
