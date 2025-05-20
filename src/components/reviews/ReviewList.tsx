@@ -2,29 +2,55 @@
 
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  limit,
+  onSnapshot,
+  startAfter,
+  orderBy,
+  QueryDocumentSnapshot,
+  DocumentData
+} from 'firebase/firestore';
 
 export function ReviewList({ providerId }: { providerId: string }) {
   const [reviews, setReviews] = useState<any[]>([]);
+  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchReviews = (startDoc: QueryDocumentSnapshot<DocumentData> | null = null) => {
+    const baseQuery = query(
+      collection(db, 'reviews'),
+      where('providerId', '==', providerId),
+      orderBy('createdAt', 'desc'),
+      limit(10),
+      ...(startDoc ? [startAfter(startDoc)] : [])
+    );
+
+    return onSnapshot(baseQuery, (snap) => {
+      if (snap.empty) {
+        setHasMore(false);
+        setLoading(false);
+        return;
+      }
+
+      const newReviews = snap.docs.map(doc => doc.data());
+      setReviews(prev => [...prev, ...newReviews]);
+      setLastDoc(snap.docs[snap.docs.length - 1]);
+      setLoading(false);
+    });
+  };
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      const q = query(collection(db, 'reviews'), where('providerId', '==', providerId));
-      const snap = await getDocs(q);
-      const data = snap.docs.map(doc => doc.data());
-      setReviews(data);
-      setLoading(false);
-    };
-
-    fetchReviews();
+    const unsub = fetchReviews();
+    return () => unsub();
   }, [providerId]);
 
-  if (loading) return <div className="text-sm text-gray-400">Loading reviews...</div>;
-  if (reviews.length === 0) return <div className="text-sm text-gray-400">No reviews yet.</div>;
-
-  const avgRating =
-    reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length;
+  const avgRating = reviews.length
+    ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length
+    : 0;
 
   return (
     <div className="mt-8 w-full max-w-xl">
@@ -41,6 +67,17 @@ export function ReviewList({ providerId }: { providerId: string }) {
           </div>
         ))}
       </div>
+
+      {hasMore && (
+        <button
+          onClick={() => fetchReviews(lastDoc)}
+          className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200"
+        >
+          Load More
+        </button>
+      )}
+
+      {loading && <div className="text-sm text-gray-400 mt-4">Loading...</div>}
     </div>
   );
 }
