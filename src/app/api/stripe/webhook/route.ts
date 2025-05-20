@@ -21,6 +21,11 @@ export async function POST(req: Request) {
     );
   } catch (err) {
     console.error('❌ Stripe webhook signature verification failed:', err);
+    await firestore.collection("stripe_logs").add({
+      type: "webhook_signature_error",
+      error: err?.message || "Invalid signature",
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 

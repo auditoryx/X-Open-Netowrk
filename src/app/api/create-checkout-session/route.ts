@@ -47,10 +47,15 @@ async function handler(req: NextRequest & { user: any }) {
     console.error('❌ Stripe session failed:', err?.message || err);
 
     try {
-      await addDoc(collection(db, 'errorLogs'), {
-        type: 'stripe_checkout_error',
+      await addDoc(collection(db, 'stripe_logs'), {
+        type: 'checkout_session_error',
         message: err?.message || 'Unknown error',
-        timestamp: serverTimestamp(),
+        bookingId: parsed?.data?.bookingId || 'unknown',
+        providerId: parsed?.data?.providerId || 'unknown',
+        userId: req.user.uid || 'unknown',
+        ip: req.headers.get('x-forwarded-for') || req.ip || 'unknown',
+        userAgent: req.headers.get('user-agent') || 'unknown',
+        createdAt: serverTimestamp(),
       });
     } catch (logErr) {
       console.error('🔥 Failed to log error to Firestore:', logErr);
