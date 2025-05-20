@@ -5,16 +5,19 @@ export async function submitSupportMessage({
   uid,
   email,
   message,
+  type = 'general',
 }: {
   uid: string;
   email: string;
   message: string;
+  type?: 'bannedAppeal' | 'contractIssue' | 'bookingProblem' | 'general';
 }) {
   try {
     await addDoc(collection(db, 'supportMessages'), {
       uid,
       email,
       message,
+      type,
       status: 'open',
       createdAt: serverTimestamp(),
     });
