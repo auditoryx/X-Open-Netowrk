@@ -4,13 +4,19 @@ import {
   getDocs,
   query,
   where,
+  orderBy,
 } from 'firebase/firestore';
 
 export const queryCreators = async (filters: {
   role: string;
   verifiedOnly: boolean;
-  location: string;
-  service: string;
+  location?: string;
+  service?: string;
+  lat?: number;
+  lng?: number;
+  radiusKm?: number;
+  sortKey?: string;
+  sortDirection?: 'asc' | 'desc';
 }) => {
   let ref = collection(db, 'users');
   const constraints = [];
@@ -23,13 +29,21 @@ export const queryCreators = async (filters: {
     constraints.push(where('verified', '==', true));
   }
 
-  // Add support for location and service as needed
   if (filters.location) {
     constraints.push(where('location', '==', filters.location));
   }
 
   if (filters.service) {
     constraints.push(where('services', 'array-contains', filters.service));
+  }
+
+  if (filters.sortKey) {
+    constraints.push(orderBy(filters.sortKey, filters.sortDirection || 'desc'));
+  }
+
+  if (filters.lat && filters.lng && filters.radiusKm) {
+    console.warn('🔜 Geo radius filtering not implemented yet');
+    // Later: use a geohash or Firestore extension or distance calc
   }
 
   const q = query(ref, ...constraints);

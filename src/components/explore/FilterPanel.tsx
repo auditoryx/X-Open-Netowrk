@@ -8,13 +8,32 @@ type Props = {
     verifiedOnly: boolean;
     location: string;
     service: string;
+    lat?: number;
+    lng?: number;
+    searchNearMe?: boolean;
   };
   setFilters: (filters: any) => void;
 };
 
 const FilterPanel = ({ filters, setFilters }: Props) => {
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters({ ...filters, role: e.target.value });
+  const handleGeoToggle = () => {
+    if (!filters.searchNearMe) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setFilters({
+          ...filters,
+          searchNearMe: true,
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+      });
+    } else {
+      setFilters({
+        ...filters,
+        searchNearMe: false,
+        lat: undefined,
+        lng: undefined,
+      });
+    }
   };
 
   return (
@@ -23,7 +42,7 @@ const FilterPanel = ({ filters, setFilters }: Props) => {
       <div className="flex flex-col gap-4">
         <select
           value={filters.role}
-          onChange={handleRoleChange}
+          onChange={(e) => setFilters({ ...filters, role: e.target.value })}
           className="bg-black border border-neutral-700 p-2 rounded text-white"
         >
           <option value="">All Roles</option>
@@ -50,19 +69,13 @@ const FilterPanel = ({ filters, setFilters }: Props) => {
           className="bg-black border border-neutral-700 p-2 rounded text-white"
         />
 
-        <label className="flex items-center gap-2 text-sm text-white">
+        <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
-            checked={!filters.verifiedOnly}
-            onChange={() =>
-              setFilters((prev) => ({
-                ...prev,
-                verifiedOnly: !prev.verifiedOnly,
-              }))
-            }
-            className="form-checkbox text-blue-600"
+            checked={filters.searchNearMe || false}
+            onChange={handleGeoToggle}
           />
-          <span>Show Unverified Creators</span>
+          Search Near Me
         </label>
       </div>
     </div>
