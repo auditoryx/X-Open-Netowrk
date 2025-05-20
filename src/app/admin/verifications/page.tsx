@@ -5,72 +5,77 @@ import { db } from '@/lib/firebase';
 import {
   collection,
   getDocs,
-  deleteDoc,
   doc,
   updateDoc,
+  serverTimestamp,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 import withAdminProtection from '@/middleware/withAdminProtection';
 
 function VerificationsPage() {
-  const [apps, setApps] = useState<any[]>([]);
+  const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchApps = async () => {
-      const snap = await getDocs(collection(db, 'pendingVerifications'));
+    const fetchRequests = async () => {
+      const q = query(collection(db, 'verificationRequests'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
       const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setApps(data);
+      setRequests(data.filter((r) => r.status === 'pending'));
       setLoading(false);
     };
-    fetchApps();
+
+    fetchRequests();
   }, []);
 
-  const handleApprove = async (app: any) => {
-    if (!app.uid) return;
+  const handleApprove = async (r: any) => {
+    if (!r.uid) return;
+    await updateDoc(doc(db, 'users', r.uid), { verified: true });
 
-    await updateDoc(doc(db, 'users', app.uid), {
-      verified: true,
-      role: app.role,
+    await updateDoc(doc(db, 'verificationRequests', r.uid), {
+      status: 'approved',
+      reviewedAt: serverTimestamp(),
     });
 
-    await deleteDoc(doc(db, 'pendingVerifications', app.id));
-    setApps((prev) => prev.filter((a) => a.id !== app.id));
+    setRequests((prev) => prev.filter((req) => req.uid !== r.uid));
   };
 
-  const handleReject = async (appId: string) => {
-    await deleteDoc(doc(db, 'pendingVerifications', appId));
-    setApps((prev) => prev.filter((a) => a.id !== appId));
+  const handleReject = async (r: any) => {
+    await updateDoc(doc(db, 'verificationRequests', r.uid), {
+      status: 'rejected',
+      reviewedAt: serverTimestamp(),
+    });
+
+    setRequests((prev) => prev.filter((req) => req.uid !== r.uid));
   };
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl font-bold mb-6">Pending Applications</h1>
+      <h1 className="text-3xl font-bold mb-6">Verification Requests</h1>
+
       {loading ? (
         <p>Loading...</p>
-      ) : apps.length === 0 ? (
-        <p>No pending applications.</p>
+      ) : requests.length === 0 ? (
+        <p>No pending verification requests.</p>
       ) : (
         <div className="space-y-6">
-          {apps.map((app) => (
-            <div
-              key={app.id}
-              className="border border-neutral-800 rounded-lg p-6 shadow hover:border-white/20 transition"
-            >
-              <p><strong>Name:</strong> {app.name || 'Unknown'}</p>
-              <p><strong>Email:</strong> {app.email}</p>
-              <p><strong>Role:</strong> {app.role}</p>
-              <p><strong>Bio:</strong> {app.bio}</p>
-              <p><strong>Links:</strong> {app.links}</p>
+          {requests.map((r) => (
+            <div key={r.uid} className="border border-neutral-700 rounded-lg p-6 shadow">
+              <p><strong>Email:</strong> {r.email}</p>
+              <p><strong>UID:</strong> {r.uid}</p>
+              <p><strong>Message:</strong> {r.message || '(no message)'}</p>
+              <p><strong>Requested At:</strong> {r.createdAt?.seconds ? new Date(r.createdAt.seconds * 1000).toLocaleString() : 'Unknown'}</p>
 
               <div className="mt-4 flex gap-4">
                 <button
-                  onClick={() => handleApprove(app)}
+                  onClick={() => handleApprove(r)}
                   className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
                 >
                   Approve
                 </button>
                 <button
-                  onClick={() => handleReject(app.id)}
+                  onClick={() => handleReject(r)}
                   className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
                 >
                   Reject
