@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { app } from '@/app/firebase';
 import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
@@ -12,7 +12,9 @@ export default function EditProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [bio, setBio] = useState('');
   const [socialLink, setSocialLink] = useState('');
+  const [verificationMessage, setVerificationMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,6 +60,26 @@ export default function EditProfilePage() {
     router.push(`/profile/${user.uid}`);
   };
 
+  const handleVerificationSubmit = async () => {
+    const auth = getAuth(app);
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const db = getFirestore(app);
+    const ref = collection(db, 'verificationRequests');
+
+    await setDoc(doc(ref, user.uid), {
+      uid: user.uid,
+      email: user.email,
+      message: verificationMessage,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+
+    setSubmitted(true);
+    setVerificationMessage('');
+  };
+
   if (loading) return <div className="p-6 text-white">Loading profile...</div>;
 
   return (
@@ -89,7 +111,30 @@ export default function EditProfilePage() {
           Save Profile
         </button>
       </form>
+
+      {/* 🟦 Apply for Verification */}
+      <div className="mt-10 w-full max-w-md border-t pt-6">
+        <h2 className="text-xl font-semibold mb-2">Apply for Verification</h2>
+        {submitted ? (
+          <p className="text-green-400 text-sm">✅ Request submitted! We'll review it soon.</p>
+        ) : (
+          <>
+            <textarea
+              placeholder="Why should we verify you? (Optional)"
+              value={verificationMessage}
+              onChange={(e) => setVerificationMessage(e.target.value)}
+              className="w-full p-2 rounded text-black mb-2"
+              rows={3}
+            />
+            <button
+              onClick={handleVerificationSubmit}
+              className="w-full bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+            >
+              Submit Verification Request
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
-// This code is a React component for editing a user's profile. It fetches the user's current profile data from Firestore, allows the user to edit their bio and social link, and saves the changes back to Firestore. The component also includes a profile completion meter to show how complete the user's profile is.
