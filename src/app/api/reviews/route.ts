@@ -1,17 +1,18 @@
 import { db } from '@/lib/firebase';
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import withAuth from '@/app/utils/withAuth';
 
-export async function POST(req: NextRequest) {
-  const { bookingId, reviewerId, reviewedId, text, rating } = await req.json();
+async function handler(req: NextRequest & { user: any }) {
+  const { bookingId, reviewedId, text, rating } = await req.json();
 
-  if (!bookingId || !reviewerId || !reviewedId || !text || !rating) {
+  if (!bookingId || !reviewedId || !text || !rating) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
   await addDoc(collection(db, 'reviews'), {
     bookingId,
-    reviewerId,
+    reviewerId: req.user.uid,
     reviewedId,
     text,
     rating,
@@ -20,3 +21,5 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ success: true });
 }
+
+export const POST = withAuth(handler);

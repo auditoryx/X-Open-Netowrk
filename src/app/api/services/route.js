@@ -1,32 +1,60 @@
+import { db } from '@/lib/firebase';
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { firebaseConfig } from '@/app/firebase';
+import withAuth from '@/app/utils/withAuth';
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
-
-export async function GET() {
+// GET all services
+async function getServices() {
   const snap = await getDocs(collection(db, 'services'));
   const services = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   return NextResponse.json(services);
 }
 
-export async function POST(req) {
+// POST new service
+async function createService(req) {
   const data = await req.json();
-  const ref = await addDoc(collection(db, 'services'), data);
-  return NextResponse.json({ id: ref.id, ...data });
+
+  if (!data.title || !data.description || !data.price) {
+    return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+  }
+
+  const newService = {
+    ...data,
+    creatorId: req.user.uid,
+    createdAt: Date.now(),
+  };
+
+  const docRef = await addDoc(collection(db, 'services'), newService);
+  return NextResponse.json({ id: docRef.id });
 }
 
-export async function PUT(req) {
-  const { id, ...rest } = await req.json();
+// PUT update service
+async function updateService(req) {
+  const { id, updates } = await req.json();
+
+  if (!id || !updates) {
+    return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+  }
+
   const ref = doc(db, 'services', id);
-  await updateDoc(ref, rest);
+  await updateDoc(ref, { ...updates, updatedAt: Date.now() });
+
   return NextResponse.json({ success: true });
 }
 
-export async function DELETE(req) {
+// DELETE service
+async function deleteService(req) {
   const { id } = await req.json();
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing service ID' }, { status: 400 });
+  }
+
   await deleteDoc(doc(db, 'services', id));
   return NextResponse.json({ success: true });
 }
+
+export const GET = getServices;
+export const POST = withAuth(createService);
+export const PUT = withAuth(updateService);
+export const DELETE = withAuth(deleteService);
