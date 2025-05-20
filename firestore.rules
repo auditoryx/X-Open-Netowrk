@@ -71,3 +71,8 @@ service cloud.firestore {
     }
   }
 }
+
+// Global fallback match
+match /{document=**} {
+  allow read: if false;
+}
