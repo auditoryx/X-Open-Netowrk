@@ -1,17 +1,18 @@
 'use client';
 
 import BookingChat from '../../../../components/chat/BookingChat';
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 import ReviewForm from '@/components/booking/ReviewForm';
 import DisputeForm from '@/components/disputes/DisputeForm';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const highlightRef = useRef<{ [key: string]: HTMLLIElement | null }>({});
 
@@ -64,19 +65,39 @@ export default function DashboardBookingsPage() {
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
               <p><strong>Status:</strong> {booking.status}</p>
 
-              {/* 💸 Fee Info */}
               {booking.platformFee && (
                 <p><strong>Platform Fee:</strong> ${booking.platformFee}</p>
               )}
 
               {booking.status === 'paid' && (
-                <><div className="mt-4">
-                  <BookingChat bookingId={booking.id} />
-                </div><div className="mt-4">
-                    <ContractViewer bookingId={booking.id} terms={''} agreedByClient={false} agreedByProvider={false} userRole={'client'} onAgree={function (): void {
-                      throw new Error('Function not implemented.');
-                    } } />
-                  </div></>
+                <>
+                  <div className="mt-4">
+                    <BookingChat bookingId={booking.id} />
+                  </div>
+                  <div className="mt-4">
+                    <ContractViewer
+                      bookingId={booking.id}
+                      terms={
+                        booking.contract?.terms ||
+                        'By booking this service, you agree to collaborate professionally and complete the work as discussed.'
+                      }
+                      agreedByClient={booking.contract?.agreedByClient || false}
+                      agreedByProvider={booking.contract?.agreedByProvider || false}
+                      userRole={user?.uid === booking.buyerId ? 'client' : 'provider'}
+                      onAgree={async () => {
+                        await fetch('/api/agree-contract', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            bookingId: booking.id,
+                            role: user?.uid === booking.buyerId ? 'client' : 'provider',
+                          }),
+                        });
+                        alert('✅ Contract signed!');
+                      }}
+                    />
+                  </div>
+                </>
               )}
 
               <div className="flex space-x-4 mt-2">
