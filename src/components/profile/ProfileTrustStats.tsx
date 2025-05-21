@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 
@@ -11,11 +11,14 @@ export function ProfileTrustStats() {
   const [reviewCount, setReviewCount] = useState<number>(0);
   const [badges, setBadges] = useState<string[]>([]);
   const [level, setLevel] = useState<string>('');
+  const [isVerified, setIsVerified] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchTrustStats() {
       if (!user?.uid) return;
       const db = getFirestore(app);
+
+      // Get reviews
       const reviewsRef = collection(db, 'users', user.uid, 'reviews');
       const snapshot = await getDocs(reviewsRef);
       const ratings = snapshot.docs.map(doc => doc.data().rating);
@@ -25,7 +28,13 @@ export function ProfileTrustStats() {
         setReviewCount(ratings.length);
       }
 
-      // Optional – fetch extra trust stats if you already have logic
+      // Fetch verified status
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        setIsVerified(userDoc.data()?.verified || false);
+      }
+
+      // Optional: extra trust badges
       const res = await fetch(`/api/trust-stats?uid=${user.uid}`);
       const data = await res.json();
       setBadges(data.badges || []);
@@ -39,6 +48,11 @@ export function ProfileTrustStats() {
 
   return (
     <div className="p-4 rounded-md border mt-4">
+      {isVerified && (
+        <span className="inline-block mb-2 text-blue-400 text-xs bg-blue-400/10 px-2 py-1 rounded-full">
+          ✔ Verified Profile
+        </span>
+      )}
       <h2 className="text-lg font-bold mb-2">Profile Trust Stats</h2>
       {averageRating !== null && (
         <p className="text-sm">
