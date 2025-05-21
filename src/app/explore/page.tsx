@@ -7,6 +7,7 @@ import GlobalMapPage from '../map/page';
 export default function ExplorePage() {
   const [view, setView] = useState<'grid' | 'map'>('grid');
   const [tier, setTier] = useState('');
+  const [role, setRole] = useState('');
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
@@ -21,6 +22,18 @@ export default function ExplorePage() {
             <option value="">All Tiers</option>
             <option value="verified">Verified</option>
             <option value="signature">Signature</option>
+          </select>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="text-black px-2 py-1 rounded"
+          >
+            <option value="">All Roles</option>
+            <option value="artist">Artist</option>
+            <option value="producer">Producer</option>
+            <option value="engineer">Engineer</option>
+            <option value="studio">Studio</option>
+            <option value="videographer">Videographer</option>
           </select>
           <button
             onClick={() => setView('grid')}
@@ -42,7 +55,7 @@ export default function ExplorePage() {
       </div>
 
       {view === 'grid' ? (
-        <DiscoveryGrid filters={{ proTier: tier }} />
+        <DiscoveryGrid filters={{ proTier: tier, role }} />
       ) : (
         <div className="h-[80vh] rounded overflow-hidden border border-white">
           <GlobalMapPage />
