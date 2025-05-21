@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/app/components/Navbar';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';

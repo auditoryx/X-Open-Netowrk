@@ -1,5 +1,5 @@
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 
 export async function getAverageRating(providerId: string): Promise<number | null> {
   const db = getFirestore(app);

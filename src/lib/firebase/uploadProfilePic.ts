@@ -1,5 +1,5 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 
 export async function uploadProfilePic(file: File, userId: string): Promise<string> {
   const storage = getStorage(app);

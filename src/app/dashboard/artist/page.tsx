@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import { UserProfile } from '@/types/user';
 import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';

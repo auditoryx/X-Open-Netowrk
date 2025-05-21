@@ -14,7 +14,7 @@ import {
   getDocs,
   serverTimestamp
 } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import Navbar from '@/app/components/Navbar';
 import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';

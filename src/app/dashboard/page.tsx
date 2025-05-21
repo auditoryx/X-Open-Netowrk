@@ -3,7 +3,7 @@
 import Navbar from '@/app/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import { useEffect, useState } from 'react';
 
 export default function DashboardPage() {

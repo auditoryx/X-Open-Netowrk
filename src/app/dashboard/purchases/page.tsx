@@ -4,7 +4,7 @@ import Navbar from '@/app/components/Navbar';
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function PurchasesPage() {

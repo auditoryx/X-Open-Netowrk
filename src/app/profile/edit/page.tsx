@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
 import { UserProfile } from '@/types/user';
 

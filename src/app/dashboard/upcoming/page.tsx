@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Navbar from '@/app/components/Navbar';
 

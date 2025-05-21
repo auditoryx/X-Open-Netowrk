@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { app } from '@/app/firebase';
+import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
