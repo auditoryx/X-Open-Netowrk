@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 export default function Navbar() {
+  const { data: session } = useSession();
+
   return (
     <nav className="bg-black px-6 py-4 flex items-center justify-between text-white border-b border-neutral-800">
       <Link href="/" className="flex items-center gap-3">
@@ -19,7 +22,13 @@ export default function Navbar() {
 
       <div className="space-x-6 text-sm">
         <Link href="/explore" className="hover:underline">Explore</Link>
-        <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+        {session?.user ? (
+          <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+        ) : (
+          <Link href="/start" className="hover:underline font-semibold text-blue-400">
+            Join as a Creator
+          </Link>
+        )}
         <Link href="/apply" className="hover:underline">Apply</Link>
       </div>
     </nav>
