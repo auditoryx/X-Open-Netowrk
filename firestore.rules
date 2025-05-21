@@ -11,8 +11,19 @@ service cloud.firestore {
     // User profiles
     match /users/{userId} {
       allow read: if true;
+
       allow create: if request.auth != null && request.auth.uid == userId;
-      allow update, delete: if request.auth != null && request.auth.uid == userId;
+
+      allow update: if request.auth != null && request.auth.uid == userId
+        && !(
+          "proTier" in request.resource.data ||
+          "verified" in request.resource.data ||
+          "approvedByAdmin" in request.resource.data
+        );
+
+      allow update: if request.auth.token.admin == true;
+
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
     // Bookings
@@ -69,10 +80,10 @@ service cloud.firestore {
     match /admin/{docId} {
       allow read, write: if request.auth.token.admin == true;
     }
-  }
-}
 
-// Global fallback match
-match /{document=**} {
-  allow read: if false;
+    // ✅ FIXED: Fallback match must be here inside the root document match
+    match /{document=**} {
+      allow read: if false;
+    }
+  }
 }
