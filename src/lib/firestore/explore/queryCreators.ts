@@ -6,6 +6,7 @@ import {
   where,
   orderBy,
 } from 'firebase/firestore';
+import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 
 export const queryCreators = async (filters: {
   role: string;
@@ -43,10 +44,13 @@ export const queryCreators = async (filters: {
 
   if (filters.lat && filters.lng && filters.radiusKm) {
     console.warn('🔜 Geo radius filtering not implemented yet');
-    // Later: use a geohash or Firestore extension or distance calc
+    // Future: use geohash or post-query distance filtering
   }
 
   const q = query(ref, ...constraints);
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  return snapshot.docs
+    .map((doc) => ({ id: doc.id, ...doc.data() }))
+    .filter(isProfileComplete);
 };
