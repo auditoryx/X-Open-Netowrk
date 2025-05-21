@@ -12,6 +12,7 @@ import {
   query,
   where,
   getDocs,
+  serverTimestamp
 } from 'firebase/firestore';
 import { app } from '@/app/firebase';
 import Navbar from '@/app/components/Navbar';
@@ -70,7 +71,6 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       return;
     }
 
-    // 💰 Fee Logic
     const baseAmount = 100;
     const platformFee = Math.round(baseAmount * 0.15);
     const totalAmount = baseAmount + platformFee;
@@ -84,13 +84,13 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       baseAmount,
       platformFee,
       totalAmount,
-      createdAt: new Date(),
-      status: 'pending',
+      createdAt: serverTimestamp(),
+      status: 'pending'
     });
 
     const updated = availability.filter((a) => a !== selectedTime);
     await updateDoc(doc(db, 'users', params.uid), {
-      availability: updated,
+      availability: updated
     });
 
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
