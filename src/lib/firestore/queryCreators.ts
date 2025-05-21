@@ -3,7 +3,12 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { UserProfile } from '@/types/user'; // ✅ import type
 
-export async function queryCreators(filters: { role?: string; verifiedOnly?: boolean; location?: string }) {
+export async function queryCreators(filters: {
+  role?: string;
+  verifiedOnly?: boolean;
+  location?: string;
+  proTier?: 'standard' | 'verified' | 'signature';
+}) {
   const qConstraints = [];
 
   if (filters.role) {
@@ -16,6 +21,10 @@ export async function queryCreators(filters: { role?: string; verifiedOnly?: boo
 
   if (filters.location) {
     qConstraints.push(where('location', '==', filters.location));
+  }
+
+  if (filters.proTier) {
+    qConstraints.push(where('proTier', '==', filters.proTier));
   }
 
   const q = query(collection(db, 'users'), ...qConstraints);
