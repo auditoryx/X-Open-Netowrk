@@ -7,16 +7,8 @@ import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
 import CreatorCard from '@/components/cards/CreatorCard';
 
 const LOCATIONS = [
-  'Tokyo',
-  'Los Angeles',
-  'New York',
-  'Seoul',
-  'London',
-  'Paris',
-  'Toronto',
-  'Berlin',
-  'Sydney',
-  'Remote',
+  'Tokyo', 'Los Angeles', 'New York', 'Seoul', 'London',
+  'Paris', 'Toronto', 'Berlin', 'Sydney', 'Remote',
 ];
 
 const DiscoveryGrid = () => {
@@ -27,16 +19,21 @@ const DiscoveryGrid = () => {
     verifiedOnly: false,
     location: '',
     service: '',
+    proTier: '',
   });
 
   useEffect(() => {
     const fetchCreators = async () => {
       const result = await queryCreators(filters);
-      setCreators(result);
+      const sorted = result.sort((a, b) => {
+        const tierOrder = { signature: 0, verified: 1, standard: 2 };
+        return (tierOrder[a.proTier] ?? 3) - (tierOrder[b.proTier] ?? 3);
+      });
+      setCreators(sorted);
 
       const availabilityMap: Record<string, string | null> = {};
       await Promise.all(
-        result.map(async (creator: any) => {
+        sorted.map(async (creator: any) => {
           const next = await getNextAvailable(creator.uid);
           availabilityMap[creator.uid] = next;
         })
@@ -49,7 +46,24 @@ const DiscoveryGrid = () => {
   return (
     <div className="space-y-4">
       {/* 🔍 Filters */}
-      <FilterPanel filters={filters} setFilters={setFilters} />
+      <div className="sticky top-0 z-20 bg-black border-b border-white pb-4 mb-6">
+        <FilterPanel filters={filters} setFilters={setFilters} />
+
+        {/* 🔰 Tier Dropdown */}
+        <div className="flex gap-4 mt-2">
+          <select
+            value={filters.proTier}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, proTier: e.target.value }))
+            }
+            className="text-black px-2 py-1 rounded"
+          >
+            <option value="">All Tiers</option>
+            <option value="signature">Signature</option>
+            <option value="verified">Verified</option>
+          </select>
+        </div>
+      </div>
 
       {/* 🌍 Location Filter Chips */}
       <div className="flex flex-wrap gap-2 py-2">
@@ -90,6 +104,7 @@ const DiscoveryGrid = () => {
             reviewCount={c.reviewCount}
             verified={c.verified}
             imageUrl={c.profileImage || ''}
+            proTier={c.proTier}
           />
         ))}
       </div>
@@ -98,6 +113,3 @@ const DiscoveryGrid = () => {
 };
 
 export default DiscoveryGrid;
-//
-// <div className="flex flex-wrap gap-2 py-2">
-//   {LOCATIONS.map((loc) => (  
