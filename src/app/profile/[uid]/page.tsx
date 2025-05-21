@@ -41,6 +41,12 @@ export default function PublicProfilePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-1">{profile.name || 'Unnamed User'}</h1>
+      {profile.proTier === 'signature' && (
+        <p className="text-purple-400 text-sm mb-2">💎 Signature Creator</p>
+      )}
+      {profile.proTier === 'verified' && (
+        <p className="text-blue-400 text-sm mb-2">✔ Verified Creator</p>
+      )}
 
       {profile.averageRating !== undefined && (
         <p className="text-yellow-400 text-sm mb-2">
