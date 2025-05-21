@@ -1,9 +1,9 @@
 import Stripe from 'stripe';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
   const { serviceName, amount, providerId, clientId } = await req.json();
 
   const session = await stripe.checkout.sessions.create({
@@ -12,17 +12,14 @@ export async function POST(req) {
       price_data: {
         currency: 'usd',
         product_data: { name: serviceName },
-        unit_amount: amount * 100, // Convert to cents
+        unit_amount: amount * 100,
       },
       quantity: 1,
     }],
     mode: 'payment',
     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
-    metadata: {
-      providerId,
-      clientId,
-    },
+    metadata: { providerId, clientId },
   });
 
   return NextResponse.json({ id: session.id });

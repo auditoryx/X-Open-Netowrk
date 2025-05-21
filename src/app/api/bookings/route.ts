@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { firebaseConfig } from '@/app/firebase';
@@ -8,14 +8,14 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 // GET bookings (auth-protected)
-async function getBookings(req) {
+async function getBookings(req: NextRequest) {
   const snap = await getDocs(collection(db, 'bookingRequests'));
   const bookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   return NextResponse.json(bookings);
 }
 
 // PUT booking status (auth-protected)
-async function updateBooking(req) {
+async function updateBooking(req: NextRequest) {
   const { id, status } = await req.json();
 
   if (!id || !status) {
@@ -27,6 +27,5 @@ async function updateBooking(req) {
   return NextResponse.json({ success: true });
 }
 
-// Export protected routes
 export const GET = withAuth(getBookings);
 export const PUT = withAuth(updateBooking);
