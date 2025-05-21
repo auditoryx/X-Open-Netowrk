@@ -4,8 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Global Styles */
+/* Global overrides */
 body {
-  @apply bg-background text-foreground;
+  background-color: #000;
+  color: #fff;
   font-family: sans-serif;
 }
