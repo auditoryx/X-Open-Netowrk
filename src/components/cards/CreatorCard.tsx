@@ -12,6 +12,7 @@ export default function CreatorCard({
   verified,
   imageUrl,
   id,
+  proTier,
 }: {
   name: string;
   price: number;
@@ -22,6 +23,7 @@ export default function CreatorCard({
   verified?: boolean;
   imageUrl?: string;
   id: string;
+  proTier?: 'standard' | 'verified' | 'signature';
 }) {
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 space-y-2 shadow hover:border-white/20 transition">
@@ -34,7 +36,12 @@ export default function CreatorCard({
         <div className="flex flex-col">
           <p className="font-semibold text-white flex items-center gap-2">
             {name}
-            {verified && (
+            {proTier === 'signature' && (
+              <span className="text-purple-400 text-xs bg-purple-400/10 px-2 py-0.5 rounded-full">
+                💎 Signature
+              </span>
+            )}
+            {proTier === 'verified' && (
               <span className="text-blue-400 text-xs bg-blue-400/10 px-2 py-0.5 rounded-full">
                 ✔ Verified
               </span>
