@@ -5,86 +5,109 @@ import { db } from '@/lib/firebase';
 import {
   collection,
   getDocs,
-  doc,
   updateDoc,
+  doc,
   serverTimestamp,
   query,
-  orderBy,
+  where
 } from 'firebase/firestore';
 import withAdminProtection from '@/middleware/withAdminProtection';
 
 function VerificationsPage() {
   const [requests, setRequests] = useState<any[]>([]);
+  const [verifiedUsers, setVerifiedUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRequests = async () => {
-      const q = query(collection(db, 'verificationRequests'), orderBy('createdAt', 'desc'));
+    const fetchData = async () => {
+      const q = query(collection(db, 'verificationRequests'), where('status', '==', 'pending'));
       const snap = await getDocs(q);
-      const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setRequests(data.filter((r) => r.status === 'pending'));
+      setRequests(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+      const verifiedQ = query(collection(db, 'users'), where('verified', '==', true));
+      const verifiedSnap = await getDocs(verifiedQ);
+      setVerifiedUsers(verifiedSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
       setLoading(false);
     };
-
-    fetchRequests();
+    fetchData();
   }, []);
 
-  const handleApprove = async (r: any) => {
-    if (!r.uid) return;
-    await updateDoc(doc(db, 'users', r.uid), { verified: true });
-
-    await updateDoc(doc(db, 'verificationRequests', r.uid), {
+  const approve = async (req: any) => {
+    await updateDoc(doc(db, 'users', req.uid), {
+      verified: true,
+      verifiedAt: serverTimestamp()
+    });
+    await updateDoc(doc(db, 'verificationRequests', req.id), {
       status: 'approved',
-      reviewedAt: serverTimestamp(),
+      reviewedAt: serverTimestamp()
     });
-
-    setRequests((prev) => prev.filter((req) => req.uid !== r.uid));
+    setRequests((prev) => prev.filter((r) => r.id !== req.id));
   };
 
-  const handleReject = async (r: any) => {
-    await updateDoc(doc(db, 'verificationRequests', r.uid), {
+  const reject = async (req: any) => {
+    await updateDoc(doc(db, 'verificationRequests', req.id), {
       status: 'rejected',
-      reviewedAt: serverTimestamp(),
+      reviewedAt: serverTimestamp()
     });
-
-    setRequests((prev) => prev.filter((req) => req.uid !== r.uid));
+    setRequests((prev) => prev.filter((r) => r.id !== req.id));
   };
+
+  const revoke = async (uid: string) => {
+    await updateDoc(doc(db, 'users', uid), {
+      verified: false,
+      verifiedRevokedAt: serverTimestamp()
+    });
+    setVerifiedUsers((prev) => prev.filter((u) => u.id !== uid));
+  };
+
+  if (loading) return <p className="p-6">Loading…</p>;
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl font-bold mb-6">Verification Requests</h1>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : requests.length === 0 ? (
-        <p>No pending verification requests.</p>
-      ) : (
-        <div className="space-y-6">
-          {requests.map((r) => (
-            <div key={r.uid} className="border border-neutral-700 rounded-lg p-6 shadow">
-              <p><strong>Email:</strong> {r.email}</p>
-              <p><strong>UID:</strong> {r.uid}</p>
-              <p><strong>Message:</strong> {r.message || '(no message)'}</p>
-              <p><strong>Requested At:</strong> {r.createdAt?.seconds ? new Date(r.createdAt.seconds * 1000).toLocaleString() : 'Unknown'}</p>
-
-              <div className="mt-4 flex gap-4">
-                <button
-                  onClick={() => handleApprove(r)}
-                  className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => handleReject(r)}
-                  className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
-                >
-                  Reject
-                </button>
-              </div>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">Pending Verification Requests</h1>
+      <div className="space-y-4">
+        {requests.map((req) => (
+          <div key={req.id} className="border p-4 rounded-md">
+            <p><b>Email:</b> {req.email}</p>
+            <p><b>User ID:</b> {req.uid}</p>
+            <p><b>Message:</b> {req.message}</p>
+            <div className="mt-2 space-x-2">
+              <button
+                onClick={() => approve(req)}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => reject(req)}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Reject
+              </button>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
+
+      <h2 className="text-xl font-bold mt-10 mb-4">Currently Verified Users</h2>
+      <div className="space-y-4">
+        {verifiedUsers.map((user) => (
+          <div key={user.id} className="border p-4 rounded-md">
+            <p><b>Name:</b> {user.name || 'Unnamed'}</p>
+            <p><b>Email:</b> {user.email}</p>
+            <p><b>Role:</b> {user.role}</p>
+            <div className="mt-2">
+              <button
+                onClick={() => revoke(user.id)}
+                className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600"
+              >
+                Revoke Verification
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
