@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
+import BookingForm from '@/components/booking/BookingForm';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
@@ -41,6 +42,7 @@ export default function PublicProfilePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-1">{profile.name || 'Unnamed User'}</h1>
+
       {profile.proTier === 'signature' && (
         <p className="text-purple-400 text-sm mb-2">💎 Signature Creator</p>
       )}
@@ -86,6 +88,16 @@ export default function PublicProfilePage() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {profile.proTier === 'signature' ? (
+        <button className="mt-6 px-4 py-2 bg-neutral-800 text-white border border-white rounded">
+          Request Access
+        </button>
+      ) : (
+        <div className="mt-6 w-full max-w-xl">
+          <BookingForm onBook={(details) => console.log('Booking details:', details)} />
         </div>
       )}
 
