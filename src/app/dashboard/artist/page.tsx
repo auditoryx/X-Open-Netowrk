@@ -8,8 +8,9 @@ import { UserProfile } from '@/types/user';
 import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import DashboardRoleOverview from '@/components/dashboard/DashboardRoleOverview';
+import { withRoleProtection } from '@/lib/utils/withRoleProtection';
 
-export default function ArtistDashboard() {
+function ArtistDashboardPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -49,3 +50,5 @@ export default function ArtistDashboard() {
     </div>
   );
 }
+
+export default withRoleProtection(ArtistDashboardPage, ['artist']);
