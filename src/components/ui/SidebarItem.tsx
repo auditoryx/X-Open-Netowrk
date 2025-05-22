@@ -1,22 +1,33 @@
 'use client';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
-export default function SidebarItem({ href, label }: { href: string; label: string }) {
+export default function SidebarItem({
+  href,
+  label,
+  icon,
+}: {
+  href: string;
+  label: string;
+  icon?: React.ReactNode;
+}) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const active = pathname.startsWith(href);
 
   return (
-    <li>
-      <Link
-        href={href}
-        className={`block w-full px-4 py-2 rounded font-medium transition ${isActive
-          ? 'bg-black text-white'
-          : 'hover:bg-gray-100 text-gray-800'}`}
-        aria-current={isActive ? 'page' : undefined}
-      >
-        {label}
-      </Link>
-    </li>
+    <Link
+      href={href}
+      className={cn(
+        'flex items-center gap-2 px-3 py-2 rounded transition',
+        active
+          ? 'bg-white text-black font-semibold'
+          : 'text-white hover:bg-white/10'
+      )}
+    >
+      {icon}
+      <span className="text-sm">{label}</span>
+    </Link>
   );
 }
