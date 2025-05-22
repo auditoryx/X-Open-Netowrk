@@ -12,21 +12,23 @@ import {
   query,
   where,
   getDocs,
-  serverTimestamp
+  serverTimestamp,
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import Navbar from '@/app/components/Navbar';
 import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import BookingSidebar from '@/components/book/BookingSidebar';
 
 export default function BookServicePage({ params }: { params: { uid: string } }) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [availability, setAvailability] = useState<string[]>([]);
-  const [providerEmail, setProviderEmail] = useState<string>('');
-  const [providerLocation, setProviderLocation] = useState<string>('');
+  const [providerEmail, setProviderEmail] = useState('');
+  const [providerLocation, setProviderLocation] = useState('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [creator, setCreator] = useState<any>(null);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -38,8 +40,14 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       if (snap.exists()) {
         const data = snap.data();
         setAvailability(data.availability || []);
-        setProviderEmail(data.email || 'Zenji@auditoryx.com');
+        setProviderEmail(data.email || '');
         setProviderLocation(data.location || '');
+        setCreator({
+          name: data.name || 'Creator',
+          rating: data.rating || 0,
+          reviewCount: data.reviewCount || 0,
+          proTier: data.proTier || 'standard',
+        });
       }
     };
     fetchAvailability();
@@ -85,48 +93,62 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       platformFee,
       totalAmount,
       createdAt: serverTimestamp(),
-      status: 'pending'
+      status: 'pending',
     });
 
     const updated = availability.filter((a) => a !== selectedTime);
     await updateDoc(doc(db, 'users', params.uid), {
-      availability: updated
+      availability: updated,
     });
 
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
     setLoading(false);
-    router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);
+    router.push(
+      `/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`
+    );
   };
 
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
-      <div className="max-w-md mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Send Booking Request</h1>
+      <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row gap-8">
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold mb-6">Send Booking Request</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+            <WeeklyCalendarSelector
+              availability={availability}
+              onSelect={(datetime: string) => setSelectedTime(datetime)}
+            />
 
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          <WeeklyCalendarSelector
-            availability={availability}
-            onSelect={(datetime: string) => setSelectedTime(datetime)}
-          />
+            <textarea
+              className="bg-black border border-white p-4 rounded focus:outline-none"
+              placeholder="Add a message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+            />
 
-          <textarea
-            className="bg-black border border-white p-4 rounded focus:outline-none"
-            placeholder="Add a message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          />
+            <button
+              type="submit"
+              disabled={loading}
+              className="border border-white p-4 rounded hover:bg-white hover:text-black transition"
+            >
+              {loading ? 'Sending...' : 'Send Request'}
+            </button>
+          </form>
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="border border-white p-4 rounded hover:bg-white hover:text-black transition"
-          >
-            {loading ? 'Sending...' : 'Send Request'}
-          </button>
-        </form>
+        {creator && (
+          <div className="w-full md:w-80">
+            <BookingSidebar
+              name={creator.name}
+              rating={creator.rating}
+              reviewCount={creator.reviewCount}
+              proTier={creator.proTier}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
