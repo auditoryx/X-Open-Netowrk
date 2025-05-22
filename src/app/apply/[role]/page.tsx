@@ -6,6 +6,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
+import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
 
 export default function ApplyRolePage({ params }: { params: { role: string } }) {
   const { user } = useAuth();
@@ -22,7 +23,6 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
       return setError('All fields are required.');
     }
 
-    // Fallback coordinate logic
     const cleanedCity = location.toLowerCase().replace(/\s+/g, '');
     const fallbackCoords = cityToCoords[cleanedCity];
     let locationLat = null;
@@ -53,6 +53,13 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <div className="max-w-2xl mx-auto py-12 px-6">
+        <OnboardingStepHeader
+          step={1}
+          total={3}
+          title={`Apply as ${params.role}`}
+          subtitle="Tell us who you are so we can verify you."
+        />
+
         {submitted ? (
           <div className="text-center space-y-4">
             <div className="text-4xl text-green-400">✅</div>
