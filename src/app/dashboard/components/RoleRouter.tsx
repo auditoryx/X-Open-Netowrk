@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
+import RoleSwitcher from '@/components/dashboard/RoleSwitcher';
 import { useRouter } from 'next/navigation';
+import RoleSwitcher from '@/components/dashboard/RoleSwitcher';
 import { useAuth } from '@/lib/hooks/useAuth';
+import RoleSwitcher from '@/components/dashboard/RoleSwitcher';
 
 export default function RoleRouter() {
   const { userData } = useAuth();
