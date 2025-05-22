@@ -11,6 +11,11 @@ export function useProfileCompletion(profile: UserProfile) {
       label: 'Add at least one social link',
       done: !!(profile.socials?.instagram || profile.socials?.twitter || profile.socials?.spotify),
     },
+    {
+      key: 'verification',
+      label: 'Complete ID verification',
+      done: profile.verificationStatus === 'verified',
+    }
   ]
 
   const score = Math.round((checklist.filter(i => i.done).length / checklist.length) * 100)
