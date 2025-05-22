@@ -1,16 +1,9 @@
 'use client';
 import Navbar from '@/app/components/Navbar';
-import Link from 'next/link';
+import RoleSelectCard from '@/components/onboarding/RoleSelectCard';
+import { roles } from '@/utils/roles';
 
 export default function ApplyPage() {
-  const roles = [
-    { label: 'Artist', value: 'artist' },
-    { label: 'Producer', value: 'producer' },
-    { label: 'Engineer', value: 'engineer' },
-    { label: 'Videographer', value: 'videographer' },
-    { label: 'Studio', value: 'studio' },
-  ];
-
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
@@ -22,16 +15,7 @@ export default function ApplyPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {roles.map((role) => (
-            <Link
-              key={role.value}
-              href={`/apply/${role.value}`}
-              className="border border-neutral-700 rounded-xl p-6 hover:border-white/70 transition"
-            >
-              <h2 className="text-xl font-semibold">{role.label}</h2>
-              <p className="text-sm text-gray-400 mt-2">
-                Apply as a {role.label.toLowerCase()} to list services and get booked.
-              </p>
-            </Link>
+            <RoleSelectCard key={role.value} role={role} />
           ))}
         </div>
       </div>
