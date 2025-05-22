@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Navbar from '@/app/components/Navbar';
+import CompletionNotice from '@/components/onboarding/CompletionNotice';
 
 export default function CreateProfilePage() {
   const { data: session, status } = useSession();
@@ -48,6 +49,7 @@ export default function CreateProfilePage() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <div className="flex flex-col items-center justify-center text-center p-8">
+        <CompletionNotice />
         <h1 className="text-4xl font-bold mb-4">Create Your Profile</h1>
         <p className="text-gray-400">Complete your details and showcase your creative skills to the world.</p>
       </div>
