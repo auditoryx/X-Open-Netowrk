@@ -12,23 +12,25 @@ import {
   query,
   where,
   getDocs,
-  serverTimestamp,
+  serverTimestamp
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import Navbar from '@/app/components/Navbar';
 import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import BookingSidebar from '@/components/book/BookingSidebar';
+import BookingSummarySidebar from '@/components/booking/BookingSummarySidebar';
+import TrustBadges from '@/components/booking/TrustBadges';
 
 export default function BookServicePage({ params }: { params: { uid: string } }) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [availability, setAvailability] = useState<string[]>([]);
-  const [providerEmail, setProviderEmail] = useState('');
-  const [providerLocation, setProviderLocation] = useState('');
+  const [providerName, setProviderName] = useState<string>('');
+  const [providerEmail, setProviderEmail] = useState<string>('');
+  const [providerLocation, setProviderLocation] = useState<string>('');
+  const [providerTier, setProviderTier] = useState<'standard' | 'verified' | 'signature'>('standard');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [creator, setCreator] = useState<any>(null);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -42,12 +44,8 @@ export default function BookServicePage({ params }: { params: { uid: string } })
         setAvailability(data.availability || []);
         setProviderEmail(data.email || '');
         setProviderLocation(data.location || '');
-        setCreator({
-          name: data.name || 'Creator',
-          rating: data.rating || 0,
-          reviewCount: data.reviewCount || 0,
-          proTier: data.proTier || 'standard',
-        });
+        setProviderName(data.name || 'Creator');
+        setProviderTier(data.tier || 'standard');
       }
     };
     fetchAvailability();
@@ -74,7 +72,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     );
     const overlapSnap = await getDocs(overlapQ);
     if (!overlapSnap.empty) {
-      alert('This time slot was just booked by someone else. Please pick a new one.');
+      alert('This time slot was just booked. Please pick another.');
       setLoading(false);
       return;
     }
@@ -93,28 +91,26 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       platformFee,
       totalAmount,
       createdAt: serverTimestamp(),
-      status: 'pending',
+      status: 'pending'
     });
 
     const updated = availability.filter((a) => a !== selectedTime);
     await updateDoc(doc(db, 'users', params.uid), {
-      availability: updated,
+      availability: updated
     });
 
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
     setLoading(false);
-    router.push(
-      `/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`
-    );
+    router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);
   };
 
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
-      <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row gap-8">
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-6">Send Booking Request</h1>
+      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
+        <div className="md:col-span-2 space-y-4">
+          <h1 className="text-3xl font-bold mb-4">Send Booking Request</h1>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <WeeklyCalendarSelector
               availability={availability}
@@ -139,16 +135,17 @@ export default function BookServicePage({ params }: { params: { uid: string } })
           </form>
         </div>
 
-        {creator && (
-          <div className="w-full md:w-80">
-            <BookingSidebar
-              name={creator.name}
-              rating={creator.rating}
-              reviewCount={creator.reviewCount}
-              proTier={creator.proTier}
-            />
-          </div>
-        )}
+        <div className="md:col-span-1">
+          <BookingSummarySidebar
+            providerName={providerName}
+            providerTier={providerTier}
+            providerLocation={providerLocation}
+            selectedTime={selectedTime || ''}
+            baseAmount={100}
+            platformFee={15}
+          />
+          <TrustBadges />
+        </div>
       </div>
     </div>
   );
