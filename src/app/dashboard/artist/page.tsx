@@ -7,6 +7,7 @@ import { app } from '@/lib/firebase';
 import { UserProfile } from '@/types/user';
 import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
+import DashboardRoleOverview from '@/components/dashboard/DashboardRoleOverview';
 
 export default function ArtistDashboard() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -35,8 +36,7 @@ export default function ArtistDashboard() {
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
-      <h1 className="text-3xl font-bold mb-4">Welcome to your Artist Dashboard</h1>
-
+      {profile && <DashboardRoleOverview profile={profile} />}
       {profile && <ProfileCompletionMeter profile={profile} />}
 
       {!complete && (
