@@ -1,66 +1,62 @@
 'use client';
 
 import Link from 'next/link';
+import TierBadge from '@/components/ui/TierBadge';
 
 export default function CreatorCard({
+  id,
   name,
-  price,
   tagline,
+  price,
   location,
+  imageUrl,
   rating,
   reviewCount,
-  verified,
-  imageUrl,
-  id,
   proTier,
 }: {
+  id: string;
   name: string;
-  price: number;
-  tagline: string;
-  location: string;
+  tagline?: string;
+  price?: number;
+  location?: string;
+  imageUrl?: string;
   rating?: number;
   reviewCount?: number;
-  verified?: boolean;
-  imageUrl?: string;
-  id: string;
-  proTier?: 'standard' | 'verified' | 'signature';
+  proTier?: string;
 }) {
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 space-y-2 shadow hover:border-white/20 transition">
-      <div className="flex items-center gap-3">
-        <img
-          src={imageUrl || '/default-avatar.jpg'}
-          alt={name}
-          className="w-12 h-12 rounded-full object-cover bg-white"
-        />
-        <div className="flex flex-col">
-          <p className="font-semibold text-white flex items-center gap-2">
-            {name}
-            {proTier === 'signature' && (
-              <span className="text-purple-400 text-xs bg-purple-400/10 px-2 py-0.5 rounded-full">
-                💎 Signature
-              </span>
-            )}
-            {proTier === 'verified' && (
-              <span className="text-blue-400 text-xs bg-blue-400/10 px-2 py-0.5 rounded-full">
-                ✔ Verified
-              </span>
-            )}
-          </p>
-          <p className="text-xs text-gray-400">{location}</p>
+    <Link
+      href={`/profile/${id}`}
+      className="bg-neutral-900 border border-white/10 hover:border-white/20 transition p-4 rounded-lg block"
+    >
+      <div className="flex items-center gap-3 mb-3">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={name}
+            className="w-12 h-12 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-neutral-700" />
+        )}
+
+        <div>
+          <div className="flex items-center">
+            <h2 className="text-lg font-semibold">{name}</h2>
+            {proTier && <TierBadge tier={proTier} />}
+          </div>
+          <p className="text-sm text-gray-400">{location || 'Unknown'}</p>
         </div>
       </div>
-      <p className="text-sm text-gray-300">{tagline}</p>
-      <div className="text-xs text-gray-400">
-        ⭐ {rating ?? '–'} ({reviewCount ?? 0} reviews)
+
+      <p className="text-sm text-gray-300 mb-2 line-clamp-2">{tagline}</p>
+
+      <div className="text-sm text-gray-400 flex justify-between items-center">
+        <span>{rating?.toFixed(1) ?? '—'} ★ ({reviewCount ?? 0})</span>
+        <span className="font-semibold text-white">
+          {price ? `From ¥${price}` : 'Price TBD'}
+        </span>
       </div>
-      <p className="font-bold text-white">${price}</p>
-      <Link
-        href={`/profile/${id}`}
-        className="block text-center border mt-2 py-1 rounded hover:bg-white hover:text-black transition"
-      >
-        View Profile
-      </Link>
-    </div>
+    </Link>
   );
 }
