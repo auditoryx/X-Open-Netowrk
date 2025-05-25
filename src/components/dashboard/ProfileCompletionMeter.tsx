@@ -17,7 +17,7 @@ export default function ProfileCompletionMeter({ profile }: Props) {
 
       <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
         <div
-          className="bg-blue-600 h-2 rounded-full"
+          className="bg-blue-600 h-2 rounded-full transition-all"
           style={{ width: `${score}%` }}
         />
       </div>
@@ -26,9 +26,14 @@ export default function ProfileCompletionMeter({ profile }: Props) {
 
       <ul className="space-y-1">
         {checklist.map((item) => (
-          <li key={item.key} className="flex items-center gap-2">
-            <span>{item.done ? '✅' : '❌'}</span>
-            <span>{item.label}</span>
+          <li key={item.key}>
+            <a
+              href={`/dashboard/edit#${item.key}`}
+              className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-100 transition focus:outline-none focus:ring"
+            >
+              <span>{item.done ? '✅' : '❌'}</span>
+              <span>{item.label}</span>
+            </a>
           </li>
         ))}
       </ul>

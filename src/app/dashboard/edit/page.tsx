@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { app } from '@/lib/firebase';
-import ProfileCompletionMeter from '@/components/profile/ProfileCompletionMeter';
+import ProfileCompletionMeter from '@/components/dashboard/ProfileCompletionMeter';
 import AvailabilitySelector from '@/components/profile/AvailabilitySelector';
 import { PortfolioEditor } from '@/components/profile/PortfolioEditor';
 
