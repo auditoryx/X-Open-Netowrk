@@ -1,42 +1,42 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Navbar from '@/app/components/Navbar';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { useAuth } from '@/lib/hooks/useAuth';
-import { cityToCoords } from '@/lib/utils/cityToCoords';
-import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
+import { useState } from 'react'
+import Navbar from '@/app/components/Navbar'
+import { db } from '@/lib/firebase'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { useAuth } from '@/lib/hooks/useAuth'
+import { cityToCoords } from '@/lib/utils/cityToCoords'
+import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader'
 
 export default function ApplyRolePage({ params }: { params: { role: string } }) {
-  const { user } = useAuth();
-  const [bio, setBio] = useState('');
-  const [links, setLinks] = useState('');
-  const [location, setLocation] = useState('');
-  const [error, setError] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const { user, userData, loading } = useAuth()
+  const [bio, setBio] = useState('')
+  const [links, setLinks] = useState('')
+  const [location, setLocation] = useState('')
+  const [error, setError] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = async () => {
-    setError('');
-    if (!user) return setError('You must be logged in to apply.');
+    setError('')
+    if (!user) return setError('You must be logged in to apply.')
     if (!bio.trim() || !links.trim() || !location.trim()) {
-      return setError('All fields are required.');
+      return setError('All fields are required.')
     }
 
-    const cleanedCity = location.toLowerCase().replace(/\s+/g, '');
-    const fallbackCoords = cityToCoords[cleanedCity];
-    let locationLat = null;
-    let locationLng = null;
+    const cleanedCity = location.toLowerCase().replace(/\s+/g, '')
+    const fallbackCoords = cityToCoords[cleanedCity]
+    let locationLat = null
+    let locationLng = null
 
     if (fallbackCoords) {
-      locationLng = fallbackCoords[0];
-      locationLat = fallbackCoords[1];
+      locationLng = fallbackCoords[0]
+      locationLat = fallbackCoords[1]
     }
 
     await addDoc(collection(db, 'pendingVerifications'), {
       uid: user.uid,
-      email: user.email,
-      name: user.displayName || '',
+      email: userData?.email || user.email,
+      name: userData?.name || user.displayName || '',
       role: params.role,
       bio,
       links,
@@ -44,10 +44,18 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
       locationLat,
       locationLng,
       timestamp: serverTimestamp(),
-    });
+    })
 
-    setSubmitted(true);
-  };
+    setSubmitted(true)
+  }
+
+  if (loading) {
+    return <div className="text-white p-8">Loading...</div>
+  }
+
+  if (!user) {
+    return <div className="text-red-500 p-8 text-center">You must be logged in to apply.</div>
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -81,7 +89,7 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
               <div>
                 <label className="text-sm mb-1 block">Name</label>
                 <input
-                  value={user?.displayName || ''}
+                  value={userData?.name || user?.displayName || ''}
                   disabled
                   className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-gray-300"
                 />
@@ -90,7 +98,7 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
               <div>
                 <label className="text-sm mb-1 block">Email</label>
                 <input
-                  value={user?.email || ''}
+                  value={userData?.email || user?.email || ''}
                   disabled
                   className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-gray-300"
                 />
@@ -138,5 +146,5 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
         )}
       </div>
     </div>
-  );
+  )
 }

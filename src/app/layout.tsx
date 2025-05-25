@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,17 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-black text-white`}>
-        <LanguageProvider>
-          <Toaster position="top-center" />
-          <Navbar />
-          {children}
-        </LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
+            <Toaster position="top-center" />
+            <Navbar />
+            {children}
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );
 }
-// import { getServerSession } from 'next-auth';
-// import { authOptions } from '@/lib/auth';
-// import { useEffect } from 'react';
-// import { useRouter } from 'next/router';
-// import { useSession } from 'next-auth/react';

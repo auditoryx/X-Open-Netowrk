@@ -20,7 +20,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "firebase": "^11.6.1",
-    "firebase-admin": "^13.2.0",
+    "firebase-admin": "^13.4.0",
     "framer-motion": "^12.5.0",
     "googleapis": "^148.0.0",
     "jose": "^6.0.10",
@@ -57,6 +57,6 @@
     "postcss-nested": "^7.0.2",
     "prisma": "^6.4.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "5.8.3"
+    "typescript": "^5.8.3"
   }
 }
