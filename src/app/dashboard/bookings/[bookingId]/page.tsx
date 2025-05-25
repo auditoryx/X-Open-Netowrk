@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -14,6 +14,8 @@ import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function BookingDetailPage() {
   const { bookingId: rawId } = useParams();
+  const searchParams = useSearchParams();
+  const success = searchParams.get("success") === "true";
   const bookingId = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -41,6 +43,11 @@ export default function BookingDetailPage() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <div className="max-w-4xl mx-auto py-10 px-6 space-y-8">
+        {success && (
+          <div className="bg-green-600 text-white text-sm p-3 rounded mb-6">
+            ✅ Booking Confirmed — you can now chat with your provider.
+          </div>
+        )}
         <h1 className="text-3xl font-bold">Booking Details</h1>
 
         <p><strong>Status:</strong> {booking.status}</p>
