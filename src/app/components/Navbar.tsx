@@ -5,13 +5,16 @@ import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const { user } = useAuth();
+  const router = useRouter();
 
   const handleLogout = async () => {
     const auth = getAuth(app);
     await signOut(auth);
+    router.push('/login');
   };
 
   return (
@@ -32,7 +35,12 @@ export default function Navbar() {
         {!user && (
           <>
             <Link href="/apply" className="hover:underline">Apply</Link>
-            <Link href="/login" className="hover:underline font-semibold text-blue-400">Login</Link>
+            <button
+              onClick={() => router.push('/login')}
+              className="hover:underline font-semibold text-blue-400"
+            >
+              Login
+            </button>
           </>
         )}
         {user && (
