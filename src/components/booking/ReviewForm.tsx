@@ -1,4 +1,5 @@
 'use client';
+import { sendInAppNotification } from "@/lib/notifications/sendInAppNotification";
 
 import { useState } from 'react';
 import { submitReview } from '@/lib/firestore/reviews/submitReview';
@@ -32,12 +33,68 @@ export default function ReviewForm({
 
     try {
       await submitReview({
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
         bookingId,
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
         providerId,
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
         clientId: user.uid,
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
         contractId,
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
         text: text.trim(),
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
         rating,
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
+      });
+      });
+      await sendInAppNotification({
+        to: providerId,
+        type: "review",
+        title: "New Review Received",
+        message: `You received a ${rating}-star review from a client`,
+        link: `/dashboard/bookings/${bookingId}`
       });
 
       setSubmitted(true);

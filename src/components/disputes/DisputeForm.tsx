@@ -1,4 +1,5 @@
 'use client';
+import { sendInAppNotification } from "@/lib/notifications/sendInAppNotification";
 
 import { useState } from 'react';
 import { createDispute } from '@/lib/firestore/disputes/createDispute';
@@ -21,9 +22,44 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
     setLoading(true);
     try {
       const result = await createDispute({
+      await sendInAppNotification({
+        to: "admin-notify",
+        type: "dispute",
+        title: "New Dispute Filed",
+        message: `A user submitted a dispute for booking ${bookingId}`,
+        link: `/admin/disputes`
+      });
         bookingId,
+      await sendInAppNotification({
+        to: "admin-notify",
+        type: "dispute",
+        title: "New Dispute Filed",
+        message: `A user submitted a dispute for booking ${bookingId}`,
+        link: `/admin/disputes`
+      });
         fromUser: clientId,
+      await sendInAppNotification({
+        to: "admin-notify",
+        type: "dispute",
+        title: "New Dispute Filed",
+        message: `A user submitted a dispute for booking ${bookingId}`,
+        link: `/admin/disputes`
+      });
         reason: trimmed,
+      await sendInAppNotification({
+        to: "admin-notify",
+        type: "dispute",
+        title: "New Dispute Filed",
+        message: `A user submitted a dispute for booking ${bookingId}`,
+        link: `/admin/disputes`
+      });
+      });
+      await sendInAppNotification({
+        to: "admin-notify",
+        type: "dispute",
+        title: "New Dispute Filed",
+        message: `A user submitted a dispute for booking ${bookingId}`,
+        link: `/admin/disputes`
       });
 
       if (result?.error) {
