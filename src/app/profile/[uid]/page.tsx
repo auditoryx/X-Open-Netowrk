@@ -1,22 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
-import SaveButton from '@/components/explore/SaveButton';
+import { SaveButton } from '@/components/profile/SaveButton';
 import BookingForm from '@/components/booking/BookingForm';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
 export default function PublicProfilePage() {
   const params = useParams();
-  const router = useRouter();
   const uid = params?.uid as string;
-  const { user } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,6 +27,7 @@ export default function PublicProfilePage() {
         const data = snap.data();
         const avg = await getAverageRating(uid);
         const count = await getReviewCount(uid);
+
         setProfile({ ...data, averageRating: avg, reviewCount: count });
       }
 
@@ -38,18 +36,11 @@ export default function PublicProfilePage() {
     fetchProfile();
   }, [uid]);
 
-  const handleBooking = async ({ message }: { message: string }) => {
-    if (!user) return;
-    const db = getFirestore(app);
-    const bookingRef = await addDoc(collection(db, 'bookings'), {
-      clientId: user.uid,
-      providerId: uid,
-      message,
-      status: 'pending',
-      timestamp: serverTimestamp(),
-    });
-
-    router.push(`/dashboard/bookings?bookingId=${bookingRef.id}`);
+  const scrollToBooking = () => {
+    const form = document.getElementById('booking-form');
+    if (form) {
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   if (loading) return <div className="p-6 text-white">Loading...</div>;
@@ -91,7 +82,7 @@ export default function PublicProfilePage() {
       )}
 
       <div className="mb-6">
-        <SaveButton creatorId={uid} />
+        <SaveButton providerId={uid} />
       </div>
 
       {profile.availability?.length > 0 && (
@@ -99,7 +90,7 @@ export default function PublicProfilePage() {
           <h2 className="text-xl font-semibold mb-2">🗓️ Availability</h2>
           <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
             {profile.availability.map((slot: string, idx: number) => (
-              <li key={idx} className="bg-gray-800 p-2 rounded text-center">
+              <li key={idx} className="bg-neutral-800 px-3 py-1 rounded text-center">
                 {slot}
               </li>
             ))}
@@ -107,9 +98,9 @@ export default function PublicProfilePage() {
         </div>
       )}
 
-      <div className="w-full max-w-xl mt-6">
+      <div id="booking-form" className="w-full max-w-xl mt-6">
         <h2 className="text-xl font-semibold mb-2">📩 Send Booking Request</h2>
-        <BookingForm onBook={handleBooking} />
+        <BookingForm onBook={() => {}} />
       </div>
 
       <div className="mt-10 w-full max-w-4xl">
@@ -118,6 +109,15 @@ export default function PublicProfilePage() {
 
       <div className="mt-10 w-full max-w-3xl">
         <ReviewList uid={uid} />
+      </div>
+
+      <div className="fixed bottom-4 inset-x-0 flex justify-center md:hidden z-50">
+        <button
+          onClick={scrollToBooking}
+          className="bg-white text-black font-semibold px-6 py-3 rounded-full shadow-lg border border-black"
+        >
+          📩 Request Booking
+        </button>
       </div>
     </div>
   );
