@@ -1,4 +1,5 @@
 import { stripe } from '@/lib/stripe';
+import { sendInAppNotification } from "@/lib/notifications/sendInAppNotification";
 import { admin } from '@/lib/firebase-admin';
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
@@ -33,6 +34,29 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     const metadata = session.metadata || {};
+    const bookingId = metadata.bookingId;
+    if (bookingId) {
+      const bookingRef = firestore.collection("bookings").doc(bookingId);
+      await bookingRef.update({ status: "paid" });
+      const bookingSnap = await bookingRef.get();
+      const booking = bookingSnap.data();
+      if (booking) {
+        await sendInAppNotification({
+          to: booking.buyerId,
+          type: "booking",
+          title: "Booking Confirmed",
+          message: "Your payment was successful. You can now chat with your provider.",
+          link: `/dashboard/bookings/${bookingId}`
+        });
+        await sendInAppNotification({
+          to: booking.providerId,
+          type: "booking",
+          title: "New Paid Booking",
+          message: "Someone just booked your service. Time to deliver!",
+          link: `/dashboard/bookings/${bookingId}`
+        });
+      }
+    }
     const mode = session.mode;
     const email = session.customer_email || 'unknown@email.com';
 
