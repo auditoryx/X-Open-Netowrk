@@ -98,7 +98,6 @@ export default function DashboardBookingsPage() {
                 {getStatusBanner(booking.status)}
               </div>
 
-              {/* Accept / Reject Buttons for Provider */}
               {booking.status === 'pending' && user?.uid === booking.providerId && (
                 <div className="flex gap-4 mt-2">
                   <button
@@ -127,6 +126,34 @@ export default function DashboardBookingsPage() {
                       terms={booking.contract?.terms || 'By booking this service, both parties agree to the provided scope of work.'}
                     />
                   </div>
+                  {user?.uid === booking.buyerId && (
+                    <div className="mt-4">
+                      <ReleaseFundsButton bookingId={booking.id} />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {booking.status === 'completed' && user?.uid === booking.buyerId && (
+                <>
+                  {!booking.hasReview && (
+                    <div className="mt-4">
+                      <ReviewForm
+                        bookingId={booking.id}
+                        providerId={booking.providerId}
+                        contractId={booking.contractId}
+                      />
+                    </div>
+                  )}
+
+                  {!booking.hasDispute && (
+                    <div className="mt-4">
+                      <DisputeForm
+                        bookingId={booking.id}
+                        clientId={booking.buyerId}
+                      />
+                    </div>
+                  )}
                 </>
               )}
             </li>
