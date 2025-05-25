@@ -2,10 +2,17 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { getAuth, signOut } from 'firebase/auth';
+import { app } from '@/lib/firebase';
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { user } = useAuth();
+
+  const handleLogout = async () => {
+    const auth = getAuth(app);
+    await signOut(auth);
+  };
 
   return (
     <nav className="bg-black px-6 py-4 flex items-center justify-between text-white border-b border-neutral-800">
@@ -20,16 +27,25 @@ export default function Navbar() {
         <span className="font-bold text-2xl tracking-tight">AuditoryX</span>
       </Link>
 
-      <div className="space-x-6 text-sm">
+      <div className="space-x-6 text-sm flex items-center">
         <Link href="/explore" className="hover:underline">Explore</Link>
-        {session?.user ? (
-          <Link href="/dashboard" className="hover:underline">Dashboard</Link>
-        ) : (
-          <Link href="/start" className="hover:underline font-semibold text-blue-400">
-            Join as a Creator
-          </Link>
+        {!user && (
+          <>
+            <Link href="/apply" className="hover:underline">Apply</Link>
+            <Link href="/login" className="hover:underline font-semibold text-blue-400">Login</Link>
+          </>
         )}
-        <Link href="/apply" className="hover:underline">Apply</Link>
+        {user && (
+          <>
+            <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+            <button
+              onClick={handleLogout}
+              className="hover:underline text-red-400"
+            >
+              Logout
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );
