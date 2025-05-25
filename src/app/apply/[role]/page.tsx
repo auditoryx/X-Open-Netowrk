@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Navbar from '@/app/components/Navbar'
 import { db } from '@/lib/firebase'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
@@ -9,12 +10,19 @@ import { cityToCoords } from '@/lib/utils/cityToCoords'
 import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader'
 
 export default function ApplyRolePage({ params }: { params: { role: string } }) {
+  const router = useRouter()
   const { user, userData, loading } = useAuth()
   const [bio, setBio] = useState('')
   const [links, setLinks] = useState('')
   const [location, setLocation] = useState('')
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push(`/login?redirect=/apply/${params.role}`)
+    }
+  }, [user, loading, params.role, router])
 
   const handleSubmit = async () => {
     setError('')
@@ -87,61 +95,38 @@ export default function ApplyRolePage({ params }: { params: { role: string } }) 
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm mb-1 block">Name</label>
-                <input
-                  value={userData?.name || user?.displayName || ''}
-                  disabled
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-gray-300"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm mb-1 block">Email</label>
-                <input
-                  value={userData?.email || user?.email || ''}
-                  disabled
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-gray-300"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm mb-1 block">City / Location</label>
-                <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Tokyo, NYC, Paris"
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm mb-1 block">Bio</label>
+                <label className="block mb-1 text-sm font-medium">Your Bio</label>
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us what you do, your experience, style, and any key work."
-                  rows={5}
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                  className="w-full p-2 bg-gray-900 border border-gray-700 rounded"
+                  rows={4}
                 />
               </div>
-
               <div>
-                <label className="text-sm mb-1 block">Portfolio / Social Links</label>
+                <label className="block mb-1 text-sm font-medium">Links (Portfolio, Socials, Reels)</label>
                 <input
                   value={links}
                   onChange={(e) => setLinks(e.target.value)}
-                  placeholder="e.g. Instagram, website, YouTube, etc."
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                  className="w-full p-2 bg-gray-900 border border-gray-700 rounded"
                 />
               </div>
-
-              <button
-                onClick={handleSubmit}
-                className="mt-4 bg-white text-black font-semibold px-6 py-2 rounded hover:bg-gray-200 transition"
-              >
-                Submit Application
-              </button>
+              <div>
+                <label className="block mb-1 text-sm font-medium">Your City</label>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full p-2 bg-gray-900 border border-gray-700 rounded"
+                />
+              </div>
             </div>
+
+            <button
+              onClick={handleSubmit}
+              className="mt-6 w-full bg-white text-black py-2 rounded hover:bg-gray-200 transition"
+            >
+              Submit Application
+            </button>
           </>
         )}
       </div>
