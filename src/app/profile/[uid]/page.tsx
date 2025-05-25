@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import { useParams } from 'next/navigation';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
@@ -12,8 +12,8 @@ import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
 export default function PublicProfilePage() {
-  const params = useParams();
-  const uid = params?.uid as string;
+  const rawParams = useParams();
+  const uid = typeof rawParams.uid === 'string' ? rawParams.uid : Array.isArray(rawParams.uid) ? rawParams.uid[0] : '';
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
