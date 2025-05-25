@@ -23,8 +23,13 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<any[]>([]);
   const [favorites, setFavorites] = useState<any[]>([]);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
+    if (!localStorage.getItem('onboardingDismissed')) {
+      setShowBanner(true);
+    }
+
     const auth = getAuth(app);
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) {
@@ -34,7 +39,6 @@ export default function DashboardPage() {
 
       const db = getFirestore(app);
 
-      // Fetch Orders
       const q = query(collection(db, 'orders'), where('sellerId', '==', user.uid));
       const snap = await getDocs(q);
       const tempOrders = [];
@@ -54,7 +58,6 @@ export default function DashboardPage() {
 
       setOrders(tempOrders);
 
-      // Fetch Favorites
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data();
@@ -82,6 +85,11 @@ export default function DashboardPage() {
     router.push('/login');
   };
 
+  const dismissBanner = () => {
+    localStorage.setItem('onboardingDismissed', 'true');
+    setShowBanner(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -94,6 +102,32 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <div className="max-w-4xl mx-auto p-6">
+        {showBanner && (
+          <div className="bg-blue-900 border border-blue-500 text-white p-4 rounded-lg mb-6 shadow">
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-lg font-bold mb-1">🎉 Welcome to AuditoryX!</h2>
+                <p className="text-sm text-blue-200">
+                  Complete your profile to appear in Explore and start getting booked.
+                </p>
+              </div>
+              <button
+                onClick={dismissBanner}
+                className="text-xs text-blue-300 hover:underline ml-4"
+              >
+                Dismiss
+              </button>
+            </div>
+            <div className="mt-3">
+              <Link href="/dashboard/edit">
+                <button className="bg-white text-black px-4 py-1 rounded hover:bg-blue-200 transition text-sm font-semibold">
+                  Complete Profile
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
+
         <h1 className="text-4xl font-bold mb-6 text-center">Dashboard</h1>
 
         {userData?.proTier === 'standard' && (
