@@ -1,19 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { useRouter, useParams } from 'next/navigation';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import { useParams } from 'next/navigation';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
-import { SaveButton } from '@/components/profile/SaveButton';
+import SaveButton from '@/components/explore/SaveButton';
 import BookingForm from '@/components/booking/BookingForm';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
 export default function PublicProfilePage() {
   const params = useParams();
+  const router = useRouter();
   const uid = params?.uid as string;
+  const { user } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +30,6 @@ export default function PublicProfilePage() {
         const data = snap.data();
         const avg = await getAverageRating(uid);
         const count = await getReviewCount(uid);
-
         setProfile({ ...data, averageRating: avg, reviewCount: count });
       }
 
@@ -35,6 +37,20 @@ export default function PublicProfilePage() {
     };
     fetchProfile();
   }, [uid]);
+
+  const handleBooking = async ({ message }: { message: string }) => {
+    if (!user) return;
+    const db = getFirestore(app);
+    const bookingRef = await addDoc(collection(db, 'bookings'), {
+      clientId: user.uid,
+      providerId: uid,
+      message,
+      status: 'pending',
+      timestamp: serverTimestamp(),
+    });
+
+    router.push(`/dashboard/bookings?bookingId=${bookingRef.id}`);
+  };
 
   if (loading) return <div className="p-6 text-white">Loading...</div>;
   if (!profile) return <div className="p-6 text-white">Profile not found.</div>;
@@ -75,7 +91,7 @@ export default function PublicProfilePage() {
       )}
 
       <div className="mb-6">
-        <SaveButton providerId={uid} />
+        <SaveButton creatorId={uid} />
       </div>
 
       {profile.availability?.length > 0 && (
@@ -83,7 +99,7 @@ export default function PublicProfilePage() {
           <h2 className="text-xl font-semibold mb-2">🗓️ Availability</h2>
           <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
             {profile.availability.map((slot: string, idx: number) => (
-              <li key={idx} className="bg-gray-800 px-3 py-1 rounded">
+              <li key={idx} className="bg-gray-800 p-2 rounded text-center">
                 {slot}
               </li>
             ))}
@@ -91,18 +107,18 @@ export default function PublicProfilePage() {
         </div>
       )}
 
-      {profile.proTier === 'signature' ? (
-        <button className="mt-6 px-4 py-2 bg-neutral-800 text-white border border-white rounded">
-          Request Access
-        </button>
-      ) : (
-        <div className="mt-6 w-full max-w-xl">
-          <BookingForm onBook={(details) => console.log('Booking details:', details)} />
-        </div>
-      )}
+      <div className="w-full max-w-xl mt-6">
+        <h2 className="text-xl font-semibold mb-2">📩 Send Booking Request</h2>
+        <BookingForm onBook={handleBooking} />
+      </div>
 
-      <ReviewList providerId={uid} />
-      <PortfolioGrid items={profile.portfolio || []} />
+      <div className="mt-10 w-full max-w-4xl">
+        <PortfolioGrid uid={uid} />
+      </div>
+
+      <div className="mt-10 w-full max-w-3xl">
+        <ReviewList uid={uid} />
+      </div>
     </div>
   );
 }
