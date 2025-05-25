@@ -54,7 +54,7 @@ export default function PublicProfilePage() {
         <p className="text-purple-400 text-sm mb-2">💎 Signature Creator</p>
       )}
       {profile.proTier === 'verified' && (
-        <p className="text-blue-400 text-sm mb-2">✔ Verified Creator</p>
+        <p className="text-blue-400 text-sm mb-2" title="Verified by AuditoryX — identity and profile have been reviewed.">✔ Verified Creator</p>
       )}
 
       {profile.averageRating !== undefined && (
