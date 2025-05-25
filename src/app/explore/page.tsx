@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import DiscoveryGrid from '@/components/explore/DiscoveryGrid';
+import NewExploreGrid from '@/components/explore/NewExploreGrid';
 import FilterPanel from '@/components/explore/FilterPanel';
 import GlobalMapPage from '../map/page';
+import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const newExplore = useFeatureFlag('newExplore');
 
   const [view, setView] = useState<'grid' | 'map'>('grid');
   const [filters, setFilters] = useState({
@@ -52,7 +55,11 @@ export default function ExplorePage() {
       <FilterPanel filters={filters} setFilters={setFilters} />
 
       {view === 'grid' ? (
-        <DiscoveryGrid filters={filters} />
+        newExplore ? (
+          <NewExploreGrid filters={filters} />
+        ) : (
+          <DiscoveryGrid filters={filters} />
+        )
       ) : (
         <div className="h-[80vh] rounded overflow-hidden border border-white">
           <GlobalMapPage />
