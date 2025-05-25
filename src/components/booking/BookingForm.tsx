@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
 import toast from 'react-hot-toast';
 
 type BookingFormProps = {
@@ -8,12 +9,18 @@ type BookingFormProps = {
 };
 
 export default function BookingForm({ onBook }: BookingFormProps) {
+  const { user } = useAuth();
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = message.trim();
+
+    if (!user) {
+      toast.error('Please log in to send a booking request.');
+      return;
+    }
 
     if (!trimmed || loading) return;
 
@@ -64,10 +71,3 @@ export default function BookingForm({ onBook }: BookingFormProps) {
     </form>
   );
 }
-// Usage example
-// <BookingForm
-//   onBook={async ({ message }) => {
-//     // Call your booking API or function here
-//     await initiateBookingWithStripe({ message });
-//   }}
-// />
