@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { app } from '@/lib/firebase'
 import Navbar from '@/app/components/Navbar'
@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/dashboard'
   const auth = getAuth(app)
   const provider = new GoogleAuthProvider()
 
@@ -18,7 +20,7 @@ export default function LoginPage() {
     setError('')
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      router.push('/dashboard')
+      router.push(redirect)
     } catch (err: any) {
       setError(err.message)
     }
@@ -28,7 +30,7 @@ export default function LoginPage() {
     setError('')
     try {
       await signInWithPopup(auth, provider)
-      router.push('/dashboard')
+      router.push(redirect)
     } catch (err: any) {
       setError(err.message)
     }
