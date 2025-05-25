@@ -44,6 +44,22 @@ export default function DashboardBookingsPage() {
     setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
   };
 
+  const getStatusBanner = (status: string) => {
+    const base = 'rounded p-3 mb-4 text-sm font-medium';
+    switch (status) {
+      case 'pending':
+        return <div className={`${base} bg-blue-900 text-blue-200`}>⏳ Waiting for provider to respond.</div>;
+      case 'accepted':
+        return <div className={`${base} bg-yellow-900 text-yellow-200`}>💳 Request accepted. Awaiting your payment.</div>;
+      case 'paid':
+        return <div className={`${base} bg-green-900 text-green-200`}>✅ Session confirmed. Chat and deliverables unlocked below.</div>;
+      case 'rejected':
+        return <div className={`${base} bg-red-900 text-red-300`}>❌ This request was declined.</div>;
+      default:
+        return null;
+    }
+  };
+
   if (loading) return <div className="p-6 text-white">Loading bookings...</div>;
 
   return (
@@ -59,7 +75,7 @@ export default function DashboardBookingsPage() {
               ref={el => {
                 highlightRef.current[booking.id] = el;
               }}
-              className="border p-4 rounded"
+              className="border border-white p-4 rounded"
             >
               <p><strong>Service:</strong> {booking.serviceId}</p>
               <p><strong>Buyer:</strong> {booking.buyerId}</p>
@@ -69,6 +85,10 @@ export default function DashboardBookingsPage() {
                 <p><strong>Platform Fee:</strong> ${booking.platformFee}</p>
               )}
 
+              <div className="mt-4">
+                {getStatusBanner(booking.status)}
+              </div>
+
               {booking.status === 'paid' && (
                 <>
                   <div className="mt-4">
@@ -77,76 +97,9 @@ export default function DashboardBookingsPage() {
                   <div className="mt-4">
                     <ContractViewer
                       bookingId={booking.id}
-                      terms={
-                        booking.contract?.terms ||
-                        'By booking this service, you agree to collaborate professionally and complete the work as discussed.'
-                      }
-                      agreedByClient={booking.contract?.agreedByClient || false}
-                      agreedByProvider={booking.contract?.agreedByProvider || false}
-                      userRole={user?.uid === booking.buyerId ? 'client' : 'provider'}
-                      onAgree={async () => {
-                        await fetch('/api/agree-contract', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            bookingId: booking.id,
-                            role: user?.uid === booking.buyerId ? 'client' : 'provider',
-                          }),
-                        });
-                        alert('✅ Contract signed!');
-                      }}
+                      terms={booking.contract?.terms || 'By booking this service, both parties agree to the provided scope of work.'}
                     />
                   </div>
-                </>
-              )}
-
-              <div className="flex space-x-4 mt-2">
-                {booking.status === 'pending' && (
-                  <>
-                    <button
-                      onClick={() => handleUpdateStatus(booking.id, 'accepted')}
-                      className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => handleUpdateStatus(booking.id, 'rejected')}
-                      className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
-                    >
-                      Reject
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {booking.status === 'paid' && (
-                <div className="mt-2">
-                  <ReleaseFundsButton bookingId={booking.id} />
-                </div>
-              )}
-
-              {booking.status === 'completed' && (
-                <>
-                  <p className="text-green-400 mt-2">Funds have been released to the provider.</p>
-
-                  {!booking.hasReview && (
-                    <div className="mt-4">
-                      <ReviewForm
-                        bookingId={booking.id}
-                        providerId={booking.providerId}
-                        contractId={booking.contractId}
-                      />
-                    </div>
-                  )}
-
-                  {!booking.hasDispute && (
-                    <div className="mt-4">
-                      <DisputeForm
-                        bookingId={booking.id}
-                        clientId={booking.buyerId}
-                      />
-                    </div>
-                  )}
                 </>
               )}
             </li>
