@@ -66,7 +66,16 @@ export default function DashboardBookingsPage() {
     <div className="min-h-screen bg-black text-white p-8">
       <h1 className="text-3xl font-bold mb-6">Manage Bookings</h1>
       {bookings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center p-6"><h2 className="text-xl font-bold mb-2">📁 No bookings yet.</h2><p className="text-gray-400 mb-4">Once you send a booking request, your messages will show up here.</p><button onClick={() => router.push("/explore")} className="px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition">🔍 Explore Creators</button></div>
+        <div className="flex flex-col items-center justify-center text-center p-6">
+          <h2 className="text-xl font-bold mb-2">📁 No bookings yet.</h2>
+          <p className="text-gray-400 mb-4">Once you send a booking request, your messages will show up here.</p>
+          <button
+            onClick={() => router.push('/explore')}
+            className="px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition"
+          >
+            🔍 Explore Creators
+          </button>
+        </div>
       ) : (
         <ul className="space-y-4">
           {bookings.map(booking => (
@@ -88,6 +97,24 @@ export default function DashboardBookingsPage() {
               <div className="mt-4">
                 {getStatusBanner(booking.status)}
               </div>
+
+              {/* Accept / Reject Buttons for Provider */}
+              {booking.status === 'pending' && user?.uid === booking.providerId && (
+                <div className="flex gap-4 mt-2">
+                  <button
+                    onClick={() => handleUpdateStatus(booking.id, 'accepted')}
+                    className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition"
+                  >
+                    ✅ Accept
+                  </button>
+                  <button
+                    onClick={() => handleUpdateStatus(booking.id, 'rejected')}
+                    className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition"
+                  >
+                    ❌ Reject
+                  </button>
+                </div>
+              )}
 
               {booking.status === 'paid' && (
                 <>
