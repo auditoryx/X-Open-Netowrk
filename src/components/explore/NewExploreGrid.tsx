@@ -5,6 +5,7 @@ import { queryCreators } from '@/lib/firestore/queryCreators';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { SaveButton } from '@/components/profile/SaveButton';
+import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
   const [creators, setCreators] = useState<any[]>([]);
@@ -18,7 +19,8 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
         results.map(async (c: any) => {
           const averageRating = await getAverageRating(c.uid);
           const reviewCount = await getReviewCount(c.uid);
-          return { ...c, averageRating, reviewCount };
+          const completion = getProfileCompletion(c);
+          return { ...c, averageRating, reviewCount, completion };
         })
       );
 
@@ -45,7 +47,8 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
               ⭐ {c.averageRating.toFixed(1)} / 5.0 ({c.reviewCount})
             </p>
           )}
-          <p className="text-xs text-gray-500 line-clamp-2">{c.bio || 'No bio available.'}</p>
+          <p className="text-xs text-gray-500 line-clamp-2 mb-2">{c.bio || 'No bio available.'}</p>
+          <p className="text-xs text-blue-400">📊 {c.completion}% Profile Complete</p>
         </div>
       ))}
     </div>
