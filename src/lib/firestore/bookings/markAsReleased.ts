@@ -1,4 +1,6 @@
 import admin from '@/lib/firebase-admin';
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2023-10-16" });
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 
@@ -26,8 +28,64 @@ export async function markAsReleased(input: unknown) {
   try {
     const db = admin.firestore();
     await db.collection('bookings').doc(bookingId).update({
+    const bookingSnap = await db.collection("bookings").doc(bookingId).get();
+    const booking = bookingSnap.data();
+    if (!booking) throw new Error("Booking not found");
+    const providerSnap = await db.collection("users").doc(booking.providerId).get();
+    const provider = providerSnap.data();
+    if (!provider?.stripeAccountId) throw new Error("No Stripe account connected for provider");
+    
+    const amount = booking.totalAmount || 0;
+    await stripe.transfers.create({
+      amount: Math.floor(amount * 100),
+      currency: "usd",
+      destination: provider.stripeAccountId,
+      metadata: { bookingId }
+    });
       paymentStatus: 'released',
+    const bookingSnap = await db.collection("bookings").doc(bookingId).get();
+    const booking = bookingSnap.data();
+    if (!booking) throw new Error("Booking not found");
+    const providerSnap = await db.collection("users").doc(booking.providerId).get();
+    const provider = providerSnap.data();
+    if (!provider?.stripeAccountId) throw new Error("No Stripe account connected for provider");
+    
+    const amount = booking.totalAmount || 0;
+    await stripe.transfers.create({
+      amount: Math.floor(amount * 100),
+      currency: "usd",
+      destination: provider.stripeAccountId,
+      metadata: { bookingId }
+    });
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    const bookingSnap = await db.collection("bookings").doc(bookingId).get();
+    const booking = bookingSnap.data();
+    if (!booking) throw new Error("Booking not found");
+    const providerSnap = await db.collection("users").doc(booking.providerId).get();
+    const provider = providerSnap.data();
+    if (!provider?.stripeAccountId) throw new Error("No Stripe account connected for provider");
+    
+    const amount = booking.totalAmount || 0;
+    await stripe.transfers.create({
+      amount: Math.floor(amount * 100),
+      currency: "usd",
+      destination: provider.stripeAccountId,
+      metadata: { bookingId }
+    });
+    });
+    const bookingSnap = await db.collection("bookings").doc(bookingId).get();
+    const booking = bookingSnap.data();
+    if (!booking) throw new Error("Booking not found");
+    const providerSnap = await db.collection("users").doc(booking.providerId).get();
+    const provider = providerSnap.data();
+    if (!provider?.stripeAccountId) throw new Error("No Stripe account connected for provider");
+    
+    const amount = booking.totalAmount || 0;
+    await stripe.transfers.create({
+      amount: Math.floor(amount * 100),
+      currency: "usd",
+      destination: provider.stripeAccountId,
+      metadata: { bookingId }
     });
 
     await logActivity(userId, 'payment_released', {
