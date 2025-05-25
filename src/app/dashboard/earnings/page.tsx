@@ -37,12 +37,26 @@ export default function EarningsPage() {
         const serviceData = serviceSnap.exists() ? serviceSnap.data() : null;
 
         tempEarnings.push({
+          payoutStatus: data.paymentStatus || "unknown",
+
           id: docSnap.id,
+          payoutStatus: data.paymentStatus || "unknown",
+
           title: serviceData?.title || 'Unknown Service',
+          payoutStatus: data.paymentStatus || "unknown",
+
           buyerName: data.buyerName || 'Unknown Buyer',
+          payoutStatus: data.paymentStatus || "unknown",
+
           amount: data.amountPaid || 0,
+          payoutStatus: data.paymentStatus || "unknown",
+
           timestamp: data.timestamp?.toDate().toLocaleDateString() || 'Unknown Date',
+          payoutStatus: data.paymentStatus || "unknown",
+
         });
+          payoutStatus: data.paymentStatus || "unknown",
+
       }
 
       setEarnings(tempEarnings);
