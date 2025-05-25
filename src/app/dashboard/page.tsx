@@ -1,7 +1,8 @@
 'use client';
 
 import Navbar from '@/app/components/Navbar';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import clsx from 'clsx';
 import { getAuth, signOut } from 'firebase/auth';
 import {
   getFirestore,
@@ -102,6 +103,14 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
+      <div className="flex justify-center my-6 gap-4">
+        <Link href="/dashboard/bookings" className={clsx("px-4 py-2 rounded font-medium", { "bg-white text-black": router.pathname === "/dashboard/bookings", "bg-gray-800 text-white": router.pathname !== "/dashboard/bookings" })}>
+          I’m Selling
+        </Link>
+        <Link href="/dashboard/purchases" className={clsx("px-4 py-2 rounded font-medium", { "bg-white text-black": router.pathname === "/dashboard/purchases", "bg-gray-800 text-white": router.pathname !== "/dashboard/purchases" })}>
+          I’m Buying
+        </Link>
+      </div>
       <div className="max-w-4xl mx-auto p-6">
         {showBanner && (
           <div className="bg-blue-900 border border-blue-500 text-white p-4 rounded-lg mb-6 shadow">
