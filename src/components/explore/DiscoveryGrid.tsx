@@ -1,115 +1,68 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import FilterPanel from './FilterPanel';
-import { queryCreators } from '@/lib/firestore/explore/queryCreators';
-import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
-import CreatorCard from '@/components/cards/CreatorCard';
+import { useEffect, useState } from 'react';
+import { queryCreators } from '@/lib/firestore/queryCreators';
+import { getNextAvailable } from '@/lib/availability/getNextAvailable';
+import { SaveButton } from '@/components/profile/SaveButton';
+import { getAverageRating } from '@/lib/reviews/getAverageRating';
+import { getReviewCount } from '@/lib/reviews/getReviewCount';
+import { useRouter } from 'next/navigation';
+import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 
-const LOCATIONS = [
-  'Tokyo', 'Los Angeles', 'New York', 'Seoul', 'London',
-  'Paris', 'Toronto', 'Berlin', 'Sydney', 'Remote',
-];
-
-const DiscoveryGrid = () => {
+export default function DiscoveryGrid({ filters }: { filters: any }) {
   const [creators, setCreators] = useState<any[]>([]);
-  const [nextAvailabilities, setNextAvailabilities] = useState<Record<string, string | null>>({});
-  const [filters, setFilters] = useState({
-    role: '',
-    verifiedOnly: false,
-    location: '',
-    service: '',
-    proTier: '',
-  });
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchCreators = async () => {
-      const result = await queryCreators(filters);
-      const sorted = result.sort((a, b) => {
-        const tierOrder = { signature: 0, verified: 1, standard: 2 };
-        return (tierOrder[a.proTier] ?? 3) - (tierOrder[b.proTier] ?? 3);
-      });
-      setCreators(sorted);
+    const fetch = async () => {
+      const results = await queryCreators(filters);
 
-      const availabilityMap: Record<string, string | null> = {};
-      await Promise.all(
-        sorted.map(async (creator: any) => {
-          const next = await getNextAvailable(creator.uid);
-          availabilityMap[creator.uid] = next;
+      const withMeta = await Promise.all(
+        results.map(async (c: any) => {
+          const next = await getNextAvailable(c.uid);
+          const rating = await getAverageRating(c.uid);
+          const count = await getReviewCount(c.uid);
+          const completion = getProfileCompletion(c);
+          return { ...c, next, rating, count, completion };
         })
       );
-      setNextAvailabilities(availabilityMap);
+
+      setCreators(withMeta);
+      setLoading(false);
     };
-    fetchCreators();
+
+    fetch();
   }, [filters]);
 
+  if (loading) return <div className="text-white">Loading results...</div>;
+
   return (
-    <div className="space-y-4">
-      {/* 🔍 Filters */}
-      <div className="sticky top-0 z-20 bg-black border-b border-white pb-4 mb-6">
-        <FilterPanel filters={filters} setFilters={setFilters} />
-
-        {/* 🔰 Tier Dropdown */}
-        <div className="flex gap-4 mt-2">
-          <select
-            value={filters.proTier}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, proTier: e.target.value }))
-            }
-            className="text-black px-2 py-1 rounded"
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {creators.map((creator: any) => (
+        <div
+          key={creator.uid}
+          className="border border-white p-4 rounded hover:bg-white hover:text-black transition"
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-bold">{creator.name || 'Unnamed'}</h2>
+            <SaveButton providerId={creator.uid} />
+          </div>
+          {creator.rating !== null && (
+            <p className="text-yellow-500 text-sm mb-1">
+              ⭐ {creator.rating.toFixed(1)} / 5.0 ({creator.count})
+            </p>
+          )}
+          <p className="text-sm text-gray-500 mb-2 line-clamp-2">{creator.bio || 'No bio provided.'}</p>
+          <p className="text-xs text-blue-400 mb-1">📊 {creator.completion}% Profile Complete</p>
+          <button
+            className="border px-4 py-1 rounded text-sm"
+            onClick={() => router.push(`/profile/${creator.uid}`)}
           >
-            <option value="">All Tiers</option>
-            <option value="signature">Signature</option>
-            <option value="verified">Verified</option>
-          </select>
+            View Profile
+          </button>
         </div>
-      </div>
-
-      {/* 🌍 Location Filter Chips */}
-      <div className="flex flex-wrap gap-2 py-2">
-        {LOCATIONS.map((loc) => (
-          <button
-            key={loc}
-            onClick={() => setFilters((prev) => ({ ...prev, location: loc }))}
-            className={`px-4 py-1 rounded-full border text-sm ${
-              filters.location === loc
-                ? 'bg-white text-black border-white'
-                : 'bg-neutral-800 text-white border-neutral-600 hover:bg-neutral-700'
-            }`}
-          >
-            {loc}
-          </button>
-        ))}
-        {filters.location && (
-          <button
-            onClick={() => setFilters((prev) => ({ ...prev, location: '' }))}
-            className="ml-2 text-sm underline text-gray-400"
-          >
-            Clear
-          </button>
-        )}
-      </div>
-
-      {/* 📡 Creator Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
-        {creators.map((c) => (
-          <CreatorCard
-            key={c.uid}
-            id={c.uid}
-            name={c.displayName}
-            price={c.price ?? 0}
-            tagline={c.bio || 'No description yet'}
-            location={c.location || 'Unknown'}
-            rating={c.rating}
-            reviewCount={c.reviewCount}
-            verified={c.verified}
-            imageUrl={c.profileImage || ''}
-            proTier={c.proTier}
-          />
-        ))}
-      </div>
+      ))}
     </div>
   );
-};
-
-export default DiscoveryGrid;
+}
