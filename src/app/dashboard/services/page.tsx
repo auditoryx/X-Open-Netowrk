@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Navbar from '@/app/components/Navbar';
 import Link from 'next/link';
 
@@ -50,7 +51,11 @@ export default function ServicesPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
-            <Link key={service.title} href={service.href} className="border border-neutral-700 p-6 rounded-xl hover:border-white/80 transition">
+            <Link
+              key={service.title}
+              href={service.href}
+              className="border border-neutral-700 p-6 rounded-xl hover:border-white/80 transition"
+            >
               <h2 className="text-xl font-semibold mb-2">{service.title}</h2>
               <p className="text-sm text-gray-400">{service.description}</p>
             </Link>
@@ -59,8 +64,13 @@ export default function ServicesPage() {
 
         <div className="pt-12 text-center">
           <h3 className="text-xl font-semibold">Ready to offer your own services?</h3>
-          <p className="text-sm text-gray-400 mb-4">Apply now to join the network and start getting booked globally.</p>
-          <Link href="/apply" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
+          <p className="text-sm text-gray-400 mb-4">
+            Apply now to join the network and start getting booked globally.
+          </p>
+          <Link
+            href="/apply"
+            className="border px-6 py-2 rounded hover:bg-white hover:text-black transition"
+          >
             Apply as a Creator
           </Link>
         </div>
