@@ -60,6 +60,29 @@ export default function DashboardBookingsPage() {
     }
   };
 
+  const handleContractAgree = async (bookingId: string, role: 'client' | 'provider') => {
+    await fetch('/api/agree-contract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId, role }),
+    });
+
+    setBookings(prev =>
+      prev.map(b =>
+        b.id === bookingId
+          ? {
+              ...b,
+              contract: {
+                ...b.contract,
+                agreedByClient: role === 'client' ? true : b.contract.agreedByClient,
+                agreedByProvider: role === 'provider' ? true : b.contract.agreedByProvider,
+              },
+            }
+          : b
+      )
+    );
+  };
+
   if (loading) return <div className="p-6 text-white">Loading bookings...</div>;
 
   return (
@@ -78,86 +101,104 @@ export default function DashboardBookingsPage() {
         </div>
       ) : (
         <ul className="space-y-4">
-          {bookings.map(booking => (
-            <li
-              key={booking.id}
-              ref={el => {
-                highlightRef.current[booking.id] = el;
-              }}
-              className="border border-white p-4 rounded"
-            >
-              <p><strong>Service:</strong> {booking.serviceId}</p>
-              <p><strong>Buyer:</strong> {booking.buyerId}</p>
-              <p><strong>Status:</strong> {booking.status}</p>
+          {bookings.map(booking => {
+            const userRole = user?.uid === booking.buyerId ? 'client' : 'provider';
+            const contract = booking.contract || {};
+            const bothAgreed = contract.agreedByClient && contract.agreedByProvider;
 
-              {booking.platformFee && (
-                <p><strong>Platform Fee:</strong> ${booking.platformFee}</p>
-              )}
+            return (
+              <li
+                key={booking.id}
+                ref={el => {
+                  highlightRef.current[booking.id] = el;
+                }}
+                className="border border-white p-4 rounded"
+              >
+                <p><strong>Service:</strong> {booking.serviceId}</p>
+                <p><strong>Buyer:</strong> {booking.buyerId}</p>
+                <p><strong>Status:</strong> {booking.status}</p>
 
-              <div className="mt-4">
-                {getStatusBanner(booking.status)}
-              </div>
+                {booking.platformFee && (
+                  <p><strong>Platform Fee:</strong> ${booking.platformFee}</p>
+                )}
 
-              {booking.status === 'pending' && user?.uid === booking.providerId && (
-                <div className="flex gap-4 mt-2">
-                  <button
-                    onClick={() => handleUpdateStatus(booking.id, 'accepted')}
-                    className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition"
-                  >
-                    ✅ Accept
-                  </button>
-                  <button
-                    onClick={() => handleUpdateStatus(booking.id, 'rejected')}
-                    className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition"
-                  >
-                    ❌ Reject
-                  </button>
+                <div className="mt-4">
+                  {getStatusBanner(booking.status)}
                 </div>
-              )}
 
-              {booking.status === 'paid' && (
-                <>
-                  <div className="mt-4">
-                    <BookingChat bookingId={booking.id} />
+                {booking.status === 'pending' && user?.uid === booking.providerId && (
+                  <div className="flex gap-4 mt-2">
+                    <button
+                      onClick={() => handleUpdateStatus(booking.id, 'accepted')}
+                      className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition"
+                    >
+                      ✅ Accept
+                    </button>
+                    <button
+                      onClick={() => handleUpdateStatus(booking.id, 'rejected')}
+                      className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition"
+                    >
+                      ❌ Reject
+                    </button>
                   </div>
-                  <div className="mt-4">
-                    <ContractViewer
-                      bookingId={booking.id}
-                      terms={booking.contract?.terms || 'By booking this service, both parties agree to the provided scope of work.'}
-                    />
-                  </div>
-                  {user?.uid === booking.buyerId && (
-                    <div className="mt-4">
-                      <ReleaseFundsButton bookingId={booking.id} />
-                    </div>
-                  )}
-                </>
-              )}
+                )}
 
-              {booking.status === 'completed' && user?.uid === booking.buyerId && (
-                <>
-                  {!booking.hasReview && (
+                {booking.status === 'paid' && (
+                  <>
                     <div className="mt-4">
-                      <ReviewForm
+                      <ContractViewer
                         bookingId={booking.id}
-                        providerId={booking.providerId}
-                        contractId={booking.contractId}
+                        terms={contract.terms || 'By booking this service, both parties agree to the provided scope of work.'}
+                        agreedByClient={contract.agreedByClient || false}
+                        agreedByProvider={contract.agreedByProvider || false}
+                        userRole={userRole}
+                        onAgree={() => handleContractAgree(booking.id, userRole)}
                       />
                     </div>
-                  )}
 
-                  {!booking.hasDispute && (
-                    <div className="mt-4">
-                      <DisputeForm
-                        bookingId={booking.id}
-                        clientId={booking.buyerId}
-                      />
-                    </div>
-                  )}
-                </>
-              )}
-            </li>
-          ))}
+                    {bothAgreed ? (
+                      <div className="mt-4">
+                        <BookingChat bookingId={booking.id} />
+                      </div>
+                    ) : (
+                      <p className="text-yellow-400 text-sm font-medium">
+                        ⚠️ Both parties must agree to the contract before messaging.
+                      </p>
+                    )}
+
+                    {userRole === 'client' && (
+                      <div className="mt-4">
+                        <ReleaseFundsButton bookingId={booking.id} />
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {booking.status === 'completed' && user?.uid === booking.buyerId && (
+                  <>
+                    {!booking.hasReview && (
+                      <div className="mt-4">
+                        <ReviewForm
+                          bookingId={booking.id}
+                          providerId={booking.providerId}
+                          contractId={booking.contractId}
+                        />
+                      </div>
+                    )}
+
+                    {!booking.hasDispute && (
+                      <div className="mt-4">
+                        <DisputeForm
+                          bookingId={booking.id}
+                          clientId={booking.buyerId}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
