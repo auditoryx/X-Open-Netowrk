@@ -16,6 +16,7 @@ import { app } from '@/lib/firebase';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Link from 'next/link';
+import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -129,6 +130,7 @@ export default function DashboardPage() {
         )}
 
         <h1 className="text-4xl font-bold mb-6 text-center">Dashboard</h1>
+<NotificationsPanel />
 
         {userData?.proTier === 'standard' && (
           <div className="bg-yellow-400 text-black p-4 rounded-xl mb-6">
