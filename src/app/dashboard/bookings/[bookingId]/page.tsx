@@ -11,6 +11,8 @@ import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 import ReviewForm from '@/components/booking/ReviewForm';
 import DisputeForm from '@/components/disputes/DisputeForm';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
+import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
 
 export default function BookingDetailPage() {
   const { bookingId: rawId } = useParams();
@@ -19,6 +21,7 @@ export default function BookingDetailPage() {
   const bookingId = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -31,6 +34,12 @@ export default function BookingDetailPage() {
       setLoading(false);
     };
     fetchBooking();
+  }, [bookingId]);
+
+  useEffect(() => {
+    if (!bookingId) return;
+    const unsub = listenToTyping(bookingId, setTypingUsers);
+    return () => unsub();
   }, [bookingId]);
 
   if (loading) return <div className="p-6 text-white">Loading booking...</div>;
@@ -77,6 +86,13 @@ export default function BookingDetailPage() {
             />
 
             <BookingChat bookingId={bookingId} />
+
+            {typingUsers.length > 0 && (
+              <p className="text-sm text-gray-400 italic">
+                {typingUsers.join(', ')} is typing...
+              </p>
+            )}
+
             <ReleaseFundsButton bookingId={bookingId} />
           </>
         )}
