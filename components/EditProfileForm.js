@@ -34,7 +34,7 @@ export default function EditProfileForm() {
       <div>
         <label className="block mb-1">Display Name</label>
         <input
-          className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
+          className="input-base"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
         />
@@ -42,7 +42,7 @@ export default function EditProfileForm() {
       <div>
         <label className="block mb-1">Bio</label>
         <textarea
-          className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
+          className="textarea-base"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
         />
