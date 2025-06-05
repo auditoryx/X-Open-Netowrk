@@ -2,15 +2,14 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { db } from '@/lib/firebase'
 import { doc, setDoc } from 'firebase/firestore'
-import { getServerUser } from '@/lib/auth/getServerUser'
+import withAuth from '@/app/api/_utils/withAuth'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-10-16',
 })
 
-export async function POST() {
-  const user = await getServerUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+async function handler(req: any & { user: any }) {
+  const user = req.user
 
   const account = await stripe.accounts.create({
     type: 'express',
@@ -31,3 +30,5 @@ export async function POST() {
 
   return NextResponse.json({ url: link.url })
 }
+
+export const POST = withAuth(handler)

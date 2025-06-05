@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { NextRequest, NextResponse } from 'next/server';
-import withAuth from '@/app/utils/withAuth';
+import withAuth from '@/app/api/_utils/withAuth';
 
 async function handler(req: NextRequest & { user: any }) {
   if (req.user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { firebaseConfig } from '@/lib/firebase';
-import withAuth from '@/app/utils/withAuth';
+import withAuth from '@/app/api/_utils/withAuth';
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);

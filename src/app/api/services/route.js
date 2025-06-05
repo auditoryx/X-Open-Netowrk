@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
-import withAuth from '@/app/utils/withAuth';
+import withAuth from '@/app/api/_utils/withAuth';
 
 // GET all services
 async function getServices() {

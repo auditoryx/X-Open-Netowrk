@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import withAuth from '@/app/utils/withAuth';
+import withAuth from '@/app/api/_utils/withAuth';
 
 async function handler(req: NextRequest & { user: any }) {
   const { bookingId, reviewedId, text, rating } = await req.json();

@@ -4,7 +4,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
-import withAuth from '@/app/utils/withAuth';
+import withAuth from '@/app/api/_utils/withAuth';
 
 const CheckoutSchema = z.object({
   bookingId: z.string().min(1),
