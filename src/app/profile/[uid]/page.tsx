@@ -7,6 +7,8 @@ import { app } from '@/lib/firebase';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
+import VerifiedBadge from '@/components/ui/VerifiedBadge';
+import TierBadge from '@/components/ui/TierBadge';
 import BookingForm from '@/components/booking/BookingForm';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
@@ -48,13 +50,20 @@ export default function PublicProfilePage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-1">{profile.name || 'Unnamed User'}</h1>
+      <div className="flex items-center mb-1">
+        <h1 className="text-3xl font-bold">{profile.name || 'Unnamed User'}</h1>
+        {(profile.proTier === 'verified' || profile.proTier === 'signature') && <VerifiedBadge />}
+        {profile.proTier === 'signature' && <TierBadge tier="signature" />}
+      </div>
 
+      {profile.proTier === 'verified' && (
+        <p className="text-blue-400 text-sm mb-2" title="Verified by AuditoryX — identity and profile have been reviewed.">Verified Creator</p>
+      )}
       {profile.proTier === 'signature' && (
         <p className="text-purple-400 text-sm mb-2">💎 Signature Creator</p>
       )}
-      {profile.proTier === 'verified' && (
-        <p className="text-blue-400 text-sm mb-2" title="Verified by AuditoryX — identity and profile have been reviewed.">✔ Verified Creator</p>
+      {(!profile.proTier || profile.proTier === 'standard') && (
+        <p className="text-gray-400 text-sm mb-2">Standard Creator</p>
       )}
 
       {profile.averageRating !== undefined && (

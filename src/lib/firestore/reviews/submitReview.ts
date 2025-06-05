@@ -1,4 +1,4 @@
-import { getFirestore, doc, setDoc, collection, serverTimestamp, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, collection, serverTimestamp, getDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
 async function notifyProvider(providerId: string, bookingId: string, rating: number) {
@@ -38,12 +38,13 @@ export async function submitReview(review: Review) {
 
   // Write to contract thread
   const contractReviewRef = doc(db, 'contracts', review.contractId, 'reviews', review.clientId);
-  // Also write to user profile thread
   const userReviewRef = doc(db, 'users', review.providerId, 'reviews', review.clientId);
 
   await Promise.all([
     setDoc(contractReviewRef, reviewData),
-    setDoc(userReviewRef, reviewData)
+    setDoc(userReviewRef, reviewData),
+    addDoc(collection(db, 'reviews'), reviewData),
+    updateDoc(doc(db, 'bookings', review.bookingId), { hasReview: true })
   ]);
 
   await notifyProvider(review.providerId, review.bookingId, review.rating);
