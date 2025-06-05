@@ -3,7 +3,10 @@ import {
   doc,
   updateDoc,
   collection,
-  getDocs
+  getDocs,
+  query,
+  orderBy,
+  limit
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
@@ -12,7 +15,12 @@ export async function markMessagesAsSeen(
   uid: string
 ) {
   const db = getFirestore(app);
-  const snap = await getDocs(collection(db, 'bookings', bookingId, 'messages'));
+  const q = query(
+    collection(db, 'bookings', bookingId, 'messages'),
+    orderBy('createdAt', 'desc'),
+    limit(50)
+  );
+  const snap = await getDocs(q);
 
   const updates = snap.docs.filter(doc => {
     const data = doc.data();

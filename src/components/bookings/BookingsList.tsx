@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 
 type Props = {
@@ -10,17 +10,28 @@ type Props = {
 
 export default function BookingsList({ uid }: Props) {
   const [bookings, setBookings] = useState<any[]>([])
+  const [lastDoc, setLastDoc] = useState<any | null>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      const q = query(collection(db, 'bookings'), where('userId', '==', uid))
-      const snapshot = await getDocs(q)
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-      setBookings(data)
-    }
-
-    fetchBookings()
+    loadMore()
   }, [uid])
+
+  const loadMore = async () => {
+    setLoading(true)
+    const base = query(
+      collection(db, 'bookings'),
+      where('userId', '==', uid),
+      orderBy('date', 'desc'),
+      limit(10)
+    )
+    const q = lastDoc ? query(base, startAfter(lastDoc)) : base
+    const snapshot = await getDocs(q)
+    const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    setLastDoc(snapshot.docs[snapshot.docs.length - 1] || lastDoc)
+    setBookings(prev => [...prev, ...docs])
+    setLoading(false)
+  }
 
   if (!bookings.length) return <p>No bookings found.</p>
 
@@ -35,6 +46,15 @@ export default function BookingsList({ uid }: Props) {
           </li>
         ))}
       </ul>
+      {lastDoc && (
+        <button
+          onClick={loadMore}
+          disabled={loading}
+          className="mt-2 px-4 py-2 bg-neutral-800 rounded text-white"
+        >
+          {loading ? 'Loading...' : 'Load More'}
+        </button>
+      )}
     </div>
   )
 }

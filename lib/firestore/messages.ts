@@ -7,7 +7,8 @@ import {
   onSnapshot,
   serverTimestamp,
   getDocs,
-  updateDoc
+  updateDoc,
+  limit
 } from 'firebase/firestore';
 
 export const sendMessage = async (
@@ -30,7 +31,7 @@ export const sendMessage = async (
 
 export const markMessagesAsSeen = async (bookingId: string, userId: string) => {
   const ref = collection(db, 'bookings', bookingId, 'messages');
-  const q = query(ref, orderBy('timestamp', 'asc'));
+  const q = query(ref, orderBy('timestamp', 'asc'), limit(50));
   const snapshot = await getDocs(q);
   snapshot.docs.forEach((docSnap) => {
     if (docSnap.data().senderId !== userId && !docSnap.data().seen) {

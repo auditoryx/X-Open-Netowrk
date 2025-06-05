@@ -25,6 +25,7 @@ export default function Navbar() {
           alt="AuditoryX Logo"
           width={40}
           height={40}
+          loading="lazy"
           className="rounded-md object-contain"
         />
         <span className="font-bold text-2xl tracking-tight">AuditoryX</span>
