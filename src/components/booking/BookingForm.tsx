@@ -3,13 +3,22 @@
 import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import toast from 'react-hot-toast';
+import WeeklyCalendarSelector from './WeeklyCalendarSelector';
+import { createBooking } from '@/lib/firestore/createBooking';
+import { checkBookingConflict } from '@/lib/firestore/checkBookingConflict';
+import { useProviderAvailability } from '@/lib/hooks/useProviderAvailability';
+import { getNextDateForWeekday } from '@/lib/google/calendar';
 
 type BookingFormProps = {
-  onBook: (details: { message: string }) => Promise<void> | void;
+  providerId: string;
+  onBooked?: () => void;
 };
 
-export default function BookingForm({ onBook }: BookingFormProps) {
+export default function BookingForm({ providerId, onBooked }: BookingFormProps) {
   const { user } = useAuth();
+  const { slots, busySlots, timezone } = useProviderAvailability(providerId);
+  const [service, setService] = useState('');
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -22,13 +31,33 @@ export default function BookingForm({ onBook }: BookingFormProps) {
       return;
     }
 
-    if (!trimmed || loading) return;
+    if (!selectedTime) {
+      toast.error('Please select a time slot.');
+      return;
+    }
+
+    if (loading) return;
 
     setLoading(true);
     try {
-      await onBook({ message: trimmed });
+      const conflict = await checkBookingConflict(providerId, selectedTime);
+      if (conflict) {
+        toast.error('Time slot already booked');
+        setLoading(false);
+        return;
+      }
+      await createBooking({
+        clientId: user.uid,
+        providerId,
+        service,
+        dateTime: selectedTime,
+        message: trimmed,
+      });
       toast.success('Booking request sent!');
       setMessage('');
+      setService('');
+      setSelectedTime(null);
+      onBooked && onBooked();
     } catch (err) {
       console.error('Booking submission failed:', err);
       toast.error('Failed to send booking request.');
@@ -42,6 +71,29 @@ export default function BookingForm({ onBook }: BookingFormProps) {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 p-4 border rounded bg-white text-black"
     >
+      <input
+        type="text"
+        placeholder="Service name"
+        value={service}
+        onChange={(e) => setService(e.target.value)}
+        className="p-2 border rounded"
+        required
+      />
+
+      <WeeklyCalendarSelector
+        availability={slots
+          .map((s) => `${getNextDateForWeekday(s.day as any)}T${s.time}`)
+          .filter(
+            (dt) =>
+              !busySlots.some(
+                (b) => `${getNextDateForWeekday(b.day as any)}T${b.time}` === dt
+              )
+          )}
+        onSelect={(dt) => setSelectedTime(dt)}
+      />
+
+      <p className="text-xs text-gray-600">Provider timezone: {timezone || 'N/A'}</p>
+
       <label htmlFor="booking-message" className="text-sm font-medium">
         Message to provider
       </label>
@@ -59,7 +111,7 @@ export default function BookingForm({ onBook }: BookingFormProps) {
       <button
         type="submit"
         aria-label="Send booking request"
-        disabled={loading || !message.trim()}
+        disabled={loading || !message.trim() || !selectedTime}
         className={`px-4 py-2 rounded text-white font-medium transition ${
           loading
             ? 'bg-gray-500 cursor-not-allowed'

@@ -4,7 +4,9 @@ export async function sendBookingConfirmation(
   to: string,
   selectedTime: string,
   message: string,
-  senderName?: string
+  senderName?: string,
+  providerTZ?: string,
+  clientTZ?: string
 ) {
   const subject = `📅 New Booking Request – ${selectedTime}`;
 
@@ -13,6 +15,8 @@ export async function sendBookingConfirmation(
       selectedTime,
       message,
       senderName: senderName || 'Anonymous',
+      providerTZ: providerTZ || '',
+      clientTZ: clientTZ || '',
     });
 
     if (result.error) {
