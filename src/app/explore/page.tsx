@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import DiscoveryGrid from '@/components/explore/DiscoveryGrid';
 import NewExploreGrid from '@/components/explore/NewExploreGrid';
 import FilterPanel from '@/components/explore/FilterPanel';
-import GlobalMapPage from '../map/page';
+import DiscoveryMap from '@/components/explore/DiscoveryMap';
 import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 
 export default function ExplorePage() {
@@ -20,6 +20,8 @@ export default function ExplorePage() {
     service: searchParams.get('service') || '',
     proTier: searchParams.get('proTier') || '',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
+    lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
+    lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
   });
 
   useEffect(() => {
@@ -28,7 +30,11 @@ export default function ExplorePage() {
     if (filters.location) query.set('location', filters.location);
     if (filters.service) query.set('service', filters.service);
     if (filters.proTier) query.set('proTier', filters.proTier);
-    if (filters.searchNearMe) query.set('searchNearMe', 'true');
+    if (filters.searchNearMe) {
+      query.set('searchNearMe', 'true');
+      if (filters.lat) query.set('lat', String(filters.lat));
+      if (filters.lng) query.set('lng', String(filters.lng));
+    }
     router.replace('/explore?' + query.toString());
   }, [filters]);
 
@@ -62,7 +68,7 @@ export default function ExplorePage() {
         )
       ) : (
         <div className="h-[80vh] rounded overflow-hidden border border-white">
-          <GlobalMapPage />
+          <DiscoveryMap filters={filters} />
         </div>
       )}
     </div>
