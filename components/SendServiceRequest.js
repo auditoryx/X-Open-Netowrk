@@ -1,7 +1,11 @@
 "use client";
 import { useState } from "react";
 
-export default function SendServiceRequest({ recipientId = "", recipientRole = "studio" }) {
+export default function SendServiceRequest({
+  serviceId = "",
+  recipientId = "",
+  recipientRole = "studio",
+}) {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
@@ -12,10 +16,28 @@ export default function SendServiceRequest({ recipientId = "", recipientRole = "
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Replace with real backend logic later
-    alert(`Request sent to ${recipientRole} (ID: ${recipientId})`);
+    try {
+      const res = await fetch('/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceId,
+          date: formData.date,
+          time: formData.time,
+          message: formData.notes,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Request failed');
+
+      setFormData({ date: '', time: '', notes: '' });
+      alert('Request sent successfully');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to send request');
+    }
   };
 
   return (

@@ -46,7 +46,7 @@ function StudioDashboardPage() {
         </div>
       )}
 
-      <p>📦 More dashboard features coming soon...</p>
+      <p>Select an option from the sidebar to manage your account.</p>
     </div>
   );
 }

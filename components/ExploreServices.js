@@ -43,7 +43,11 @@ export default function ExploreServices() {
           <h3 className="text-xl font-bold">{service.title}</h3>
           <p className="text-gray-300 mb-1">${service.price}</p>
           <p className="text-gray-400 mb-3">{service.desc}</p>
-          <SendServiceRequest recipientId={service.userId} recipientRole={service.role || "provider"} />
+          <SendServiceRequest
+            serviceId={service.id}
+            recipientId={service.userId}
+            recipientRole={service.role || 'provider'}
+          />
         </div>
       ))}
     </div>
