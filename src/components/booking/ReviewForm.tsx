@@ -1,10 +1,11 @@
 'use client';
-import { sendInAppNotification } from "@/lib/notifications/sendInAppNotification";
+import { sendInAppNotification } from '@/lib/notifications/sendInAppNotification';
 
 import { useState } from 'react';
 import { submitReview } from '@/lib/firestore/reviews/submitReview';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { toast } from 'sonner';
+import StarRating from '@/components/ui/StarRating';
 
 type ReviewFormProps = {
   bookingId: string;
@@ -33,68 +34,20 @@ export default function ReviewForm({
 
     try {
       await submitReview({
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
         bookingId,
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
         providerId,
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
-        clientId: user.uid,
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
         contractId,
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
+        clientId: user.uid,
         text: text.trim(),
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
         rating,
+      });
+
       await sendInAppNotification({
         to: providerId,
-        type: "review",
-        title: "New Review Received",
+        type: 'review',
+        title: 'New Review Received',
         message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
-      });
-      });
-      await sendInAppNotification({
-        to: providerId,
-        type: "review",
-        title: "New Review Received",
-        message: `You received a ${rating}-star review from a client`,
-        link: `/dashboard/bookings/${bookingId}`
+        link: `/dashboard/bookings/${bookingId}`,
       });
 
       setSubmitted(true);
@@ -129,20 +82,7 @@ export default function ReviewForm({
       <div className="text-xs text-right text-gray-500">{text.length}/500</div>
 
       <label htmlFor="review-rating" className="text-sm font-medium">Rating</label>
-      <select
-        id="review-rating"
-        aria-label="Rating out of 5"
-        value={rating}
-        onChange={(e) => setRating(Number(e.target.value))}
-        className="p-2 border rounded"
-        disabled={loading}
-      >
-        {[5, 4, 3, 2, 1].map((n) => (
-          <option key={n} value={n}>
-            {n} Stars
-          </option>
-        ))}
-      </select>
+      <StarRating rating={rating} onChange={setRating} disabled={loading} />
 
       <button
         type="submit"
@@ -159,16 +99,3 @@ export default function ReviewForm({
     </form>
   );
 }
-//   //   console.log('Booking request sent:', message);
-// //   }}
-// //   />
-// //
-// // Example usage
-// // <BookingChatThread bookingId="12345" /> 
-// // <BookingChatThread bookingId="67890" />
-// // <BookingChatThread bookingId="54321" />
-// // <BookingChatThread bookingId="98765" />
-// // <BookingChatThread bookingId="11223" />
-// // <BookingChatThread bookingId="44556" />
-// // <BookingChatThread bookingId="77889" />
-// // <BookingChatThread bookingId="99000" />
