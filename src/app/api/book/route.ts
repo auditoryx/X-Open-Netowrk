@@ -8,6 +8,8 @@ import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 const BookingSchema = z.object({
   serviceId: z.string().min(1),
+  date: z.string().min(1),
+  time: z.string().min(1),
   message: z.string().min(1),
 });
 
@@ -23,11 +25,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid input', issues: parsed.error.format() }, { status: 400 });
   }
 
-  const { serviceId, message } = parsed.data;
+  const { serviceId, date, time, message } = parsed.data;
 
   try {
     const docRef = await addDoc(collection(db, 'bookingRequests'), {
       serviceId,
+      date,
+      time,
       message,
       userId: session.user.id,
       status: 'pending',
@@ -36,6 +40,8 @@ export async function POST(req: NextRequest) {
 
     await logActivity(session.user.id, 'booking_request_sent', {
       serviceId,
+      date,
+      time,
       message,
       requestId: docRef.id,
     });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { initiateBookingWithStripe } from "@/lib/initiateBookingWithStripe";
+import { initiateBookingWithStripe } from "@/lib/stripe/initiateBookingWithStripe";
 
 export default function BookingForm({ providerId, serviceId, userId }: { providerId: string; serviceId: string; userId: string }) {
   const [date, setDate] = useState("");
