@@ -7,6 +7,7 @@ import { useSidebarToggle } from '@/hooks/useSidebarToggle';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import ReviewPrompt from '@/components/dashboard/ReviewPrompt';
 
 export default function DashboardLayout({
   children,
@@ -48,6 +49,7 @@ export default function DashboardLayout({
           </div>
         )}
         {children}
+        <ReviewPrompt />
       </div>
       <BottomNav />
     </div>

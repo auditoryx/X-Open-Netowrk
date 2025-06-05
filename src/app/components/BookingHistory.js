@@ -2,24 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, startAfter } from 'firebase/firestore';
 
 export default function BookingHistory({ userId }) {
   const [bookings, setBookings] = useState([]);
+  const [lastDoc, setLastDoc] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      const q = query(collection(db, 'bookings'), where('userId', '==', userId));
-      const querySnapshot = await getDocs(q);
-      const results = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setBookings(results);
-    };
-
-    fetchBookings();
+    loadMore();
   }, [userId]);
+
+  const loadMore = async () => {
+    setLoading(true);
+    const base = query(
+      collection(db, 'bookings'),
+      where('userId', '==', userId),
+      orderBy('date', 'desc'),
+      limit(10)
+    );
+    const q = lastDoc ? query(base, startAfter(lastDoc)) : base;
+    const querySnapshot = await getDocs(q);
+    const results = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1] || lastDoc);
+    setBookings((prev) => [...prev, ...results]);
+    setLoading(false);
+  };
 
   return (
     <div className="mt-8">
@@ -35,6 +46,15 @@ export default function BookingHistory({ userId }) {
             </li>
           ))}
         </ul>
+      )}
+      {lastDoc && (
+        <button
+          onClick={loadMore}
+          disabled={loading}
+          className="mt-2 px-4 py-2 bg-gray-800 text-white rounded"
+        >
+          {loading ? 'Loading...' : 'Load More'}
+        </button>
       )}
     </div>
   );

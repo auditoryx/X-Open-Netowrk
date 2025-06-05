@@ -15,9 +15,9 @@ import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 const BookingSchema = z.object({
   serviceId: z.string().min(1),
-  message: z.string().min(1),
   date: z.string().min(1),
   time: z.string().min(1),
+  message: z.string().min(1),
 });
 
 export async function POST(req: NextRequest) {
@@ -29,10 +29,13 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const parsed = BookingSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid input', issues: parsed.error.format() }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Invalid input', issues: parsed.error.format() },
+      { status: 400 }
+    );
   }
 
-  const { serviceId, message, date, time } = parsed.data;
+  const { serviceId, date, time, message } = parsed.data;
 
   try {
     const q = query(
@@ -70,6 +73,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, requestId: docRef.id });
   } catch (err: any) {
     console.error('❌ Booking request failed:', err.message);
-    return NextResponse.json({ error: 'Failed to create booking request' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create booking request' },
+      { status: 500 }
+    );
   }
 }

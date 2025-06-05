@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import TierBadge from '@/components/ui/TierBadge';
+import Image from 'next/image';
 
 export default function CreatorCard({
   id,
@@ -31,9 +32,12 @@ export default function CreatorCard({
     >
       <div className="flex items-center gap-3 mb-3">
         {imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt={name}
+            width={48}
+            height={48}
+            loading="lazy"
             className="w-12 h-12 rounded-full object-cover"
           />
         ) : (

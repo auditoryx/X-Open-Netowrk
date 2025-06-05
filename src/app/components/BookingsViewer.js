@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, orderBy, startAfter, limit } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
 export default function BookingsViewer() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [lastDoc, setLastDoc] = useState(null);
+  const [uidState, setUid] = useState(null);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -16,19 +18,29 @@ export default function BookingsViewer() {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) return;
 
-      const q = query(
-        collection(db, 'bookings'),
-        where('recipientUid', '==', user.uid)
-      );
-
-      const snapshot = await getDocs(q);
-      const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setBookings(results);
-      setLoading(false);
+      setUid(user.uid);
+      await loadMore(user.uid);
     });
 
     return () => unsubscribe();
   }, []);
+
+  const loadMore = async (uid) => {
+    setLoading(true);
+    const db = getFirestore(app);
+    const base = query(
+      collection(db, 'bookings'),
+      where('recipientUid', '==', uid),
+      orderBy('createdAt', 'desc'),
+      limit(10)
+    );
+    const q = lastDoc ? query(base, startAfter(lastDoc)) : base;
+    const snapshot = await getDocs(q);
+    const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setLastDoc(snapshot.docs[snapshot.docs.length - 1] || lastDoc);
+    setBookings((prev) => [...prev, ...results]);
+    setLoading(false);
+  };
 
   if (loading) return <p className="text-white">Loading bookings...</p>;
 
@@ -49,6 +61,15 @@ export default function BookingsViewer() {
             </li>
           ))}
         </ul>
+      )}
+      {lastDoc && (
+        <button
+          onClick={() => loadMore(uidState)}
+          disabled={loading}
+          className="mt-2 px-4 py-2 bg-gray-800 text-white rounded"
+        >
+          {loading ? 'Loading...' : 'Load More'}
+        </button>
       )}
     </div>
   );
