@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
+import BottomNav from '@/components/dashboard/BottomNav';
 import { useSidebarToggle } from '@/hooks/useSidebarToggle';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -29,7 +30,7 @@ export default function DashboardLayout({
       </div>
 
       {/* Content */}
-      <div className="flex-1 p-4 md:ml-64">
+      <div className="flex-1 p-4 pb-16 md:ml-64">
         {isCreator && (
           <div className="mb-4 flex gap-2">
             <Link
@@ -48,6 +49,7 @@ export default function DashboardLayout({
         )}
         {children}
       </div>
+      <BottomNav />
     </div>
   );
 }
