@@ -2,13 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 const BookingSchema = z.object({
   serviceId: z.string().min(1),
   message: z.string().min(1),
+  date: z.string().min(1),
+  time: z.string().min(1),
 });
 
 export async function POST(req: NextRequest) {
@@ -23,11 +32,27 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid input', issues: parsed.error.format() }, { status: 400 });
   }
 
-  const { serviceId, message } = parsed.data;
+  const { serviceId, message, date, time } = parsed.data;
 
   try {
+    const q = query(
+      collection(db, 'bookingRequests'),
+      where('serviceId', '==', serviceId),
+      where('date', '==', date),
+      where('time', '==', time)
+    );
+    const snap = await getDocs(q);
+    if (!snap.empty) {
+      return NextResponse.json(
+        { error: 'Booking slot already taken' },
+        { status: 409 }
+      );
+    }
+
     const docRef = await addDoc(collection(db, 'bookingRequests'), {
       serviceId,
+      date,
+      time,
       message,
       userId: session.user.id,
       status: 'pending',
@@ -36,6 +61,8 @@ export async function POST(req: NextRequest) {
 
     await logActivity(session.user.id, 'booking_request_sent', {
       serviceId,
+      date,
+      time,
       message,
       requestId: docRef.id,
     });
