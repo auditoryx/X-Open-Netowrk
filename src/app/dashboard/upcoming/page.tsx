@@ -34,7 +34,7 @@ export default function UpcomingBookingsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-            <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">📅 Upcoming Bookings</h1>
         {bookings.length === 0 ? (
           <p>No upcoming requests.</p>
@@ -56,6 +56,3 @@ export default function UpcomingBookingsPage() {
     </div>
   );
 }
-git add .
-git commit -m "📆 Step 4: Added Upcoming Bookings dashboard for providers"
-git push

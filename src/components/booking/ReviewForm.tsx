@@ -90,14 +90,10 @@ export default function ReviewForm({
       </select>
 
       <button
-  type="submit"
-  aria-label="Submit review"
-  disabled={loading || text.trim().length < 3}
-  className={`btn btn-primary ${loading ? 'cursor-not-allowed opacity-60' : ''}`}
->
-  {loading ? 'Submitting...' : 'Submit Review'}
-</button>
-
+        type="submit"
+        aria-label="Submit review"
+        disabled={loading || text.trim().length < 3}
+        className={`btn btn-primary ${loading ? 'cursor-not-allowed opacity-60' : ''}`}
       >
         {loading ? 'Submitting...' : 'Submit Review'}
       </button>
