@@ -2,14 +2,19 @@
 
 import { useSidebarToggle } from '@/hooks/useSidebarToggle';
 import SidebarItem from '@/components/ui/SidebarItem';
+import { useAuth } from '@/lib/hooks/useAuth';
 
-const links = [
-  { href: '/dashboard', label: 'Dashboard Home' },
-  { href: '/dashboard/settings', label: 'Settings' },
-];
+export default function Sidebar({ onClose }: { onClose?: () => void }) {
+  const { open: isOpen, toggle } = useSidebarToggle();
+  const { userData } = useAuth();
+  const isCreator = userData?.role && userData.role !== 'user';
 
-export default function Sidebar() {
-  const { isOpen, toggle } = useSidebarToggle();
+  const links = [
+    { href: '/dashboard', label: 'Dashboard Home' },
+    ...(isCreator ? [{ href: '/dashboard/bookings', label: 'Bookings' }] : []),
+    { href: '/dashboard/purchases', label: 'Purchases' },
+    { href: '/dashboard/settings', label: 'Settings' },
+  ];
 
   return (
     <>
@@ -29,7 +34,9 @@ export default function Sidebar() {
         <nav aria-label="Dashboard navigation">
           <ul className="space-y-2">
             {links.map(({ href, label }) => (
-              <SidebarItem key={href} href={href} label={label} />
+              <li key={href} onClick={onClose}>
+                <SidebarItem href={href} label={label} />
+              </li>
             ))}
           </ul>
         </nav>
