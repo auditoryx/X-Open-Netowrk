@@ -100,7 +100,7 @@ export default function PublicProfilePage() {
 
       <div id="booking-form" className="w-full max-w-xl mt-6">
         <h2 className="text-xl font-semibold mb-2">📩 Send Booking Request</h2>
-        <BookingForm onBook={() => {}} />
+        <BookingForm providerId={uid} onBook={() => {}} />
       </div>
 
       <div className="mt-10 w-full max-w-4xl">

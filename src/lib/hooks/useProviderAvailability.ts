@@ -25,7 +25,8 @@ export function useProviderAvailability(uid: string) {
         const userSnap = await getDoc(doc(db, 'users', uid));
         if (userSnap.exists()) {
           const data = userSnap.data();
-          setSlots(data.availability || []);
+          // availabilitySlots is stored directly on the user profile
+          setSlots(data.availabilitySlots || data.availability || []);
           setTimezone(data.timezone || '');
         }
       }
