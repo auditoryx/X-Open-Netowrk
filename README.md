@@ -45,3 +45,8 @@ See `.env.example` for a full list of variables required by the project.
 ## Escrow Payments
 
 All payments are placed in escrow when a booking is made. Funds remain held until the work is completed and both parties confirm the outcome. This protects buyers and sellers by ensuring money is only released once the service is delivered.
+
+## Availability Management
+
+Availability can now be managed from the dashboard at `/dashboard/availability`. Old JS pages were removed in favor of TypeScript components.
+

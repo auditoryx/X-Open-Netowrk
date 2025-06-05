@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { getDoc, doc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { useBookingData } from '@/lib/hooks/useBookingData';
 import BookingChat from '@/components/chat/BookingChat';
 
 export default function PurchaseDetailPage() {
@@ -12,20 +10,8 @@ export default function PurchaseDetailPage() {
   const success = searchParams.get('success') === 'true';
   const bookingId = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
 
-  const [booking, setBooking] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBooking = async () => {
-      if (!bookingId) return;
-      const snap = await getDoc(doc(db, 'bookings', bookingId));
-      if (snap.exists()) {
-        setBooking(snap.data());
-      }
-      setLoading(false);
-    };
-    fetchBooking();
-  }, [bookingId]);
+  const booking = useBookingData(bookingId);
+  const loading = !booking;
 
   if (loading) return <div className="p-6 text-white">Loading booking...</div>;
   if (!booking) return <div className="p-6 text-white">Booking not found.</div>;

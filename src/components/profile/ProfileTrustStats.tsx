@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { app } from '@/lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useUserProfile } from '@/lib/hooks/useUserProfile';
 
 export function ProfileTrustStats() {
   const { user } = useAuth();
+  const profile = useUserProfile();
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const [reviewCount, setReviewCount] = useState<number>(0);
   const [badges, setBadges] = useState<string[]>([]);
@@ -16,8 +18,6 @@ export function ProfileTrustStats() {
   useEffect(() => {
     async function fetchTrustStats() {
       if (!user?.uid) return;
-      const db = getFirestore(app);
-
       // Get reviews
       const reviewsRef = collection(db, 'users', user.uid, 'reviews');
       const snapshot = await getDocs(reviewsRef);
@@ -28,11 +28,8 @@ export function ProfileTrustStats() {
         setReviewCount(ratings.length);
       }
 
-      // Fetch verified status
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (userDoc.exists()) {
-        setIsVerified(userDoc.data()?.verified || false);
-      }
+      // Use profile data for verified status
+      setIsVerified(profile?.verified ?? false);
 
       // Optional: extra trust badges
       const res = await fetch(`/api/trust-stats?uid=${user.uid}`);
@@ -42,7 +39,11 @@ export function ProfileTrustStats() {
     }
 
     fetchTrustStats();
-  }, [user]);
+  }, [user, profile]);
+
+  useEffect(() => {
+    setIsVerified(profile?.verified ?? false);
+  }, [profile]);
 
   if (!user) return null;
 
