@@ -38,10 +38,19 @@ export function useAvailability() {
     fetch();
   }, [user]);
 
-  const saveAvailability = async (slots: Slot[], notes: string, timezone: string) => {
+  const saveAvailability = async (
+    slots: Slot[],
+    notes: string,
+    timezone: string
+  ) => {
     if (!user) return;
     const ref = doc(db, 'availability', user.uid);
     await setDoc(ref, { slots, notes, timezone }, { merge: true });
+
+    // Also store slots on the user profile for easy reference in bookings
+    const userRef = doc(db, 'users', user.uid);
+    await setDoc(userRef, { availabilitySlots: slots }, { merge: true });
+
     setAvailability(slots);
     setNotes(notes);
     setTimezone(timezone);
