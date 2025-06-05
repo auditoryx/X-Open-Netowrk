@@ -13,6 +13,10 @@ export async function POST(req) {
     const decoded = await getAuth(adminApp).verifyIdToken(token);
     const { artistId, service, description } = await req.json();
 
+    if (artistId !== decoded.uid) {
+      return new Response(JSON.stringify({ error: 'Unauthorized artistId' }), { status: 403 });
+    }
+
     if (!artistId || !service || !description) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }

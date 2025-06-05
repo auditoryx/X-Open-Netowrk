@@ -13,6 +13,10 @@ export async function POST(req) {
     const decoded = await getAuth(adminApp).verifyIdToken(token);
     const { videographerId, location, services, portfolioLink, equipment } = await req.json();
 
+    if (videographerId !== decoded.uid) {
+      return new Response(JSON.stringify({ error: 'Unauthorized videographerId' }), { status: 403 });
+    }
+
     if (!videographerId || !location || !services || !portfolioLink || !equipment) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }

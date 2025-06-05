@@ -13,6 +13,10 @@ export async function POST(req) {
     const decoded = await getAuth(adminApp).verifyIdToken(token);
     const { producerId, title, bpm, genre, price, link } = await req.json();
 
+    if (producerId !== decoded.uid) {
+      return new Response(JSON.stringify({ error: 'Unauthorized producerId' }), { status: 403 });
+    }
+
     if (!producerId || !title || !bpm || !genre || !price || !link) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }

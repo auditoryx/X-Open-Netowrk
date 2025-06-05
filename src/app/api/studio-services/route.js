@@ -13,6 +13,10 @@ export async function POST(req) {
     const decoded = await getAuth(adminApp).verifyIdToken(token);
     const { studioId, name, location, amenities, hourlyRate, availability, contact } = await req.json();
 
+    if (studioId !== decoded.uid) {
+      return new Response(JSON.stringify({ error: 'Unauthorized studioId' }), { status: 403 });
+    }
+
     if (!studioId || !name || !location || !amenities || !hourlyRate || !availability || !contact) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }
