@@ -1,13 +1,11 @@
 'use client';
-import Navbar from '@/app/components/Navbar';
 import RoleSelectCard from '@/components/onboarding/RoleSelectCard';
 import { roles } from '@/utils/roles';
 
 export default function ApplyPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto py-12 px-6">
+            <div className="max-w-4xl mx-auto py-12 px-6">
         <h1 className="text-4xl font-bold mb-4 text-center">Apply to AuditoryX</h1>
         <p className="text-lg text-gray-400 mb-10 text-center">
           Choose your creator role to begin your application.

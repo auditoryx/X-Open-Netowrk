@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Navbar from '@/app/components/Navbar';
 import { parseISO, format } from 'date-fns';
 
 export default function BookingSuccessPage() {
@@ -24,8 +23,7 @@ export default function BookingSuccessPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-xl mx-auto p-8 text-center">
+            <div className="max-w-xl mx-auto p-8 text-center">
         <h1 className="text-4xl font-bold mb-4">✅ Booking Request Sent!</h1>
 
         <p className="text-lg mb-2">

@@ -1,6 +1,5 @@
 'use client';
 
-import Navbar from '@/app/components/Navbar';
 import { useRouter, useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import { getAuth, signOut } from 'firebase/auth';
@@ -103,8 +102,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
+            <div className="max-w-4xl mx-auto p-6">
         {showBanner && (
           <div className="bg-blue-900 border border-blue-500 text-white p-4 rounded-lg mb-6 shadow">
             <div className="flex justify-between items-start">

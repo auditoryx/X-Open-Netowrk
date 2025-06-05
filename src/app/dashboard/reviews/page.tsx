@@ -1,6 +1,5 @@
 'use client';
 
-import Navbar from '@/app/components/Navbar';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { db } from '@/lib/firebase';
@@ -56,8 +55,7 @@ export default function ReviewsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-3xl mx-auto p-6">
+            <div className="max-w-3xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6 text-center">My Reviews</h1>
         {reviews.length === 0 ? (
           <p className="text-gray-400 text-center">No reviews yet.</p>

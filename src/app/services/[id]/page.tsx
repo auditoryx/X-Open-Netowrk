@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Navbar from '@/app/components/Navbar';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { SaveButton } from '@/components/profile/SaveButton';
@@ -37,8 +36,7 @@ export default function ServiceDetailPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto py-12 px-6">
+            <div className="max-w-4xl mx-auto py-12 px-6">
         <h1 className="text-4xl font-bold mb-4">{service.title || 'Untitled Service'}</h1>
         <p className="text-gray-400 mb-6">{service.description || 'No description provided.'}</p>
 

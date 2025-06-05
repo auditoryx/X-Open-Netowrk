@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import Navbar from '@/app/components/Navbar';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -65,8 +64,7 @@ export default function ApplyRolePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-2xl mx-auto py-12 px-6">
+            <div className="max-w-2xl mx-auto py-12 px-6">
         <OnboardingStepHeader
           step={1}
           total={3}

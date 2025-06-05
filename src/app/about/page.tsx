@@ -1,11 +1,9 @@
 'use client';
 
-import Navbar from '@/app/components/Navbar';
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-20 space-y-10">
         <h1 className="text-4xl font-bold text-center">Our Mission</h1>
 

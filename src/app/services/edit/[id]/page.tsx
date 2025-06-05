@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import Navbar from '@/app/components/Navbar';
 
 export default function EditServicePage() {
   const { id: rawId } = useParams();
@@ -59,8 +58,7 @@ export default function EditServicePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-2xl mx-auto py-12 px-6">
+            <div className="max-w-2xl mx-auto py-12 px-6">
         <h1 className="text-3xl font-bold mb-6">Edit Service</h1>
 
         <div className="space-y-4">
