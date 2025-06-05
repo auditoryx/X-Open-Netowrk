@@ -1,51 +1,67 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'sonner'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db } from '@/lib/firebase'
 import { doc, updateDoc } from 'firebase/firestore'
 import { useAuth } from '@/lib/hooks/useAuth'
 
 export default function IDVerificationForm() {
   const { user } = useAuth()
-  const [idUrl, setIdUrl] = useState('')
+  const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
-  const [status, setStatus] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = async () => {
-    if (!user || !idUrl) return
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!user?.uid || !file || loading) return
     setLoading(true)
     try {
+      const storage = getStorage()
+      const fileRef = ref(storage, `id-verifications/${user.uid}/${file.name}`)
+      await uploadBytes(fileRef, file)
+      const url = await getDownloadURL(fileRef)
+
       await updateDoc(doc(db, 'users', user.uid), {
         verificationStatus: 'pending',
-        idDocumentUrl: idUrl,
+        idDocumentUrl: url,
       })
-      setStatus('Submitted')
+
+      toast.success('ID submitted successfully!')
+      setSubmitted(true)
     } catch (e) {
       console.error(e)
-      setStatus('Error submitting')
+      toast.error('Upload failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
+  }
+
+  if (submitted) {
+    return (
+      <p className="text-green-400 text-sm">✅ Your ID has been submitted and is under review.</p>
+    )
   }
 
   return (
-    <div className="bg-neutral-900 p-4 rounded-xl text-white space-y-3">
+    <form onSubmit={handleSubmit} className="bg-neutral-900 p-4 rounded-xl text-white space-y-3">
       <h2 className="text-lg font-bold">Verify Your Identity</h2>
-      <p className="text-sm text-gray-400">Upload a link to your ID (or a screenshot).</p>
+      <p className="text-sm text-gray-400">Upload a photo or scan of your government ID.</p>
       <input
-        type="url"
-        placeholder="Paste image URL"
-        value={idUrl}
-        onChange={(e) => setIdUrl(e.target.value)}
+        type="file"
+        accept="image/*,application/pdf"
+        onChange={(e) => setFile(e.target.files?.[0] || null)}
         className="bg-neutral-800 border border-neutral-700 rounded p-2 w-full text-white"
+        disabled={loading}
       />
       <button
-        onClick={handleSubmit}
-        disabled={loading}
+        type="submit"
+        disabled={!file || loading}
         className="bg-blue-600 px-4 py-2 rounded text-white"
       >
         {loading ? 'Submitting...' : 'Submit Verification'}
       </button>
-      {status && <p className="text-sm mt-2 text-green-400">{status}</p>}
-    </div>
+    </form>
   )
 }
