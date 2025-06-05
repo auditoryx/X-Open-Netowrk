@@ -14,6 +14,10 @@ export async function POST(req: NextRequest) {
     const decoded = await getAuth(adminApp).verifyIdToken(token);
     const { timeSlot, studioId } = await req.json();
 
+    if (studioId !== decoded.uid) {
+      return NextResponse.json({ error: 'Unauthorized studioId' }, { status: 403 });
+    }
+
     if (!timeSlot || !studioId) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }

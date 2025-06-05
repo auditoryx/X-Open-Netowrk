@@ -13,6 +13,10 @@ export async function POST(req) {
     const decoded = await getAuth(adminApp).verifyIdToken(token);
     const { engineerId, services, daws, rate, availability, contact } = await req.json();
 
+    if (engineerId !== decoded.uid) {
+      return new Response(JSON.stringify({ error: 'Unauthorized engineerId' }), { status: 403 });
+    }
+
     if (!engineerId || !services || !daws || !rate || !availability || !contact) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), { status: 400 });
     }

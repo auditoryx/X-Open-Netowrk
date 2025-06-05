@@ -49,10 +49,19 @@ export async function POST(req) {
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.split('Bearer ')[1];
+    if (!token) {
+      return new Response(JSON.stringify({ error: 'Unauthorized: Missing token' }), { status: 401 });
+    }
+    const decoded = await getAuth(adminApp).verifyIdToken(token);
     const uid = searchParams.get('uid');
 
     if (!uid) {
       return new Response(JSON.stringify({ error: 'Missing uid' }), { status: 400 });
+    }
+    if (uid !== decoded.uid) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
     }
 
     const docSnap = await getDoc(doc(db, 'userAvailability', uid));

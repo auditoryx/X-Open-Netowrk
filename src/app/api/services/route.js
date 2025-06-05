@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, getDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 import withAuth from '@/app/api/_utils/withAuth';
 
@@ -37,6 +37,11 @@ async function updateService(req) {
   }
 
   const ref = doc(db, 'services', id);
+  const snap = await getDoc(ref);
+  if (!snap.exists() || snap.data().creatorId !== req.user.uid) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
   await updateDoc(ref, { ...updates, updatedAt: Date.now() });
 
   return NextResponse.json({ success: true });
@@ -50,7 +55,13 @@ async function deleteService(req) {
     return NextResponse.json({ error: 'Missing service ID' }, { status: 400 });
   }
 
-  await deleteDoc(doc(db, 'services', id));
+  const ref = doc(db, 'services', id);
+  const snap = await getDoc(ref);
+  if (!snap.exists() || snap.data().creatorId !== req.user.uid) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  await deleteDoc(ref);
   return NextResponse.json({ success: true });
 }
 
