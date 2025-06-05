@@ -29,7 +29,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", protect, async (req, res) => {
     try {
         const { name, description, price } = req.body;
-        const newService = new Service({ name, description, price, user: req.user._id });
+        const newService = new Service({ name, description, price, provider: req.user._id });
         await newService.save();
         res.status(201).json(newService);
     } catch (error) {
