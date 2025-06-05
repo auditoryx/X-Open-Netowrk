@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { auth, db } from "../firebase/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function AvailabilityForm() {
   const [availability, setAvailability] = useState({
@@ -17,10 +19,22 @@ export default function AvailabilityForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Availability saved.");
-    // TODO: Send to backend
+
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in.");
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "users", user.uid), { availability }, { merge: true });
+      alert("Availability saved.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save availability.");
+    }
   };
 
   return (

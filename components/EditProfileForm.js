@@ -1,14 +1,32 @@
 "use client";
 import { useState } from "react";
+import { auth, db } from "../firebase/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function EditProfileForm() {
   const [displayName, setDisplayName] = useState("Zenji");
   const [bio, setBio] = useState("Music visionary. A&R. Creator of vibes.");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Profile updated!");
-    // TODO: hook to backend
+
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in.");
+      return;
+    }
+
+    try {
+      await setDoc(
+        doc(db, "users", user.uid),
+        { displayName, bio },
+        { merge: true }
+      );
+      alert("Profile updated!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update profile.");
+    }
   };
 
   return (
