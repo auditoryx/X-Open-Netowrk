@@ -1,8 +1,7 @@
 'use client';
-import { sendInAppNotification } from "@/lib/notifications/sendInAppNotification";
-
-import { useState } from 'react';
-import { createDispute } from '@/lib/firestore/disputes/createDispute';
+import { useState } from 'react'
+import { createDispute } from '@/lib/firestore/disputes/createDispute'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { toast } from 'sonner';
 
 type Props = {
@@ -14,6 +13,7 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
   const [reason, setReason] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth()
 
   const handleSubmit = async () => {
     const trimmed = reason.trim();
@@ -22,45 +22,42 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
     setLoading(true);
     try {
       const result = await createDispute({
-      await sendInAppNotification({
-        to: "admin-notify",
-        type: "dispute",
-        title: "New Dispute Filed",
-        message: `A user submitted a dispute for booking ${bookingId}`,
-        link: `/admin/disputes`
-      });
         bookingId,
-      await sendInAppNotification({
-        to: "admin-notify",
-        type: "dispute",
-        title: "New Dispute Filed",
-        message: `A user submitted a dispute for booking ${bookingId}`,
-        link: `/admin/disputes`
-      });
         fromUser: clientId,
-      await sendInAppNotification({
-        to: "admin-notify",
-        type: "dispute",
-        title: "New Dispute Filed",
-        message: `A user submitted a dispute for booking ${bookingId}`,
-        link: `/admin/disputes`
-      });
-        reason: trimmed,
-      await sendInAppNotification({
-        to: "admin-notify",
-        type: "dispute",
-        title: "New Dispute Filed",
-        message: `A user submitted a dispute for booking ${bookingId}`,
-        link: `/admin/disputes`
-      });
-      });
-      await sendInAppNotification({
-        to: "admin-notify",
-        type: "dispute",
-        title: "New Dispute Filed",
-        message: `A user submitted a dispute for booking ${bookingId}`,
-        link: `/admin/disputes`
-      });
+        reason: trimmed
+      })
+
+      if (!result?.error) {
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || null
+
+        await Promise.all([
+          fetch('/api/notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: 'admin-notify',
+              email: adminEmail,
+              type: 'dispute',
+              title: 'New Dispute Filed',
+              message: `A user submitted a dispute for booking ${bookingId}`,
+              link: `/admin/disputes`
+            })
+          }),
+          user?.email
+            ? fetch('/api/notifications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: user.email,
+                  type: 'dispute',
+                  title: 'Dispute Submitted',
+                  message: `We received your dispute for booking ${bookingId}`,
+                  link: `/dashboard/disputes`
+                })
+              })
+            : Promise.resolve()
+        ])
+      }
 
       if (result?.error) {
         toast.error(result.error);
