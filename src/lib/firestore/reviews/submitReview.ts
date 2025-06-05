@@ -1,5 +1,23 @@
-import { getFirestore, doc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, collection, serverTimestamp, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+
+async function notifyProvider(providerId: string, bookingId: string, rating: number) {
+  const db = getFirestore(app)
+  const snap = await getDoc(doc(db, 'users', providerId))
+  const email = snap.exists() ? (snap.data() as any).email || null : null
+  await fetch('/api/notifications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId: providerId,
+      email,
+      type: 'review',
+      title: 'New Review Received',
+      message: `You received a ${rating}-star review from a client`,
+      link: `/dashboard/bookings/${bookingId}`
+    })
+  })
+}
 
 type Review = {
   bookingId: string;
@@ -27,4 +45,6 @@ export async function submitReview(review: Review) {
     setDoc(contractReviewRef, reviewData),
     setDoc(userReviewRef, reviewData)
   ]);
+
+  await notifyProvider(review.providerId, review.bookingId, review.rating);
 }

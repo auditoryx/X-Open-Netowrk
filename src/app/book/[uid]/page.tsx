@@ -101,6 +101,19 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
     await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
 
+    await fetch('/api/notifications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: params.uid,
+        email: providerEmail,
+        type: 'booking',
+        title: 'New Booking Request',
+        message: `You received a new booking request from ${user?.displayName || 'a user'}`,
+        link: '/dashboard/bookings'
+      })
+    })
+
     setLoading(false);
     router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);
   };
