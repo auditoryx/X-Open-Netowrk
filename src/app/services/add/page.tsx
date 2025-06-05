@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import Navbar from '@/app/components/Navbar';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
@@ -42,8 +41,7 @@ export default function AddServicePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-2xl mx-auto py-12 px-6">
+            <div className="max-w-2xl mx-auto py-12 px-6">
         <h1 className="text-3xl font-bold mb-6">Add New Service</h1>
 
         {error && <p className="text-red-400 mb-4">{error}</p>}

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import Navbar from '@/app/components/Navbar';
 
 export default function AdminUserPage() {
   const { uid: rawUid } = useParams();
@@ -31,8 +30,7 @@ export default function AdminUserPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-3xl mx-auto py-12 px-6">
+            <div className="max-w-3xl mx-auto py-12 px-6">
         <h1 className="text-3xl font-bold mb-6">Admin: {user.name || 'Unnamed User'}</h1>
         <p><span className="text-gray-400">UID:</span> {uid}</p>
         <p><span className="text-gray-400">Email:</span> {user.email || 'N/A'}</p>

@@ -15,7 +15,6 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import Navbar from '@/app/components/Navbar';
 import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -120,8 +119,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
+            <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
         <div className="md:col-span-2 space-y-4">
           <h1 className="text-3xl font-bold mb-4">Send Booking Request</h1>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">

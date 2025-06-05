@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
-import Navbar from '@/app/components/Navbar';
 
 export default function UpcomingBookingsPage() {
   const { user } = useAuth();
@@ -35,8 +34,7 @@ export default function UpcomingBookingsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
+            <div className="max-w-4xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">📅 Upcoming Bookings</h1>
         {bookings.length === 0 ? (
           <p>No upcoming requests.</p>

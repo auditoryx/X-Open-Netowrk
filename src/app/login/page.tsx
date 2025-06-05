@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { app } from '@/lib/firebase'
-import Navbar from '@/app/components/Navbar'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -38,8 +37,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center justify-center">
-      <Navbar />
-      <h1 className="text-3xl font-bold mb-6">Log In</h1>
+            <h1 className="text-3xl font-bold mb-6">Log In</h1>
 
       <button
         onClick={handleGoogleLogin}

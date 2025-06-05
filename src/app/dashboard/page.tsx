@@ -1,6 +1,5 @@
 'use client';
 
-import Navbar from '@/app/components/Navbar';
 import { useRouter, useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import { getAuth, signOut } from 'firebase/auth';
@@ -102,8 +101,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="flex justify-center my-6 gap-4">
+            <div className="flex justify-center my-6 gap-4">
         <Link href="/dashboard/bookings" className={clsx("px-4 py-2 rounded font-medium", { "bg-white text-black": router.pathname === "/dashboard/bookings", "bg-gray-800 text-white": router.pathname !== "/dashboard/bookings" })}>
           I’m Selling
         </Link>

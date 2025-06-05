@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import Navbar from '@/app/components/Navbar';
 import BookingChat from '@/components/chat/BookingChat';
 
 export default function PurchaseDetailPage() {
@@ -33,8 +32,7 @@ export default function PurchaseDetailPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto py-10 px-6 space-y-8">
+            <div className="max-w-4xl mx-auto py-10 px-6 space-y-8">
         {success && (
           <div className="bg-green-600 text-white text-sm p-3 rounded mb-6">
             ✅ Booking Confirmed — you can now chat with your provider.

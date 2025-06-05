@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Navbar from '@/app/components/Navbar';
 import Link from 'next/link';
 
 const services = [
@@ -40,8 +39,7 @@ const services = [
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-6xl mx-auto px-6 py-20 space-y-12">
+            <div className="max-w-6xl mx-auto px-6 py-20 space-y-12">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-3">What You Can Do on AuditoryX</h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">

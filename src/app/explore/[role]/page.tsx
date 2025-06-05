@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Navbar from '@/app/components/Navbar';
 import { getFirestore, collection, getDocs, query, where, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { useRouter, useParams } from 'next/navigation';
@@ -73,8 +72,7 @@ export default function ExploreRolePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-6xl mx-auto p-6">
+            <div className="max-w-6xl mx-auto p-6">
         <h1 className="text-4xl font-bold mb-6 capitalize">{role} Services</h1>
 
         {userData?.isAdmin && (

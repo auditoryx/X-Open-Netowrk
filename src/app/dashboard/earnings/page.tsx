@@ -12,7 +12,6 @@ import {
   getDoc,
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import Navbar from '@/app/components/Navbar';
 
 export default function EarningsPage() {
   const [earnings, setEarnings] = useState<any[]>([]);
@@ -72,8 +71,7 @@ export default function EarningsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-6 py-10">
+            <div className="max-w-4xl mx-auto px-6 py-10">
         <h1 className="text-3xl font-bold mb-6">💸 My Earnings</h1>
 
         {earnings.length === 0 ? (

@@ -1,13 +1,11 @@
 'use client';
 
-import Navbar from '@/app/components/Navbar';
 import Link from 'next/link';
 
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-3xl mx-auto px-6 py-16 text-center space-y-8">
+            <div className="max-w-3xl mx-auto px-6 py-16 text-center space-y-8">
         <h1 className="text-4xl font-bold">Contact AuditoryX</h1>
         <p className="text-lg text-gray-400">
           Got a question, partnership idea, or want to join the movement?
