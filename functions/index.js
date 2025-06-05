@@ -13,3 +13,5 @@ exports.grantAdmin = functions.https.onCall(async (data, context) => {
   await admin.auth().setCustomUserClaims(data.uid, { admin: true });
   return { success: true };
 });
+
+exports.cleanupOldBookings = require('./cleanupOldBookings').cleanupOldBookings;
