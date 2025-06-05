@@ -40,11 +40,11 @@ const MediaUploader = () => {
   return (
     <div className="p-4 border rounded-xl shadow-sm bg-white">
       <label className="block mb-2 font-medium text-sm">Upload Media Samples</label>
-      <input type="file" multiple accept="image/*,audio/*,video/*" onChange={handleFileChange} />
+      <input type="file" multiple accept="image/*,audio/*,video/*" onChange={handleFileChange} className="input-base" />
       <button
         onClick={handleUpload}
         disabled={uploading}
-        className="mt-3 bg-black text-white px-4 py-2 rounded-lg"
+        className="mt-3 btn btn-primary"
       >
         {uploading ? 'Uploading…' : 'Upload'}
       </button>

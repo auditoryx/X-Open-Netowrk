@@ -33,11 +33,7 @@ export default function PayButton({ service, buyerId }) {
     <button
       onClick={onClick}
       disabled={loading}
-      className={`border text-white px-6 py-3 rounded transition ${
-        loading
-          ? 'bg-gray-500 border-gray-500 cursor-not-allowed'
-          : 'border-white hover:bg-white hover:text-black'
-      }`}
+      className="btn btn-primary px-6 py-3"
     >
       {loading ? 'Redirecting...' : 'Book Now'}
     </button>

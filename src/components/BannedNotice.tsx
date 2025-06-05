@@ -53,13 +53,13 @@ export default function BannedNotice() {
       <div className="flex gap-4">
         <button
           onClick={() => signOut(auth)}
-          className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200"
+          className="btn btn-primary bg-white text-black hover:bg-gray-200"
         >
           Sign Out
         </button>
         <button
           onClick={() => setShowModal(true)}
-          className="border border-white px-4 py-2 rounded hover:bg-white hover:text-black"
+          className="btn btn-secondary"
         >
           Contact Support
         </button>
@@ -79,7 +79,7 @@ export default function BannedNotice() {
                   placeholder="Explain your situation..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full p-2 border rounded text-black"
+                  className="textarea-base text-black"
                   rows={4}
                 />
                 <div className="flex justify-end gap-2">
@@ -91,7 +91,7 @@ export default function BannedNotice() {
                   </button>
                   <button
                     onClick={handleSubmit}
-                    className="bg-black text-white px-4 py-2 rounded"
+                    className="btn btn-primary"
                     disabled={submitting}
                   >
                     {submitting ? 'Sending...' : 'Send'}

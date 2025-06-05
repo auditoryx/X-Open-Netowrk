@@ -66,17 +66,13 @@ export default function IDVerificationForm({ userId }: Props) {
         accept="image/*,application/pdf"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
         disabled={loading}
-        className="w-full border p-2 rounded"
+        className="input-base"
       />
 
       <button
         type="submit"
         disabled={!file || loading}
-        className={`w-full py-2 px-4 rounded font-medium text-white transition ${
-          loading
-            ? 'bg-gray-500 cursor-not-allowed'
-            : 'bg-black hover:bg-white hover:text-black border border-black'
-        }`}
+        className="btn btn-primary w-full"
         aria-label="Submit ID for verification"
       >
         {loading ? 'Submitting...' : 'Submit Verification'}

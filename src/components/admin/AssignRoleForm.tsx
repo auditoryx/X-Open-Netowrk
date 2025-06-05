@@ -40,16 +40,16 @@ export default function AssignRoleForm() {
         placeholder="User UID"
         value={uid}
         onChange={(e) => setUid(e.target.value)}
-        className="w-full p-2 border rounded"
+        className="input-base"
       />
       <input
         type="text"
         placeholder="Role (artist, producer, etc.)"
         value={role}
         onChange={(e) => setRole(e.target.value)}
-        className="w-full p-2 border rounded"
+        className="input-base"
       />
-      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+      <button type="submit" className="btn btn-primary w-full">
         {loading ? 'Assigning...' : 'Assign Role'}
       </button>
     </form>
