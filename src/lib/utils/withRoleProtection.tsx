@@ -20,7 +20,7 @@ export function withRoleProtection<P extends WithRoleProtectionProps>(
     useEffect(() => {
       if (!loading) {
         if (!user) {
-          router.push('/auth/login');
+          router.push('/login');
         } else if (!allowedRoles.includes(user.role)) {
           router.push('/dashboard'); // Optional: make this customizable
         }

@@ -12,7 +12,7 @@ export default function withAuth(Component) {
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (!user) {
-          router.push('/auth/login');
+          router.push('/login');
         } else {
           setLoading(false);
         }
