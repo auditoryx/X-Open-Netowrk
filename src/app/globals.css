@@ -1,4 +1,6 @@
 @import 'mapbox-gl/dist/mapbox-gl.css';
+@import '../styles/tokens.css';
+@import '../styles/components.css';
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +8,18 @@
 
 /* Global overrides */
 body {
-  background-color: #000;
-  color: #fff;
-  font-family: sans-serif;
+  @apply bg-neutral-dark text-neutral-light font-body leading-relaxed;
+}
+
+h1 {
+  @apply text-4xl font-bold font-heading leading-snug;
+}
+h2 {
+  @apply text-2xl font-semibold font-heading leading-snug;
+}
+h3 {
+  @apply text-xl font-semibold font-heading leading-snug;
+}
+h4, h5, h6 {
+  @apply font-heading leading-snug;
 }

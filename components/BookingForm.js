@@ -18,13 +18,13 @@ export default function BookingForm() {
   return (
     <form onSubmit={handleSubmit} className="p-6 bg-gray-900 rounded-xl space-y-4">
       <input
-        className="p-3 rounded w-full bg-black border border-gray-700 text-white"
+        className="input-base"
         placeholder="Your Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <input
-        className="p-3 rounded w-full bg-black border border-gray-700 text-white"
+        className="input-base"
         placeholder="Service Name"
         value={service}
         onChange={(e) => setService(e.target.value)}

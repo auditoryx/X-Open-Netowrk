@@ -1,0 +1,10 @@
+:root {
+  --color-primary: #1E1E2F;
+  --color-secondary: #7B61FF;
+  --color-accent: #FFBC00;
+  --color-neutral-light: #F5F5F5;
+  --color-neutral-dark: #1A1A1A;
+
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
