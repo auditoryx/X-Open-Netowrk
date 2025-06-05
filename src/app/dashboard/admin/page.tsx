@@ -52,6 +52,19 @@ export default function AdminDashboard() {
       });
 
       setSubmissions((prev) => prev.filter((s) => s.id !== submission.id));
+
+      await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: submission.uid,
+          email: submission.email,
+          type: 'admin',
+          title: 'Account Approved',
+          message: 'Your account has been approved by the admin team.',
+          link: '/dashboard'
+        })
+      })
     } catch (err) {
       console.error('❌ Approval error:', err);
     }

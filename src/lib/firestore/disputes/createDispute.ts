@@ -4,6 +4,22 @@ import { sendDisputeEmail } from '@/lib/email/sendDisputeEmail';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { z } from 'zod';
 
+async function notifyAdmin(bookingId: string, fromUser: string, reason: string) {
+  const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL || null
+  await fetch('/api/notifications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId: 'admin-notify',
+      email,
+      type: 'dispute',
+      title: 'New Dispute Filed',
+      message: `A dispute was filed for booking ${bookingId}`,
+      link: `/admin/disputes`
+    })
+  })
+}
+
 const disputeSchema = z.object({
   bookingId: z.string().min(1),
   fromUser: z.string().min(1),
@@ -47,6 +63,7 @@ export async function createDispute(input: unknown) {
     });
 
     await sendDisputeEmail(bookingId, fromUser, reason);
+    await notifyAdmin(bookingId, fromUser, reason);
     await logActivity(fromUser, 'dispute_opened', { bookingId, reason });
 
     return { success: true };
