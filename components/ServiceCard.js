@@ -19,7 +19,11 @@ export default function ServiceCard({ service }) {
       </button>
 
       {showRequest && (
-        <SendServiceRequest recipientId={service.email} recipientRole="provider" />
+        <SendServiceRequest
+          serviceId={service.id}
+          recipientId={service.email}
+          recipientRole="provider"
+        />
       )}
     </div>
   );
