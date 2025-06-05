@@ -39,7 +39,7 @@ export async function createCheckoutSession(input: unknown) {
         capture_method: 'manual',
         metadata: { bookingId },
       },
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/bookings`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/purchases/${bookingId}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/bookings`,
     });
 
