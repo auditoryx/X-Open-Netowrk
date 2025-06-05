@@ -5,17 +5,12 @@ import {
   collection,
   query,
   orderBy,
-  onSnapshot,
-  addDoc,
-  serverTimestamp
+  onSnapshot
 } from 'firebase/firestore';
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from 'firebase/storage';
-import { db, app } from '@/lib/firebase';
+import { format } from 'date-fns'
+import { sendMessage } from '@/lib/firestore/chat/sendMessage'
+import { uploadChatMedia } from '@/lib/firebase/uploadChatMedia'
+import { db } from '@/lib/firebase'
 import { useAuth } from '@/lib/hooks/useAuth';
 import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
 import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
@@ -80,24 +75,17 @@ export default function BookingChat({ bookingId }: Props) {
   const handleSend = async () => {
     if (!user?.uid || (!text.trim() && !file)) return;
 
-    let mediaUrl: string | null = null;
+    let mediaUrl: string | null = null
     if (file) {
-      const storage = getStorage(app);
-      const ref = storageRef(
-        storage,
-        `bookings/${bookingId}/${Date.now()}_${file.name}`
-      );
-      await uploadBytes(ref, file);
-      mediaUrl = await getDownloadURL(ref);
+      mediaUrl = await uploadChatMedia(bookingId, file)
     }
 
-    await addDoc(collection(db, 'bookings', bookingId, 'messages'), {
+    await sendMessage({
+      bookingId,
       senderId: user.uid,
       text: text.trim(),
-      mediaUrl,
-      createdAt: serverTimestamp(),
-      seenBy: [user.uid]
-    });
+      mediaUrl
+    })
 
     setText('');
     setFile(null);
@@ -122,6 +110,13 @@ export default function BookingChat({ bookingId }: Props) {
               )
             )}
             {msg.text && <p>{msg.text}</p>}
+            <div className="text-xs text-gray-500 mt-1">
+              {format(
+                msg.createdAt?.toDate ? msg.createdAt.toDate() : new Date(),
+                'HH:mm'
+              )}
+              {msg.senderId === user?.uid && msg.seenBy?.length > 1 && ' ✓✓'}
+            </div>
           </div>
         ))}
         <div ref={bottomRef} />

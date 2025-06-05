@@ -32,11 +32,13 @@ async function notifyRecipient(
 export async function sendMessage({
   bookingId,
   senderId,
-  text
+  text,
+  mediaUrl
 }: {
   bookingId: string
   senderId: string
   text: string
+  mediaUrl?: string | null
 }) {
   const db = getFirestore(app)
   const ref = collection(db, 'bookings', bookingId, 'messages')
@@ -45,6 +47,7 @@ export async function sendMessage({
   await addDoc(ref, {
     senderId,
     text,
+    ...(mediaUrl ? { mediaUrl } : {}),
     createdAt: serverTimestamp(),
     seenBy: [senderId]
   })
