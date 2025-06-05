@@ -1,0 +1,17 @@
+{
+  "name": "your-package-name",
+  "version": "1.0.0",
+  "description": "Your package description",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    // ...your dependencies...
+  },
+  "devDependencies": {
+    "jest": "^27.0.0"
+  }
+}
