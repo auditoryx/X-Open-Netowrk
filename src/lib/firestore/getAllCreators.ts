@@ -1,9 +1,15 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { format } from 'date-fns';
 
 export const getAllCreators = async () => {
-  const snap = await getDocs(collection(db, 'users'));
+  const creatorsQuery = query(
+    collection(db, 'users'),
+    where('role', '==', 'producer'),
+    orderBy('createdAt', 'desc'),
+    limit(20)
+  );
+  const snap = await getDocs(creatorsQuery);
 
   return snap.docs.map((doc) => {
     const data = doc.data();

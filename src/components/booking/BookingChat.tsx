@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import {
   collection,
   query,
@@ -104,9 +105,9 @@ export default function BookingChat({ bookingId }: Props) {
           >
             {msg.mediaUrl && (
               msg.mediaUrl.endsWith('.mp3') ? (
-                <audio controls src={msg.mediaUrl} className="mb-1 mx-auto" />
+                <audio controls src={msg.mediaUrl} loading="lazy" className="mb-1 mx-auto" />
               ) : (
-                <img src={msg.mediaUrl} className="w-32 rounded mb-1 mx-auto" />
+                <Image src={msg.mediaUrl} alt="attachment" width={128} height={128} loading="lazy" className="w-32 rounded mb-1 mx-auto" />
               )
             )}
             {msg.text && <p>{msg.text}</p>}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getMediaSamples } from '@/lib/firestore/getMediaSamples';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { deleteMediaSample } from '@/lib/firestore/deleteMediaSample';
@@ -36,10 +37,10 @@ const MediaGallery = () => {
       {samples.map((sample, idx) => (
         <div key={idx} className="border rounded-xl p-2 relative">
           {sample.type === 'image' && (
-            <img src={sample.url} alt="media" className="w-full max-w-xs rounded" />
+            <Image src={sample.url} alt="media" width={300} height={300} loading="lazy" className="w-full max-w-xs rounded" />
           )}
           {sample.type === 'video' && (
-            <video controls src={sample.url} className="w-full max-w-xs rounded" />
+            <video controls src={sample.url} loading="lazy" className="w-full max-w-xs rounded" />
           )}
           {sample.type === 'audio' && (
             <audio controls src={sample.url} className="w-full" />

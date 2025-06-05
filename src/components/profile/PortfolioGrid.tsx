@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 
 export function PortfolioGrid({ items }: { items: string[] }) {
   if (!items || items.length === 0) return null;
@@ -22,7 +23,7 @@ export function PortfolioGrid({ items }: { items: string[] }) {
                   allowFullScreen
                 />
               ) : (
-                <img src={url} alt={`portfolio-${i}`} className="w-full h-60 object-cover" />
+                <Image src={url} alt={`portfolio-${i}`} width={300} height={240} loading="lazy" className="w-full h-60 object-cover" />
               )}
             </div>
           );

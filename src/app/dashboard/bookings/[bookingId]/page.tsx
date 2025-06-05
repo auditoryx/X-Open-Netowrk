@@ -2,8 +2,8 @@
 
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { useBookingData } from '@/lib/hooks/useBookingData';
 import BookingChat from '@/components/chat/BookingChat';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
@@ -18,22 +18,10 @@ export default function BookingDetailPage() {
   const searchParams = useSearchParams();
   const success = searchParams.get("success") === "true";
   const bookingId = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
-  const [booking, setBooking] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const booking = useBookingData(bookingId);
+  const loading = !booking;
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const { user } = useAuth();
-
-  useEffect(() => {
-    const fetchBooking = async () => {
-      if (!bookingId) return;
-      const snap = await getDoc(doc(db, 'bookings', bookingId));
-      if (snap.exists()) {
-        setBooking(snap.data());
-      }
-      setLoading(false);
-    };
-    fetchBooking();
-  }, [bookingId]);
 
   useEffect(() => {
     if (!bookingId) return;
