@@ -4,7 +4,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
-import withAuth from '@/app/api/_utils/withAuth';
+import { getServerUser } from '@/lib/auth/getServerUser';
 
 const CheckoutSchema = z.object({
   bookingId: z.string().min(1),
@@ -13,7 +13,9 @@ const CheckoutSchema = z.object({
   providerId: z.string().min(1),
 });
 
-async function handler(req: NextRequest & { user: any }) {
+async function handler(req: NextRequest) {
+  const user = await getServerUser(req)
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const body = await req.json();
     const parsed = CheckoutSchema.safeParse(body);
@@ -32,7 +34,7 @@ async function handler(req: NextRequest & { user: any }) {
     const ip = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
     const userAgent = req.headers.get('user-agent') || 'unknown';
 
-    await logActivity(req.user.uid || req.user.email, 'checkout_initiated', {
+    await logActivity(user.uid || user.email, 'checkout_initiated', {
       bookingId,
       price,
       providerId,
@@ -52,7 +54,7 @@ async function handler(req: NextRequest & { user: any }) {
         message: err?.message || 'Unknown error',
         bookingId: parsed?.data?.bookingId || 'unknown',
         providerId: parsed?.data?.providerId || 'unknown',
-        userId: req.user.uid || 'unknown',
+        userId: user.uid || 'unknown',
         ip: req.headers.get('x-forwarded-for') || req.ip || 'unknown',
         userAgent: req.headers.get('user-agent') || 'unknown',
         createdAt: serverTimestamp(),
@@ -65,4 +67,4 @@ async function handler(req: NextRequest & { user: any }) {
   }
 }
 
-export const POST = withAuth(handler);
+export const POST = handler;
