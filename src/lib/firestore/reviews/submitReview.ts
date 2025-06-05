@@ -1,4 +1,16 @@
-import { getFirestore, doc, setDoc, collection, serverTimestamp, getDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  serverTimestamp,
+  getDoc,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+} from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
 async function notifyProvider(providerId: string, bookingId: string, rating: number) {
@@ -41,10 +53,29 @@ export async function submitReview(review: Review) {
   // Also write to user profile thread
   const userReviewRef = doc(db, 'users', review.providerId, 'reviews', review.clientId);
 
+  const globalReviewsRef = collection(db, 'reviews');
+
   await Promise.all([
     setDoc(contractReviewRef, reviewData),
-    setDoc(userReviewRef, reviewData)
+    setDoc(userReviewRef, reviewData),
+    addDoc(globalReviewsRef, {
+      ...reviewData,
+      providerId: review.providerId,
+    }),
+    updateDoc(doc(db, 'bookings', review.bookingId), { hasReview: true }),
   ]);
+
+  const ratingSnap = await getDocs(
+    query(collection(db, 'reviews'), where('providerId', '==', review.providerId))
+  );
+  const ratings = ratingSnap.docs
+    .map((d) => d.data().rating)
+    .filter((r) => typeof r === 'number');
+  const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+  await updateDoc(doc(db, 'users', review.providerId), {
+    averageRating: avg,
+    reviewCount: ratings.length,
+  });
 
   await notifyProvider(review.providerId, review.bookingId, review.rating);
 }

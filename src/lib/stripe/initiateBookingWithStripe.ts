@@ -4,7 +4,9 @@ import { z } from 'zod';
 const formSchema = z.object({
   serviceId: z.string().min(1),
   providerId: z.string().min(1),
-  price: z.number().positive(),
+  userId: z.string().min(1),
+  date: z.string().min(1),
+  time: z.string().min(1),
   message: z.string().optional(),
 });
 
