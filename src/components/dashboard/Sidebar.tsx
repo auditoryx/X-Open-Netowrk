@@ -10,9 +10,12 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const isCreator = userData?.role && userData.role !== 'user';
 
   const links = [
-    { href: '/dashboard', label: 'Dashboard Home' },
-    ...(isCreator ? [{ href: '/dashboard/bookings', label: 'Bookings' }] : []),
-    { href: '/dashboard/purchases', label: 'Purchases' },
+    { href: '/dashboard/home', label: 'Dashboard Home' },
+    { href: '/dashboard/bookings', label: 'Bookings' },
+    { href: '/dashboard/messages', label: 'Messages' },
+    { href: '/dashboard/availability', label: 'Availability' },
+    { href: '/dashboard/earnings', label: 'Finances' },
+    { href: '/dashboard/profile', label: 'Profile' },
     { href: '/dashboard/settings', label: 'Settings' },
   ];
 
