@@ -14,9 +14,14 @@ export default function ApplyRolePage() {
   const role = typeof rawParams.role === 'string' ? rawParams.role : Array.isArray(rawParams.role) ? rawParams.role[0] : '';
 
   const { user, userData, loading } = useAuth();
+  const [step, setStep] = useState(1);
+  const totalSteps = 5;
   const [bio, setBio] = useState('');
   const [links, setLinks] = useState('');
   const [location, setLocation] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [availability, setAvailability] = useState('');
+  const [verified, setVerified] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
@@ -51,6 +56,9 @@ export default function ApplyRolePage() {
       bio,
       links,
       location,
+      photo: photo ? photo.name : null,
+      availability,
+      verified,
       locationLat,
       locationLng,
       timestamp: serverTimestamp(),
@@ -66,8 +74,8 @@ export default function ApplyRolePage() {
     <div className="min-h-screen bg-black text-white">
             <div className="max-w-2xl mx-auto py-12 px-6">
         <OnboardingStepHeader
-          step={1}
-          total={3}
+          step={step}
+          total={totalSteps}
           title={`Apply as ${role}`}
           subtitle="Tell us who you are so we can verify you."
         />
@@ -90,43 +98,106 @@ export default function ApplyRolePage() {
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
             <div className="space-y-4">
-              <div>
-                <label className="text-sm mb-1 block">City / Location</label>
-                <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Tokyo, NYC, Paris"
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                />
-              </div>
+              {step === 1 && (
+                <>
+                  <div>
+                    <label className="text-sm mb-1 block">City / Location</label>
+                    <input
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="e.g. Tokyo, NYC, Paris"
+                      className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm mb-1 block">Bio</label>
+                    <textarea
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      placeholder="Tell us what you do, your experience, style, and any key work."
+                      rows={5}
+                      className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                    />
+                  </div>
+                </>
+              )}
 
-              <div>
-                <label className="text-sm mb-1 block">Bio</label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us what you do, your experience, style, and any key work."
-                  rows={5}
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                />
-              </div>
+              {step === 2 && (
+                <div>
+                  <label className="text-sm mb-1 block">Profile Photo</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+                    className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                  />
+                </div>
+              )}
 
-              <div>
-                <label className="text-sm mb-1 block">Portfolio / Social Links</label>
-                <input
-                  value={links}
-                  onChange={(e) => setLinks(e.target.value)}
-                  placeholder="e.g. Instagram, website, YouTube, etc."
-                  className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                />
-              </div>
+              {step === 3 && (
+                <div>
+                  <label className="text-sm mb-1 block">Portfolio / Social Links</label>
+                  <input
+                    value={links}
+                    onChange={(e) => setLinks(e.target.value)}
+                    placeholder="e.g. Instagram, website, YouTube, etc."
+                    className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                  />
+                </div>
+              )}
 
-              <button
-                onClick={handleSubmit}
-                className="mt-4 bg-white text-black font-semibold px-6 py-2 rounded hover:bg-gray-200 transition"
-              >
-                Submit Application
-              </button>
+              {step === 4 && (
+                <div>
+                  <label className="text-sm mb-1 block">Availability</label>
+                  <input
+                    value={availability}
+                    onChange={(e) => setAvailability(e.target.value)}
+                    placeholder="e.g. Weekdays 9am-5pm"
+                    className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                  />
+                </div>
+              )}
+
+              {step === 5 && (
+                <div className="flex items-center gap-2">
+                  <input
+                    id="verify"
+                    type="checkbox"
+                    checked={verified}
+                    onChange={(e) => setVerified(e.target.checked)}
+                    className="rounded"
+                  />
+                  <label htmlFor="verify" className="text-sm">
+                    I agree to complete ID verification
+                  </label>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                {step > 1 && (
+                  <button
+                    onClick={() => setStep(step - 1)}
+                    className="bg-neutral-700 px-4 py-2 rounded"
+                  >
+                    Back
+                  </button>
+                )}
+                {step < totalSteps ? (
+                  <button
+                    onClick={() => setStep(step + 1)}
+                    className="bg-white text-black px-4 py-2 rounded font-semibold"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-white text-black px-4 py-2 rounded font-semibold"
+                  >
+                    Submit Application
+                  </button>
+                )}
+              </div>
             </div>
           </>
         )}

@@ -12,7 +12,10 @@ export default function ProfileCompletionMeter({ profile }: Props) {
   const { score, checklist } = useProfileCompletion(profile);
 
   return (
-    <div className="bg-white text-black p-4 rounded-xl shadow-md mb-6 text-sm w-full max-w-md">
+    <div
+      className="bg-white text-black p-4 rounded-xl shadow-md mb-6 text-sm w-full max-w-md"
+      title="Complete profiles get 3x bookings!"
+    >
       <h3 className="text-lg font-semibold mb-2">Profile Completion</h3>
 
       <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
@@ -22,7 +25,7 @@ export default function ProfileCompletionMeter({ profile }: Props) {
         />
       </div>
 
-      <p className="mb-2">{score}% complete</p>
+      <p className="mb-2" title="Complete profiles get 3x bookings!">{score}% complete</p>
 
       <ul className="space-y-1">
         {checklist.map((item) => (
