@@ -30,7 +30,7 @@ exports.isServiceOwner = async (req, res, next) => {
             return res.status(404).json({ error: "Service not found" });
         }
 
-        if (!service.user || service.user.toString() !== req.user._id.toString()) {
+        if (!service.provider || service.provider.toString() !== req.user._id.toString()) {
             return res.status(403).json({ error: "Not authorized to modify this service" });
         }
 
