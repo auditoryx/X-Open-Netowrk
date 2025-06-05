@@ -47,6 +47,14 @@ export function useAvailability() {
     setTimezone(timezone);
   };
 
+  const addBusySlots = async (slots: Slot[]) => {
+    if (!user) return;
+    const ref = doc(db, 'availability', user.uid);
+    await setDoc(ref, { busySlots: slots, lastSynced: new Date().toISOString() }, { merge: true });
+    setBusySlots(slots);
+    setLastSynced(new Date().toISOString());
+  };
+
   return {
     availability,
     busySlots,
@@ -55,6 +63,7 @@ export function useAvailability() {
     lastSynced,
     loading,
     saveAvailability,
+    addBusySlots,
     setNotes,
     setTimezone,
   };

@@ -70,7 +70,7 @@ const dayMap = {
 
 type DayOfWeek = keyof typeof dayMap;
 
-function getNextDateForWeekday(weekday: DayOfWeek): string {
+export function getNextDateForWeekday(weekday: DayOfWeek): string {
   const today = new Date();
   const result = new Date();
   const diff = (dayMap[weekday] + 7 - today.getDay()) % 7;

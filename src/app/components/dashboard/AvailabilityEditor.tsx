@@ -7,12 +7,16 @@ import SlotSelectorGrid from './SlotSelectorGrid';
 import SyncStatusBadge from './SyncStatusBadge';
 import AvailabilitySummary from './AvailabilitySummary';
 import toast from 'react-hot-toast';
+import { parseICalToSlots } from '@/lib/calendar/importICal';
+import { exportToICal } from '@/lib/calendar/exportToICal';
+import { getNextDateForWeekday } from '@/lib/google/calendar';
 
 export default function AvailabilityEditor() {
   const {
     availability,
     busySlots,
     saveAvailability,
+    addBusySlots,
     loading,
     notes,
     setNotes,
@@ -78,6 +82,36 @@ export default function AvailabilityEditor() {
     }
   };
 
+  const handleImportIcs = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = reader.result as string;
+      const slots = parseICalToSlots(text);
+      addBusySlots(slots);
+      toast.success('Imported calendar');
+    };
+    reader.readAsText(file);
+  };
+
+  const handleExportIcs = () => {
+    const events = availability.map((s) => {
+      const day = getNextDateForWeekday(s.day as any);
+      const startIso = `${day}T${s.time}:00`;
+      const endIso = `${day}T${s.time}:00`;
+      return { start: startIso, end: endIso, summary: 'Available' };
+    });
+    const ics = exportToICal(events);
+    const blob = new Blob([ics], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'availability.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (loading) return <p>Loading availability...</p>;
 
   return (
@@ -129,6 +163,13 @@ export default function AvailabilityEditor() {
           className="bg-blue-600 text-white px-4 py-2 rounded-md"
         >
           Push to Google Calendar
+        </button>
+        <input type="file" accept=".ics" onChange={handleImportIcs} className="hidden" id="ics-upload" />
+        <label htmlFor="ics-upload" className="bg-gray-600 text-white px-4 py-2 rounded-md cursor-pointer">
+          Import iCal
+        </label>
+        <button onClick={handleExportIcs} className="bg-gray-600 text-white px-4 py-2 rounded-md">
+          Export iCal
         </button>
       </div>
     </div>

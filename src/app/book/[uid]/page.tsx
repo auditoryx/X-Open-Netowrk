@@ -98,7 +98,14 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       availability: updated
     });
 
-    await sendBookingConfirmation(providerEmail, selectedTime, message, user?.displayName);
+    await sendBookingConfirmation(
+      providerEmail,
+      selectedTime,
+      message,
+      user?.displayName,
+      providerLocation,
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    );
 
     await fetch('/api/notifications', {
       method: 'POST',
