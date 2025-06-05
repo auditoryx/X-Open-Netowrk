@@ -20,10 +20,10 @@ export default function LanguageSwitcher() {
           disabled={language === code}
           aria-label={`Switch to ${label}`}
           aria-pressed={language === code}
-          className={`px-3 py-1 rounded text-sm font-medium transition border ${
+          className={`btn text-sm px-3 py-1 ${
             language === code
-              ? 'bg-black text-white border-black'
-              : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+              ? 'bg-black text-white border border-black'
+              : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
           }`}
         >
           {label}

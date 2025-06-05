@@ -39,7 +39,7 @@ export default function RoleToggle() {
       <select
         value={selectedRole}
         onChange={(e) => setSelectedRole(e.target.value)}
-        className="p-2 border rounded w-full"
+        className="input-base"
       >
         <option value="">Select Role</option>
         {roles.map((r) => (
@@ -48,7 +48,7 @@ export default function RoleToggle() {
       </select>
       <button
         onClick={handleSetRole}
-        className="px-4 py-2 bg-black text-white rounded w-full"
+        className="btn btn-primary w-full"
       >
         Set Role
       </button>

@@ -48,7 +48,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         <select
           value={filters.role}
           onChange={(e) => setFilters({ ...filters, role: e.target.value })}
-          className="bg-black border border-neutral-700 p-2 rounded text-white"
+          className="input-base"
         >
           <option value="">All Roles</option>
           <option value="artist">Artist</option>
@@ -63,7 +63,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           placeholder="Location (Tokyo, Seoul...)"
           value={filters.location}
           onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-          className="bg-black border border-neutral-700 p-2 rounded text-white"
+          className="input-base"
         />
 
         <input
@@ -71,7 +71,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           placeholder="Service (Mixing, Videography...)"
           value={filters.service}
           onChange={(e) => setFilters({ ...filters, service: e.target.value })}
-          className="bg-black border border-neutral-700 p-2 rounded text-white"
+          className="input-base"
         />
 
         <label className="flex items-center gap-2 text-sm">

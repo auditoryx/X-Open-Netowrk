@@ -46,8 +46,8 @@ export default function AdminVerificationRequests() {
             <a href={req.idDocumentUrl} target="_blank" className="text-blue-400 underline">View ID</a>
           )}
           <div className="mt-2 space-x-2">
-            <button onClick={() => approve(req.id)} className="bg-green-600 text-white px-3 py-1 rounded text-sm">Approve</button>
-            <button onClick={() => reject(req.id)} className="bg-red-600 text-white px-3 py-1 rounded text-sm">Reject</button>
+            <button onClick={() => approve(req.id)} className="btn btn-primary text-sm">Approve</button>
+            <button onClick={() => reject(req.id)} className="btn btn-secondary text-sm">Reject</button>
           </div>
         </div>
       ))}

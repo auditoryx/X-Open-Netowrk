@@ -76,7 +76,7 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
         placeholder="Service name"
         value={service}
         onChange={(e) => setService(e.target.value)}
-        className="p-2 border rounded"
+        className="input-base"
         required
       />
 
@@ -103,7 +103,7 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
         placeholder="Type your message..."
         value={message}
         onChange={(e) => setMessage(e.target.value.replace(/\s{2,}/g, ' '))}
-        className="p-2 border rounded resize-none h-32"
+        className="textarea-base"
         maxLength={500}
         disabled={loading}
       />
@@ -112,11 +112,7 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
         type="submit"
         aria-label="Send booking request"
         disabled={loading || !message.trim() || !selectedTime}
-        className={`px-4 py-2 rounded text-white font-medium transition ${
-          loading
-            ? 'bg-gray-500 cursor-not-allowed'
-            : 'bg-black hover:bg-white hover:text-black border border-black'
-        }`}
+        className="btn btn-primary"
       >
         {loading ? 'Sending…' : 'Send Booking Request'}
       </button>

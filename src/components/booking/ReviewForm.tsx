@@ -122,7 +122,7 @@ export default function ReviewForm({
         maxLength={500}
         value={text}
         onChange={(e) => setText(e.target.value.replace(/\s{2,}/g, ' '))}
-        className="p-2 border rounded resize-none h-24"
+        className="textarea-base h-24"
         disabled={loading}
         required
       />
@@ -134,7 +134,7 @@ export default function ReviewForm({
         aria-label="Rating out of 5"
         value={rating}
         onChange={(e) => setRating(Number(e.target.value))}
-        className="p-2 border rounded"
+        className="input-base"
         disabled={loading}
       >
         {[5, 4, 3, 2, 1].map((n) => (
@@ -148,11 +148,7 @@ export default function ReviewForm({
         type="submit"
         aria-label="Submit review"
         disabled={loading || text.trim().length < 3}
-        className={`px-4 py-2 rounded text-white font-medium transition ${
-          loading
-            ? 'bg-gray-500 cursor-not-allowed'
-            : 'bg-black hover:bg-white hover:text-black border border-black'
-        }`}
+        className="btn btn-primary"
       >
         {loading ? 'Submitting...' : 'Submit Review'}
       </button>

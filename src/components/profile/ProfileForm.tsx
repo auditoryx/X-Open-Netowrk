@@ -79,13 +79,13 @@ export default function ProfileForm() {
       <p className="text-sm text-gray-400">{percent}% complete</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input name="role" placeholder="Role (e.g., artist)" value={form.role} onChange={handleChange} className="w-full p-2 border rounded" />
-        <textarea name="bio" placeholder="Short Bio" value={form.bio} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input name="instagram" placeholder="Instagram Handle" value={form.instagram} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input name="availability" placeholder="Availability" value={form.availability} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input name="location" placeholder="City, Country" value={form.location} onChange={handleChange} className="w-full p-2 border rounded" />
-        <input name="timezone" placeholder="Timezone" value={form.timezone} onChange={handleChange} className="w-full p-2 border rounded" />
+        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="input-base" />
+        <input name="role" placeholder="Role (e.g., artist)" value={form.role} onChange={handleChange} className="input-base" />
+        <textarea name="bio" placeholder="Short Bio" value={form.bio} onChange={handleChange} className="textarea-base" />
+        <input name="instagram" placeholder="Instagram Handle" value={form.instagram} onChange={handleChange} className="input-base" />
+        <input name="availability" placeholder="Availability" value={form.availability} onChange={handleChange} className="input-base" />
+        <input name="location" placeholder="City, Country" value={form.location} onChange={handleChange} className="input-base" />
+        <input name="timezone" placeholder="Timezone" value={form.timezone} onChange={handleChange} className="input-base" />
 
         <div className="flex items-center space-x-2">
           <label htmlFor="visible" className="text-sm font-medium">Publicly Visible:</label>
@@ -98,7 +98,7 @@ export default function ProfileForm() {
           />
         </div>
 
-        <button type="submit" className="px-4 py-2 bg-black text-white rounded">Save Profile</button>
+        <button type="submit" className="btn btn-primary">Save Profile</button>
       </form>
     </div>
   );

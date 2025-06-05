@@ -52,13 +52,13 @@ export default function IDVerificationForm() {
         type="file"
         accept="image/*,application/pdf"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
-        className="bg-neutral-800 border border-neutral-700 rounded p-2 w-full text-white"
+        className="input-base"
         disabled={loading}
       />
       <button
         type="submit"
         disabled={!file || loading}
-        className="bg-blue-600 px-4 py-2 rounded text-white"
+        className="btn btn-primary w-full"
       >
         {loading ? 'Submitting...' : 'Submit Verification'}
       </button>
