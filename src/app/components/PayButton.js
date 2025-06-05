@@ -23,7 +23,7 @@ export default function PayButton({ service, buyerId }: PayButtonProps) {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/create-checkout-session', {
+      const res = await fetch('/api/payments/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

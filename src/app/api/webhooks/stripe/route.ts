@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { stripe } from '@/lib/stripe';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
-import { stripe } from '@/lib/stripe/createCheckoutSession';
+import { markAsHeld } from '@/lib/firestore/bookings/markAsHeld';
+import { generateContract } from '@/lib/firestore/contracts/generateContract';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -10,7 +12,6 @@ export async function POST(req: NextRequest) {
   const sig = req.headers.get('stripe-signature');
 
   let event: Stripe.Event;
-
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig!, endpointSecret);
   } catch (err) {
@@ -18,85 +19,29 @@ export async function POST(req: NextRequest) {
     return new NextResponse('Webhook Error', { status: 400 });
   }
 
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const bookingId = session?.metadata?.bookingId;
-      const uid = session?.metadata?.uid;
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const bookingId = session.metadata?.bookingId;
+    const buyerId = session.metadata?.buyerId;
+    const providerId = session.metadata?.providerId;
+    const serviceName = session.metadata?.serviceName;
+    const price = session.amount_total ? session.amount_total / 100 : undefined;
 
-      if (bookingId) {
-        await updateBookingStatus(bookingId, 'paid');
-        console.log(`✅ Booking ${bookingId} marked as paid.`);
+    if (bookingId) {
+      await updateBookingStatus(bookingId, 'paid');
+      await markAsHeld({ bookingId, userId: 'system', role: 'admin' });
+
+      if (buyerId && providerId && serviceName && price) {
+        const startDate = new Date().toISOString().split('T')[0];
+        await generateContract(
+          { bookingId, buyerId, providerId, serviceName, price, startDate },
+          'system'
+        );
       }
 
-      if (session.mode === 'subscription' && uid) {
-        const admin = (await import('@/lib/firebase-admin')).default;
-        await admin.firestore().collection('users').doc(uid).update({
-          subscriptionStatus: 'pro',
-        });
-        console.log(`🌟 Subscription activated for user ${uid}`);
-      }
-
-      break;
+      console.log(`✅ Booking ${bookingId} marked paid and funds held.`);
     }
-
-    case 'payment_intent.succeeded': {
-      console.log('✅ Payment intent succeeded.');
-      break;
-    }
-
-    case 'payout.paid': {
-      const payout = event.data.object as any;
-      const bookingId = payout?.metadata?.bookingId;
-      const uid = payout?.metadata?.uid;
-
-      if (uid && bookingId) {
-        const admin = (await import('@/lib/firebase-admin')).default;
-        await admin.firestore().collection('users').doc(uid).collection('bookings').doc(bookingId).update({
-          payoutStatus: 'paid',
-        });
-        console.log(`💸 Payout confirmed for booking ${bookingId}`);
-      }
-      break;
-    }
-
-    default:
-      console.log(`Unhandled event type ${event.type}`);
   }
 
   return new NextResponse('Received', { status: 200 });
 }
-
-// Add this import at the top with others
-import { generateContract } from '@/lib/firestore/contracts/generateContract';
-
-...
-
-    case 'checkout.session.completed': {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const bookingId = session?.metadata?.bookingId;
-      const buyerId = session?.metadata?.buyerId;
-      const providerId = session?.metadata?.providerId;
-      const serviceName = session?.metadata?.serviceName;
-      const price = session?.amount_total! / 100;
-      const startDate = new Date().toISOString().split('T')[0];
-
-      if (bookingId) {
-        await updateBookingStatus(bookingId, 'paid');
-        console.log(`✅ Booking ${bookingId} marked as paid.`);
-
-        // 📝 Auto-generate contract
-        await generateContract({
-          bookingId,
-          buyerId,
-          providerId,
-          serviceName,
-          price,
-          startDate,
-        });
-        console.log(`📄 Contract generated for booking ${bookingId}.`);
-      }
-      break;
-    }
-
-...

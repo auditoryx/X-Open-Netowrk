@@ -41,3 +41,7 @@ Email sending uses Nodemailer. Provide the account details in `SMTP_EMAIL` and `
 ## Environment Variables
 
 See `.env.example` for a full list of variables required by the project.
+
+## Escrow Payments
+
+All payments are placed in escrow when a booking is made. Funds remain held until the work is completed and both parties confirm the outcome. This protects buyers and sellers by ensuring money is only released once the service is delivered.
