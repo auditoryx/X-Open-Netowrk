@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { sendMessage, subscribeToMessages, markMessagesAsSeen } from '../../lib/firestore/messages';
-import { useAuth } from '../../lib/hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { format } from 'date-fns';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase/firebaseConfig';
