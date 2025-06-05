@@ -43,6 +43,6 @@ export async function sendEmail(
     return { error: 'Email send failed' };
   }
 }
+
 // Example usage
-// sendEmail(
-//   '  
+// await sendEmail('test@example.com', 'Welcome', 'welcome.html', { username: 'John' });

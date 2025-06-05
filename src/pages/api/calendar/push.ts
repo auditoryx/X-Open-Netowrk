@@ -43,4 +43,4 @@ export default async function handler(req, res) {
 // The handler function is exported as the default export of the module.
 // The function `pushToGoogleCalendar` is assumed to be defined in the `lib/google/calendar` module.
 // The `SlotSchema` is defined using zod to ensure the input data structure is correct.
-// The `handler` function is an asynchronous function that handles the HTTP request and response. 
+// The `handler` function is an asynchronous function that handles the HTTP request and response.
