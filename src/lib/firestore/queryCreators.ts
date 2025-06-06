@@ -8,6 +8,7 @@ export async function queryCreators(filters: {
   role?: string;
   verifiedOnly?: boolean;
   location?: string;
+  service?: string;
   proTier?: 'standard' | 'verified' | 'signature';
   lat?: number;
   lng?: number;
@@ -25,6 +26,12 @@ export async function queryCreators(filters: {
 
   if (filters.location) {
     qConstraints.push(where('location', '==', filters.location));
+  }
+
+  if (filters.service) {
+    qConstraints.push(
+      where('services', 'array-contains', filters.service.toLowerCase())
+    );
   }
 
   if (filters.proTier) {
