@@ -34,7 +34,7 @@ export default function EditDashboard() {
     <div className="p-6 max-w-3xl mx-auto text-white">
       <h1 className="text-xl font-semibold mb-4">Edit Your Profile</h1>
 
-      <ProfileCompletionMeter />
+      <ProfileCompletionMeter profile={profile} />
 
       {/* 🗓️ Editable Availability Grid */}
       <AvailabilitySelector
