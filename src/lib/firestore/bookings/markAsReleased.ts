@@ -1,4 +1,5 @@
-import admin from '@/lib/firebase-admin';
+import { adminDb } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
@@ -10,7 +11,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const schema = z.object({
   bookingId: z.string().min(1),
   userId: z.string().min(1),
-  role: z.enum(['provider', 'admin']),
 });
 
 export async function markAsReleased(input: unknown) {
@@ -20,16 +20,10 @@ export async function markAsReleased(input: unknown) {
     return { error: 'Invalid input' } as const;
   }
 
-  const { bookingId, userId, role } = parsed.data;
-
-  // 🔐 Only provider or admin can release payouts
-  if (!['provider', 'admin'].includes(role)) {
-    console.warn('⚠️ Unauthorized fund release attempt by:', userId);
-    return { error: 'Unauthorized' } as const;
-  }
+  const { bookingId, userId } = parsed.data;
 
   try {
-    const db = admin.firestore();
+    const db = adminDb;
     const bookingRef = db.collection('bookings').doc(bookingId);
     const bookingSnap = await bookingRef.get();
     const booking = bookingSnap.data();
@@ -50,11 +44,11 @@ export async function markAsReleased(input: unknown) {
     });
 
     await bookingRef.update({
-      payoutStatus: 'released',
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      status: 'released',
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
-    await logActivity(userId, 'payment_released', { bookingId, byRole: role });
+    await logActivity(userId, 'payment_released', { bookingId });
 
     return { success: true } as const;
   } catch (err: any) {

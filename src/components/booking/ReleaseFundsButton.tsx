@@ -16,7 +16,7 @@ export default function ReleaseFundsButton({ bookingId }: Props) {
     setStatus('loading');
 
     try {
-      const res = await fetch('/api/capture-payment', {
+      const res = await fetch('/api/bookings/release', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bookingId }),

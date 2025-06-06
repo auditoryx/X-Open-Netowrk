@@ -6,6 +6,6 @@ export async function checkDisputeAndRelease(bookingId: string) {
   const dispute = doc.data();
 
   if (!dispute || dispute.status === 'resolved') {
-    await markAsReleased(bookingId);
+    await markAsReleased({ bookingId, userId: 'system' });
   }
 }
