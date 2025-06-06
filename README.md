@@ -45,3 +45,12 @@ See `.env.example` for a full list of variables required by the project.
 ## Escrow Payments
 
 All payments are placed in escrow when a booking is made. Funds remain held until the work is completed and both parties confirm the outcome. This protects buyers and sellers by ensuring money is only released once the service is delivered.
+
+## Testing
+
+Run the Jest test suite with:
+```bash
+npm test
+```
+
+This will execute all unit tests located in any `__tests__` directories.
