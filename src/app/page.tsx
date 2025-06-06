@@ -20,6 +20,9 @@ export default function Home() {
             <Link href="/apply" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
               ✍️ Apply to Join
             </Link>
+            <Link href="/explore" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
+              📖 Book Talent
+            </Link>
           </div>
         </section>
 
