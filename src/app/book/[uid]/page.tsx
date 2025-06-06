@@ -61,7 +61,10 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     if (!selectedTime) return alert('Please select a time slot.');
     setLoading(true);
 
-    if (new Date(selectedTime) < new Date()) {
+    const selectedDate = new Date(selectedTime);
+    const isoTime = selectedDate.toISOString();
+
+    if (selectedDate.getTime() < Date.now()) {
       alert('Cannot book a time in the past.');
       setLoading(false);
       return;
@@ -72,7 +75,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     const overlapQ = query(
       collection(db, 'bookingRequests'),
       where('providerId', '==', params.uid),
-      where('selectedTime', '==', selectedTime),
+      where('selectedTime', '==', isoTime),
       where('status', 'in', ['pending', 'confirmed'])
     );
     const overlapSnap = await getDocs(overlapQ);
@@ -90,7 +93,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       providerId: params.uid,
       clientId: user?.uid || 'anon',
       message,
-      selectedTime,
+      selectedTime: isoTime,
       providerLocation,
       baseAmount,
       platformFee,
@@ -99,14 +102,16 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       status: 'pending'
     });
 
-    const updated = availability.filter((a) => a !== selectedTime);
+    const updated = availability.filter(
+      (a) => new Date(a).toISOString() !== isoTime
+    );
     await updateDoc(doc(db, 'users', params.uid), {
       availability: updated
     });
 
     await sendBookingConfirmation(
       providerEmail,
-      selectedTime,
+      isoTime,
       message,
       user?.displayName,
       providerLocation,
@@ -127,7 +132,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     })
 
     setLoading(false);
-    router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);
+    router.push(`/success?time=${isoTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);
   };
 
   return (

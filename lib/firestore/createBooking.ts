@@ -8,8 +8,10 @@ export const createBooking = async (bookingData: {
   dateTime: string,
   message?: string
 }) => {
+  const isoTime = new Date(bookingData.dateTime).toISOString();
   const docRef = await addDoc(collection(firestore, 'bookings'), {
     ...bookingData,
+    dateTime: isoTime,
     status: 'pending',
     createdAt: serverTimestamp(),
     paid: false,
