@@ -14,4 +14,7 @@ const firebaseConfig = {
 
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(app);
-export const auth = getAuth(app);
+// In testing environments the Firebase config may be invalid or missing.
+// Guard against initialization errors by only creating the auth instance when
+// an API key is provided.
+export const auth = process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? getAuth(app) : ({} as any);
