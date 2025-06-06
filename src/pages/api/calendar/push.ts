@@ -1,5 +1,6 @@
 import { getSession } from 'next-auth/react';
 import { pushToGoogleCalendar } from '@/lib/google/calendar';
+import { adminDb } from '@/lib/firebase-admin';
 import { z } from 'zod';
 
 const SlotSchema = z.array(
@@ -30,8 +31,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Invalid slot data' });
   }
 
+  let timezone = 'UTC';
   try {
-    await pushToGoogleCalendar(session.accessToken, session.user.email, parse.data);
+    const tzSnap = await adminDb.doc(`availability/${session.user.id}`).get();
+    if (tzSnap.exists) {
+      timezone = (tzSnap.data() as any).timezone || timezone;
+    }
+  } catch (err) {
+    console.error('Failed to fetch timezone:', err);
+  }
+
+  try {
+    await pushToGoogleCalendar(
+      session.accessToken,
+      session.user.email,
+      parse.data,
+      timezone
+    );
     return res.status(200).json({ success: true });
   } catch (err: any) {
     console.error('Push to Google Calendar failed:', err);
