@@ -1,0 +1,22 @@
+{
+  "nav.explore": "Explore",
+  "nav.apply": "Apply",
+  "nav.login": "Login",
+  "nav.dashboard": "Dashboard",
+  "nav.logout": "Logout",
+  "dashboard.selling": "I\u2019m Selling",
+  "dashboard.buying": "I\u2019m Buying",
+  "sidebar.dashboardHome": "Dashboard Home",
+  "sidebar.bookings": "Bookings",
+  "sidebar.messages": "Messages",
+  "sidebar.availability": "Availability",
+  "sidebar.finances": "Finances",
+  "sidebar.profile": "Profile",
+  "sidebar.settings": "Settings",
+  "bottomnav.home": "Home",
+  "bottomnav.messages": "Messages",
+  "bottomnav.bookings": "Bookings",
+  "bottomnav.profile": "Profile",
+  "button.saveChanges": "Save Changes",
+  "button.submitService": "Submit Service"
+}

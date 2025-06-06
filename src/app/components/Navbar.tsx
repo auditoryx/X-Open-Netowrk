@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
+import { Translate } from '@/i18n/Translate';
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -32,26 +33,32 @@ export default function Navbar() {
       </Link>
 
       <div className="space-x-6 text-sm flex items-center">
-        <Link href="/explore" className="hover:underline">Explore</Link>
+        <Link href="/explore" className="hover:underline">
+          <Translate t="nav.explore" />
+        </Link>
         {!user && (
           <>
-            <Link href="/apply" className="hover:underline">Apply</Link>
+            <Link href="/apply" className="hover:underline">
+              <Translate t="nav.apply" />
+            </Link>
             <button
               onClick={() => router.push('/login')}
               className="hover:underline font-semibold text-blue-400"
             >
-              Login
+              <Translate t="nav.login" />
             </button>
           </>
         )}
         {user && (
           <>
-            <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+            <Link href="/dashboard" className="hover:underline">
+              <Translate t="nav.dashboard" />
+            </Link>
             <button
               onClick={handleLogout}
               className="hover:underline text-red-400"
             >
-              Logout
+              <Translate t="nav.logout" />
             </button>
           </>
         )}

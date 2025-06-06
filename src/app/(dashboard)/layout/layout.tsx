@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import ReviewPrompt from '@/components/dashboard/ReviewPrompt';
+import { Translate } from '@/i18n/Translate';
 
 export default function DashboardLayout({
   children,
@@ -38,13 +39,13 @@ export default function DashboardLayout({
               href="/dashboard/bookings"
               className={`px-3 py-1 rounded text-sm ${pathname.startsWith('/dashboard/bookings') ? 'bg-white text-black' : 'bg-neutral-800 text-white'}`}
             >
-              I’m Selling
+              <Translate t="dashboard.selling" />
             </Link>
             <Link
               href="/dashboard/purchases"
               className={`px-3 py-1 rounded text-sm ${pathname.startsWith('/dashboard/purchases') ? 'bg-white text-black' : 'bg-neutral-800 text-white'}`}
             >
-              I’m Buying
+              <Translate t="dashboard.buying" />
             </Link>
           </div>
         )}

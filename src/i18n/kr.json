@@ -1,0 +1,22 @@
+{
+  "nav.explore": "\ud0d0\uc0c9",
+  "nav.apply": "\uc2e0\uccad",
+  "nav.login": "\ub85c\uadf8\uc778",
+  "nav.dashboard": "\ub370\uc2dc\ubcf4\ub4dc",
+  "nav.logout": "\ub85c\uadf8\uc544\uc6c3",
+  "dashboard.selling": "\ud314\ub9bd\uc911",
+  "dashboard.buying": "\uad6c\ub9e4\uc911",
+  "sidebar.dashboardHome": "\ub370\uc2dc\ubcf4\ub4dc \ud648",
+  "sidebar.bookings": "\uc608\uc57d",
+  "sidebar.messages": "\uba54\uc2dc\uc9c0",
+  "sidebar.availability": "\uc751\ub2f5\uac00\ub2a5",
+  "sidebar.finances": "\uc7a5\ubaa8",
+  "sidebar.profile": "\ud504\ub85c\ud544",
+  "sidebar.settings": "\uc124\uc815",
+  "bottomnav.home": "\ud648",
+  "bottomnav.messages": "\uba54\uc2dc\uc9c0",
+  "bottomnav.bookings": "\uc608\uc57d",
+  "bottomnav.profile": "\ud504\ub85c\ud544",
+  "button.saveChanges": "\ubcc0\uacbd \uc800\uc7a5",
+  "button.submitService": "\uc11c\ube44\uc2a4 \uc81c\ucd9c"
+}
