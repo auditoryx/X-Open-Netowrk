@@ -54,3 +54,15 @@ npm test
 ```
 
 This will execute all unit tests located in any `__tests__` directories.
+
+## Deploying Firestore Indexes
+
+After modifying `firestore.indexes.json`, deploy the indexes to your Firebase
+project:
+
+```bash
+firebase deploy --only firestore:indexes
+```
+
+Run this command from the repository root so the new composite and single-field
+indexes become active.
