@@ -2,6 +2,7 @@ import { getSession } from 'next-auth/react';
 import { pushToGoogleCalendar } from '@/lib/google/calendar';
 import { adminDb } from '@/lib/firebase-admin';
 import { z } from 'zod';
+import { Sentry } from '@/lib/sentry';
 
 const SlotSchema = z.array(
   z.object({
@@ -39,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (err) {
     console.error('Failed to fetch timezone:', err);
+    Sentry.captureException(err);
   }
 
   try {
@@ -51,6 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ success: true });
   } catch (err: any) {
     console.error('Push to Google Calendar failed:', err);
+    Sentry.captureException(err);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

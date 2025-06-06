@@ -6,6 +6,7 @@ import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { logger } from '@/lib/logger';
+import { Sentry } from '@/lib/sentry';
 
 export async function POST(req: Request) {
   const buf = await req.arrayBuffer();
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
     );
   } catch (err) {
     logger.error('❌ Stripe webhook signature verification failed:', err);
+    Sentry.captureException(err);
     await firestore.collection("stripe_logs").add({
       type: "webhook_signature_error",
       error: err?.message || "Invalid signature",
@@ -87,6 +89,7 @@ export async function POST(req: Request) {
       }
     } catch (err: any) {
       logger.error('🔥 Failed to handle Stripe event:', err.message);
+      Sentry.captureException(err);
       await firestore.collection('errorLogs').add({
         type: 'webhook_handling_error',
         message: err.message,

@@ -5,6 +5,7 @@ import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
 import { markAsHeld } from '@/lib/firestore/bookings/markAsHeld';
 import { generateContract } from '@/lib/firestore/contracts/generateContract';
 import { logger } from '@/lib/logger';
+import { Sentry } from '@/lib/sentry';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(rawBody, sig!, endpointSecret);
   } catch (err) {
     logger.error('❌ Stripe webhook signature verification failed.', err);
+    Sentry.captureException(err);
     return new NextResponse('Webhook Error', { status: 400 });
   }
 

@@ -45,6 +45,7 @@
     "resend": "^4.5.2",
     "sonner": "^2.0.3",
     "stream-browserify": "^3.0.0",
+    "@sentry/nextjs": "^7.92.0",
     "@sendgrid/mail": "^8.1.5",
     "stripe": "^17.7.0",
     "mongoose": "^8.3.1",

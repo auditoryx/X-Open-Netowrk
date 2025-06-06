@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const Sentry = require('./sentry');
 
 admin.initializeApp();
 
