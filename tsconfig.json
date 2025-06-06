@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": ["node", "next-auth", "jest"],
+    "types": ["node", "next", "next-auth", "jest", "react", "stripe"],
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
