@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { logger } from '../logger';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -16,8 +17,8 @@ export const sendBookingConfirmation = async (toEmail: string, bookingId: string
         </div>
       `,
     });
-    console.log('📧 Email sent to', toEmail);
+    logger.info('📧 Email sent to', toEmail);
   } catch (error) {
-    console.error('❌ Email failed:', error);
+    logger.error('❌ Email failed:', error);
   }
 };

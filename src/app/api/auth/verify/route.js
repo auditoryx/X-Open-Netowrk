@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import { logger } from '@/lib/logger';
 
 export async function GET(req) {
   try {
@@ -23,7 +24,7 @@ export async function GET(req) {
       email: decoded.email
     });
   } catch (error) {
-    console.error('Verification error:', error);
+    logger.error('Verification error:', error);
     return NextResponse.json(
       { error: 'Invalid token' },
       { status: 401 }

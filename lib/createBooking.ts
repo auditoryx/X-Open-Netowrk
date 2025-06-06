@@ -1,6 +1,7 @@
 import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore"
 import { app } from "../firebase/firebaseConfig"
 import { getStripe } from "@/lib/utils/stripe"
+import { logger } from "./logger"
 
 const db = getFirestore(app)
 
@@ -59,7 +60,7 @@ export async function createBooking({
 
     return { success: true, id: bookingId }
   } catch (err) {
-    console.error("Booking error:", err)
+    logger.error("Booking error:", err)
     return { success: false, error: err }
   }
 }

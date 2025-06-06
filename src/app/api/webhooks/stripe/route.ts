@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
 import { markAsHeld } from '@/lib/firestore/bookings/markAsHeld';
 import { generateContract } from '@/lib/firestore/contracts/generateContract';
+import { logger } from '@/lib/logger';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig!, endpointSecret);
   } catch (err) {
-    console.error('❌ Stripe webhook signature verification failed.', err);
+    logger.error('❌ Stripe webhook signature verification failed.', err);
     return new NextResponse('Webhook Error', { status: 400 });
   }
 
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      console.log(`✅ Booking ${bookingId} marked paid and funds held.`);
+      logger.info(`✅ Booking ${bookingId} marked paid and funds held.`);
     }
   }
 

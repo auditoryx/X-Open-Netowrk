@@ -5,6 +5,7 @@ import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: Request) {
   const buf = await req.arrayBuffer();
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
-    console.error('❌ Stripe webhook signature verification failed:', err);
+    logger.error('❌ Stripe webhook signature verification failed:', err);
     await firestore.collection("stripe_logs").add({
       type: "webhook_signature_error",
       error: err?.message || "Invalid signature",
@@ -82,10 +83,10 @@ export async function POST(req: Request) {
           bookingId: metadata.bookingId,
         });
 
-        console.log('✅ Booking confirmed:', metadata.bookingId);
+        logger.info('✅ Booking confirmed:', metadata.bookingId);
       }
     } catch (err: any) {
-      console.error('🔥 Failed to handle Stripe event:', err.message);
+      logger.error('🔥 Failed to handle Stripe event:', err.message);
       await firestore.collection('errorLogs').add({
         type: 'webhook_handling_error',
         message: err.message,

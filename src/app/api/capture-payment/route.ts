@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import withAuth from '@/app/api/_utils/withAuth';
+import { logger } from '@/lib/logger';
 
 async function handler(req: NextRequest & { user: any }) {
   const schema = z.object({
@@ -23,7 +24,7 @@ async function handler(req: NextRequest & { user: any }) {
     await updatePayoutStatus(paymentIntentId);
     return NextResponse.json({ success: true });
   } catch (err: any) {
-    console.error('❌ Capture Payment Error:', err?.message || err);
+    logger.error('❌ Capture Payment Error:', err?.message || err);
     await addDoc(collection(db, 'stripe_logs'), {
       type: 'capture_payment_error',
       error: err?.message || 'Unknown error',

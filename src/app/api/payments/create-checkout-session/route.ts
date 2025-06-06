@@ -5,6 +5,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { getServerUser } from '@/lib/auth/getServerUser';
+import { logger } from '@/lib/logger';
 
 const CheckoutSchema = z.object({
   bookingId: z.string().min(1),
@@ -46,7 +47,7 @@ async function handler(req: NextRequest) {
     return NextResponse.json({ url });
 
   } catch (err: any) {
-    console.error('❌ Stripe session failed:', err?.message || err);
+    logger.error('❌ Stripe session failed:', err?.message || err);
 
     try {
       await addDoc(collection(db, 'stripe_logs'), {
@@ -60,7 +61,7 @@ async function handler(req: NextRequest) {
         createdAt: serverTimestamp(),
       });
     } catch (logErr) {
-      console.error('🔥 Failed to log error to Firestore:', logErr);
+      logger.error('🔥 Failed to log error to Firestore:', logErr);
     }
 
     return NextResponse.json({ error: 'Stripe session failed' }, { status: 500 });

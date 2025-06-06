@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import withAuth from '@/app/api/_utils/withAuth';
+import { logger } from '@/lib/logger';
 
 async function handler(req: NextRequest & { user: any }) {
   if (req.user.role !== 'admin') {
@@ -13,7 +14,7 @@ async function handler(req: NextRequest & { user: any }) {
     await getAuth(admin).setCustomUserClaims(uid, { role });
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error setting role:', error);
+    logger.error('Error setting role:', error);
     return NextResponse.json({ error: 'Role assignment failed' }, { status: 500 });
   }
 }

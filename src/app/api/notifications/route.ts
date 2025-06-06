@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendInAppNotification } from '@/lib/notifications/sendInAppNotification'
 import { sendEmailNotification } from '@/lib/notifications/sendEmailNotification'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: NextRequest) {
   const { userId, email, type, title, message, link } = await req.json()
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     ])
     return NextResponse.json({ success: true })
   } catch (err) {
-    console.error('Notification error:', err)
+    logger.error('Notification error:', err)
     return NextResponse.json({ error: 'Failed' }, { status: 500 })
   }
 }

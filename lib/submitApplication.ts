@@ -1,5 +1,6 @@
 import { app } from "@/firebase/firebaseConfig";
 import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
+import { logger } from "./logger";
 
 const db = getFirestore(app);
 
@@ -22,10 +23,10 @@ export async function submitApplication({
       role,
       submittedAt: Timestamp.now(),
     });
-    console.log("Document written with ID: ", docRef.id);
+    logger.info("Document written with ID:", docRef.id);
     return { success: true, id: docRef.id };
   } catch (e) {
-    console.error("Error adding document: ", e);
+    logger.error("Error adding document:", e);
     return { success: false, error: e };
   }
 }

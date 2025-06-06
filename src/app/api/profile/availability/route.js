@@ -2,6 +2,7 @@ import { adminApp } from '@lib/firebaseAdmin';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { z } from 'zod';
+import { logger } from '@/lib/logger';
 
 const db = getFirestore(adminApp);
 
@@ -41,7 +42,7 @@ export async function POST(req) {
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (err) {
-    console.error('❌ Availability POST failed:', err.message);
+    logger.error('❌ Availability POST failed:', err.message);
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
@@ -67,7 +68,7 @@ export async function GET(req) {
     const docSnap = await getDoc(doc(db, 'userAvailability', uid));
     return new Response(JSON.stringify(docSnap.exists ? docSnap.data() : {}), { status: 200 });
   } catch (err) {
-    console.error('❌ Availability GET failed:', err.message);
+    logger.error('❌ Availability GET failed:', err.message);
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
