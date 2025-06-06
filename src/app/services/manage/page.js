@@ -1,5 +1,5 @@
 "use client";
-import ServiceManager from "../../../components/ServiceManager";
+import ServiceManager from "../../components/ServiceManager";
 
 export default function ManageServices() {
   return (

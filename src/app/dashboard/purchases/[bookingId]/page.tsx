@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import BookingChat from '@/components/chat/BookingChat';
+import BookingChat from '@/components/booking/BookingChat';
 
 export default function PurchaseDetailPage() {
   const { bookingId: rawId } = useParams();

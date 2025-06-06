@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import BookingChat from '@/components/chat/BookingChat';
+import BookingChat from '@/components/booking/BookingChat';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 import ReviewForm from '@/components/booking/ReviewForm';
