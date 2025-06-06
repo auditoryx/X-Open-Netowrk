@@ -34,12 +34,21 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              userId: 'admin-notify',
-              email: adminEmail,
+              toUid: 'admin-notify',
               type: 'dispute',
-              title: 'New Dispute Filed',
-              message: `A user submitted a dispute for booking ${bookingId}`,
-              link: `/admin/disputes`
+              payload: {
+                title: 'New Dispute Filed',
+                message: `A user submitted a dispute for booking ${bookingId}`,
+                link: `/admin/disputes`,
+                ...(adminEmail
+                  ? {
+                      email: adminEmail,
+                      subject: 'New Dispute Filed',
+                      template: 'dispute-notification.html',
+                      data: { bookingId, fromUser: user?.uid, reason: trimmed }
+                    }
+                  : {})
+              }
             })
           }),
           user?.email
@@ -47,11 +56,17 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  email: user.email,
+                  toUid: user.uid,
                   type: 'dispute',
-                  title: 'Dispute Submitted',
-                  message: `We received your dispute for booking ${bookingId}`,
-                  link: `/dashboard/disputes`
+                  payload: {
+                    title: 'Dispute Submitted',
+                    message: `We received your dispute for booking ${bookingId}`,
+                    link: `/dashboard/disputes`,
+                    email: user.email,
+                    subject: 'Dispute Submitted',
+                    template: 'dispute-opened.html',
+                    data: { disputeId: bookingId }
+                  }
                 })
               })
             : Promise.resolve()
