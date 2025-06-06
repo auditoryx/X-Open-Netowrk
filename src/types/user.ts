@@ -12,6 +12,11 @@ export interface UserProfile {
     spotify?: string;
   };
   isVerified: boolean;
+  /**
+   * Status of the user's ID verification request. If undefined, no verification
+   * has been submitted yet.
+   */
+  verificationStatus?: 'pending' | 'verified' | 'rejected';
   status: 'approved' | 'rejected';
   createdAt: any;
   timezone: string; // ✅ Required for isProfileComplete
