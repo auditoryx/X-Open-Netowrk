@@ -14,4 +14,5 @@ jobs:
           node-version: 18
       - run: npm ci --legacy-peer-deps
       - run: npm run lint --if-present
-      - run: npm test
+      - run: pnpm test
+      - run: firebase emulators:exec "firebase firestore:indexes > /dev/null && firebase storage:rules:lint"

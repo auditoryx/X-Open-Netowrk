@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Chat attachments
+    match /chat_uploads/{bookingId}/{file=**} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid in [
+          get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientUid,
+          get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerUid
+        ];
+    }
+
+    // Profile images
+    match /profile_images/{userId}/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
