@@ -6,6 +6,7 @@ import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
+import { PointsBadge } from '@/components/profile/PointsBadge';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
   const [creators, setCreators] = useState<any[]>([]);
@@ -49,6 +50,7 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
           )}
           <p className="text-xs text-gray-500 line-clamp-2 mb-2">{c.bio || 'No bio available.'}</p>
           <p className="text-xs text-blue-400">📊 {c.completion}% Profile Complete</p>
+          <PointsBadge points={c.points} />
         </div>
       ))}
     </div>

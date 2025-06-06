@@ -12,6 +12,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 async function notifyProvider(providerId: string, bookingId: string, rating: number) {
   const db = getFirestore(app)
@@ -78,4 +79,7 @@ export async function submitReview(review: Review) {
   });
 
   await notifyProvider(review.providerId, review.bookingId, review.rating);
+  await logActivity(review.clientId, 'review_submitted', {
+    bookingId: review.bookingId,
+  });
 }

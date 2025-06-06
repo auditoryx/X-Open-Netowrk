@@ -7,6 +7,7 @@ import { app } from '@/lib/firebase';
 import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
+import { PointsBadge } from '@/components/profile/PointsBadge';
 import BookingForm from '@/components/booking/BookingForm';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
@@ -63,6 +64,7 @@ export default function PublicProfilePage() {
           <span className="text-gray-400"> ({profile.reviewCount} reviews)</span>
         </p>
       )}
+      <PointsBadge points={profile.points} />
 
       <p className="mb-2 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
 

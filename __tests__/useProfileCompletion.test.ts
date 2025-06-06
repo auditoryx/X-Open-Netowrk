@@ -16,6 +16,7 @@ function createProfile(overrides: Partial<UserProfile> = {}): UserProfile {
     status: 'approved',
     createdAt: null,
     timezone: 'UTC',
+    points: 0,
     ...overrides,
   } as UserProfile;
 }

@@ -8,6 +8,7 @@ import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { useRouter } from 'next/navigation';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
+import { PointsBadge } from '@/components/profile/PointsBadge';
 
 export default function DiscoveryGrid({ filters }: { filters: any }) {
   const [creators, setCreators] = useState<any[]>([]);
@@ -55,6 +56,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
           )}
           <p className="text-sm text-gray-500 mb-2 line-clamp-2">{creator.bio || 'No bio provided.'}</p>
           <p className="text-xs text-blue-400 mb-1">📊 {creator.completion}% Profile Complete</p>
+          <PointsBadge points={creator.points} />
           <button
             className="border px-4 py-1 rounded text-sm"
             onClick={() => router.push(`/profile/${creator.uid}`)}
