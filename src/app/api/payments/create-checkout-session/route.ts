@@ -5,7 +5,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { getServerUser } from '@/lib/auth/getServerUser';
-import { logger } from '@/lib/logger';
+import { logger } from '@lib/logger';
 
 const CheckoutSchema = z.object({
   bookingId: z.string().min(1),

@@ -1,6 +1,6 @@
 import { createSubscriptionSession } from '@/lib/stripe/createSubscriptionSession';
 import { NextResponse } from 'next/server';
-import { logger } from '@/lib/logger';
+import { logger } from '@lib/logger';
 
 export async function GET() {
   try {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { logger } from '@/lib/logger';
+import { logger } from '@lib/logger';
 
 export async function GET(req) {
   try {

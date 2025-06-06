@@ -9,7 +9,7 @@ import AvailabilitySummary from './AvailabilitySummary';
 import toast from 'react-hot-toast';
 import { parseICalToSlots } from '@/lib/calendar/importICal';
 import { exportToICal } from '@/lib/calendar/exportToICal';
-import { getNextDateForWeekday } from '@/lib/google/calendar';
+import { getNextDateForWeekday } from '@/lib/google/utils';
 
 export default function AvailabilityEditor() {
   const {

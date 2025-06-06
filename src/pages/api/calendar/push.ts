@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/react';
 import { pushToGoogleCalendar } from '@/lib/google/calendar';
 import { adminDb } from '@/lib/firebase-admin';
 import { z } from 'zod';
-import { Sentry } from '@/lib/sentry';
+import { Sentry } from '@lib/sentry';
 
 const SlotSchema = z.array(
   z.object({

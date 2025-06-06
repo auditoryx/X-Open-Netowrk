@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import withAuth from '@/app/api/_utils/withAuth';
-import { logger } from '@/lib/logger';
+import { logger } from '@lib/logger';
 
 async function handler(req: NextRequest & { user: any }) {
   if (req.user.role !== 'admin') {
