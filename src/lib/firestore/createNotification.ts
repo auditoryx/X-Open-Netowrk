@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase/init';
+import { db } from '@lib/firebase/init';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export async function createNotification(uid: string, type: string, message: string, relatedId: string) {

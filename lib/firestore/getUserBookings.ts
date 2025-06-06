@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase/init';
+import { firestore } from '@lib/firebase/init';
 
 export const getUserBookings = async (uid: string, type: 'client' | 'provider') => {
   const bookingsRef = collection(firestore, 'bookings');
