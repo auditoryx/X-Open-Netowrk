@@ -20,6 +20,10 @@ This repository contains a Next.js application with a Node.js backend and Fireba
    cd ..
    ```
 4. Copy `.env.example` to `.env` and fill in the environment variables as described in `README.md`.
+5. For documentation diagrams, install Mermaid CLI globally so `mmdc` is available:
+   ```bash
+   pnpm add -g @mermaid-js/mermaid-cli
+   ```
 
 ## Development
 - Start the Next.js development server from the repository root:
