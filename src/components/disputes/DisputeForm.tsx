@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react'
-import { createDispute } from '@/lib/firestore/disputes/createDispute'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { toast } from 'sonner';
 
@@ -21,13 +20,13 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
 
     setLoading(true);
     try {
-      const result = await createDispute({
-        bookingId,
-        fromUser: clientId,
-        reason: trimmed
+      const res = await fetch('/api/disputes/open', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId, reason: trimmed })
       })
 
-      if (!result?.error) {
+      if (res.ok) {
         const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || null
 
         await Promise.all([
@@ -59,8 +58,9 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
         ])
       }
 
-      if (result?.error) {
-        toast.error(result.error);
+      if (!res.ok) {
+        const { error } = await res.json();
+        toast.error(error || 'Submission failed');
       } else {
         toast.success('Dispute submitted successfully!');
         setSubmitted(true);

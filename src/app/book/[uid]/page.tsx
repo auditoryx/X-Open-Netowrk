@@ -22,7 +22,6 @@ const WeeklyCalendarSelector = dynamic(
   () => import('@/components/booking/WeeklyCalendarSelector').then(mod => mod.WeeklyCalendarSelector),
   { ssr: false }
 );
-import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import BookingSummarySidebar from '@/components/booking/BookingSummarySidebar';
 import TrustBadges from '@/components/booking/TrustBadges';
@@ -104,14 +103,18 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       availability: updated
     });
 
-    await sendBookingConfirmation(
-      providerEmail,
-      selectedTime,
-      message,
-      user?.displayName,
-      providerLocation,
-      Intl.DateTimeFormat().resolvedOptions().timeZone
-    );
+    await fetch('/api/send-booking-confirmation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: providerEmail,
+        selectedTime,
+        message,
+        senderName: user?.displayName,
+        providerTZ: providerLocation,
+        clientTZ: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
+    });
 
     await fetch('/api/notifications', {
       method: 'POST',
