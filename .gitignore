@@ -130,3 +130,7 @@ dist
 .pnp.*
 
 firebaseAdminServer/key.json
+
+# Local archives
+stripe.tar.gz
+TypeScript:
