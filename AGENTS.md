@@ -2,6 +2,12 @@
 
 This repository contains a Next.js application with a Node.js backend and Firebase functions. The following guidelines explain how to set up the project, run it locally, execute tests, and build for production. These instructions apply to the entire repository.
 
+## Directories
+- API Routes: `src/app/api`
+- Components: `src/components`
+- Utilities: `src/lib`
+- Pages: `src/app/*`
+
 ## Setup
 1. Ensure **Node.js 18+** is installed.
 2. Install dependencies from the project root:
@@ -24,6 +30,11 @@ This repository contains a Next.js application with a Node.js backend and Fireba
   ```bash
   node backend/server.js
   ```
+
+## Contribution Guidelines
+- Use Tailwind `btn` and `input` classes
+- Favor `zod` for validation
+- Use `getServerSession` for auth-checking
 
 ## Testing
 - Unit tests are written with Jest/ts-jest under the `__tests__/` directory.
