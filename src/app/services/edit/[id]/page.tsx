@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { Translate } from '@/i18n/Translate';
 
 export default function EditServicePage() {
   const { id: rawId } = useParams();
@@ -93,7 +94,7 @@ export default function EditServicePage() {
             onClick={handleSave}
             className="bg-white text-black font-semibold px-6 py-2 rounded hover:bg-gray-200 transition"
           >
-            Save Changes
+            <Translate t="button.saveChanges" />
           </button>
 
           {success && <p className="text-green-400 mt-2">✅ Service updated!</p>}

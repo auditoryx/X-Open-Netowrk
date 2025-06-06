@@ -3,6 +3,7 @@ import { useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
+import { Translate } from "@/i18n/Translate";
 
 export default function ServiceSubmissionForm() {
   const { data: session } = useSession();
@@ -61,7 +62,9 @@ export default function ServiceSubmissionForm() {
         className="w-full p-3 rounded bg-black border border-gray-700 text-white"
         required
       />
-      <button type="submit" className="btn btn-primary w-full">Submit Service</button>
+      <button type="submit" className="btn btn-primary w-full">
+        <Translate t="button.submitService" />
+      </button>
       {status && <p className="text-sm text-blue-400 mt-2">{status}</p>}
     </form>
   );

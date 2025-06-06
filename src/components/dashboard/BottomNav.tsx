@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Translate } from '@/i18n/Translate';
 
 const links = [
-  { href: '/dashboard/home', label: 'Home' },
-  { href: '/dashboard/messages', label: 'Messages' },
-  { href: '/dashboard/bookings', label: 'Bookings' },
-  { href: '/dashboard/profile', label: 'Profile' },
+  { href: '/dashboard/home', label: <Translate t="bottomnav.home" /> },
+  { href: '/dashboard/messages', label: <Translate t="bottomnav.messages" /> },
+  { href: '/dashboard/bookings', label: <Translate t="bottomnav.bookings" /> },
+  { href: '/dashboard/profile', label: <Translate t="bottomnav.profile" /> },
 ];
 
 export default function BottomNav() {

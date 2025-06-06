@@ -10,7 +10,7 @@ export default function SidebarItem({
   icon,
 }: {
   href: string;
-  label: string;
+  label: React.ReactNode;
   icon?: React.ReactNode;
 }) {
   const pathname = usePathname();

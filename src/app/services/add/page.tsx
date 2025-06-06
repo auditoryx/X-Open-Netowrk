@@ -5,6 +5,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { Translate } from '@/i18n/Translate';
 
 export default function AddServicePage() {
   const { user, userData } = useAuth();
@@ -79,7 +80,7 @@ export default function AddServicePage() {
             onClick={handleSubmit}
             className="bg-white text-black font-semibold px-6 py-2 rounded hover:bg-gray-200 transition"
           >
-            Submit Service
+            <Translate t="button.submitService" />
           </button>
         </div>
       </div>

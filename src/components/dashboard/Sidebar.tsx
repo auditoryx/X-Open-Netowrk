@@ -3,6 +3,7 @@
 import { useSidebarToggle } from '@/hooks/useSidebarToggle';
 import SidebarItem from '@/components/ui/SidebarItem';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { Translate } from '@/i18n/Translate';
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const { open: isOpen, toggle } = useSidebarToggle();
@@ -10,13 +11,13 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const isCreator = userData?.role && userData.role !== 'user';
 
   const links = [
-    { href: '/dashboard/home', label: 'Dashboard Home' },
-    { href: '/dashboard/bookings', label: 'Bookings' },
-    { href: '/dashboard/messages', label: 'Messages' },
-    { href: '/dashboard/availability', label: 'Availability' },
-    { href: '/dashboard/earnings', label: 'Finances' },
-    { href: '/dashboard/profile', label: 'Profile' },
-    { href: '/dashboard/settings', label: 'Settings' },
+    { href: '/dashboard/home', label: <Translate t="sidebar.dashboardHome" /> },
+    { href: '/dashboard/bookings', label: <Translate t="sidebar.bookings" /> },
+    { href: '/dashboard/messages', label: <Translate t="sidebar.messages" /> },
+    { href: '/dashboard/availability', label: <Translate t="sidebar.availability" /> },
+    { href: '/dashboard/earnings', label: <Translate t="sidebar.finances" /> },
+    { href: '/dashboard/profile', label: <Translate t="sidebar.profile" /> },
+    { href: '/dashboard/settings', label: <Translate t="sidebar.settings" /> },
   ];
 
   return (
