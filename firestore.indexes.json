@@ -7,6 +7,22 @@
         { "fieldPath": "rating", "order": "DESCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "bookingRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "serviceId", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" },
+        { "fieldPath": "time", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "availability",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
