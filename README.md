@@ -66,3 +66,8 @@ firebase deploy --only firestore:indexes
 
 Run this command from the repository root so the new composite and single-field
 indexes become active.
+
+### Payment Flow
+
+![Stripe Flow](docs/diagrams/stripe-flow.png)
+
