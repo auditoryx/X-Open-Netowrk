@@ -10,6 +10,7 @@ const nextConfig = {
       util: require.resolve('util/'),
       stream: require.resolve('stream-browserify'),
       path: require.resolve('path-browserify'),
+      fs: false,
     };
     return config;
   },
