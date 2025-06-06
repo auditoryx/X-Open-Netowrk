@@ -4,7 +4,15 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 
-type Role = 'client' | 'provider' | 'admin'; // Update with actual roles
+type Role =
+  | 'client'
+  | 'provider'
+  | 'admin'
+  | 'artist'
+  | 'engineer'
+  | 'producer'
+  | 'studio'
+  | 'videographer';
 type WithRoleProtectionProps = {
   [key: string]: any;
 };
