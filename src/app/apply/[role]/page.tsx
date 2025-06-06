@@ -7,6 +7,8 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
+import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
+import { addDays, startOfWeek, format } from 'date-fns';
 
 export default function ApplyRolePage() {
   const router = useRouter();
@@ -20,10 +22,18 @@ export default function ApplyRolePage() {
   const [links, setLinks] = useState('');
   const [location, setLocation] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
-  const [availability, setAvailability] = useState('');
+  const [availabilitySlots, setAvailabilitySlots] = useState<string[]>([]);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+  const start = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const allAvailability = [...Array(7)].flatMap((_, dayIndex) => {
+    const date = addDays(start, dayIndex);
+    const dateStr = format(date, 'yyyy-MM-dd');
+    return HOURS.map((h) => `${dateStr}T${h}`);
+  });
 
   useEffect(() => {
     if (!loading && !user) {
@@ -48,6 +58,14 @@ export default function ApplyRolePage() {
       locationLat = fallbackCoords[1];
     }
 
+    const slots = availabilitySlots.map((dt) => {
+      const [datePart, time] = dt.split('T');
+      const day = new Date(datePart).toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
+      return { day, time };
+    });
+
     await addDoc(collection(db, 'pendingVerifications'), {
       uid: user.uid,
       email: userData?.email || user.email,
@@ -57,7 +75,7 @@ export default function ApplyRolePage() {
       links,
       location,
       photo: photo ? photo.name : null,
-      availability,
+      availabilitySlots: slots,
       verified,
       locationLat,
       locationLng,
@@ -149,11 +167,14 @@ export default function ApplyRolePage() {
               {step === 4 && (
                 <div>
                   <label className="text-sm mb-1 block">Availability</label>
-                  <input
-                    value={availability}
-                    onChange={(e) => setAvailability(e.target.value)}
-                    placeholder="e.g. Weekdays 9am-5pm"
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                  <WeeklyCalendarSelector
+                    availability={allAvailability}
+                    multiSelect
+                    onSelect={(slots) =>
+                      setAvailabilitySlots(
+                        Array.isArray(slots) ? slots : [slots]
+                      )
+                    }
                   />
                 </div>
               )}
