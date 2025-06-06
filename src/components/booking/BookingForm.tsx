@@ -89,7 +89,7 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
                 (b) => `${getNextDateForWeekday(b.day as any)}T${b.time}` === dt
               )
           )}
-        onSelect={(dt) => setSelectedTime(dt)}
+        onSelect={(dt) => setSelectedTime(dt as string)}
       />
 
       <p className="text-xs text-gray-600">Provider timezone: {timezone || 'N/A'}</p>

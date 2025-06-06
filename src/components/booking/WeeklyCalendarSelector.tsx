@@ -8,18 +8,34 @@ const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00']
 export function WeeklyCalendarSelector({
   availability,
   onSelect,
+  multiSelect = false,
+  value,
 }: {
   availability: string[]
-  onSelect: (datetime: string) => void
+  onSelect: (selection: string | string[]) => void
+  multiSelect?: boolean
+  value?: string | string[]
 }) {
-  const [selected, setSelected] = useState<string | null>(null)
+  const initial = Array.isArray(value) ? value : value ? [value] : []
+  const [selected, setSelected] = useState<string[]>(initial)
   const start = startOfWeek(new Date(), { weekStartsOn: 1 })
 
   const now = new Date()
 
   const handleSelect = (datetime: string) => {
-    setSelected(datetime)
-    onSelect(datetime)
+    if (multiSelect) {
+      setSelected((prev) => {
+        const exists = prev.includes(datetime)
+        const updated = exists
+          ? prev.filter((d) => d !== datetime)
+          : [...prev, datetime]
+        onSelect(updated)
+        return updated
+      })
+    } else {
+      setSelected([datetime])
+      onSelect(datetime)
+    }
   }
 
   return (
@@ -47,7 +63,7 @@ export function WeeklyCalendarSelector({
                     className={`block w-full text-xs px-2 py-1 mb-1 rounded ${
                       !isAvailable || isPast
                         ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                        : selected === datetime
+                        : selected.includes(datetime)
                         ? 'bg-green-600 text-white'
                         : 'bg-white text-black hover:bg-green-100'
                     }`}

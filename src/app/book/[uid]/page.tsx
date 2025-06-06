@@ -132,7 +132,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <WeeklyCalendarSelector
               availability={availability}
-              onSelect={(datetime: string) => setSelectedTime(datetime)}
+              onSelect={(datetime) => setSelectedTime(datetime as string)}
             />
 
             <textarea
