@@ -1,5 +1,5 @@
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase/init';
+import { firestore } from '@lib/firebase/init';
 
 export const createBooking = async (bookingData: {
   clientId: string,

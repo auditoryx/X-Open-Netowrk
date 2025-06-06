@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase/init';
+import { firestore } from '@lib/firebase/init';
 
 export const getCreatorReviews = async (creatorId: string) => {
   const q = query(
