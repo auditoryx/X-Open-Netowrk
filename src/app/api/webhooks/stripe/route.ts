@@ -4,8 +4,8 @@ import { stripe } from '@/lib/stripe';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
 import { markAsHeld } from '@/lib/firestore/bookings/markAsHeld';
 import { generateContract } from '@/lib/firestore/contracts/generateContract';
-import { logger } from '@/lib/logger';
-import { Sentry } from '@/lib/sentry';
+import { logger } from '@lib/logger';
+import { Sentry } from '@lib/sentry';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 

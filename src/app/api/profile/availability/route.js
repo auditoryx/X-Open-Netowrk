@@ -2,7 +2,7 @@ import { adminApp } from '@lib/firebaseAdmin';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { z } from 'zod';
-import { logger } from '@/lib/logger';
+import { logger } from '@lib/logger';
 
 const db = getFirestore(adminApp);
 

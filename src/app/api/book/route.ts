@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
-import { logger } from '@/lib/logger';
+import { logger } from '@lib/logger';
 
 const BookingSchema = z.object({
   serviceId: z.string().min(1),

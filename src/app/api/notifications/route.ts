@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendInAppNotification } from '@/lib/notifications/sendInAppNotification'
 import { sendEmailNotification } from '@/lib/notifications/sendEmailNotification'
-import { logger } from '@/lib/logger'
+import { logger } from '@lib/logger'
 
 export async function POST(req: NextRequest) {
   const { userId, email, type, title, message, link } = await req.json()

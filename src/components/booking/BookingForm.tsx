@@ -7,7 +7,7 @@ import WeeklyCalendarSelector from './WeeklyCalendarSelector';
 import { createBooking } from '@lib/firestore/createBooking';
 import { checkBookingConflict } from '@/lib/firestore/checkBookingConflict';
 import { useProviderAvailability } from '@/lib/hooks/useProviderAvailability';
-import { getNextDateForWeekday } from '@/lib/google/calendar';
+import { getNextDateForWeekday } from '@/lib/google/utils';
 
 type BookingFormProps = {
   providerId: string;
