@@ -1,5 +1,6 @@
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { app } from "@/firebase/firebaseConfig";
+import { logger } from "./logger";
 
 const db = getFirestore(app);
 
@@ -9,7 +10,7 @@ export const getUserProfile = async (uid: string) => {
     const userSnap = await getDoc(userRef);
     return userSnap.exists() ? userSnap.data() : null;
   } catch (error) {
-    console.error("Error fetching user profile:", error);
+    logger.error("Error fetching user profile:", error);
     return null;
   }
 };

@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
+import { logger } from '@/lib/logger';
 
 const BookingSchema = z.object({
   serviceId: z.string().min(1),
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, requestId: docRef.id });
   } catch (err: any) {
-    console.error('❌ Booking request failed:', err.message);
+    logger.error('❌ Booking request failed:', err.message);
     return NextResponse.json(
       { error: 'Failed to create booking request' },
       { status: 500 }

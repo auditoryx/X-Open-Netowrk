@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import { logger } from '@/lib/logger';
 
 export async function POST(req) {
   try {
@@ -23,7 +24,7 @@ export async function POST(req) {
       }
     });
   } catch (error) {
-    console.error('Session error:', error);
+    logger.error('Session error:', error);
     return NextResponse.json(
       { error: 'Authentication failed' },
       { status: 401 }
