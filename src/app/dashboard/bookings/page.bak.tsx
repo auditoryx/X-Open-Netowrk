@@ -41,6 +41,34 @@ export default function DashboardBookingsPage() {
     setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
   };
 
+  const handleContractAgree = async (
+    bookingId: string,
+    role: 'client' | 'provider'
+  ) => {
+    await fetch('/api/agree-contract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId, role }),
+    });
+
+    setBookings(prev =>
+      prev.map(b =>
+        b.id === bookingId
+          ? {
+              ...b,
+              contract: {
+                ...b.contract,
+                agreedByClient:
+                  role === 'client' ? true : b.contract?.agreedByClient,
+                agreedByProvider:
+                  role === 'provider' ? true : b.contract?.agreedByProvider,
+              },
+            }
+          : b
+      )
+    );
+  };
+
   if (loading) return <div className="p-6 text-white">Loading bookings...</div>;
 
   return (
@@ -69,9 +97,14 @@ export default function DashboardBookingsPage() {
 
               {booking.status === 'paid' && (
                 <div className="mt-4">
-                  <ContractViewer bookingId={booking.id} terms={''} agreedByClient={false} agreedByProvider={false} userRole={'client'} onAgree={function (): void {
-                    throw new Error('Function not implemented.');
-                  } } />
+                  <ContractViewer
+                    bookingId={booking.id}
+                    terms={''}
+                    agreedByClient={false}
+                    agreedByProvider={false}
+                    userRole={'client'}
+                    onAgree={() => handleContractAgree(booking.id, 'client')}
+                  />
                 </div>
               )}
 
