@@ -7,7 +7,11 @@ import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
-const poppins = Poppins({ subsets: ['latin'], variable: '--font-heading' });
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-heading',
+});
 
 export const metadata: Metadata = {
   title: 'AuditoryX Open Network',
