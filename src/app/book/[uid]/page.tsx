@@ -15,7 +15,13 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const WeeklyCalendarSelector = dynamic(
+  () => import('@/components/booking/WeeklyCalendarSelector').then(mod => mod.WeeklyCalendarSelector),
+  { ssr: false }
+);
 import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import BookingSummarySidebar from '@/components/booking/BookingSummarySidebar';
@@ -130,10 +136,12 @@ export default function BookServicePage({ params }: { params: { uid: string } })
         <div className="md:col-span-2 space-y-4">
           <h1 className="text-3xl font-bold mb-4">Send Booking Request</h1>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-            <WeeklyCalendarSelector
-              availability={availability}
-              onSelect={(datetime) => setSelectedTime(datetime as string)}
-            />
+            <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
+              <WeeklyCalendarSelector
+                availability={availability}
+                onSelect={(datetime) => setSelectedTime(datetime as string)}
+              />
+            </Suspense>
 
             <textarea
               className="bg-black border border-white p-4 rounded focus:outline-none"

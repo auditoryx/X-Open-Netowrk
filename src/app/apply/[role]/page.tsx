@@ -7,7 +7,13 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
-import { WeeklyCalendarSelector } from '@/components/booking/WeeklyCalendarSelector';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const WeeklyCalendarSelector = dynamic(
+  () => import('@/components/booking/WeeklyCalendarSelector').then(mod => mod.WeeklyCalendarSelector),
+  { ssr: false }
+);
 import { addDays, startOfWeek, format } from 'date-fns';
 
 export default function ApplyRolePage() {
@@ -167,15 +173,17 @@ export default function ApplyRolePage() {
               {step === 4 && (
                 <div>
                   <label className="text-sm mb-1 block">Availability</label>
-                  <WeeklyCalendarSelector
-                    availability={allAvailability}
-                    multiSelect
-                    onSelect={(slots) =>
-                      setAvailabilitySlots(
-                        Array.isArray(slots) ? slots : [slots]
-                      )
-                    }
-                  />
+                  <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
+                    <WeeklyCalendarSelector
+                      availability={allAvailability}
+                      multiSelect
+                      onSelect={(slots) =>
+                        setAvailabilitySlots(
+                          Array.isArray(slots) ? slots : [slots]
+                        )
+                      }
+                    />
+                  </Suspense>
                 </div>
               )}
 

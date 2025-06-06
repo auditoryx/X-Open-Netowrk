@@ -5,7 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import DiscoveryGrid from '@/components/explore/DiscoveryGrid';
 import NewExploreGrid from '@/components/explore/NewExploreGrid';
 import FilterPanel from '@/components/explore/FilterPanel';
-import DiscoveryMap from '@/components/explore/DiscoveryMap';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), {
+  ssr: false,
+});
 import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 
 export default function ExplorePage() {
@@ -68,7 +73,9 @@ export default function ExplorePage() {
         )
       ) : (
         <div className="h-[80vh] rounded overflow-hidden border border-white">
-          <DiscoveryMap filters={filters} />
+          <Suspense fallback={<div className="p-4">Loading map...</div>}>
+            <DiscoveryMap filters={filters} />
+          </Suspense>
         </div>
       )}
     </div>

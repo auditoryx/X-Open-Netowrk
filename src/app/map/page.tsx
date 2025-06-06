@@ -1,28 +1,32 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
 import { getAllCreators } from '@/lib/firestore/getAllCreators';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
-
 export default function GlobalMapPage() {
   const mapContainer = useRef(null);
-  const map = useRef<mapboxgl.Map | null>(null);
+  const map = useRef<any>(null);
+  const mapboxglRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!map.current) {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current!,
-        style: 'mapbox://styles/mapbox/dark-v10',
-        center: [139.6917, 35.6895], // Default to Tokyo
-        zoom: 2.5,
-      });
-    }
+    const init = async () => {
+      if (!mapboxglRef.current) {
+        const mbgl = (await import('mapbox-gl')).default;
+        mbgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
+        mapboxglRef.current = mbgl;
+      }
 
-    const loadPins = async () => {
+      if (!map.current) {
+        map.current = new mapboxglRef.current.Map({
+          container: mapContainer.current!,
+          style: 'mapbox://styles/mapbox/dark-v10',
+          center: [139.6917, 35.6895], // Default to Tokyo
+          zoom: 2.5,
+        });
+      }
+
       const creators = await getAllCreators();
 
       creators.forEach((c) => {
@@ -37,7 +41,7 @@ export default function GlobalMapPage() {
         }
 
         if (lat && lng) {
-          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+          const popup = new mapboxglRef.current.Popup({ offset: 25 }).setHTML(`
             <div style="font-size:14px">
               <strong>${c.displayName}</strong><br/>
               ${c.role} ${c.verified ? '✔️' : ''}<br/>
@@ -48,7 +52,7 @@ export default function GlobalMapPage() {
             </div>
           `);
 
-          new mapboxgl.Marker({ color: c.verified ? '#3B82F6' : '#aaa' })
+          new mapboxglRef.current.Marker({ color: c.verified ? '#3B82F6' : '#aaa' })
             .setLngLat([lng, lat])
             .setPopup(popup)
             .addTo(map.current!);
@@ -56,7 +60,7 @@ export default function GlobalMapPage() {
       });
     };
 
-    loadPins();
+    init();
   }, []);
 
   return (
