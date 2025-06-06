@@ -1,5 +1,3 @@
-'use client';
-
 export function PointsBadge({ points }: { points?: number }) {
   if (!points || points < 100) return null;
   return (
