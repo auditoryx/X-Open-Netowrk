@@ -62,3 +62,13 @@ This repository contains a Next.js application with a Node.js backend and Fireba
 - Always install dependencies if `package.json` changes.
 - After modifying code, run `npm test` and ensure it passes.
 - No linting or additional CI steps are required.
+
+## Gamification Development
+- Execute streak reset cron locally:
+  ```bash
+  firebase emulators:exec 'node cron/streakReset.js'
+  ```
+- Run gamification tests:
+  ```bash
+  pnpm test gamification
+  ```
