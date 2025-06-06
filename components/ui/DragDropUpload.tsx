@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { uploadMedia } from '@/lib/firebase/uploadMedia';
+import { uploadMedia } from '@lib/firebase/uploadMedia';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface Props {
@@ -13,7 +13,12 @@ export default function DragDropUpload({ onUploadComplete }: Props) {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setUploading(true);
-    const files = Array.from(e.target.files);
+    const fileList = e.target.files;
+    if (!fileList) {
+      setUploading(false);
+      return;
+    }
+    const files = Array.from(fileList);
     const uploadedUrls = await Promise.all(
       files.map((file) => uploadMedia(file, user.uid))
     );

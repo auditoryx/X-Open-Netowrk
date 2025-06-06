@@ -52,6 +52,9 @@ export async function createBooking({
 
     const { sessionId } = await res.json()
     const stripe = await getStripe()
+    if (!stripe) {
+      throw new Error('Stripe failed to initialize')
+    }
     await stripe.redirectToCheckout({ sessionId })
 
     return { success: true, id: bookingId }

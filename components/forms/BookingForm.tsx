@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createBooking } from '@/lib/firestore/createBooking';
+import { createBooking } from '@lib/firestore/createBooking';
 import { useAuth } from '@/lib/hooks/useAuth';
 import toast from 'react-hot-toast';
 

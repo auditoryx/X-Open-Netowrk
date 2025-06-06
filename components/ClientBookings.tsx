@@ -47,7 +47,7 @@ export default function ClientBookings() {
   };
 
   const handleAgree = async (bookingId: string) => {
-    await agreeToContract(bookingId, 'client');
+    await agreeToContract(bookingId, 'client', user.uid);
     toast.success('You agreed to the contract.');
     fetch();
   };
