@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { adminDb } from '@/lib/firebase-admin';
+import { DateTime } from 'luxon';
 
 type Slot = { day: string; time: string };
 
@@ -34,7 +35,12 @@ export async function syncFromGoogleCalendar(token: string, uid: string) {
   return busySlots;
 }
 
-export async function pushToGoogleCalendar(token: string, uid: string, slots: Slot[]) {
+export async function pushToGoogleCalendar(
+  token: string,
+  uid: string,
+  slots: Slot[],
+  timezone: string
+) {
   const oAuth2Client = new google.auth.OAuth2();
   oAuth2Client.setCredentials({ access_token: token });
 
@@ -43,16 +49,16 @@ export async function pushToGoogleCalendar(token: string, uid: string, slots: Sl
   for (const slot of slots) {
     const nextDate = getNextDateForWeekday(slot.day as DayOfWeek);
 
-    const start = new Date(`${nextDate}T${slot.time}:00`);
-    const end = new Date(start.getTime() + 30 * 60 * 1000); // 30-min block
+    const start = DateTime.fromISO(`${nextDate}T${slot.time}`, { zone: timezone });
+    const end = start.plus({ minutes: 30 });
 
     await calendar.events.insert({
       calendarId: 'primary',
       requestBody: {
         summary: 'Available via AuditoryX',
         description: 'Booked through AuditoryX Platform',
-        start: { dateTime: start.toISOString() },
-        end: { dateTime: end.toISOString() },
+        start: { dateTime: start.toISO(), timeZone: timezone },
+        end: { dateTime: end.toISO(), timeZone: timezone },
       },
     });
   }
