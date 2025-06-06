@@ -18,7 +18,9 @@ export default function ExplorePage() {
   const router = useRouter();
   const newExplore = useFeatureFlag('newExplore');
 
-  const [view, setView] = useState<'grid' | 'map'>('grid');
+  const [view, setView] = useState<'grid' | 'map'>(
+    searchParams.get('view') === 'map' ? 'map' : 'grid'
+  );
   const [filters, setFilters] = useState({
     role: searchParams.get('role') || '',
     location: searchParams.get('location') || '',
@@ -40,8 +42,9 @@ export default function ExplorePage() {
       if (filters.lat) query.set('lat', String(filters.lat));
       if (filters.lng) query.set('lng', String(filters.lng));
     }
+    query.set('view', view);
     router.replace('/explore?' + query.toString());
-  }, [filters]);
+  }, [filters, view]);
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
