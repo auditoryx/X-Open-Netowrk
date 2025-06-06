@@ -1,6 +1,7 @@
 import { getSession } from 'next-auth/react';
 import { syncFromGoogleCalendar } from '@/lib/google/calendar';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { Sentry } from '@/lib/sentry';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -21,6 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ synced: slots });
   } catch (err: any) {
     console.error('Calendar sync failed:', err.message);
+    Sentry.captureException(err);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
