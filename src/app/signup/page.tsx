@@ -4,7 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { app } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { app, db } from '@/lib/firebase';
+import { getRedirectAfterSignup } from './getRedirectAfterSignup';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -27,8 +29,11 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push(redirectPath);
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const snap = await getDoc(doc(db, 'users', cred.user.uid));
+      const role = snap.exists() ? (snap.data() as any).role : null;
+      const path = getRedirectAfterSignup(role, redirectPath);
+      router.push(path);
     } catch (err: any) {
       setError(err.message || 'Signup failed');
     }
