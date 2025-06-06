@@ -12,6 +12,11 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if true;
       allow write: if request.auth.uid == userId || request.auth.token.admin == true;
+
+      match /activities/{activityId} {
+        allow create: if request.auth.uid == userId;
+        allow read: if request.auth.uid == userId || request.auth.token.admin == true;
+      }
     }
 
     // Bookings

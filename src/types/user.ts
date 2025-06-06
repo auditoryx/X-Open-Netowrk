@@ -35,6 +35,18 @@ export interface User {
   providerId: string;
   role: 'creator' | 'admin' | 'user';
   isVisible?: boolean; // ✅ Optional for isProfileComplete
+  /**
+   * Total XP points accumulated by the user.
+   */
+  points?: number;
+  /**
+   * Current reply streak count.
+   */
+  streakCount?: number;
+  /**
+   * Timestamp of the user's last activity used for streak tracking.
+   */
+  lastActivityAt?: any;
 }
 
 export interface UserWithProfile extends User {
