@@ -1,4 +1,5 @@
 import { stripe } from '@/lib/stripe';
+import type Stripe from 'stripe';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import { getUserProfile } from '@lib/getUserProfile';
@@ -25,7 +26,7 @@ export async function createSubscriptionSession() {
     metadata: {
       uid: session.user.uid,
     },
-  });
+  } as Stripe.Checkout.SessionCreateParams);
 
   return checkoutSession.url;
 }

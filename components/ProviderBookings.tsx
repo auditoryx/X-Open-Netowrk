@@ -47,7 +47,7 @@ export default function ProviderBookings() {
   };
 
   const handleAgreeToContract = async (bookingId: string) => {
-    await agreeToContract(bookingId, 'provider');
+    await agreeToContract(bookingId, 'provider', user.uid);
     toast.success('You agreed to the contract.');
     fetchBookings();
   };
