@@ -17,6 +17,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "assert": "^2.1.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "buffer": "^6.0.3",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
@@ -45,6 +46,7 @@
     "stream-browserify": "^3.0.0",
     "@sendgrid/mail": "^7.7.0",
     "stripe": "^17.7.0",
+    "mongoose": "^8.3.1",
     "util": "^0.12.5",
     "zod": "^3.25.3"
   },
