@@ -5,7 +5,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import withAuth from '@/app/api/_utils/withAuth'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-02-24.acacia',
 })
 
 async function handler(req: any & { user: any }) {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { queryCreators } from '@/lib/firestore/queryCreators';
-import { getNextAvailable } from '@/lib/availability/getNextAvailable';
+import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';

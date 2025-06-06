@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
+import { UserProfile } from '@/types/user';
 
 export const queryCreators = async (filters: {
   role: string;
@@ -47,7 +48,7 @@ export const queryCreators = async (filters: {
   const snapshot = await getDocs(q);
 
   let results = snapshot.docs
-    .map((doc) => ({ id: doc.id, ...doc.data() }))
+    .map((doc) => ({ id: doc.id, ...(doc.data() as any) } as UserProfile))
     .filter(isProfileComplete);
 
   if (filters.lat && filters.lng) {

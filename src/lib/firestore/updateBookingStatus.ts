@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase/init';
+import { db } from '../../../lib/firebase/init';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { sendBookingAccepted } from '@/functions/sendBookingAccepted';
 import { sendReviewRequest } from '@/functions/sendReviewRequest';

@@ -1,5 +1,5 @@
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
+import { db } from '../../../firebase/firebaseConfig';
 
 /**
  * Update a provider's availability slots in Firestore.

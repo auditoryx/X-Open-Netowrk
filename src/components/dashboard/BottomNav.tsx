@@ -11,7 +11,7 @@ const links = [
 ];
 
 export default function BottomNav() {
-  const pathname = usePathname();
+  const pathname = usePathname() || '';
   return (
     <nav className="sm:hidden fixed bottom-0 inset-x-0 flex justify-around items-center bg-neutral-dark border-t border-neutral-800 py-2 z-30">
       {links.map(({ href, label }) => (

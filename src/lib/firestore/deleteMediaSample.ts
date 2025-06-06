@@ -1,7 +1,7 @@
 import { doc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
 import { db } from '@/lib/firebase';
-import { storage } from '@/lib/firebaseStorage';
+import { storage } from '../../../lib/firebase/init';
 
 export async function deleteMediaSample(uid: string, sample: { type: string; url: string }) {
   const userRef = doc(db, 'users', uid);

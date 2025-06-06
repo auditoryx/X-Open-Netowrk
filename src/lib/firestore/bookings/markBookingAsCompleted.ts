@@ -1,6 +1,6 @@
 // src/lib/firestore/bookings/markBookingAsCompleted.ts
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
+import { db } from '../../../../firebase/firebaseConfig';
 import { createNotification } from '@/lib/firestore/createNotification';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 

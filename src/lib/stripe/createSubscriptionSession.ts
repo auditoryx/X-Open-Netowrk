@@ -1,13 +1,13 @@
 import { stripe } from '@/lib/stripe';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { getUserProfile } from '@/lib/firestore/getUserProfile';
+import { authOptions } from '@/lib/authOptions';
+import { getUserProfile } from '../../../lib/getUserProfile';
 
 export async function createSubscriptionSession() {
   const session = await getServerSession(authOptions);
   if (!session?.user) throw new Error('Not authenticated.');
 
-  const userProfile = await getUserProfile(session.user.uid);
+  const userProfile = await getUserProfile(session.user.id);
   if (!userProfile) throw new Error('No profile found.');
 
   const checkoutSession = await stripe.checkout.sessions.create({
@@ -19,11 +19,11 @@ export async function createSubscriptionSession() {
         quantity: 1,
       },
     ],
-    customer_email: session.user.email,
+    customer_email: session.user.email ?? undefined,
     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/settings?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/settings?canceled=true`,
     metadata: {
-      uid: session.user.uid,
+      uid: session.user.id,
     },
   });
 

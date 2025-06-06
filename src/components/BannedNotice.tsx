@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut } from 'firebase/auth';
-import { auth } from '@/firebase/firebaseConfig';
+import { auth } from '../../firebase/firebaseConfig';
 import { useEffect, useState } from 'react';
 import { submitSupportMessage } from '@/lib/firestore/support/submitSupportMessage';
 import { onAuthStateChanged } from 'firebase/auth';

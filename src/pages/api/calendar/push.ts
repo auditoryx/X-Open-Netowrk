@@ -1,6 +1,7 @@
 import { getSession } from 'next-auth/react';
 import { pushToGoogleCalendar } from '@/lib/google/calendar';
 import { z } from 'zod';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const SlotSchema = z.array(
   z.object({
@@ -9,7 +10,10 @@ const SlotSchema = z.array(
   })
 );
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method not allowed' });

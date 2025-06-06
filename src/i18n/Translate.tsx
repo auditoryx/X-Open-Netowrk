@@ -6,9 +6,9 @@ import jp from '@/i18n/jp.json';
 import kr from '@/i18n/kr.json';
 
 const translations: Record<string, Record<string, string>> = {
-  en,
-  jp,
-  kr,
+  en: en as Record<string, string>,
+  jp: jp as Record<string, string>,
+  kr: kr as Record<string, string>,
 };
 
 export function Translate({ t }: { t: string }) {

@@ -1,10 +1,11 @@
-import admin from '@/lib/firebase-admin';
+import { admin, adminDb } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-02-24.acacia',
 });
 
 const schema = z.object({
@@ -29,13 +30,12 @@ export async function markAsReleased(input: unknown) {
   }
 
   try {
-    const db = admin.firestore();
-    const bookingRef = db.collection('bookings').doc(bookingId);
+    const bookingRef = adminDb.collection('bookings').doc(bookingId);
     const bookingSnap = await bookingRef.get();
     const booking = bookingSnap.data();
     if (!booking) throw new Error('Booking not found');
 
-    const providerSnap = await db.collection('users').doc(booking.providerId).get();
+    const providerSnap = await adminDb.collection('users').doc(booking.providerId).get();
     const provider = providerSnap.data();
     if (!provider?.stripeAccountId) {
       throw new Error('No Stripe account connected for provider');
@@ -51,7 +51,7 @@ export async function markAsReleased(input: unknown) {
 
     await bookingRef.update({
       payoutStatus: 'released',
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
     await logActivity(userId, 'payment_released', { bookingId, byRole: role });

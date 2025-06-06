@@ -13,7 +13,7 @@ export default function SidebarItem({
   label: string;
   icon?: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname() || '';
   const active = pathname.startsWith(href);
 
   return (

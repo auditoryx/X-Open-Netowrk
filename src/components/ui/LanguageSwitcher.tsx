@@ -1,6 +1,6 @@
 'use client';
 
-import { useLanguage } from '@/context/LanguageContext';
+import { useLanguage, Language } from '@/context/LanguageContext';
 
 export default function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage();
@@ -16,7 +16,7 @@ export default function LanguageSwitcher() {
       {LANGS.map(({ code, label }) => (
         <button
           key={code}
-          onClick={() => setLanguage(code)}
+          onClick={() => setLanguage(code as Language)}
           disabled={language === code}
           aria-label={`Switch to ${label}`}
           aria-pressed={language === code}

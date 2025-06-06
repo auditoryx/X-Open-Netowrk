@@ -22,6 +22,7 @@ interface Message {
   text?: string;
   mediaUrl?: string;
   createdAt?: any;
+  seenBy?: string[];
 }
 
 type Props = {

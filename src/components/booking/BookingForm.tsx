@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import toast from 'react-hot-toast';
-import WeeklyCalendarSelector from './WeeklyCalendarSelector';
-import { createBooking } from '@/lib/firestore/createBooking';
+import { WeeklyCalendarSelector } from './WeeklyCalendarSelector';
+import { createBooking } from '../../lib/firestore/createBooking';
 import { checkBookingConflict } from '@/lib/firestore/checkBookingConflict';
 import { useProviderAvailability } from '@/lib/hooks/useProviderAvailability';
 import { getNextDateForWeekday } from '@/lib/google/calendar';
@@ -89,7 +89,7 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
                 (b) => `${getNextDateForWeekday(b.day as any)}T${b.time}` === dt
               )
           )}
-        onSelect={(dt) => setSelectedTime(dt)}
+        onSelect={(dt: string) => setSelectedTime(dt)}
       />
 
       <p className="text-xs text-gray-600">Provider timezone: {timezone || 'N/A'}</p>

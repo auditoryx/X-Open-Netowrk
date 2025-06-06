@@ -14,7 +14,7 @@ export function useProfileCompletion(profile: UserProfile) {
     {
       key: 'verification',
       label: 'Complete ID verification',
-      done: profile.verificationStatus === 'verified',
+      done: profile.isVerified,
     }
   ]
 
