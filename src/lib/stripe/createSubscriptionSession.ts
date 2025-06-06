@@ -1,7 +1,7 @@
 import { stripe } from '@/lib/stripe';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
-import { getUserProfile } from '@/lib/firestore/getUserProfile';
+import { getUserProfile } from '@lib/getUserProfile';
 
 export async function createSubscriptionSession() {
   const session = await getServerSession(authOptions);

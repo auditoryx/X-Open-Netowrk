@@ -1,6 +1,6 @@
 'use client';
 
-import BookingChat from '../../../../components/chat/BookingChat';
+import BookingChat from '@/components/booking/BookingChat';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ContractViewer from '@/components/contract/ContractViewer';

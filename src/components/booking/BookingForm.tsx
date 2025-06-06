@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import toast from 'react-hot-toast';
 import WeeklyCalendarSelector from './WeeklyCalendarSelector';
-import { createBooking } from '@/lib/firestore/createBooking';
+import { createBooking } from '@lib/firestore/createBooking';
 import { checkBookingConflict } from '@/lib/firestore/checkBookingConflict';
 import { useProviderAvailability } from '@/lib/hooks/useProviderAvailability';
 import { getNextDateForWeekday } from '@/lib/google/calendar';

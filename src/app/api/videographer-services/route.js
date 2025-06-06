@@ -1,7 +1,7 @@
 import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { app } from '@/lib/firebase';
-import { adminApp } from '@/lib/firebaseAdmin';
+import { adminApp } from '@lib/firebaseAdmin';
 
 export async function POST(req) {
   try {
