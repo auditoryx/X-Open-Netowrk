@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, updateDoc, increment } from 'firebase/firestore';
 
 export async function logActivity(
   uid: string,
@@ -25,6 +25,14 @@ export async function logActivity(
 
   try {
     await addDoc(collection(db, 'activityLogs', uid, 'logs'), payload);
+
+    // Award points for key actions
+    if (actionType === 'booking_completed') {
+      await updateDoc(doc(db, 'users', uid), { points: increment(10) });
+    }
+    if (actionType === 'review_submitted') {
+      await updateDoc(doc(db, 'users', uid), { points: increment(5) });
+    }
   } catch (err: any) {
     console.error(`❌ logActivity failed for uid=${uid}:`, err.message);
   }

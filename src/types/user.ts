@@ -20,6 +20,10 @@ export interface UserProfile {
   status: 'approved' | 'rejected';
   createdAt: any;
   timezone: string; // ✅ Required for isProfileComplete
+  /**
+   * Community contribution points. Starts at 0.
+   */
+  points?: number;
 }
 
 export interface User {
