@@ -1,6 +1,6 @@
 import { stripe } from '@/lib/stripe';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '@/lib/authOptions';
 import { getUserProfile } from '@/lib/firestore/getUserProfile';
 
 export async function createSubscriptionSession() {
