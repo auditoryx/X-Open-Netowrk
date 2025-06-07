@@ -9,6 +9,7 @@ export default function LanguageSwitcher() {
     { code: 'en', label: 'EN' },
     { code: 'jp', label: 'JP' },
     { code: 'kr', label: 'KR' },
+    { code: 'pl', label: 'PL' },
   ];
 
   return (
