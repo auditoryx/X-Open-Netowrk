@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { track } from '@/lib/analytics/track';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
 import { SaveButton } from '@/components/profile/SaveButton';
@@ -22,6 +23,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
       if (pageParam) params.append('cursor', pageParam as string);
+      track('search', { ...filters, page: pageParam ?? 1 });
       const res = await fetch(`/api/search?${params.toString()}`);
       const json = await res.json();
       const withMeta = await Promise.all(
