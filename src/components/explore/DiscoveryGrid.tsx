@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { queryCreators } from '@/lib/firestore/queryCreators';
+import { useEffect } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
@@ -11,16 +11,21 @@ import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 
 export default function DiscoveryGrid({ filters }: { filters: any }) {
-  const [creators, setCreators] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetch = async () => {
-      const results = await queryCreators(filters);
-
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ['creators', filters],
+    queryFn: async ({ pageParam }) => {
+      const params = new URLSearchParams({ limit: '20', ...filters });
+      if (pageParam) params.append('cursor', pageParam as string);
+      const res = await fetch(`/api/search?${params.toString()}`);
+      const json = await res.json();
       const withMeta = await Promise.all(
-        results.map(async (c: any) => {
+        json.results.map(async (c: any) => {
           const next = await getNextAvailable(c.uid);
           const rating = await getAverageRating(c.uid);
           const count = await getReviewCount(c.uid);
@@ -28,15 +33,30 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
           return { ...c, next, rating, count, completion };
         })
       );
+      return { results: withMeta, nextCursor: json.nextCursor };
+    },
+    getNextPageParam: last => last.nextCursor ?? undefined,
+  });
 
-      setCreators(withMeta);
-      setLoading(false);
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage();
+      }
     };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const router = useRouter();
 
-    fetch();
-  }, [filters]);
+  if (isLoading) return <div className="text-white">Loading results...</div>;
 
-  if (loading) return <div className="text-white">Loading results...</div>;
+  const creators = data?.pages.flatMap(p => p.results) ?? [];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

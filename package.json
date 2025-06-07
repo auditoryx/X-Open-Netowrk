@@ -50,7 +50,8 @@
     "stripe": "^17.7.0",
     "mongoose": "^8.3.1",
     "util": "^0.12.5",
-    "zod": "^3.25.3"
+    "zod": "^3.25.3",
+    "@tanstack/react-query": "^5.29.12"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { queryCreators } from '@/lib/firestore/queryCreators';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { SaveButton } from '@/components/profile/SaveButton';
@@ -10,31 +10,51 @@ import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
-  const [creators, setCreators] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetch = async () => {
-      const results = await queryCreators(filters);
-
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ['creators-new', filters],
+    queryFn: async ({ pageParam }) => {
+      const params = new URLSearchParams({ limit: '20', ...filters });
+      if (pageParam) params.append('cursor', pageParam as string);
+      const res = await fetch(`/api/search?${params.toString()}`);
+      const json = await res.json();
       const withRatings = await Promise.all(
-        results.map(async (c: any) => {
+        json.results.map(async (c: any) => {
           const averageRating = await getAverageRating(c.uid);
           const reviewCount = await getReviewCount(c.uid);
           const completion = getProfileCompletion(c);
           return { ...c, averageRating, reviewCount, completion };
         })
       );
+      return { results: withRatings, nextCursor: json.nextCursor };
+    },
+    getNextPageParam: last => last.nextCursor ?? undefined,
+  });
 
-      setCreators(withRatings);
-      setLoading(false);
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage();
+      }
     };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    fetch();
-  }, [filters]);
+  if (isLoading) return <div className="text-white">Loading new layout...</div>;
 
-  if (loading) return <div className="text-white">Loading new layout...</div>;
+  const creators = data?.pages.flatMap(p => p.results) ?? [];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
