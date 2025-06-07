@@ -14,6 +14,8 @@ export async function GET(req: Request) {
     verifiedOnly: searchParams.get('verifiedOnly') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
+    radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : undefined,
+    sort: searchParams.get('sort') as 'rating' | 'distance' | 'popularity' | null,
   }
 
   const { results, nextCursor } = await queryCreators({
