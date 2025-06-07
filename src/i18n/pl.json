@@ -1,0 +1,22 @@
+{
+  "nav.explore": "Odkrywaj",
+  "nav.apply": "Aplikuj",
+  "nav.login": "Zaloguj się",
+  "nav.dashboard": "Panel",
+  "nav.logout": "Wyloguj",
+  "dashboard.selling": "Sprzedaję",
+  "dashboard.buying": "Kupuję",
+  "sidebar.dashboardHome": "Strona główna panelu",
+  "sidebar.bookings": "Rezerwacje",
+  "sidebar.messages": "Wiadomości",
+  "sidebar.availability": "Dostępność",
+  "sidebar.finances": "Finanse",
+  "sidebar.profile": "Profil",
+  "sidebar.settings": "Ustawienia",
+  "bottomnav.home": "Główna",
+  "bottomnav.messages": "Wiadomości",
+  "bottomnav.bookings": "Rezerwacje",
+  "bottomnav.profile": "Profil",
+  "button.saveChanges": "Zapisz zmiany",
+  "button.submitService": "Dodaj usługę"
+}
