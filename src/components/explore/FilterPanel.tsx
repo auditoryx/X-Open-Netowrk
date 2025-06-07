@@ -1,5 +1,7 @@
 'use client';
 
+import LocationAutocomplete from './LocationAutocomplete';
+
 type Props = {
   filters: {
     role: string;
@@ -9,6 +11,7 @@ type Props = {
     searchNearMe?: boolean;
     lat?: number;
     lng?: number;
+    radiusKm?: number;
   };
   setFilters: (filters: any) => void;
 };
@@ -58,13 +61,38 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           <option value="engineer">Engineer</option>
         </select>
 
-        <input
-          type="text"
-          placeholder="Location (Tokyo, Seoul...)"
+        <LocationAutocomplete
           value={filters.location}
-          onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-          className="input-base"
+          onChange={(v) => setFilters({ ...filters, location: v })}
+          onSelect={(name, lat, lng) =>
+            setFilters({
+              ...filters,
+              location: name,
+              lat,
+              lng,
+              searchNearMe: false,
+            })
+          }
         />
+
+        <div>
+          <label className="text-sm block mb-1">
+            Radius: {filters.radiusKm ?? 50} km
+          </label>
+          <input
+            type="range"
+            min={1}
+            max={100}
+            value={filters.radiusKm ?? 50}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                radiusKm: parseInt(e.target.value, 10),
+              })
+            }
+            className="w-full"
+          />
+        </div>
 
         <input
           type="text"

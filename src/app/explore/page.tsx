@@ -29,6 +29,7 @@ export default function ExplorePage() {
     searchNearMe: searchParams.get('searchNearMe') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
+    radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : 50,
   });
 
   useEffect(() => {
@@ -39,9 +40,10 @@ export default function ExplorePage() {
     if (filters.proTier) query.set('proTier', filters.proTier);
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');
-      if (filters.lat) query.set('lat', String(filters.lat));
-      if (filters.lng) query.set('lng', String(filters.lng));
     }
+    if (filters.lat) query.set('lat', String(filters.lat));
+    if (filters.lng) query.set('lng', String(filters.lng));
+    if (filters.radiusKm) query.set('radiusKm', String(filters.radiusKm));
     query.set('view', view);
     router.replace('/explore?' + query.toString());
   }, [filters, view]);
