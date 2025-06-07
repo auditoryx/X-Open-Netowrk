@@ -13,6 +13,7 @@ type Props = {
     lat?: number;
     lng?: number;
     radiusKm?: number;
+    sort?: 'rating' | 'distance' | 'popularity';
   };
   setFilters: (filters: any) => void;
 };
@@ -103,6 +104,18 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           onChange={(e) => setFilters({ ...filters, service: e.target.value })}
           className="input-base"
         />
+
+        <select
+          value={filters.sort || 'rating'}
+          onChange={(e) =>
+            setFilters({ ...filters, sort: e.target.value as any })
+          }
+          className="input-base"
+        >
+          <option value="rating">Sort by Rating</option>
+          <option value="distance">Sort by Distance</option>
+          <option value="popularity">Sort by Popularity</option>
+        </select>
 
         <label className="flex items-center gap-2 text-sm">
           <input

@@ -8,7 +8,11 @@ import FilterPanel from './FilterPanel'
 const DiscoveryWrapper = () => {
   const [creators, setCreators] = useState<any[]>([])
   const [filtered, setFiltered] = useState<any[]>([])
-  const [filters, setFilters] = useState({ role: '', verifiedOnly: false })
+  const [filters, setFilters] = useState({
+    role: '',
+    verifiedOnly: false,
+    sort: 'rating' as 'rating' | 'distance' | 'popularity',
+  })
 
   useEffect(() => {
     getAllCreators().then(setCreators)

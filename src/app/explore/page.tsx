@@ -30,6 +30,7 @@ export default function ExplorePage() {
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
     radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : 50,
+    sort: (searchParams.get('sort') as 'rating' | 'distance' | 'popularity') || 'rating',
   });
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function ExplorePage() {
     if (filters.lat) query.set('lat', String(filters.lat));
     if (filters.lng) query.set('lng', String(filters.lng));
     if (filters.radiusKm) query.set('radiusKm', String(filters.radiusKm));
+    if (filters.sort) query.set('sort', filters.sort);
     query.set('view', view);
     router.replace('/explore?' + query.toString());
   }, [filters, view]);

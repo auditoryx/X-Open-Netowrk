@@ -1,8 +1,19 @@
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, startAfter, limit as fsLimit, doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  startAfter,
+  limit as fsLimit,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import { UserProfile } from '@/types/user'; // ✅ import type
+import { getAverageRating } from '@/lib/reviews/getAverageRating';
 
 export async function queryCreators(filters: {
   role?: string;
@@ -15,6 +26,7 @@ export async function queryCreators(filters: {
   radiusKm?: number;
   limit?: number;
   cursor?: string;
+  sort?: 'rating' | 'distance' | 'popularity';
 }) {
   const qConstraints = [];
 
@@ -97,6 +109,55 @@ export async function queryCreators(filters: {
       if (!lat || !lng) return false;
       return dist(lat, lng, filters.lat!, filters.lng!) <= radius;
     });
+  }
+
+  if (filters.sort === 'distance' && filters.lat && filters.lng) {
+    const toRad = (v: number) => (v * Math.PI) / 180;
+    const dist = (
+      lat1: number,
+      lng1: number,
+      lat2: number,
+      lng2: number
+    ) => {
+      const R = 6371;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) *
+          Math.cos(toRad(lat2)) *
+          Math.sin(dLng / 2) *
+          Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    };
+
+    results = results
+      .map((c) => {
+        let lat = (c as any).locationLat as number | null;
+        let lng = (c as any).locationLng as number | null;
+        if (!lat || !lng) {
+          const key = (c as any).location?.toLowerCase()?.replace(/\s+/g, '') || '';
+          const fb = cityToCoords[key];
+          if (fb) {
+            lng = fb[0];
+            lat = fb[1];
+          }
+        }
+        const distance = lat && lng ? dist(lat, lng, filters.lat!, filters.lng!) : Infinity;
+        return { ...c, _distance: distance } as any;
+      })
+      .sort((a, b) => (a._distance || 0) - (b._distance || 0));
+  } else if (filters.sort === 'popularity') {
+    results = results.sort((a, b) => (b.points || 0) - (a.points || 0));
+  } else if (filters.sort === 'rating') {
+    const withRatings = await Promise.all(
+      results.map(async (c) => {
+        const rating = await getAverageRating(c.uid);
+        return { ...c, _rating: rating ?? 0 } as any;
+      })
+    );
+    results = withRatings.sort((a, b) => (b._rating || 0) - (a._rating || 0));
   }
 
   const nextCursor = snapshot.docs.length
