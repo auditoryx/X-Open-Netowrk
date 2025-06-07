@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { queryCreators } from '@/lib/firestore/queryCreators';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { SaveButton } from '@/components/profile/SaveButton';
@@ -15,8 +14,20 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
   const router = useRouter();
 
   useEffect(() => {
-    const fetch = async () => {
-      const results = await queryCreators(filters);
+    const load = async () => {
+      const params = new URLSearchParams();
+      if (filters.role) params.set('role', filters.role);
+      if (filters.location) params.set('location', filters.location);
+      if (filters.service) params.set('service', filters.service);
+      if (filters.keyword) params.set('q', filters.keyword);
+      if (filters.proTier) params.set('proTier', filters.proTier);
+      if (filters.searchNearMe) {
+        params.set('searchNearMe', 'true');
+        if (filters.lat) params.set('lat', String(filters.lat));
+        if (filters.lng) params.set('lng', String(filters.lng));
+      }
+      const res = await fetch('/api/search?' + params.toString());
+      const results = await res.json();
 
       const withRatings = await Promise.all(
         results.map(async (c: any) => {
@@ -31,7 +42,7 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
       setLoading(false);
     };
 
-    fetch();
+    load();
   }, [filters]);
 
   if (loading) return <div className="text-white">Loading new layout...</div>;

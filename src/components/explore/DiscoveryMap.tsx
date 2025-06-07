@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { queryCreators } from '@/lib/firestore/queryCreators';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -31,7 +30,19 @@ export default function DiscoveryMap({ filters }: Props) {
     if (!map.current) return;
 
     const load = async () => {
-      const creators = await queryCreators(filters);
+      const params = new URLSearchParams();
+      if (filters.role) params.set('role', filters.role);
+      if (filters.location) params.set('location', filters.location);
+      if (filters.service) params.set('service', filters.service);
+      if (filters.keyword) params.set('q', filters.keyword);
+      if (filters.proTier) params.set('proTier', filters.proTier);
+      if (filters.searchNearMe) {
+        params.set('searchNearMe', 'true');
+        if (filters.lat) params.set('lat', String(filters.lat));
+        if (filters.lng) params.set('lng', String(filters.lng));
+      }
+      const res = await fetch('/api/search?' + params.toString());
+      const creators = await res.json();
       const features: any[] = [];
 
       creators.forEach((c: any) => {

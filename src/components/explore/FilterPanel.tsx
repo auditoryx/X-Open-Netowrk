@@ -5,6 +5,7 @@ type Props = {
     role: string;
     location: string;
     service: string;
+    keyword?: string;
     proTier?: 'standard' | 'verified' | 'signature';
     searchNearMe?: boolean;
     lat?: number;
@@ -71,6 +72,14 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           placeholder="Service (Mixing, Videography...)"
           value={filters.service}
           onChange={(e) => setFilters({ ...filters, service: e.target.value })}
+          className="input-base"
+        />
+
+        <input
+          type="text"
+          placeholder="Keyword"
+          value={filters.keyword || ''}
+          onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
           className="input-base"
         />
 

@@ -25,6 +25,7 @@ export default function ExplorePage() {
     role: searchParams.get('role') || '',
     location: searchParams.get('location') || '',
     service: searchParams.get('service') || '',
+    keyword: searchParams.get('q') || '',
     proTier: searchParams.get('proTier') || '',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
@@ -36,6 +37,7 @@ export default function ExplorePage() {
     if (filters.role) query.set('role', filters.role);
     if (filters.location) query.set('location', filters.location);
     if (filters.service) query.set('service', filters.service);
+    if (filters.keyword) query.set('q', filters.keyword);
     if (filters.proTier) query.set('proTier', filters.proTier);
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');
