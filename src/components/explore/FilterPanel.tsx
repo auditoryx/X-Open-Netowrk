@@ -1,6 +1,7 @@
 'use client';
 
 import LocationAutocomplete from './LocationAutocomplete';
+import SavedFilters from './SavedFilters';
 
 type Props = {
   filters: {
@@ -48,6 +49,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
       <h2 className="font-semibold mb-4 text-lg">Filters</h2>
 
       <div className="flex flex-col gap-4">
+        <SavedFilters filters={filters} setFilters={setFilters} />
         <select
           value={filters.role}
           onChange={(e) => setFilters({ ...filters, role: e.target.value })}
