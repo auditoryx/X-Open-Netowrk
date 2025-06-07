@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { collection, getDocs, updateDoc, doc } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore'
+import { approveUserVerification } from '@/lib/firestore/approveUserVerification'
 import { db } from '@/lib/firebase'
 
 export default function VerificationRequestsPage() {
@@ -19,10 +20,7 @@ export default function VerificationRequestsPage() {
   }, [])
 
   const approve = async (uid: string) => {
-    await updateDoc(doc(db, 'users', uid), {
-      verificationStatus: 'verified',
-      proTier: 'verified'
-    })
+    await approveUserVerification(uid)
     setRequests(r => r.filter(u => r.id !== uid))
   }
 

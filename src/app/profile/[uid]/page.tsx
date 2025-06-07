@@ -8,6 +8,7 @@ import { ReviewList } from '@/components/reviews/ReviewList';
 import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { PointsBadge } from '@/components/profile/PointsBadge';
+import { VerifiedProgress } from '@/components/profile/VerifiedProgress';
 import BookingForm from '@/components/booking/BookingForm';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
@@ -65,6 +66,11 @@ export default function PublicProfilePage() {
         </p>
       )}
       <PointsBadge points={profile.points} />
+      <VerifiedProgress
+        points={profile.points}
+        verificationStatus={profile.verificationStatus}
+        proTier={profile.proTier}
+      />
 
       <p className="mb-2 max-w-xl text-center">{profile.bio || 'No bio provided.'}</p>
 
