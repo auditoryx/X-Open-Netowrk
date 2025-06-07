@@ -1,6 +1,6 @@
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, startAfter, limit as fsLimit, doc, getDoc } from 'firebase/firestore';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import { UserProfile } from '@/types/user'; // ✅ import type
 
@@ -13,6 +13,8 @@ export async function queryCreators(filters: {
   lat?: number;
   lng?: number;
   radiusKm?: number;
+  limit?: number;
+  cursor?: string;
 }) {
   const qConstraints = [];
 
@@ -38,8 +40,22 @@ export async function queryCreators(filters: {
     qConstraints.push(where('proTier', '==', filters.proTier));
   }
 
-  const q = query(collection(db, 'users'), ...qConstraints);
-  const snapshot = await getDocs(q);
+  const base = query(
+    collection(db, 'users'),
+    ...qConstraints,
+    orderBy('createdAt', 'desc'),
+    fsLimit(filters.limit || 20)
+  );
+
+  let qSnap = base;
+  if (filters.cursor) {
+    const lastDoc = await getDoc(doc(db, 'users', filters.cursor));
+    if (lastDoc.exists()) {
+      qSnap = query(base, startAfter(lastDoc));
+    }
+  }
+
+  const snapshot = await getDocs(qSnap);
 
   let results = snapshot.docs
     .map((doc) => ({ uid: doc.id, ...doc.data() } as UserProfile))
@@ -83,5 +99,9 @@ export async function queryCreators(filters: {
     });
   }
 
-  return results;
+  const nextCursor = snapshot.docs.length
+    ? snapshot.docs[snapshot.docs.length - 1].id
+    : null;
+
+  return { results, nextCursor };
 }

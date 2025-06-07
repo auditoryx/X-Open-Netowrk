@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import QueryProvider from '@/providers/QueryProvider';
 
 
 export const metadata: Metadata = {
@@ -21,9 +22,11 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <LanguageProvider>
-            <Toaster position="top-center" />
-            <Navbar />
-            {children}
+            <QueryProvider>
+              <Toaster position="top-center" />
+              <Navbar />
+              {children}
+            </QueryProvider>
           </LanguageProvider>
         </AuthProvider>
       </body>

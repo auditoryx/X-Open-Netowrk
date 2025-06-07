@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { queryCreators } from '@/lib/firestore/queryCreators';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -13,6 +13,33 @@ type Props = {
 export default function DiscoveryMap({ filters }: Props) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const featuresRef = useRef<any[]>([]);
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ['map-creators', filters],
+    queryFn: async ({ pageParam }) => {
+      const params = new URLSearchParams({ limit: '20', ...filters });
+      if (pageParam) params.append('cursor', pageParam as string);
+      const res = await fetch(`/api/search?${params.toString()}`);
+      return res.json();
+    },
+    getNextPageParam: last => last.nextCursor ?? undefined,
+  });
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage();
+      }
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   // initialize map on first render
   useEffect(() => {
@@ -26,57 +53,61 @@ export default function DiscoveryMap({ filters }: Props) {
     }
   }, []);
 
-  // load markers when filters change
+  // reset markers when filters change
   useEffect(() => {
-    if (!map.current) return;
+    featuresRef.current = [];
+  }, [filters]);
 
-    const load = async () => {
-      const creators = await queryCreators(filters);
-      const features: any[] = [];
+  // update markers when new data pages load
+  useEffect(() => {
+    if (!map.current || !data) return;
 
-      creators.forEach((c: any) => {
-        let lat = c.locationLat;
-        let lng = c.locationLng;
-        if (!lat || !lng) {
-          const key = c.location?.toLowerCase()?.replace(/\s+/g, '') || '';
-          const fb = cityToCoords[key];
-          if (fb) {
-            lng = fb[0];
-            lat = fb[1];
-          }
+    const lastPage = data.pages[data.pages.length - 1];
+    const features: any[] = [];
+    lastPage.results.forEach((c: any) => {
+      let lat = c.locationLat;
+      let lng = c.locationLng;
+      if (!lat || !lng) {
+        const key = c.location?.toLowerCase()?.replace(/\s+/g, '') || '';
+        const fb = cityToCoords[key];
+        if (fb) {
+          lng = fb[0];
+          lat = fb[1];
         }
-        if (lat && lng) {
-          features.push({
-            type: 'Feature',
-            geometry: { type: 'Point', coordinates: [lng, lat] },
-            properties: {
-              uid: c.uid,
-              name: c.displayName || 'Unnamed',
-              role: c.role,
-              verified: c.verified || false,
-            },
-          });
-        }
-      });
+      }
+      if (lat && lng) {
+        features.push({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [lng, lat] },
+          properties: {
+            uid: c.uid,
+            name: c.displayName || 'Unnamed',
+            role: c.role,
+            verified: c.verified || false,
+          },
+        });
+      }
+    });
+    featuresRef.current = [...featuresRef.current, ...features];
 
-      const geojson = {
-        type: 'FeatureCollection',
-        features,
-      } as GeoJSON.FeatureCollection;
+    const geojson = {
+      type: 'FeatureCollection',
+      features: featuresRef.current,
+    } as GeoJSON.FeatureCollection;
 
-      if (map.current!.getSource('creators')) {
-        const src = map.current!.getSource('creators') as mapboxgl.GeoJSONSource;
-        src.setData(geojson);
-      } else {
-        map.current!.on('load', () => {
-          if (map.current!.getSource('creators')) return;
-          map.current!.addSource('creators', {
-            type: 'geojson',
-            data: geojson,
-            cluster: true,
-            clusterMaxZoom: 14,
-            clusterRadius: 50,
-          });
+    if (map.current!.getSource('creators')) {
+      const src = map.current!.getSource('creators') as mapboxgl.GeoJSONSource;
+      src.setData(geojson);
+    } else {
+      map.current!.on('load', () => {
+        if (map.current!.getSource('creators')) return;
+        map.current!.addSource('creators', {
+          type: 'geojson',
+          data: geojson,
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
+        });
 
           map.current!.addLayer({
             id: 'clusters',
@@ -168,10 +199,7 @@ export default function DiscoveryMap({ filters }: Props) {
           });
         });
       }
-    };
-
-    load();
-  }, [filters]);
+  }, [data, filters]);
 
   return <div ref={mapContainer} className="w-full h-full" />;
 }
