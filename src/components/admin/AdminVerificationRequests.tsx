@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { db } from '@/lib/firebase'
 import { collection, getDocs, updateDoc, doc, query, where } from 'firebase/firestore'
+import { approveUserVerification } from '@/lib/firestore/approveUserVerification'
 
 interface Request {
   id: string
@@ -23,10 +24,7 @@ export default function AdminVerificationRequests() {
   }, [])
 
   const approve = async (id: string) => {
-    await updateDoc(doc(db, 'users', id), {
-      verificationStatus: 'verified',
-      proTier: 'verified'
-    })
+    await approveUserVerification(id)
     setRequests(r => r.filter(req => req.id !== id))
   }
 
