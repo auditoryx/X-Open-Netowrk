@@ -1,7 +1,29 @@
 import { NextResponse } from 'next/server'
 import { queryCreators } from '@/lib/firestore/queryCreators'
 
+const windowMs = 60_000
+const maxRequests = 30
+const buckets: Map<string, { count: number; ts: number }> =
+  (globalThis as any).__searchLimiter ||
+  ((globalThis as any).__searchLimiter = new Map())
+
+function isRateLimited(ip: string) {
+  const now = Date.now()
+  const entry = buckets.get(ip) || { count: 0, ts: now }
+  if (now - entry.ts > windowMs) {
+    entry.count = 0
+    entry.ts = now
+  }
+  entry.count++
+  buckets.set(ip, entry)
+  return entry.count > maxRequests
+}
+
 export async function GET(req: Request) {
+  const ip = req.headers.get('x-forwarded-for') || 'unknown'
+  if (isRateLimited(ip)) {
+    return new NextResponse('Too Many Requests', { status: 429 })
+  }
   const { searchParams } = new URL(req.url)
   const limit = parseInt(searchParams.get('limit') || '10', 10)
   const cursor = searchParams.get('cursor') || undefined
