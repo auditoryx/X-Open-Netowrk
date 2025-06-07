@@ -9,6 +9,7 @@ import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { useRouter } from 'next/navigation';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
+import { Translate } from '@/i18n/Translate';
 
 export default function DiscoveryGrid({ filters }: { filters: any }) {
   const {
@@ -54,7 +55,12 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
   const router = useRouter();
 
-  if (isLoading) return <div className="text-white">Loading results...</div>;
+  if (isLoading)
+    return (
+      <div className="text-white">
+        <Translate t="explore.loadingResults" />
+      </div>
+    );
 
   const creators = data?.pages.flatMap(p => p.results) ?? [];
 
@@ -66,7 +72,9 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
           className="border border-white p-4 rounded hover:bg-white hover:text-black transition"
         >
           <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-bold">{creator.name || 'Unnamed'}</h2>
+            <h2 className="text-lg font-bold">
+              {creator.name || <Translate t="common.unnamed" />}
+            </h2>
             <SaveButton providerId={creator.uid} />
           </div>
           {creator.rating !== null && (
@@ -74,14 +82,17 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
               ⭐ {creator.rating.toFixed(1)} / 5.0 ({creator.count})
             </p>
           )}
-          <p className="text-sm text-gray-500 mb-2 line-clamp-2">{creator.bio || 'No bio provided.'}</p>
+          <p className="text-sm text-gray-500 mb-2 line-clamp-2">
+            {creator.bio || <Translate t="common.noBio" />}
+          </p>
           <p className="text-xs text-blue-400 mb-1">📊 {creator.completion}% Profile Complete</p>
           <PointsBadge points={creator.points} />
           <button
             className="border px-4 py-1 rounded text-sm"
             onClick={() => router.push(`/profile/${creator.uid}`)}
+            aria-label={`${(<Translate t="common.viewProfile" />)} ${creator.name}` as unknown as string}
           >
-            View Profile
+            <Translate t="common.viewProfile" />
           </button>
         </div>
       ))}

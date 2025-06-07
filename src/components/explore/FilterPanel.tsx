@@ -2,6 +2,7 @@
 
 import LocationAutocomplete from './LocationAutocomplete';
 import SavedFilters from './SavedFilters';
+import { Translate } from '@/i18n/Translate';
 
 type Props = {
   filters: {
@@ -47,21 +48,36 @@ export default function FilterPanel({ filters, setFilters }: Props) {
 
   return (
     <div className="mb-6 p-4 border border-neutral-800 rounded-lg bg-neutral-900 text-white">
-      <h2 className="font-semibold mb-4 text-lg">Filters</h2>
+      <h2 className="font-semibold mb-4 text-lg">
+        <Translate t="filterPanel.filters" />
+      </h2>
 
       <div className="flex flex-col gap-4">
         <SavedFilters filters={filters} setFilters={setFilters} />
         <select
+          aria-label={<Translate t="filterPanel.roleLabel" /> as unknown as string}
           value={filters.role}
           onChange={(e) => setFilters({ ...filters, role: e.target.value })}
           className="input-base"
         >
-          <option value="">All Roles</option>
-          <option value="artist">Artist</option>
-          <option value="producer">Producer</option>
-          <option value="studio">Studio</option>
-          <option value="videographer">Videographer</option>
-          <option value="engineer">Engineer</option>
+          <option value="">
+            <Translate t="filterPanel.allRoles" />
+          </option>
+          <option value="artist">
+            <Translate t="filterPanel.role.artist" />
+          </option>
+          <option value="producer">
+            <Translate t="filterPanel.role.producer" />
+          </option>
+          <option value="studio">
+            <Translate t="filterPanel.role.studio" />
+          </option>
+          <option value="videographer">
+            <Translate t="filterPanel.role.videographer" />
+          </option>
+          <option value="engineer">
+            <Translate t="filterPanel.role.engineer" />
+          </option>
         </select>
 
         <LocationAutocomplete
@@ -79,10 +95,11 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         />
 
         <div>
-          <label className="text-sm block mb-1">
-            Radius: {filters.radiusKm ?? 50} km
+          <label className="text-sm block mb-1" id="radius-label">
+            <Translate t="filterPanel.radius" />: {filters.radiusKm ?? 50} km
           </label>
           <input
+            aria-labelledby="radius-label"
             type="range"
             min={1}
             max={100}
@@ -98,23 +115,31 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         </div>
 
         <input
+          aria-label={<Translate t="filterPanel.serviceLabel" /> as unknown as string}
           type="text"
-          placeholder="Service (Mixing, Videography...)"
+          placeholder={<Translate t="filterPanel.servicePlaceholder" /> as unknown as string}
           value={filters.service}
           onChange={(e) => setFilters({ ...filters, service: e.target.value })}
           className="input-base"
         />
 
         <select
+          aria-label={<Translate t="filterPanel.sort.rating" /> as unknown as string}
           value={filters.sort || 'rating'}
           onChange={(e) =>
             setFilters({ ...filters, sort: e.target.value as any })
           }
           className="input-base"
         >
-          <option value="rating">Sort by Rating</option>
-          <option value="distance">Sort by Distance</option>
-          <option value="popularity">Sort by Popularity</option>
+          <option value="rating">
+            <Translate t="filterPanel.sort.rating" />
+          </option>
+          <option value="distance">
+            <Translate t="filterPanel.sort.distance" />
+          </option>
+          <option value="popularity">
+            <Translate t="filterPanel.sort.popularity" />
+          </option>
         </select>
 
         <label className="flex items-center gap-2 text-sm">
@@ -122,8 +147,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
             type="checkbox"
             checked={filters.searchNearMe || false}
             onChange={handleGeoToggle}
+            aria-label={<Translate t="filterPanel.searchNearMe" /> as unknown as string}
           />
-          Search Near Me
+          <Translate t="filterPanel.searchNearMe" />
         </label>
 
         <div className="flex gap-4">
@@ -133,8 +159,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
               checked={filters.proTier === 'signature'}
               onChange={() => handleTierChange('signature')}
               className="accent-yellow-400"
+              aria-label={<Translate t="filterPanel.signature" /> as unknown as string}
             />
-            Signature
+            <Translate t="filterPanel.signature" />
           </label>
           <label className="flex items-center gap-2 text-sm text-white">
             <input
@@ -142,8 +169,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
               checked={filters.proTier === 'verified'}
               onChange={() => handleTierChange('verified')}
               className="accent-blue-400"
+              aria-label={<Translate t="filterPanel.verified" /> as unknown as string}
             />
-            Verified
+            <Translate t="filterPanel.verified" />
           </label>
         </div>
       </div>

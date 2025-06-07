@@ -3,6 +3,10 @@ import mapboxgl from 'mapbox-gl';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useLanguage } from '@/context/LanguageContext';
+import en from '@/i18n/en.json';
+import jp from '@/i18n/jp.json';
+import kr from '@/i18n/kr.json';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -14,6 +18,8 @@ export default function DiscoveryMap({ filters }: Props) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const featuresRef = useRef<any[]>([]);
+  const { language } = useLanguage();
+  const translations: Record<string, Record<string, string>> = { en, jp, kr };
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['map-creators', filters],
@@ -174,10 +180,11 @@ export default function DiscoveryMap({ filters }: Props) {
             const feature = e.features?.[0];
             if (!feature) return;
             const props = feature.properties as any;
+            const view = translations[language]?.['common.viewProfile'] || 'View Profile';
             const html = `<div style="font-size:14px">` +
               `<strong>${props.name}</strong><br/>` +
               `${props.role}${props.verified ? ' ✔️' : ''}<br/>` +
-              `<a href="/profile/${props.uid}" target="_blank" class="underline text-blue-400">View Profile</a>` +
+              `<a href="/profile/${props.uid}" target="_blank" class="underline text-blue-400">${view}</a>` +
               `</div>`;
             new mapboxgl.Popup()
               .setLngLat(feature.geometry.coordinates as any)
@@ -201,5 +208,13 @@ export default function DiscoveryMap({ filters }: Props) {
       }
   }, [data, filters]);
 
-  return <div ref={mapContainer} className="w-full h-full" />;
+  return (
+    <div
+      ref={mapContainer}
+      className="w-full h-full"
+      role="application"
+      tabIndex={0}
+      aria-label={translations[language]?.['explore.mapLabel'] || 'Creator map'}
+    />
+  );
 }
