@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { track } from '@/lib/analytics/track';
 import mapboxgl from 'mapbox-gl';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
@@ -20,6 +21,7 @@ export default function DiscoveryMap({ filters }: Props) {
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
       if (pageParam) params.append('cursor', pageParam as string);
+      track('search', { ...filters, page: pageParam ?? 1 });
       const res = await fetch(`/api/search?${params.toString()}`);
       return res.json();
     },
@@ -170,15 +172,21 @@ export default function DiscoveryMap({ filters }: Props) {
             });
           });
 
-          map.current!.on('click', 'unclustered-point', (e) => {
-            const feature = e.features?.[0];
-            if (!feature) return;
-            const props = feature.properties as any;
-            const html = `<div style="font-size:14px">` +
-              `<strong>${props.name}</strong><br/>` +
-              `${props.role}${props.verified ? ' ✔️' : ''}<br/>` +
-              `<a href="/profile/${props.uid}" target="_blank" class="underline text-blue-400">View Profile</a>` +
-              `</div>`;
+        map.current!.on('click', 'unclustered-point', (e) => {
+          const feature = e.features?.[0];
+          if (!feature) return;
+          const props = feature.properties as any;
+          track('map_marker_click', {
+            uid: props.uid,
+            name: props.name,
+            role: props.role,
+            coordinates: feature.geometry.coordinates,
+          });
+          const html = `<div style="font-size:14px">` +
+            `<strong>${props.name}</strong><br/>` +
+            `${props.role}${props.verified ? ' ✔️' : ''}<br/>` +
+            `<a href="/profile/${props.uid}" target="_blank" class="underline text-blue-400">View Profile</a>` +
+            `</div>`;
             new mapboxgl.Popup()
               .setLngLat(feature.geometry.coordinates as any)
               .setHTML(html)

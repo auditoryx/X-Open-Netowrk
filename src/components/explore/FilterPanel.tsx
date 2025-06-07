@@ -2,6 +2,7 @@
 
 import LocationAutocomplete from './LocationAutocomplete';
 import SavedFilters from './SavedFilters';
+import { track } from '@/lib/analytics/track';
 
 type Props = {
   filters: {
@@ -19,10 +20,14 @@ type Props = {
 };
 
 export default function FilterPanel({ filters, setFilters }: Props) {
+  const updateFilters = (newFilters: any) => {
+    setFilters(newFilters);
+    track('filters_change', newFilters);
+  };
   const handleGeoToggle = () => {
     if (!filters.searchNearMe) {
       navigator.geolocation.getCurrentPosition((pos) => {
-        setFilters({
+        updateFilters({
           ...filters,
           searchNearMe: true,
           lat: pos.coords.latitude,
@@ -30,7 +35,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         });
       });
     } else {
-      setFilters({
+      updateFilters({
         ...filters,
         searchNearMe: false,
         lat: undefined,
@@ -42,7 +47,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
   const handleTierChange = (tier: 'verified' | 'signature') => {
     const updated = { ...filters };
     updated.proTier = filters.proTier === tier ? undefined : tier;
-    setFilters(updated);
+    updateFilters(updated);
   };
 
   return (
@@ -50,10 +55,10 @@ export default function FilterPanel({ filters, setFilters }: Props) {
       <h2 className="font-semibold mb-4 text-lg">Filters</h2>
 
       <div className="flex flex-col gap-4">
-        <SavedFilters filters={filters} setFilters={setFilters} />
+        <SavedFilters filters={filters} setFilters={updateFilters} />
         <select
           value={filters.role}
-          onChange={(e) => setFilters({ ...filters, role: e.target.value })}
+          onChange={(e) => updateFilters({ ...filters, role: e.target.value })}
           className="input-base"
         >
           <option value="">All Roles</option>
@@ -66,9 +71,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
 
         <LocationAutocomplete
           value={filters.location}
-          onChange={(v) => setFilters({ ...filters, location: v })}
+          onChange={(v) => updateFilters({ ...filters, location: v })}
           onSelect={(name, lat, lng) =>
-            setFilters({
+            updateFilters({
               ...filters,
               location: name,
               lat,
@@ -88,7 +93,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
             max={100}
             value={filters.radiusKm ?? 50}
             onChange={(e) =>
-              setFilters({
+              updateFilters({
                 ...filters,
                 radiusKm: parseInt(e.target.value, 10),
               })
@@ -101,14 +106,14 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           type="text"
           placeholder="Service (Mixing, Videography...)"
           value={filters.service}
-          onChange={(e) => setFilters({ ...filters, service: e.target.value })}
+          onChange={(e) => updateFilters({ ...filters, service: e.target.value })}
           className="input-base"
         />
 
         <select
           value={filters.sort || 'rating'}
           onChange={(e) =>
-            setFilters({ ...filters, sort: e.target.value as any })
+            updateFilters({ ...filters, sort: e.target.value as any })
           }
           className="input-base"
         >
