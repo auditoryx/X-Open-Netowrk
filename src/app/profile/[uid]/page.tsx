@@ -13,12 +13,15 @@ import BookingForm from '@/components/booking/BookingForm';
 import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
+import { getRatingDistribution } from '@/lib/reviews/getRatingDistribution';
+import RatingBarChart from '@/components/profile/RatingBarChart';
 
 export default function PublicProfilePage() {
   const rawParams = useParams();
   const uid = typeof rawParams.uid === 'string' ? rawParams.uid : Array.isArray(rawParams.uid) ? rawParams.uid[0] : '';
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [distribution, setDistribution] = useState<Record<number, number> | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -30,8 +33,10 @@ export default function PublicProfilePage() {
         const data = snap.data();
         const avg = await getAverageRating(uid);
         const count = await getReviewCount(uid);
+        const dist = await getRatingDistribution(uid);
 
         setProfile({ ...data, averageRating: avg, reviewCount: count });
+        setDistribution(dist);
       }
 
       setLoading(false);
@@ -55,10 +60,13 @@ export default function PublicProfilePage() {
       )}
 
       {profile.averageRating !== undefined && (
-        <p className="text-yellow-400 text-sm mb-2">
-          ⭐ {profile.averageRating.toFixed(1)} / 5.0
-          <span className="text-gray-400"> ({profile.reviewCount} reviews)</span>
-        </p>
+        <div className="mb-2">
+          <p className="text-yellow-400 text-sm">
+            ⭐ {profile.averageRating.toFixed(1)} / 5.0
+            <span className="text-gray-400"> ({profile.reviewCount} reviews)</span>
+          </p>
+          {distribution && <RatingBarChart distribution={distribution} />}
+        </div>
       )}
       <PointsBadge points={profile.points} />
       <VerifiedProgress
