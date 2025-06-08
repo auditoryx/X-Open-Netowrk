@@ -1,4 +1,4 @@
-import './globals.css';
+import '@/styles/globals.css';
 import Navbar from './components/Navbar';
 import { Metadata } from 'next';
 import { LanguageProvider } from '@/context/LanguageContext';
