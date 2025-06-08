@@ -7,6 +7,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
+import LocationAutocomplete from '@/components/explore/LocationAutocomplete';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
@@ -32,6 +33,35 @@ export default function ApplyRolePage() {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(`applyDraft-${role}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setStep(data.step || 1);
+        setBio(data.bio || '');
+        setLinks(data.links || '');
+        setLocation(data.location || '');
+        setAvailabilitySlots(data.availabilitySlots || []);
+        setVerified(!!data.verified);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [role]);
+
+  useEffect(() => {
+    const data = {
+      step,
+      bio,
+      links,
+      location,
+      availabilitySlots,
+      verified,
+    };
+    localStorage.setItem(`applyDraft-${role}`, JSON.stringify(data));
+  }, [step, bio, links, location, availabilitySlots, verified, role]);
 
   const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -126,11 +156,10 @@ export default function ApplyRolePage() {
                 <>
                   <div>
                     <label className="text-sm mb-1 block">City / Location</label>
-                    <input
+                    <LocationAutocomplete
                       value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      placeholder="e.g. Tokyo, NYC, Paris"
-                      className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+                      onChange={(v) => setLocation(v)}
+                      onSelect={(name) => setLocation(name)}
                     />
                   </div>
                   <div>
