@@ -43,20 +43,23 @@ export async function sendMessage({
   const db = getFirestore(app)
   const ref = collection(db, 'bookings', bookingId, 'messages')
 
-  // Send message
+  // Fetch booking to determine recipient and message metadata
+  const bookingSnap = await getDoc(doc(db, 'bookings', bookingId))
+  if (!bookingSnap.exists()) return
+  const booking = bookingSnap.data() as any
+
+  // Send message with client and provider ids
   await addDoc(ref, {
     senderId,
     text,
     ...(mediaUrl ? { mediaUrl } : {}),
     createdAt: serverTimestamp(),
-    seenBy: [senderId]
+    seenBy: [senderId],
+    clientId: booking.buyerId ?? booking.clientId,
+    providerId: booking.providerId
   })
 
-  // Get booking to determine recipient
-  const bookingSnap = await getDoc(doc(db, 'bookings', bookingId))
-  if (!bookingSnap.exists()) return
-  const booking = bookingSnap.data()
-  const recipientId = booking.buyerId === senderId ? booking.providerId : booking.buyerId
+  const recipientId = (booking.buyerId ?? booking.clientId) === senderId ? booking.providerId : (booking.buyerId ?? booking.clientId)
 
   const userSnap = await getDoc(doc(db, 'users', recipientId))
   const email = userSnap.exists() ? (userSnap.data() as any).email || null : null
