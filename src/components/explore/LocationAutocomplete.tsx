@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Translate } from '@/i18n/Translate';
 
 export default function LocationAutocomplete({
   value,
@@ -65,9 +66,10 @@ export default function LocationAutocomplete({
   return (
     <div className="relative" ref={containerRef}>
       <input
+        aria-label={<Translate t="filterPanel.locationPlaceholder" /> as unknown as string}
         type="text"
         value={query}
-        placeholder="Location (Tokyo, Seoul...)"
+        placeholder={<Translate t="filterPanel.locationPlaceholder" /> as unknown as string}
         onChange={(e) => {
           setQuery(e.target.value);
           onChange(e.target.value);
@@ -76,10 +78,13 @@ export default function LocationAutocomplete({
         className="input-base"
       />
       {open && results.length > 0 && (
-        <ul className="absolute z-10 bg-white text-black border border-gray-300 rounded mt-1 max-h-60 overflow-auto w-full">
+        <ul role="listbox" className="absolute z-10 bg-white text-black border border-gray-300 rounded mt-1 max-h-60 overflow-auto w-full">
           {results.map((r) => (
             <li
               key={r.id}
+              tabIndex={0}
+              role="option"
+              onKeyDown={(e) => e.key === 'Enter' && handleSelect(r)}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleSelect(r)}
               className="px-3 py-2 hover:bg-gray-200 cursor-pointer text-sm"

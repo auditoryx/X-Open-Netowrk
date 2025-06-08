@@ -8,6 +8,7 @@ import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
+import { Translate } from '@/i18n/Translate';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
   const router = useRouter();
@@ -52,7 +53,12 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) return <div className="text-white">Loading new layout...</div>;
+  if (isLoading)
+    return (
+      <div className="text-white">
+        <Translate t="explore.loadingNewLayout" />
+      </div>
+    );
 
   const creators = data?.pages.flatMap(p => p.results) ?? [];
 
@@ -66,13 +72,13 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
         >
           <div className="flex justify-between items-center mb-2">
             <h2 className="font-semibold text-lg">
-              {c.name || 'Unnamed'}
+              {c.name || <Translate t="common.unnamed" />}
             </h2>
             <SaveButton providerId={c.uid} />
           </div>
 
           <p className="text-sm text-gray-400">
-            {c.location || 'Unknown Location'}
+            {c.location || <Translate t="common.unknownLocation" />}
           </p>
 
           {c.averageRating !== null && (
@@ -82,7 +88,7 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
           )}
 
           <p className="text-xs text-gray-500 line-clamp-2 mb-2">
-            {c.bio || 'No bio available.'}
+            {c.bio || <Translate t="common.noBio" />}
           </p>
 
           <p className="text-xs text-blue-400">
@@ -96,8 +102,9 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
           <button
             className="btn btn-primary w-full mt-2"
             onClick={() => router.push(`/profile/${c.uid}`)}
+            aria-label={`${(<Translate t="common.viewProfile" />)} ${c.name}` as unknown as string}
           >
-            View Profile
+            <Translate t="common.viewProfile" />
           </button>
         </div>
       ))}

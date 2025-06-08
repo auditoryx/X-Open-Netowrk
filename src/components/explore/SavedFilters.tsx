@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { Translate } from '@/i18n/Translate';
 import {
   createFilterPreset,
   fetchFilterPresets,
@@ -56,11 +57,14 @@ export default function SavedFilters({
   return (
     <div className="space-y-2">
       <select
+        aria-label={<Translate t="savedFilters.savedPresets" /> as unknown as string}
         value={selected}
         onChange={e => handleSelect(e.target.value)}
         className="input-base"
       >
-        <option value="">Saved Presets</option>
+        <option value="">
+          <Translate t="savedFilters.savedPresets" />
+        </option>
         {presets.map(p => (
           <option key={p.id} value={p.id}>
             {p.name}
@@ -69,18 +73,19 @@ export default function SavedFilters({
       </select>
       <div className="flex gap-2">
         <input
+          aria-label={<Translate t="savedFilters.presetName" /> as unknown as string}
           type="text"
-          placeholder="Preset name"
+          placeholder={<Translate t="savedFilters.presetName" /> as unknown as string}
           value={name}
           onChange={e => setName(e.target.value)}
           className="input-base flex-1"
         />
-        <button onClick={savePreset} className="btn btn-primary">
-          Save
+        <button onClick={savePreset} className="btn btn-primary" aria-label={<Translate t="savedFilters.save" /> as unknown as string}>
+          <Translate t="savedFilters.save" />
         </button>
         {selected && (
-          <button onClick={deletePresetHandler} className="btn btn-secondary">
-            Delete
+          <button onClick={deletePresetHandler} className="btn btn-secondary" aria-label={<Translate t="savedFilters.delete" /> as unknown as string}>
+            <Translate t="savedFilters.delete" />
           </button>
         )}
       </div>

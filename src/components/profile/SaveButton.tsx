@@ -5,6 +5,7 @@ import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import { Translate } from '@/i18n/Translate';
 
 export function SaveButton({ providerId }: { providerId: string }) {
   const { user } = useAuth();
@@ -38,7 +39,11 @@ export function SaveButton({ providerId }: { providerId: string }) {
   if (loading) return null;
 
   return (
-    <button onClick={toggleSave} className="text-xl">
+    <button
+      onClick={toggleSave}
+      className="text-xl"
+      aria-label={<Translate t="common.saveProvider" /> as unknown as string}
+    >
       {isSaved ? <AiFillStar className="text-yellow-500" /> : <AiOutlineStar />}
     </button>
   );
