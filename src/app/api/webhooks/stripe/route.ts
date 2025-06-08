@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const bookingId = session.metadata?.bookingId;
-    const buyerId = session.metadata?.buyerId;
+    const clientId = session.metadata?.buyerId;
     const providerId = session.metadata?.providerId;
     const serviceName = session.metadata?.serviceName;
     const price = session.amount_total ? session.amount_total / 100 : undefined;
@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
       await updateBookingStatus(bookingId, 'paid');
       await markAsHeld({ bookingId, userId: 'system', role: 'admin' });
 
-      if (buyerId && providerId && serviceName && price) {
+      if (clientId && providerId && serviceName && price) {
         const startDate = new Date().toISOString().split('T')[0];
         await generateContract(
-          { bookingId, buyerId, providerId, serviceName, price, startDate },
+          { bookingId, clientId, providerId, serviceName, price, startDate },
           'system'
         );
       }
