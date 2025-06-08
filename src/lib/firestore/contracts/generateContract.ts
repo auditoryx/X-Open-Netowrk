@@ -5,7 +5,7 @@ import { logActivity } from '@/lib/firestore/logging/logActivity';
 
 const contractSchema = z.object({
   bookingId: z.string().min(1),
-  buyerId: z.string().min(1),
+  clientId: z.string().min(1),
   providerId: z.string().min(1),
   serviceName: z.string().min(1),
   price: z.number().positive(),
@@ -24,7 +24,7 @@ export async function generateContract(
 
   const {
     bookingId,
-    buyerId,
+    clientId,
     providerId,
     serviceName,
     price,
@@ -32,7 +32,7 @@ export async function generateContract(
   } = parsed.data;
 
   // 🔐 Authorization check
-  if (![buyerId, providerId].includes(sessionUserId)) {
+  if (![clientId, providerId].includes(sessionUserId)) {
     console.warn('⚠️ Unauthorized contract generation attempt by:', sessionUserId);
     return { error: 'Unauthorized' };
   }
@@ -40,7 +40,7 @@ export async function generateContract(
   const contractText = `
     SERVICE AGREEMENT
 
-    This agreement is between ${buyerId} (Client) and ${providerId} (Provider).
+    This agreement is between ${clientId} (Client) and ${providerId} (Provider).
 
     The Provider agrees to deliver the service "${serviceName}" starting on ${startDate}, 
     in exchange for payment of $${price}.
@@ -53,7 +53,7 @@ export async function generateContract(
   try {
     await setDoc(doc(db, 'contracts', bookingId), {
       bookingId,
-      buyerId,
+      clientId,
       providerId,
       serviceName,
       price,
@@ -65,7 +65,7 @@ export async function generateContract(
     await logActivity(sessionUserId, 'contract_generated', {
       bookingId,
       providerId,
-      buyerId,
+      clientId,
       price,
       startDate,
     });
