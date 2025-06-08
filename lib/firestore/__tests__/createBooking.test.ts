@@ -25,7 +25,7 @@ describe('createBooking', () => {
     mockedCollection.mockReturnValue(collRef as any)
     mockedAddDoc.mockResolvedValue({ id: 'abc123' } as any)
 
-    const booking = { clientId: 'c1', providerId: 'p1', service: 's1', dateTime: 'now', message: 'msg' }
+    const booking = { clientId: 'c1', providerId: 'p1', service: 's1', dateTime: 'now', message: 'msg', quote: 210 }
     const id = await createBooking(booking)
 
     expect(mockedCollection).toHaveBeenCalledWith(firestore, 'bookings')

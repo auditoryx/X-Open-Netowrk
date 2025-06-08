@@ -27,6 +27,16 @@ export interface UserProfile {
    * Community contribution points. Starts at 0.
    */
   points?: number;
+  /** Rooms for studio profiles */
+  rooms?: Room[];
+}
+
+export interface Room {
+  name: string;
+  hourlyRate: number;
+  minBlock: number;
+  hasEngineer: boolean;
+  engineerFee: number;
 }
 
 export interface User {

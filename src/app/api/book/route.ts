@@ -19,6 +19,7 @@ const BookingSchema = z.object({
   date: z.string().min(1),
   time: z.string().min(1),
   message: z.string().min(1),
+  quote: z.number().positive().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { serviceId, date, time, message } = parsed.data;
+  const { serviceId, date, time, message, quote } = parsed.data;
 
   try {
     const q = query(
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
       date,
       time,
       message,
+      quote,
       userId: session.user.id,
       status: 'pending',
       createdAt: serverTimestamp(),
@@ -68,6 +70,7 @@ export async function POST(req: NextRequest) {
       date,
       time,
       message,
+      quote,
       requestId: docRef.id,
     });
 

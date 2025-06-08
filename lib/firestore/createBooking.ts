@@ -6,7 +6,8 @@ export const createBooking = async (bookingData: {
   providerId: string,
   service: string,
   dateTime: string,
-  message?: string
+  message?: string,
+  quote?: number
 }) => {
   const docRef = await addDoc(collection(firestore, 'bookings'), {
     ...bookingData,
