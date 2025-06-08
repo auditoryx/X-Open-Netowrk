@@ -34,6 +34,7 @@ describe('createBooking', () => {
       status: 'pending',
       createdAt: 'ts',
       paid: false,
+      revisionsRemaining: 2,
     }))
     expect(id).toBe('abc123')
   })

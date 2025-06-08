@@ -13,6 +13,7 @@ export const createBooking = async (bookingData: {
     status: 'pending',
     createdAt: serverTimestamp(),
     paid: false,
+    revisionsRemaining: 2,
   });
   return docRef.id;
 };
