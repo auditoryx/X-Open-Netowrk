@@ -9,7 +9,7 @@ if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASS) {
   throw new Error('SMTP_EMAIL or SMTP_PASS is not defined')
 }
 
-const transporter = nodemailer.createTransport({
+// moved to sendEmail
   service: 'gmail',
   auth: {
     user: process.env.SMTP_EMAIL,
@@ -18,6 +18,14 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendEmail(
+  if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASS) throw new Error("SMTP_EMAIL or SMTP_PASS is not defined");
+  const transporter = nodemailer.createTransport({
+    service: Gmail,
+    auth: {
+      user: process.env.SMTP_EMAIL,
+      pass: process.env.SMTP_PASS
+    }
+  });
   to: string,
   subject: string,
   templateName: string,
