@@ -5,18 +5,6 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASS) {
-  throw new Error('SMTP_EMAIL or SMTP_PASS is not defined')
-}
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.SMTP_EMAIL,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
 export async function sendEmail(
   to: string,
   subject: string,
@@ -24,6 +12,18 @@ export async function sendEmail(
   replacements: Record<string, string>
 ) {
   try {
+    if (!process.env.SMTP_EMAIL) {
+      throw new Error('SMTP_EMAIL or SMTP_PASS is not defined')
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
     const templatePath = path.join(process.cwd(), 'public', 'emails', templateName);
     let html = fs.readFileSync(templatePath, 'utf-8');
 
