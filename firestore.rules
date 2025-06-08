@@ -10,16 +10,40 @@ service cloud.firestore {
     }
 
     // Specialized service listings
-    match /{svc}/{docId} where svc in [
-      "artistServices",
-      "engineerServices",
-      "videographerServices",
-      "studioServices",
-      "producerBeats"
-    ] {
+    match /artistServices/{serviceId} {
       allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth.token.admin == true;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.artistId;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.artistId || request.auth.token.admin == true
+      );
+    }
+    match /engineerServices/{serviceId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.engineerId;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.engineerId || request.auth.token.admin == true
+      );
+    }
+    match /videographerServices/{serviceId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.videographerId;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.videographerId || request.auth.token.admin == true
+      );
+    }
+    match /studioServices/{serviceId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.studioId;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.studioId || request.auth.token.admin == true
+      );
+    }
+    match /producerBeats/{beatId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.producerId;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.producerId || request.auth.token.admin == true
+      );
     }
 
     // User profiles
