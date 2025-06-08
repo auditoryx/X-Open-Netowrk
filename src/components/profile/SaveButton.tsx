@@ -5,6 +5,7 @@ import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import toast from 'react-hot-toast';
 import { Translate } from '@/i18n/Translate';
 
 export function SaveButton({ providerId }: { providerId: string }) {
@@ -33,6 +34,7 @@ export function SaveButton({ providerId }: { providerId: string }) {
     } else {
       await setDoc(ref, { savedAt: new Date() });
       setIsSaved(true);
+      toast.success('Added to favorites');
     }
   };
 

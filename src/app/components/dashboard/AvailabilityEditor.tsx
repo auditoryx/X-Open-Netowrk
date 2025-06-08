@@ -76,7 +76,19 @@ export default function AvailabilityEditor() {
     });
 
     if (res.ok) {
-      toast.success('Pushed availability to Google Calendar!');
+      toast.success(
+        <span>
+          Pushed to Google Calendar.{' '}
+          <a
+            href="https://calendar.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Manage on Google
+          </a>
+        </span>
+      );
     } else {
       toast.error('Failed to push to Google Calendar');
     }

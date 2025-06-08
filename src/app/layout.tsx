@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 import QueryProvider from '../../providers/QueryProvider';
+import StreakToast from '../components/gamification/StreakToast';
 
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
           <LanguageProvider>
             <QueryProvider>
               <Toaster position="top-center" />
+              <StreakToast />
               <Navbar />
               {children}
             </QueryProvider>

@@ -1,6 +1,7 @@
 'use client';
 
 import TierBadge from '@/components/ui/TierBadge';
+import Link from 'next/link';
 
 export default function BookingSidebar({
   name,
@@ -27,6 +28,11 @@ export default function BookingSidebar({
       <div className="bg-neutral-800 text-sm p-3 rounded-lg mt-4 border border-neutral-700">
         🛡 Protected by <strong>AuditoryX Guarantee</strong><br />
         Your payment is only released after the creator completes your order.
+        <div className="mt-2">
+          <Link href="/legal/escrow" className="underline text-blue-400 text-xs" target="_blank">
+            Terms & Refund Policy
+          </Link>
+        </div>
       </div>
     </aside>
   );
