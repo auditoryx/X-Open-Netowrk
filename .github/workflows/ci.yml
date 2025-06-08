@@ -15,3 +15,4 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run lint --if-present
       - run: npm test
+      - run: firebase emulators:exec "firebase storage:rules:lint"
