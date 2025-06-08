@@ -10,6 +10,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import en from '@/i18n/en.json';
 import jp from '@/i18n/jp.json';
 import kr from '@/i18n/kr.json';
+import { roleBadges, RoleKey } from '@/constants/roleBadges';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -208,10 +209,19 @@ export default function DiscoveryMap({ filters }: Props) {
           const viewLabel =
             translations[language]?.['common.viewProfile'] || 'View Profile';
 
+          const badgeCfg = roleBadges[props.role as RoleKey];
+          const key = badgeCfg?.label.toLowerCase();
+          const metric = key ? (props as any)[key] : null;
+          const badgeHtml =
+            badgeCfg && metric
+              ? `${badgeCfg.icon} ${metric} ${badgeCfg.label}<br/>`
+              : '';
+
           const html =
             `<div style="font-size:14px">` +
             `<strong>${props.name}</strong><br/>` +
             `${props.role}${props.verified ? ' ✔️' : ''}<br/>` +
+            badgeHtml +
             `<a href="/profile/${props.uid}" target="_blank" class="underline text-blue-400">${viewLabel}</a>` +
             `</div>`;
 
