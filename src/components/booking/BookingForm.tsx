@@ -22,6 +22,15 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  if (!user) {
+    return (
+      <div className="p-4 border rounded bg-white text-black space-y-2">
+        <p>Please log in to request a booking.</p>
+        <a href="/login" className="btn btn-primary">Login</a>
+      </div>
+    );
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = message.trim();

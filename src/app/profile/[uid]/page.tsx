@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { ReviewList } from '@/components/reviews/ReviewList';
-import { PortfolioGrid } from '@/components/profile/PortfolioGrid';
+import MediaCarousel from '@/components/profile/MediaCarousel';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { VerifiedProgress } from '@/components/profile/VerifiedProgress';
@@ -13,6 +13,7 @@ import BookingForm from '@/components/booking/BookingForm';
 import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
+import { getMediaSamples } from '@/lib/firestore/getMediaSamples';
 
 export default function PublicProfilePage() {
   const rawParams = useParams();
@@ -30,8 +31,9 @@ export default function PublicProfilePage() {
         const data = snap.data();
         const avg = await getAverageRating(uid);
         const count = await getReviewCount(uid);
+        const media = await getMediaSamples(uid);
 
-        setProfile({ ...data, averageRating: avg, reviewCount: count });
+        setProfile({ ...data, mediaSamples: media, averageRating: avg, reviewCount: count });
       }
 
       setLoading(false);
@@ -107,7 +109,7 @@ export default function PublicProfilePage() {
       </div>
 
       <div className="mt-10 w-full max-w-4xl">
-        <PortfolioGrid uid={uid} />
+        <MediaCarousel items={profile.mediaSamples || []} />
       </div>
 
       <div className="mt-10 w-full max-w-3xl">
