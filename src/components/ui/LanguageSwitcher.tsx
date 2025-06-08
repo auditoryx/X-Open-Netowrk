@@ -10,7 +10,7 @@ export default function LanguageSwitcher() {
     { code: 'jp', label: 'JP' },
     { code: 'kr', label: 'KR' },
     { code: 'pl', label: 'PL' },
-  ];
+  ] as const;
 
   return (
     <div className="flex gap-2">

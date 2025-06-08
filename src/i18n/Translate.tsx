@@ -17,3 +17,10 @@ export function Translate({ t }: { t: string }) {
   const { language } = useLanguage();
   return translations[language]?.[t] || t;
 }
+
+export namespace Translate {
+  export function txt(t: string) {
+    const { language } = useLanguage();
+    return translations[language]?.[t] || t;
+  }
+}

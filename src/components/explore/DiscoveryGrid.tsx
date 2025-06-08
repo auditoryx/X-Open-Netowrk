@@ -13,6 +13,8 @@ import { PointsBadge } from '@/components/profile/PointsBadge';
 import { Translate } from '@/i18n/Translate';
 import GenreBadges from '@/components/explore/GenreBadges';
 
+type Page = { results: any[]; nextCursor?: string };
+
 export default function DiscoveryGrid({ filters }: { filters: any }) {
   const {
     data,
@@ -20,8 +22,9 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<Page>({
     queryKey: ['creators', filters],
+    initialPageParam: undefined,
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
       if (filters.availableNow) params.set('availableNow', '1');

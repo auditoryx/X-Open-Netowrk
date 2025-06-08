@@ -20,8 +20,9 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<{ results: any[]; nextCursor?: string }>({
     queryKey: ['creators-new', filters],
+    initialPageParam: undefined,
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
       if (filters.availableNow) params.set('availableNow', '1');
