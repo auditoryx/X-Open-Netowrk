@@ -1,0 +1,4 @@
+
+    env:
+      SMTP_EMAIL: "mock@example.com"
+      SMTP_PASS: "fakepassword"
