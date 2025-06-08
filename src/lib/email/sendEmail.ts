@@ -1,6 +1,13 @@
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASS) {
+  throw new Error('SMTP_EMAIL or SMTP_PASS is not defined')
+}
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
