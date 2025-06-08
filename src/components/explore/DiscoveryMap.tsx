@@ -65,6 +65,9 @@ export default function DiscoveryMap({ filters }: Props) {
         style: 'mapbox://styles/mapbox/dark-v10',
         center: [139.6917, 35.6895], // Tokyo default
         zoom: 2,
+        dragPan: true,
+        touchPitch: false,
+        touchZoomRotate: false,
       });
     }
   }, []);
