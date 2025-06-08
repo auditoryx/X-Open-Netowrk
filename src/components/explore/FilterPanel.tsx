@@ -11,6 +11,7 @@ type Props = {
     location: string;
     service: string;
     proTier?: 'standard' | 'verified' | 'signature';
+    availableNow?: boolean;
     searchNearMe?: boolean;
     lat?: number;
     lng?: number;
@@ -151,6 +152,21 @@ export default function FilterPanel({ filters, setFilters }: Props) {
             aria-label={Translate.txt('filterPanel.searchNearMe')}
           />
           <Translate t="filterPanel.searchNearMe" />
+        </label>
+
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={!!filters.availableNow}
+            onChange={() => {
+              const next = !filters.availableNow;
+              track('filter_available_now', { on: next });
+              updateFilters({ ...filters, availableNow: next });
+            }}
+            className="accent-green-400"
+            aria-label={Translate.txt('filterPanel.availableNow')}
+          />
+          <Translate t="filterPanel.availableNow" />
         </label>
 
         {/* Tier toggles */}
