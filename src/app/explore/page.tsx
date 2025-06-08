@@ -26,6 +26,15 @@ export default function ExplorePage() {
     role: searchParams.get('role') || '',
     location: searchParams.get('location') || '',
     service: searchParams.get('service') || '',
+    genres: searchParams.get('genres')
+      ? searchParams.get('genres')!.split(',').filter(Boolean)
+      : [],
+    minBpm: searchParams.get('minBpm')
+      ? parseInt(searchParams.get('minBpm')!, 10)
+      : undefined,
+    maxBpm: searchParams.get('maxBpm')
+      ? parseInt(searchParams.get('maxBpm')!, 10)
+      : undefined,
     proTier: searchParams.get('proTier') || '',
     availableNow: searchParams.get('availableNow') === '1',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
@@ -40,6 +49,9 @@ export default function ExplorePage() {
     if (filters.role) query.set('role', filters.role);
     if (filters.location) query.set('location', filters.location);
     if (filters.service) query.set('service', filters.service);
+    if (filters.genres.length) query.set('genres', filters.genres.join(','));
+    if (filters.minBpm !== undefined) query.set('minBpm', String(filters.minBpm));
+    if (filters.maxBpm !== undefined) query.set('maxBpm', String(filters.maxBpm));
     if (filters.proTier) query.set('proTier', filters.proTier);
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');

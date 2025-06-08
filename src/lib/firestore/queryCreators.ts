@@ -20,6 +20,9 @@ export async function queryCreators(filters: {
   verifiedOnly?: boolean;
   location?: string;
   service?: string;
+  genres?: string[];
+  minBpm?: number;
+  maxBpm?: number;
   proTier?: 'standard' | 'verified' | 'signature';
   availableNow?: boolean;
   lat?: number;
@@ -47,6 +50,18 @@ export async function queryCreators(filters: {
     qConstraints.push(
       where('services', 'array-contains', filters.service.toLowerCase())
     );
+  }
+
+  if (filters.genres && filters.genres.length > 0) {
+    qConstraints.push(where('genres', 'array-contains-any', filters.genres));
+  }
+
+  if (filters.minBpm !== undefined) {
+    qConstraints.push(where('maxBpm', '>=', filters.minBpm));
+  }
+
+  if (filters.maxBpm !== undefined) {
+    qConstraints.push(where('minBpm', '<=', filters.maxBpm));
   }
 
   if (filters.proTier) {

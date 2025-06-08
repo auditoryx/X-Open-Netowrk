@@ -31,6 +31,10 @@ export default function ApplyRolePage() {
   const [bio, setBio] = useState('');
   const [links, setLinks] = useState('');
   const [location, setLocation] = useState('');
+  const [genres, setGenres] = useState<string[]>([]);
+  const [genreInput, setGenreInput] = useState('');
+  const [minBpm, setMinBpm] = useState<number | undefined>(undefined);
+  const [maxBpm, setMaxBpm] = useState<number | undefined>(undefined);
   const [photo, setPhoto] = useState<File | null>(null);
   const [availabilitySlots, setAvailabilitySlots] = useState<string[]>([]);
   const [verified, setVerified] = useState(false);
@@ -46,6 +50,9 @@ export default function ApplyRolePage() {
         setBio(data.bio || '');
         setLinks(data.links || '');
         setLocation(data.location || '');
+        setGenres(data.genres || []);
+        setMinBpm(data.minBpm);
+        setMaxBpm(data.maxBpm);
         setAvailabilitySlots(data.availabilitySlots || []);
         setVerified(!!data.verified);
       } catch (e) {
@@ -60,11 +67,14 @@ export default function ApplyRolePage() {
       bio,
       links,
       location,
+      genres,
+      minBpm,
+      maxBpm,
       availabilitySlots,
       verified,
     };
     localStorage.setItem(`applyDraft-${role}`, JSON.stringify(data));
-  }, [stepIndex, bio, links, location, availabilitySlots, verified, role]);
+  }, [stepIndex, bio, links, location, genres, minBpm, maxBpm, availabilitySlots, verified, role]);
 
   const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -112,6 +122,9 @@ export default function ApplyRolePage() {
       role,
       bio,
       links,
+      genres,
+      minBpm,
+      maxBpm,
       location,
       photo: photo ? photo.name : null,
       availabilitySlots: slots,
@@ -149,6 +162,55 @@ export default function ApplyRolePage() {
             rows={5}
             className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
           />
+        </div>
+      </>
+    ),
+    music: (
+      <>
+        <div>
+          <label className="text-sm mb-1 block">Genres</label>
+          <div className="flex flex-wrap gap-1 mb-1">
+            {genres.map((g) => (
+              <span key={g} className="bg-neutral-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+                {g}
+                <button type="button" onClick={() => setGenres(genres.filter(x => x !== g))}>×</button>
+              </span>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={genreInput}
+            onChange={(e) => setGenreInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = genreInput.trim();
+                if (val) setGenres([...genres, val]);
+                setGenreInput('');
+              }
+            }}
+            className="input-base"
+          />
+        </div>
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <label className="text-sm mb-1 block">Min BPM</label>
+            <input
+              type="number"
+              value={minBpm ?? ''}
+              onChange={(e) => setMinBpm(e.target.value ? +e.target.value : undefined)}
+              className="input-base"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="text-sm mb-1 block">Max BPM</label>
+            <input
+              type="number"
+              value={maxBpm ?? ''}
+              onChange={(e) => setMaxBpm(e.target.value ? +e.target.value : undefined)}
+              className="input-base"
+            />
+          </div>
         </div>
       </>
     ),
