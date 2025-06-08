@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { DateTime } from 'luxon';
 
 type Slot = { day: string; time: string };
@@ -41,6 +41,7 @@ export default function SlotSelectorGrid({
   toggleSlot,
   originalTimezone,
 }: Props) {
+  const touchRef = useRef(false);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full table-auto border-collapse">
@@ -72,7 +73,17 @@ export default function SlotSelectorGrid({
                   <td key={day + time}>
                     <button
                       disabled={isBusy}
-                      onClick={() => toggleSlot({ day, time })}
+                      onTouchEnd={() => {
+                        touchRef.current = true;
+                        toggleSlot({ day, time });
+                      }}
+                      onClick={() => {
+                        if (touchRef.current) {
+                          touchRef.current = false;
+                          return;
+                        }
+                        toggleSlot({ day, time });
+                      }}
                       className={`${baseClass} ${
                         isBusy ? busyClass : isSelected ? selectedClass : emptyClass
                       }`}

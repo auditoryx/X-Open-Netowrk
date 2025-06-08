@@ -34,8 +34,21 @@ export default function BookingChat({ bookingId }: Props) {
   const [text, setText] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [isTyping, setTyping] = useState(false);
+  const [isOnline, setIsOnline] = useState(
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
   const bottomRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const update = () => setIsOnline(navigator.onLine);
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    return () => {
+      window.removeEventListener('online', update);
+      window.removeEventListener('offline', update);
+    };
+  }, []);
 
   useEffect(() => {
     if (!bookingId) return;
@@ -94,6 +107,11 @@ export default function BookingChat({ bookingId }: Props) {
 
   return (
     <div className="space-y-4">
+      {!isOnline && (
+        <div className="bg-red-600 text-white text-center text-xs p-1 rounded">
+          You're offline
+        </div>
+      )}
       <div className="h-64 overflow-y-auto border rounded p-2 bg-white text-black">
         {messages.map(msg => (
           <div
