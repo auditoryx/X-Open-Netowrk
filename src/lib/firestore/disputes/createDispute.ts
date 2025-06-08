@@ -29,7 +29,9 @@ async function notifyAdmin(bookingId: string, fromUser: string, reason: string) 
 const disputeSchema = z.object({
   bookingId: z.string().min(1),
   fromUser: z.string().min(1),
-  reason: z.string().min(5)
+  reason: z.string().min(5),
+  clientId: z.string().min(1).optional(),
+  providerId: z.string().min(1).optional(),
 })
 
 export async function createDispute(input: unknown) {
@@ -39,7 +41,19 @@ export async function createDispute(input: unknown) {
     return { error: 'Invalid dispute data' }
   }
 
-  const { bookingId, fromUser, reason } = parsed.data
+  let { bookingId, fromUser, reason, clientId, providerId } = parsed.data
+
+  if (!clientId || !providerId) {
+    const bookingSnap = await getDoc(doc(db, 'bookings', bookingId))
+    const bookingData = bookingSnap.data() || {}
+    clientId = clientId || bookingData.clientId || bookingData.clientUid
+    providerId = providerId || bookingData.providerId || bookingData.providerUid
+  }
+
+  if (!clientId || !providerId) {
+    console.warn('Dispute missing client or provider ID for booking:', bookingId)
+    return { error: 'Associated booking not found' }
+  }
 
   // 🧯 Anti-Spam: Limit 1 dispute per 60 seconds per user
   const cooldownRef = doc(db, 'disputeCooldowns', fromUser)
@@ -60,8 +74,10 @@ export async function createDispute(input: unknown) {
       bookingId,
       fromUser,
       reason,
+      clientId,
+      providerId,
       status: 'open',
-      createdAt: Timestamp.now()
+      createdAt: Timestamp.now(),
     })
 
     await setDoc(cooldownRef, {
