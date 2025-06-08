@@ -15,6 +15,7 @@ export default function LocationAutocomplete({
   const [query, setQuery] = useState(value);
   const [results, setResults] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [mapUrl, setMapUrl] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -60,6 +61,12 @@ export default function LocationAutocomplete({
     setQuery(item.place_name);
     onChange(item.place_name);
     onSelect(item.place_name, item.center[1], item.center[0]);
+    if (token) {
+      const url =
+        `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+ff0000(` +
+        `${item.center[0]},${item.center[1]})/300x150?access_token=${token}`;
+      setMapUrl(url);
+    }
     setOpen(false);
   };
 
@@ -93,6 +100,9 @@ export default function LocationAutocomplete({
             </li>
           ))}
         </ul>
+      )}
+      {mapUrl && (
+        <img src={mapUrl} alt="Map preview" className="mt-2 rounded" />
       )}
     </div>
   );
