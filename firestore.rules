@@ -5,7 +5,21 @@ service cloud.firestore {
     // Public services (explore, etc)
     match /services/{serviceId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null && request.auth.uid == resource.data.creatorId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.creatorId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.creatorId;
+    }
+
+    // Specialized service listings
+    match /{svc}/{docId} where svc in [
+      "artistServices",
+      "engineerServices",
+      "videographerServices",
+      "studioServices",
+      "producerBeats"
+    ] {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth.token.admin == true;
     }
 
     // User profiles
@@ -21,10 +35,26 @@ service cloud.firestore {
 
     // Bookings
     match /bookings/{bookingId} {
-      allow read, write: if request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId;
+      allow create: if request.auth != null && request.auth.uid in [request.resource.data.clientId, request.resource.data.providerId];
+      allow read, update, delete: if request.auth != null && (
+        request.auth.uid in [resource.data.clientId, resource.data.providerId] ||
+        request.auth.token.admin == true
+      );
       match /messages/{messageId} {
-        allow read, write: if request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId;
+        allow create: if request.auth != null && request.auth.uid == request.resource.data.senderId;
+        allow read, update, delete: if request.auth != null && (
+          request.auth.uid in [
+            get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientId,
+            get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerId
+          ] || request.auth.token.admin == true
+        );
       }
+    }
+
+    // Direct conversations
+    match /conversations/{convoId}/messages/{messageId} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.senderId;
+      allow read, update, delete: if request.auth != null;
     }
 
     // Reviews
@@ -37,26 +67,98 @@ service cloud.firestore {
     // Disputes
     match /disputes/{disputeId} {
       allow create: if request.auth != null;
-      allow read, update: if request.auth != null 
-        && request.auth.uid in [resource.data.clientId, resource.data.providerId];
+      allow read, update: if request.auth != null && (
+        request.auth.uid in [resource.data.clientId, resource.data.providerId] ||
+        request.auth.token.admin == true
+      );
       allow delete: if false;
     }
 
     // Contracts
     match /contracts/{contractId} {
-      allow read, write: if request.auth != null 
-        && request.auth.uid in [resource.data.clientId, resource.data.providerId];
+      allow create: if request.auth != null && request.auth.uid in [request.resource.data.clientId, request.resource.data.providerId];
+      allow read, update, delete: if request.auth != null && (
+        request.auth.uid in [resource.data.clientId, resource.data.providerId] ||
+        request.auth.token.admin == true
+      );
     }
 
     // Logs
     match /activityLogs/{userId} {
       allow create: if request.auth != null && request.auth.uid == userId;
       allow read: if request.auth != null && request.auth.token.admin == true;
+
+      match /logs/{logId} {
+        allow create: if request.auth != null && request.auth.uid == userId;
+        allow read: if request.auth != null && request.auth.token.admin == true;
+      }
     }
 
     // Notifications
     match /notifications/{userId} {
       allow read, create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // User applications and verification
+    match /applications/{appId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth.token.admin == true;
+    }
+    match /verificationRequests/{id} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth.token.admin == true;
+    }
+    match /pendingVerifications/{id} {
+      allow create: if request.auth != null;
+      allow read, delete: if request.auth.token.admin == true;
+    }
+    match /adminApprovals/{docId} {
+      allow read, write: if request.auth.token.admin == true;
+    }
+
+    // Additional public data
+    match /leaderboards/{boardId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+
+    // Booking requests
+    match /bookingRequests/{requestId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.userId || request.auth.token.admin == true
+      );
+    }
+
+    // Availability
+    match /availability/{id} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.uid;
+      allow read: if true;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.uid || request.auth.token.admin == true
+      );
+    }
+    match /studioAvailability/{id} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.studioId;
+      allow read: if true;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.studioId || request.auth.token.admin == true
+      );
+    }
+
+    // Profiles approved by admins
+    match /profiles/{profileId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+
+    // Logging collections
+    match /stripe_logs/{logId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth.token.admin == true;
+    }
+    match /errorLogs/{logId} {
+      allow read, write: if request.auth.token.admin == true;
     }
 
     // Reports for creator listings or users
@@ -77,7 +179,7 @@ service cloud.firestore {
 
     // ✅ FIXED: Fallback match must be here inside the root document match
     match /{document=**} {
-      allow read: if false;
+      allow read, write: if false;
     }
   }
 }
