@@ -18,5 +18,65 @@
     "bio": "State-of-the-art recording studio in Shibuya.",
     "portfolio": "https://studiotokyo.com",
     "contact": "booking@studiotokyo.com"
+  },
+  {
+    "id": 3,
+    "name": "Lisa Beats",
+    "role": "Producer",
+    "location": "Chicago, USA",
+    "image": "https://source.unsplash.com/random/800x400?producer",
+    "bio": "Multi-platinum producer with a knack for trap drums.",
+    "portfolio": "https://lisabeats.example.com",
+    "contact": "contact@lisabeats.com"
+  },
+  {
+    "id": 4,
+    "name": "VisualMaster",
+    "role": "Videographer",
+    "location": "Berlin, Germany",
+    "image": "https://source.unsplash.com/random/800x400?videographer",
+    "bio": "Award-winning videographer capturing stories worldwide.",
+    "portfolio": "https://visualmaster.example.com",
+    "contact": "info@visualmaster.io"
+  },
+  {
+    "id": 5,
+    "name": "Mika Tanaka",
+    "role": "Artist",
+    "location": "Osaka, Japan",
+    "image": "https://source.unsplash.com/random/800x400?artist",
+    "bio": "Genre-bending singer blending J-pop with R&B.",
+    "portfolio": "https://mika.example.jp",
+    "contact": "booking@mika.jp"
+  },
+  {
+    "id": 6,
+    "name": "MixMag Studios",
+    "role": "Studio",
+    "location": "London, UK",
+    "image": "https://source.unsplash.com/random/800x400?studio",
+    "bio": "Boutique studio focused on analog warmth and vintage gear.",
+    "portfolio": "https://mixmagstudios.co.uk",
+    "contact": "hello@mixmagstudios.co.uk"
+  },
+  {
+    "id": 7,
+    "name": "Beat Lab",
+    "role": "Producer",
+    "location": "New York, USA",
+    "image": "https://source.unsplash.com/random/800x400?music",
+    "bio": "Underground producer known for experimental sounds.",
+    "portfolio": "https://beatlab.example.com",
+    "contact": "beatlab@music.com"
+  },
+  {
+    "id": 8,
+    "name": "FilmCraft",
+    "role": "Videographer",
+    "location": "Vancouver, Canada",
+    "image": "https://source.unsplash.com/random/800x400?film",
+    "bio": "Documentary specialist bringing stories to life.",
+    "portfolio": "https://filmcraft.ca",
+    "contact": "hello@filmcraft.ca"
   }
 ]
