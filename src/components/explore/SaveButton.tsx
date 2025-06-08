@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import toast from 'react-hot-toast'
 
 type Props = {
   creatorId: string
@@ -37,6 +38,7 @@ const SaveButton = ({ creatorId }: Props) => {
     const newState = !saved
     setSaved(newState)
     await toggleFavorite(user.uid, creatorId, newState)
+    if (newState) toast.success('Added to favorites')
   }
 
   return (
