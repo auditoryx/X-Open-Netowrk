@@ -7,8 +7,11 @@ export default function ApplyPage() {
     <div className="min-h-screen bg-black text-white">
             <div className="max-w-4xl mx-auto py-12 px-6">
         <h1 className="text-4xl font-bold mb-4 text-center">Apply to AuditoryX</h1>
-        <p className="text-lg text-gray-400 mb-10 text-center">
+        <p className="text-lg text-gray-400 mb-2 text-center">
           Choose your creator role to begin your application.
+        </p>
+        <p className="text-center text-sm text-gray-400 mb-10">
+          Please sign in or create an account to apply for your chosen role.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
