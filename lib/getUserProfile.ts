@@ -8,7 +8,13 @@ export const getUserProfile = async (uid: string) => {
   try {
     const userRef = doc(db, "users", uid);
     const userSnap = await getDoc(userRef);
-    return userSnap.exists() ? userSnap.data() : null;
+    if (!userSnap.exists()) return null;
+
+    const data = userSnap.data();
+    return {
+      ...data,
+      contactOnlyViaRequest: data.contactOnlyViaRequest ?? false,
+    };
   } catch (error) {
     logger.error("Error fetching user profile:", error);
     return null;

@@ -10,6 +10,7 @@ import { SaveButton } from '@/components/profile/SaveButton';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { VerifiedProgress } from '@/components/profile/VerifiedProgress';
 import BookingForm from '@/components/booking/BookingForm';
+import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 
@@ -38,12 +39,6 @@ export default function PublicProfilePage() {
     fetchProfile();
   }, [uid]);
 
-  const scrollToBooking = () => {
-    const form = document.getElementById('booking-form');
-    if (form) {
-      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
 
   if (loading) return <div className="p-6 text-white">Loading...</div>;
   if (!profile) return <div className="p-6 text-white">Profile not found.</div>;
@@ -119,14 +114,13 @@ export default function PublicProfilePage() {
         <ReviewList uid={uid} />
       </div>
 
-      <div className="fixed bottom-4 inset-x-0 flex justify-center md:hidden z-50">
-        <button
-          onClick={scrollToBooking}
-          className="bg-white text-black font-semibold px-6 py-3 rounded-full shadow-lg border border-black"
-        >
-          📩 Request Booking
-        </button>
-      </div>
+      <ProfileActionBar
+        profile={{
+          uid,
+          proTier: profile.proTier,
+          contactOnlyViaRequest: profile.contactOnlyViaRequest,
+        }}
+      />
     </div>
   );
 }
