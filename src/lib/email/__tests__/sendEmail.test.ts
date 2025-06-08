@@ -1,16 +1,18 @@
-import { sendEmail } from '../sendEmail';
-import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 
-jest.mock('nodemailer');
+const sendMail = jest.fn();
+
+jest.mock('nodemailer', () => ({
+  createTransport: jest.fn(() => ({ sendMail })),
+}));
 jest.mock('fs');
 jest.mock('path');
 
-const sendMail = jest.fn();
-(nodemailer.createTransport as jest.Mock).mockReturnValue({ sendMail });
 (fs.readFileSync as jest.Mock).mockReturnValue('Hi {{name}}');
 (path.join as jest.Mock).mockReturnValue('/template.html');
+
+import { sendEmail } from '../sendEmail';
 
 afterEach(() => {
   jest.clearAllMocks();
