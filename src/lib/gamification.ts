@@ -16,6 +16,8 @@ const DAY_MS = 24 * 60 * 60 * 1000
 
 export interface LogOptions {
   quickReply?: boolean
+  /** Optional id used to deduplicate events (e.g. booking or message id) */
+  contextId?: string
 }
 
 export async function logXpEvent(
@@ -32,6 +34,19 @@ export async function logXpEvent(
   const start = new Date(now)
   start.setHours(0, 0, 0, 0)
   const activitiesRef = collection(db, 'users', uid, 'activities')
+  if (options.contextId) {
+    const dupQ = query(activitiesRef, where('contextId', '==', options.contextId))
+    const dupSnap = await getDocs(dupQ)
+    if (!dupSnap.empty) {
+      await addDoc(collection(db, 'abuseLogs'), {
+        uid,
+        type,
+        contextId: options.contextId,
+        createdAt: serverTimestamp(),
+      })
+      return 0
+    }
+  }
   const q = query(activitiesRef, where('createdAt', '>=', Timestamp.fromDate(start)))
   const todaySnap = await getDocs(q)
   const earnedToday = todaySnap.docs.reduce((sum, d) => sum + (d.data().xp || 0), 0)
@@ -42,6 +57,7 @@ export async function logXpEvent(
   await addDoc(activitiesRef, {
     xp: awarded,
     type,
+    contextId: options.contextId,
     createdAt: serverTimestamp(),
   })
 
