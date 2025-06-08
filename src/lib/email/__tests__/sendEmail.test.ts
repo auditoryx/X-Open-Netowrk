@@ -1,5 +1,6 @@
 process.env.SMTP_EMAIL = "mock@email.com";
 process.env.SMTP_PASS = "mockpass";
+
 import fs from 'fs';
 import path from 'path';
 
@@ -22,22 +23,31 @@ afterEach(() => {
 
 test('sends email and returns success', async () => {
   sendMail.mockResolvedValue({ messageId: '1' });
-  process.env.SMTP_EMAIL = 'from@test.com';
-  const res = await sendEmail('to@test.com', 'Sub', 'welcome.html', { name: 'A' });
+  const res = await sendEmail({
+    to: 'to@test.com',
+    subject: 'Sub',
+    templateName: 'welcome.html',
+    replacements: { name: 'A' },
+  });
   expect(path.join).toHaveBeenCalled();
   expect(fs.readFileSync).toHaveBeenCalledWith('/template.html', 'utf-8');
   expect(sendMail).toHaveBeenCalledWith({
-    from: '"AuditoryX" <from@test.com>',
+    from: '"AuditoryX" <mock@email.com>',
     to: 'to@test.com',
     subject: 'Sub',
     html: 'Hi A',
-    text: 'Hi A'
+    text: 'Hi A',
   });
   expect(res).toEqual({ success: true });
 });
 
 test('returns error on failure', async () => {
   sendMail.mockRejectedValue(new Error('fail'));
-  const res = await sendEmail('to@test.com', 'Sub', 't.html', {});
+  const res = await sendEmail({
+    to: 'to@test.com',
+    subject: 'Sub',
+    templateName: 't.html',
+    replacements: {},
+  });
   expect(res).toEqual({ error: 'Email send failed' });
 });
