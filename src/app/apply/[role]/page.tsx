@@ -16,6 +16,7 @@ const WeeklyCalendarSelector = dynamic(
   { ssr: false }
 );
 import { addDays, startOfWeek, format } from 'date-fns';
+import { onboardingByRole } from '@/constants/onboardingByRole';
 
 export default function ApplyRolePage() {
   const router = useRouter();
@@ -23,8 +24,10 @@ export default function ApplyRolePage() {
   const role = typeof rawParams.role === 'string' ? rawParams.role : Array.isArray(rawParams.role) ? rawParams.role[0] : '';
 
   const { user, userData, loading } = useAuth();
-  const [step, setStep] = useState(1);
-  const totalSteps = 5;
+
+  const steps = onboardingByRole[role as keyof typeof onboardingByRole] || [];
+  const [stepIndex, setStepIndex] = useState(0);
+  const totalSteps = steps.length;
   const [bio, setBio] = useState('');
   const [links, setLinks] = useState('');
   const [location, setLocation] = useState('');
@@ -39,7 +42,7 @@ export default function ApplyRolePage() {
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        setStep(data.step || 1);
+        setStepIndex(data.stepIndex || 0);
         setBio(data.bio || '');
         setLinks(data.links || '');
         setLocation(data.location || '');
@@ -53,7 +56,7 @@ export default function ApplyRolePage() {
 
   useEffect(() => {
     const data = {
-      step,
+      stepIndex,
       bio,
       links,
       location,
@@ -61,7 +64,7 @@ export default function ApplyRolePage() {
       verified,
     };
     localStorage.setItem(`applyDraft-${role}`, JSON.stringify(data));
-  }, [step, bio, links, location, availabilitySlots, verified, role]);
+  }, [stepIndex, bio, links, location, availabilitySlots, verified, role]);
 
   const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -124,11 +127,168 @@ export default function ApplyRolePage() {
   if (loading) return <div className="text-white p-8">Loading...</div>;
   if (!user) return <div className="text-red-500 p-8 text-center">You must be logged in to apply.</div>;
 
+  const stepName = steps[stepIndex];
+
+  const stepContent: Record<string, JSX.Element> = {
+    basic: (
+      <>
+        <div>
+          <label className="text-sm mb-1 block">City / Location</label>
+          <LocationAutocomplete
+            value={location}
+            onChange={(v) => setLocation(v)}
+            onSelect={(name) => setLocation(name)}
+          />
+        </div>
+        <div>
+          <label className="text-sm mb-1 block">Bio</label>
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="Tell us what you do, your experience, style, and any key work."
+            rows={5}
+            className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+          />
+        </div>
+      </>
+    ),
+    photos: (
+      <div>
+        <label className="text-sm mb-1 block">Upload Photos</label>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    reel: (
+      <div>
+        <label className="text-sm mb-1 block">Reel Link</label>
+        <input
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Vimeo or YouTube URL"
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    travel: (
+      <div>
+        <label className="text-sm mb-1 block">Travel Details</label>
+        <input
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Travel radius or day rate"
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    audio: (
+      <div>
+        <label className="text-sm mb-1 block">Audio Links</label>
+        <input
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Upload MP3 or link"
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    beats: (
+      <div>
+        <label className="text-sm mb-1 block">Beat Links</label>
+        <input
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Upload beats or link BeatStars"
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    portfolio: (
+      <div>
+        <label className="text-sm mb-1 block">Portfolio Links</label>
+        <input
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Before/after mixes, etc."
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    pricing: (
+      <div>
+        <label className="text-sm mb-1 block">Pricing Details</label>
+        <input
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Describe your pricing"
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    rooms: (
+      <div>
+        <label className="text-sm mb-1 block">Rooms & Capacities</label>
+        <textarea
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="List room names and capacities"
+          rows={3}
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    gear: (
+      <div>
+        <label className="text-sm mb-1 block">Gear List</label>
+        <textarea
+          value={links}
+          onChange={(e) => setLinks(e.target.value)}
+          placeholder="Mics, console, outboard"
+          rows={3}
+          className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+        />
+      </div>
+    ),
+    availability: (
+      <div>
+        <label className="text-sm mb-1 block">Availability</label>
+        <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
+          <WeeklyCalendarSelector
+            availability={allAvailability}
+            multiSelect
+            onSelect={(slots) =>
+              setAvailabilitySlots(Array.isArray(slots) ? slots : [slots])
+            }
+          />
+        </Suspense>
+      </div>
+    ),
+    verify: (
+      <div className="flex items-center gap-2">
+        <input
+          id="verify"
+          type="checkbox"
+          checked={verified}
+          onChange={(e) => setVerified(e.target.checked)}
+          className="rounded"
+        />
+        <label htmlFor="verify" className="text-sm">
+          I agree to complete ID verification
+        </label>
+      </div>
+    ),
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
             <div className="max-w-2xl mx-auto py-12 px-6">
         <OnboardingStepHeader
-          step={step}
+          step={stepIndex + 1}
           total={totalSteps}
           title={`Apply as ${role}`}
           subtitle="Tell us who you are so we can verify you."
@@ -152,97 +312,20 @@ export default function ApplyRolePage() {
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
             <div className="space-y-4">
-              {step === 1 && (
-                <>
-                  <div>
-                    <label className="text-sm mb-1 block">City / Location</label>
-                    <LocationAutocomplete
-                      value={location}
-                      onChange={(v) => setLocation(v)}
-                      onSelect={(name) => setLocation(name)}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm mb-1 block">Bio</label>
-                    <textarea
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                      placeholder="Tell us what you do, your experience, style, and any key work."
-                      rows={5}
-                      className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                    />
-                  </div>
-                </>
-              )}
-
-              {step === 2 && (
-                <div>
-                  <label className="text-sm mb-1 block">Profile Photo</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                  />
-                </div>
-              )}
-
-              {step === 3 && (
-                <div>
-                  <label className="text-sm mb-1 block">Portfolio / Social Links</label>
-                  <input
-                    value={links}
-                    onChange={(e) => setLinks(e.target.value)}
-                    placeholder="e.g. Instagram, website, YouTube, etc."
-                    className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
-                  />
-                </div>
-              )}
-
-              {step === 4 && (
-                <div>
-                  <label className="text-sm mb-1 block">Availability</label>
-                  <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
-                    <WeeklyCalendarSelector
-                      availability={allAvailability}
-                      multiSelect
-                      onSelect={(slots) =>
-                        setAvailabilitySlots(
-                          Array.isArray(slots) ? slots : [slots]
-                        )
-                      }
-                    />
-                  </Suspense>
-                </div>
-              )}
-
-              {step === 5 && (
-                <div className="flex items-center gap-2">
-                  <input
-                    id="verify"
-                    type="checkbox"
-                    checked={verified}
-                    onChange={(e) => setVerified(e.target.checked)}
-                    className="rounded"
-                  />
-                  <label htmlFor="verify" className="text-sm">
-                    I agree to complete ID verification
-                  </label>
-                </div>
-              )}
+              {stepContent[stepName] || <div>{stepName}</div>}
 
               <div className="flex gap-3 pt-2">
-                {step > 1 && (
+                {stepIndex > 0 && (
                   <button
-                    onClick={() => setStep(step - 1)}
+                    onClick={() => setStepIndex(stepIndex - 1)}
                     className="bg-neutral-700 px-4 py-2 rounded"
                   >
                     Back
                   </button>
                 )}
-                {step < totalSteps ? (
+                {stepIndex < totalSteps - 1 ? (
                   <button
-                    onClick={() => setStep(step + 1)}
+                    onClick={() => setStepIndex(stepIndex + 1)}
                     className="bg-white text-black px-4 py-2 rounded font-semibold"
                   >
                     Next
