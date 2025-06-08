@@ -4,6 +4,10 @@ import LocationAutocomplete from './LocationAutocomplete';
 import SavedFilters from './SavedFilters';
 import { Translate } from '@/i18n/Translate';
 import { track } from '@/lib/analytics/track';
+import { useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { createFilterPreset } from '@/lib/firestore/savedFilters';
+import toast from 'react-hot-toast';
 
 type Props = {
   filters: {
@@ -27,6 +31,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
     setFilters(newFilters);
     track('filters_change', newFilters);
   };
+
+  const { user } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   /* ——— toggles ——— */
   const handleGeoToggle = () => {
@@ -59,13 +66,32 @@ export default function FilterPanel({ filters, setFilters }: Props) {
   /* ——— UI ——— */
   return (
     <div className="mb-6 p-4 border border-neutral-800 rounded-lg bg-neutral-900 text-white">
-      <h2 className="font-semibold mb-4 text-lg">
-        <Translate t="filterPanel.filters" />
+      <h2 className="font-semibold mb-4 text-lg flex items-center justify-between">
+        <span>
+          <Translate t="filterPanel.filters" />
+        </span>
+        <button
+          onClick={async () => {
+            const name = prompt('Preset name');
+            if (!name || !user) return;
+            await createFilterPreset(user.uid, name, filters);
+            toast.success('Filters saved');
+            setRefreshKey(k => k + 1);
+          }}
+          className="text-sm"
+          aria-label="Save Filters"
+        >
+          💾
+        </button>
       </h2>
 
       <div className="flex flex-col gap-4">
         {/* Saved filter presets */}
-        <SavedFilters filters={filters} setFilters={updateFilters} />
+        <SavedFilters
+          filters={filters}
+          setFilters={updateFilters}
+          refreshKey={refreshKey}
+        />
 
         {/* Role select */}
         <select

@@ -2,93 +2,55 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { Translate } from '@/i18n/Translate';
 import {
-  createFilterPreset,
   fetchFilterPresets,
-  deleteFilterPreset,
   SavedFilter,
 } from '@/lib/firestore/savedFilters';
+import { track } from '@/lib/analytics/track';
+import toast from 'react-hot-toast';
 
 export default function SavedFilters({
   filters,
   setFilters,
+  refreshKey,
 }: {
   filters: any;
   setFilters: (f: any) => void;
+  refreshKey: number;
 }) {
   const { user } = useAuth();
   const [presets, setPresets] = useState<SavedFilter[]>([]);
-  const [selected, setSelected] = useState('');
-  const [name, setName] = useState('');
+
+  const load = async () => {
+    if (!user) return;
+    const list = await fetchFilterPresets(user.uid);
+    setPresets(list);
+  };
 
   useEffect(() => {
-    if (!user) return;
-    fetchFilterPresets(user.uid).then(setPresets);
-  }, [user]);
+    load();
+  }, [user, refreshKey]);
 
-  const applyPreset = (id: string) => {
-    const preset = presets.find(p => p.id === id);
-    if (!preset) return;
+  const apply = (preset: SavedFilter) => {
     setFilters({ ...filters, ...preset.filters });
+    track('saved_filter_apply', { id: preset.id });
+    toast.success('Filters applied');
   };
 
-  const savePreset = async () => {
-    if (!user || !name.trim()) return;
-    await createFilterPreset(user.uid, name.trim(), filters);
-    const list = await fetchFilterPresets(user.uid);
-    setPresets(list);
-    setName('');
-  };
-
-  const deletePresetHandler = async () => {
-    if (!user || !selected) return;
-    await deleteFilterPreset(user.uid, selected);
-    const list = await fetchFilterPresets(user.uid);
-    setPresets(list);
-    setSelected('');
-  };
-
-  const handleSelect = (id: string) => {
-    setSelected(id);
-    if (id) applyPreset(id);
-  };
+  if (!presets.length) return null;
 
   return (
-    <div className="space-y-2">
-      <select
-        aria-label={<Translate t="savedFilters.savedPresets" /> as unknown as string}
-        value={selected}
-        onChange={e => handleSelect(e.target.value)}
-        className="input-base"
-      >
-        <option value="">
-          <Translate t="savedFilters.savedPresets" />
-        </option>
-        {presets.map(p => (
-          <option key={p.id} value={p.id}>
-            {p.name}
-          </option>
-        ))}
-      </select>
-      <div className="flex gap-2">
-        <input
-          aria-label={<Translate t="savedFilters.presetName" /> as unknown as string}
-          type="text"
-          placeholder={<Translate t="savedFilters.presetName" /> as unknown as string}
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className="input-base flex-1"
-        />
-        <button onClick={savePreset} className="btn btn-primary" aria-label={<Translate t="savedFilters.save" /> as unknown as string}>
-          <Translate t="savedFilters.save" />
+    <div className="flex flex-wrap gap-2">
+      {presets.map(p => (
+        <button
+          key={p.id}
+          className="btn btn-secondary btn-xs"
+          onClick={() => apply(p)}
+          aria-label={`Apply ${p.name}`}
+        >
+          {p.name}
         </button>
-        {selected && (
-          <button onClick={deletePresetHandler} className="btn btn-secondary" aria-label={<Translate t="savedFilters.delete" /> as unknown as string}>
-            <Translate t="savedFilters.delete" />
-          </button>
-        )}
-      </div>
+      ))}
     </div>
   );
 }
