@@ -37,6 +37,9 @@ export default function AdminDashboard() {
         name: submission.name,
         email: submission.email,
         role: submission.role,
+        genres: submission.genres || [],
+        minBpm: submission.minBpm || null,
+        maxBpm: submission.maxBpm || null,
         location: submission.location,
         bio: submission.bio,
         links: submission.links,
@@ -112,6 +115,16 @@ export default function AdminDashboard() {
               <p>
                 <strong>Bio:</strong> {s.bio}
               </p>
+              {s.genres && (
+                <p>
+                  <strong>Genres:</strong> {s.genres.join(', ')}
+                </p>
+              )}
+              {(s.minBpm || s.maxBpm) && (
+                <p>
+                  <strong>BPM:</strong> {s.minBpm ?? '?'} - {s.maxBpm ?? '?'}
+                </p>
+              )}
               <p>
                 <strong>Links:</strong> {s.links}
               </p>

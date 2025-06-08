@@ -15,6 +15,9 @@ export const queryCreators = async (filters: {
   verifiedOnly: boolean;
   location?: string;
   service?: string;
+  genres?: string[];
+  minBpm?: number;
+  maxBpm?: number;
   lat?: number;
   lng?: number;
   radiusKm?: number;
@@ -38,6 +41,18 @@ export const queryCreators = async (filters: {
 
   if (filters.service) {
     constraints.push(where('services', 'array-contains', filters.service));
+  }
+
+  if (filters.genres && filters.genres.length > 0) {
+    constraints.push(where('genres', 'array-contains-any', filters.genres));
+  }
+
+  if (filters.minBpm !== undefined) {
+    constraints.push(where('maxBpm', '>=', filters.minBpm));
+  }
+
+  if (filters.maxBpm !== undefined) {
+    constraints.push(where('minBpm', '<=', filters.maxBpm));
   }
 
   if (filters.sortKey) {

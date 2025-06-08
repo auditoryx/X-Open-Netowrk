@@ -9,6 +9,7 @@ import { SaveButton } from '@/components/profile/SaveButton';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { RoleBadge } from '@/components/explore/RoleBadge';
+import GenreBadges from '@/components/explore/GenreBadges';
 import { Translate } from '@/i18n/Translate';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
@@ -98,6 +99,18 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
 
           {/* Role specific metric */}
           <RoleBadge role={c.role} profile={c} />
+
+          {/* Genres & BPM */}
+          {(c.role === 'artist' || c.role === 'producer') && (
+            <>
+              <GenreBadges genres={(c.genres || []).slice(0, 3)} />
+              {c.minBpm && c.maxBpm && (
+                <span className="bg-neutral-700 text-xs px-2 py-0.5 rounded-full mr-1">
+                  {c.minBpm}-{c.maxBpm} BPM
+                </span>
+              )}
+            </>
+          )}
 
           {/* XP / gamification badge */}
           <PointsBadge points={c.points} />

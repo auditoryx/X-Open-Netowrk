@@ -16,6 +16,7 @@ export const onboardingByRole = {
   ],
   artist: [
     'basic',
+    'music',
     'audio',
     'pricing',
     'availability',
@@ -23,6 +24,7 @@ export const onboardingByRole = {
   ],
   producer: [
     'basic',
+    'music',
     'beats',
     'pricing',
     'availability',

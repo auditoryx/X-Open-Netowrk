@@ -6,6 +6,9 @@ export interface UserProfile {
   tags: string[];
   media: string[];
   availability: string[];
+  genres?: string[];
+  minBpm?: number;
+  maxBpm?: number;
   socials: {
     instagram?: string;
     twitter?: string;

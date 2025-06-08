@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { Translate } from '@/i18n/Translate';
+import GenreBadges from '@/components/explore/GenreBadges';
 
 export default function DiscoveryGrid({ filters }: { filters: any }) {
   const {
@@ -88,6 +89,16 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
             {creator.bio || <Translate t="common.noBio" />}
           </p>
           <p className="text-xs text-blue-400 mb-1">📊 {creator.completion}% Profile Complete</p>
+          { (creator.role === 'artist' || creator.role === 'producer') && (
+            <>
+              <GenreBadges genres={(creator.genres || []).slice(0,3)} />
+              {creator.minBpm && creator.maxBpm && (
+                <span className="bg-neutral-700 text-xs px-2 py-0.5 rounded-full mr-1">
+                  {creator.minBpm}-{creator.maxBpm} BPM
+                </span>
+              )}
+            </>
+          ) }
           <PointsBadge points={creator.points} />
           <button
             className="border px-4 py-1 rounded text-sm"

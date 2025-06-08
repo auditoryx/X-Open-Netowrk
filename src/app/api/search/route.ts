@@ -32,6 +32,15 @@ export async function GET(req: Request) {
     role: searchParams.get('role') || undefined,
     location: searchParams.get('location') || undefined,
     service: searchParams.get('service') || undefined,
+    genres: searchParams.get('genres')
+      ? searchParams.get('genres')!.split(',').filter(Boolean)
+      : undefined,
+    minBpm: searchParams.get('minBpm')
+      ? parseInt(searchParams.get('minBpm')!, 10)
+      : undefined,
+    maxBpm: searchParams.get('maxBpm')
+      ? parseInt(searchParams.get('maxBpm')!, 10)
+      : undefined,
     proTier: searchParams.get('proTier') || undefined,
     verifiedOnly: searchParams.get('verifiedOnly') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
