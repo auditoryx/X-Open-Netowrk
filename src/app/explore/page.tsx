@@ -13,6 +13,7 @@ const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), 
   ssr: false,
 });
 import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
+import FloatingCartButton from '@/components/cart/FloatingCartButton';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
@@ -105,6 +106,7 @@ export default function ExplorePage() {
           </Suspense>
         </div>
       )}
+      <FloatingCartButton />
     </div>
   );
 }

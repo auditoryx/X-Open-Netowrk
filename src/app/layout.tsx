@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import { Metadata } from 'next';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { CartProvider } from '@/context/CartContext';
 import { Toaster } from 'react-hot-toast';
 import QueryProvider from '../../providers/QueryProvider';
 import StreakToast from '../components/gamification/StreakToast';
@@ -28,12 +29,14 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <LanguageProvider>
-            <QueryProvider>
-              <Toaster position="top-center" />
-              <StreakToast />
-              <Navbar />
-              {children}
-            </QueryProvider>
+            <CartProvider>
+              <QueryProvider>
+                <Toaster position="top-center" />
+                <StreakToast />
+                <Navbar />
+                {children}
+              </QueryProvider>
+            </CartProvider>
           </LanguageProvider>
         </AuthProvider>
       </body>

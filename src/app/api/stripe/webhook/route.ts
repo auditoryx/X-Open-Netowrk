@@ -37,7 +37,27 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     const metadata = session.metadata || {};
-    const bookingId = metadata.bookingId;
+    const bookingId = metadata.bookingId as string | undefined;
+    const groupId = metadata.groupBookingId as string | undefined;
+    if (groupId) {
+      const groupRef = firestore.collection('groupBookings').doc(groupId);
+      const groupSnap = await groupRef.get();
+      const group = groupSnap.data() as any;
+      if (group) {
+        const services = (group.services || []) as any[];
+        for (const svc of services) {
+          await firestore.collection('bookings').add({
+            ...svc,
+            groupBookingId: groupId,
+            buyerId: group.userId,
+            status: 'paid',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+        await groupRef.update({ status: 'paid' });
+      }
+    }
+
     if (bookingId) {
       const bookingRef = firestore.collection("bookings").doc(bookingId);
       await bookingRef.update({ status: "paid" });
