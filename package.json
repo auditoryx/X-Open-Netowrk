@@ -3,7 +3,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "seed:services": "ts-node scripts/seedServiceTemplates.ts"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
