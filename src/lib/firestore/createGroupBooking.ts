@@ -1,0 +1,13 @@
+import { adminApp } from '@lib/firebaseAdmin'
+import { CartItem } from '@/context/CartContext'
+
+export async function createGroupBooking(userId: string, items: CartItem[]) {
+  const db = adminApp.firestore()
+  const ref = await db.collection('groupBookings').add({
+    userId,
+    services: items,
+    status: 'pending',
+    createdAt: adminApp.firestore.FieldValue.serverTimestamp(),
+  })
+  return ref.id
+}

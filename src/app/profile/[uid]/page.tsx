@@ -14,6 +14,7 @@ import { VerifiedProgress } from '@/components/profile/VerifiedProgress';
 import BookingForm from '@/components/booking/BookingForm';
 import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import RatingBarChart from '@/components/profile/RatingBarChart';
+import FloatingCartButton from '@/components/cart/FloatingCartButton';
 
 /* Data helpers */
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
@@ -183,6 +184,7 @@ export default function PublicProfilePage() {
           contactOnlyViaRequest: profile.contactOnlyViaRequest,
         }}
       />
+      <FloatingCartButton />
     </div>
   );
 }
