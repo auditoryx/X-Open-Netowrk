@@ -8,7 +8,9 @@ import {
   serverTimestamp,
   getDocs,
   updateDoc,
-  limit
+  limit,
+  doc,
+  getDoc
 } from 'firebase/firestore';
 
 export const sendMessage = async (
@@ -19,6 +21,10 @@ export const sendMessage = async (
   mediaUrl: string | null = null
 ) => {
   const ref = collection(db, 'bookings', bookingId, 'messages');
+  const bookingSnap = await getDoc(doc(db, 'bookings', bookingId));
+  if (!bookingSnap.exists()) return;
+  const booking = bookingSnap.data() as any;
+
   await addDoc(ref, {
     senderId,
     senderName,
@@ -26,6 +32,8 @@ export const sendMessage = async (
     mediaUrl,
     timestamp: serverTimestamp(),
     seen: false,
+    clientId: booking.clientId,
+    providerId: booking.providerId,
   });
 };
 
