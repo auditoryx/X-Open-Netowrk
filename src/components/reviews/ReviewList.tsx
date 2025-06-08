@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { db } from '@/lib/firebase';
 import {
   collection,
@@ -19,6 +20,7 @@ export function ReviewList({ providerId }: { providerId: string }) {
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const { user } = useAuth();
 
   const fetchReviews = (startDoc: QueryDocumentSnapshot<DocumentData> | null = null) => {
     const baseQuery = query(
@@ -60,12 +62,20 @@ export function ReviewList({ providerId }: { providerId: string }) {
       </div>
 
       <div className="space-y-4">
-        {reviews.map((r, idx) => (
-          <div key={idx} className="bg-gray-800 p-4 rounded">
-            <p className="text-yellow-400 text-sm mb-1">Rating: {r.rating} / 5</p>
-            <p className="text-sm text-white">{r.comment || 'No comment.'}</p>
-          </div>
-        ))}
+        {reviews.map((r, idx) => {
+          const comment = r.comment || 'No comment.'
+          const showBlur = !user && comment.length > 120
+          const display = showBlur ? comment.slice(0, 120) + '…' : comment
+          return (
+            <div key={idx} className="bg-gray-800 p-4 rounded relative">
+              <p className="text-yellow-400 text-sm mb-1">Rating: {r.rating} / 5</p>
+              <p className="text-sm text-white line-clamp-none">{display}</p>
+              {showBlur && (
+                <div className="pointer-events-none absolute inset-0 rounded bg-gradient-to-b from-transparent to-gray-800/80" />
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {hasMore && (
