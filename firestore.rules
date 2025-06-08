@@ -1,6 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+  // ✅ Allow users to read/write their own saved filters
+  match /savedFilters/{docId} {
+    allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+  }
+
+  // ✅ Allow public read access to reviews, but only author can write
+  match /reviews/{docId} {
+    allow read: if true;
+    allow write: if request.auth != null && request.auth.uid == resource.data.authorId;
+  }
+  // ✅ Only allow users to read their own bookingRequests
+  match /bookingRequests/{docId} {
+    allow read: if request.auth != null && request.auth.uid == resource.data.buyerId;
+    allow write: if false;
+  }
 
     // Public services (explore, etc)
     match /services/{serviceId} {

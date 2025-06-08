@@ -1,3 +1,8 @@
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/700.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/700.css';
+
 import '@/styles/globals.css';
 import Navbar from './components/Navbar';
 import { Metadata } from 'next';
@@ -7,6 +12,7 @@ import { CartProvider } from '@/context/CartContext';
 import { Toaster } from 'react-hot-toast';
 import QueryProvider from '../../providers/QueryProvider';
 import StreakToast from '../components/gamification/StreakToast';
+
 
 
 export const metadata: Metadata = {

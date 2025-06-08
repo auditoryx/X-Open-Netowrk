@@ -15,8 +15,8 @@ module.exports = {
         'neutral-dark': '#1A1A1A',
       },
       fontFamily: {
-        heading: ['var(--font-heading)', 'Poppins', ...fontFamily.sans],
-        body: ['var(--font-body)', 'Inter', ...fontFamily.sans],
+        heading: ['Poppins', ...fontFamily.sans],
+        body: ['Inter', ...fontFamily.sans],
       },
     },
   },

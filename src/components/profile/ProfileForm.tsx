@@ -79,13 +79,13 @@ export default function ProfileForm() {
       <p className="text-sm text-gray-400">{percent}% complete</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="input-base" />
-        <input name="role" placeholder="Role (e.g., artist)" value={form.role} onChange={handleChange} className="input-base" />
+        <input\1 id="auto-id" name="auto-name"\2>
+        <input\1 id="auto-id" name="auto-name"\2>
         <textarea name="bio" placeholder="Short Bio" value={form.bio} onChange={handleChange} className="textarea-base" />
-        <input name="instagram" placeholder="Instagram Handle" value={form.instagram} onChange={handleChange} className="input-base" />
-        <input name="availability" placeholder="Availability" value={form.availability} onChange={handleChange} className="input-base" />
-        <input name="location" placeholder="City, Country" value={form.location} onChange={handleChange} className="input-base" />
-        <input name="timezone" placeholder="Timezone" value={form.timezone} onChange={handleChange} className="input-base" />
+        <input\1 id="auto-id" name="auto-name"\2>
+        <input\1 id="auto-id" name="auto-name"\2>
+        <input\1 id="auto-id" name="auto-name"\2>
+        <input\1 id="auto-id" name="auto-name"\2>
 
         <div className="flex items-center space-x-2">
           <label htmlFor="visible" className="text-sm font-medium">Publicly Visible:</label>

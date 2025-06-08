@@ -1,13 +1,9 @@
 @import 'mapbox-gl/dist/mapbox-gl.css';
 @import './tokens.css';
-@import '@fontsource/poppins/400.css';
-@import '@fontsource/poppins/700.css';
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/700.css';
+
 
 @tailwind base;
-@tailwind components;         /* Must come BEFORE components.css */
-@tailwind utilities;
+@tailwind components;
 
 @layer components {
   .btn {
@@ -51,6 +47,8 @@ h2 {
 h3 {
   @apply text-xl font-semibold font-heading leading-snug;
 }
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   @apply font-heading leading-snug;
 }

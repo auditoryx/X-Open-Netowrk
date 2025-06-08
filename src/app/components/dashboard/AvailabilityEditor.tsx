@@ -176,7 +176,7 @@ export default function AvailabilityEditor() {
         >
           Push to Google Calendar
         </button>
-        <input type="file" accept=".ics" onChange={handleImportIcs} className="hidden" id="ics-upload" />
+        <input\1 id="auto-id" name="auto-name"\2>
         <label htmlFor="ics-upload" className="bg-gray-600 text-white px-4 py-2 rounded-md cursor-pointer">
           Import iCal
         </label>
