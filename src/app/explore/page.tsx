@@ -26,6 +26,7 @@ export default function ExplorePage() {
     location: searchParams.get('location') || '',
     service: searchParams.get('service') || '',
     proTier: searchParams.get('proTier') || '',
+    availableNow: searchParams.get('availableNow') === '1',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
@@ -42,6 +43,7 @@ export default function ExplorePage() {
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');
     }
+    if (filters.availableNow) query.set('availableNow', '1');
     if (filters.lat) query.set('lat', String(filters.lat));
     if (filters.lng) query.set('lng', String(filters.lng));
     if (filters.radiusKm) query.set('radiusKm', String(filters.radiusKm));

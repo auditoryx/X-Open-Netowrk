@@ -21,6 +21,7 @@ export async function queryCreators(filters: {
   location?: string;
   service?: string;
   proTier?: 'standard' | 'verified' | 'signature';
+  availableNow?: boolean;
   lat?: number;
   lng?: number;
   radiusKm?: number;
@@ -52,6 +53,16 @@ export async function queryCreators(filters: {
     qConstraints.push(where('proTier', '==', filters.proTier));
   }
 
+  if (filters.availableNow) {
+    qConstraints.push(
+      where(
+        'nextAvailableTs',
+        '<=',
+        Date.now() + 72 * 60 * 60 * 1000,
+      ),
+    );
+  }
+
   const base = query(
     collection(db, 'users'),
     ...qConstraints,
@@ -72,6 +83,15 @@ export async function queryCreators(filters: {
   let results = snapshot.docs
     .map((doc) => ({ uid: doc.id, ...doc.data() } as UserProfile))
     .filter(isProfileComplete);
+
+  if (filters.availableNow) {
+    const cutoff = Date.now() + 72 * 60 * 60 * 1000;
+    results = results.filter(
+      (c) =>
+        typeof (c as any).nextAvailableTs === 'number' &&
+        (c as any).nextAvailableTs <= cutoff,
+    );
+  }
 
   if (filters.lat && filters.lng) {
     const radius = filters.radiusKm ?? 50;

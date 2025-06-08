@@ -5,6 +5,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 // Update the import path below if your firebaseConfig file is located elsewhere
 import { db } from '../../../firebase/firebaseConfig';
 import { useAuth } from './useAuth';
+import { getNextDateForWeekday } from '@/lib/google/utils';
 
 type Slot = { day: string; time: string };
 
@@ -49,7 +50,23 @@ export function useAvailability() {
 
     // Also store slots on the user profile for easy reference in bookings
     const userRef = doc(db, 'users', user.uid);
-    await setDoc(userRef, { availabilitySlots: slots }, { merge: true });
+    const now = Date.now();
+    const nextTs = (() => {
+      const times = slots
+        .map((s) =>
+          new Date(
+            `${getNextDateForWeekday(s.day)}T${s.time}:00`,
+          ).getTime(),
+        )
+        .filter((t) => t > now);
+      return times.length ? Math.min(...times) : null;
+    })();
+
+    await setDoc(
+      userRef,
+      { availabilitySlots: slots, nextAvailableTs: nextTs },
+      { merge: true },
+    );
 
     setAvailability(slots);
     setNotes(notes);

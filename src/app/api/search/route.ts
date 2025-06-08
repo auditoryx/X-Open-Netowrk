@@ -34,6 +34,7 @@ export async function GET(req: Request) {
     service: searchParams.get('service') || undefined,
     proTier: searchParams.get('proTier') || undefined,
     verifiedOnly: searchParams.get('verifiedOnly') === 'true',
+    availableNow: searchParams.get('availableNow') === '1',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
     radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : undefined,
