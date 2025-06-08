@@ -1,3 +1,5 @@
+process.env.SMTP_EMAIL = "mock@email.com";
+process.env.SMTP_PASS = "mockpass";
 import fs from 'fs';
 import path from 'path';
 
