@@ -10,6 +10,11 @@ import QueryProvider from '../../providers/QueryProvider';
 export const metadata: Metadata = {
   title: 'AuditoryX Open Network',
   description: 'Global platform for artists, producers, creatives, and studios',
+  openGraph: {
+    title: 'AuditoryX Open Network',
+    description: 'Global platform for artists, producers, creatives, and studios',
+    images: 'https://placehold.co/1200x630/png',
+  },
 };
 
 export default function RootLayout({
