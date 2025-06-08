@@ -1,4 +1,4 @@
-import admin from '@/lib/firebase-admin';
+import { admin, adminDb } from '@/lib/firebase-admin';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 
@@ -24,7 +24,7 @@ export async function markAsHeld(input: unknown) {
   }
 
   try {
-    const db = admin.firestore();
+    const db = adminDb;
     await db.collection('bookings').doc(bookingId).update({
       paymentStatus: 'held',
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),

@@ -18,6 +18,8 @@ type Props = {
   filters: any;
 };
 
+type Page = { results: any[]; nextCursor?: string };
+
 export default function DiscoveryMap({ filters }: Props) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -31,8 +33,9 @@ export default function DiscoveryMap({ filters }: Props) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<Page>({
     queryKey: ['map-creators', filters],
+    initialPageParam: undefined,
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
       if (pageParam) params.append('cursor', pageParam as string);

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { handleCheckout } from '@/lib/stripe/handleCheckout';
 
-export default function PayButton({ service, buyerId }) {
+export default function PayButton({ service, buyerId }: { service: any; buyerId: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

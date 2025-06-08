@@ -31,7 +31,7 @@ export async function sendEmailNotification({
   try {
     await sgMail.send({
       to,
-      from: SENDGRID_FROM_EMAIL,
+      from: SENDGRID_FROM_EMAIL as string,
       subject,
       text,
       html: html || `<p>${text}</p>`

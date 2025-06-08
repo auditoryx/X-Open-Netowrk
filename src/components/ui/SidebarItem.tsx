@@ -14,7 +14,7 @@ export default function SidebarItem({
   icon?: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const active = pathname.startsWith(href);
+  const active = pathname?.startsWith(href);
 
   return (
     <Link

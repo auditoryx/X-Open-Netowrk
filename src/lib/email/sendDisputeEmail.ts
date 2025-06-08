@@ -18,11 +18,12 @@ export async function sendDisputeEmail(
   `;
 
   try {
-    const result = await sendEmail({
-      to: 'admin@auditoryx.com',
+    const result = await sendEmail(
+      'admin@auditoryx.com',
       subject,
-      html: body,
-    });
+      'dispute-notification.html',
+      { bookingId, fromUser, reason }
+    );
 
     if (result.error) {
       console.error(`Dispute email failed:`, result.error);
