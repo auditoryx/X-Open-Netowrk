@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RoleBadge renders artist emoji 1`] = `"<span class="inline-block text-xs text-gray-400 mb-1">🎤 Hip Hop Genre</span>"`;
+
+exports[`RoleBadge renders engineer emoji 1`] = `"<span class="inline-block text-xs text-gray-400 mb-1">🎚️ Analog Mix</span>"`;
+
+exports[`RoleBadge renders producer emoji 1`] = `"<span class="inline-block text-xs text-gray-400 mb-1">🎛️ Ableton DAW</span>"`;
+
+exports[`RoleBadge renders studio emoji 1`] = `"<span class="inline-block text-xs text-gray-400 mb-1">🏢 3 Rooms</span>"`;
+
+exports[`RoleBadge renders videographer emoji 1`] = `"<span class="inline-block text-xs text-gray-400 mb-1">🎥 Worldwide Travel</span>"`;

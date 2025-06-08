@@ -8,6 +8,7 @@ import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
+import { RoleBadge } from '@/components/explore/RoleBadge';
 import { Translate } from '@/i18n/Translate';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
@@ -94,6 +95,9 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
           <p className="text-xs text-blue-400">
             📊 {c.completion}% Profile Complete
           </p>
+
+          {/* Role specific metric */}
+          <RoleBadge role={c.role} profile={c} />
 
           {/* XP / gamification badge */}
           <PointsBadge points={c.points} />
