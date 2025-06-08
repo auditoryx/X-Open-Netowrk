@@ -1,27 +1,48 @@
 'use client';
 
 import Link from 'next/link';
+import Head from 'next/head';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  openGraph: {
+    images: 'https://placehold.co/1200x630/png',
+  },
+};
 
 export default function Home() {
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is AuditoryX?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "AuditoryX connects creators with clients worldwide."
+        }
+      }
+    ]
+  };
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-16">
-      <div className="max-w-6xl mx-auto space-y-20">
+    <>
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
+      </Head>
+      <main className="min-h-screen bg-black text-white px-6 py-16">
+        <div className="max-w-6xl mx-auto space-y-20">
 
         {/* HERO */}
         <section className="text-center space-y-4">
           <h1 className="text-4xl font-bold">The Global Creative Network Built for Music.</h1>
-          <p className="text-lg text-gray-300">
-            Connect with producers, engineers, videographers, and studios — book services, sell your own, and get paid.
-          </p>
+          <p className="text-lg text-gray-300">Book talent, sell your services, and get paid.</p>
           <div className="flex justify-center gap-4 pt-6">
-            <Link href="/explore" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
+            <Link href="/explore" className="btn btn-primary">
               🔍 Explore Creators
             </Link>
-            <Link href="/apply" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
+            <Link href="/apply" className="btn btn-secondary">
               ✍️ Apply to Join
-            </Link>
-            <Link href="/explore" className="border px-6 py-2 rounded hover:bg-white hover:text-black transition">
-              📖 Book Talent
             </Link>
           </div>
         </section>
@@ -54,7 +75,10 @@ export default function Home() {
               desc: 'AuditoryX connects creators by location, service type, and rating.',
             },
           ].map((f) => (
-            <div key={f.title} className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl space-y-2 hover:border-white/20 transition">
+            <div
+              key={f.title}
+              className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl space-y-2 hover:border-white/20 transition min-h-[160px]"
+            >
               <h2 className="text-xl font-semibold">{f.title}</h2>
               <p className="text-sm text-gray-400">{f.desc}</p>
             </div>
@@ -144,5 +168,6 @@ export default function Home() {
 
       </div>
     </main>
+    </>
   );
 }
