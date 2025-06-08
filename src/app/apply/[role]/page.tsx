@@ -2,8 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  getFirestore,
+} from 'firebase/firestore';
+import { v4 as uuid } from 'uuid';
+import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
@@ -37,7 +43,8 @@ export default function ApplyRolePage() {
   const [maxBpm, setMaxBpm] = useState<number | undefined>(undefined);
   const [photo, setPhoto] = useState<File | null>(null);
   const [availabilitySlots, setAvailabilitySlots] = useState<string[]>([]);
-  const [verified, setVerified] = useState(false);
+  const [agreedToVerify, setAgreedToVerify] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
@@ -54,7 +61,7 @@ export default function ApplyRolePage() {
         setMinBpm(data.minBpm);
         setMaxBpm(data.maxBpm);
         setAvailabilitySlots(data.availabilitySlots || []);
-        setVerified(!!data.verified);
+        setAgreedToVerify(!!data.agreedToVerify);
       } catch (e) {
         console.error(e);
       }
@@ -71,10 +78,10 @@ export default function ApplyRolePage() {
       minBpm,
       maxBpm,
       availabilitySlots,
-      verified,
+      agreedToVerify,
     };
     localStorage.setItem(`applyDraft-${role}`, JSON.stringify(data));
-  }, [stepIndex, bio, links, location, genres, minBpm, maxBpm, availabilitySlots, verified, role]);
+  }, [stepIndex, bio, links, location, genres, minBpm, maxBpm, availabilitySlots, agreedToVerify, role]);
 
   const HOURS = ['10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -90,52 +97,45 @@ export default function ApplyRolePage() {
     }
   }, [user, loading, role, router]);
 
-  const handleSubmit = async () => {
-    setError('');
-    if (!user) return setError('You must be logged in to apply.');
-    if (!bio.trim() || !links.trim() || !location.trim()) {
-      return setError('All fields are required.');
+  function handleSubmitApplication() {
+    if (!agreedToVerify) {
+      toast.error('You must agree to complete ID verification.');
+      setError('You must agree to complete ID verification.');
+      return;
     }
 
-    const cleanedCity = location.toLowerCase().replace(/\s+/g, '');
-    const fallbackCoords = cityToCoords[cleanedCity];
-    let locationLat = null;
-    let locationLng = null;
+    const applicationRef = doc(
+      getFirestore(app),
+      'applications',
+      user?.uid ?? uuid()
+    );
 
-    if (fallbackCoords) {
-      locationLng = fallbackCoords[0];
-      locationLat = fallbackCoords[1];
-    }
-
-    const slots = availabilitySlots.map((dt) => {
-      const [datePart, time] = dt.split('T');
-      const day = new Date(datePart).toLocaleDateString('en-US', {
-        weekday: 'long',
-      });
-      return { day, time };
-    });
-
-    await addDoc(collection(db, 'pendingVerifications'), {
-      uid: user.uid,
-      email: userData?.email || user.email,
-      name: userData?.name || user.displayName || '',
+    const applicationData = {
       role,
-      bio,
-      links,
-      genres,
-      minBpm,
-      maxBpm,
+      uid: user?.uid,
+      name: userData?.name || user?.displayName || '',
       location,
-      photo: photo ? photo.name : null,
-      availabilitySlots: slots,
-      verified,
-      locationLat,
-      locationLng,
-      timestamp: serverTimestamp(),
-    });
+      portfolio: links,
+      agreedToVerify,
+      createdAt: serverTimestamp(),
+    };
 
-    setSubmitted(true);
-  };
+    setError('');
+    setIsSubmitting(true);
+    setDoc(applicationRef, applicationData)
+      .then(() => {
+        toast.success('Application submitted!');
+        router.push('/dashboard');
+      })
+      .catch((err) => {
+        console.error('❌ Application error:', err);
+        setError('Failed to submit. Please try again.');
+        toast.error('Failed to submit. Please try again.');
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  }
 
   if (loading) return <div className="text-white p-8">Loading...</div>;
   if (!user) return <div className="text-red-500 p-8 text-center">You must be logged in to apply.</div>;
@@ -335,8 +335,8 @@ export default function ApplyRolePage() {
         <input
           id="verify"
           type="checkbox"
-          checked={verified}
-          onChange={(e) => setVerified(e.target.checked)}
+          checked={agreedToVerify}
+          onChange={(e) => setAgreedToVerify(e.target.checked)}
           className="rounded"
         />
         <label htmlFor="verify" className="text-sm">
@@ -394,10 +394,11 @@ export default function ApplyRolePage() {
                   </button>
                 ) : (
                   <button
-                    onClick={handleSubmit}
+                    onClick={handleSubmitApplication}
+                    disabled={isSubmitting}
                     className="bg-white text-black px-4 py-2 rounded font-semibold"
                   >
-                    Submit Application
+                    {isSubmitting ? 'Submitting...' : 'Submit Application'}
                   </button>
                 )}
               </div>
