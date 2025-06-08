@@ -9,7 +9,7 @@ import { logger } from '@lib/logger';
 
 const CheckoutSchema = z.object({
   bookingId: z.string().min(1),
-  price: z.number().positive(),
+  amount: z.number().positive(),
   buyerEmail: z.string().email(),
   providerId: z.string().min(1),
 });
@@ -26,16 +26,16 @@ async function handler(req: NextRequest & { user: any }) {
       );
     }
 
-    const { bookingId, price, buyerEmail, providerId } = parsed.data;
+    const { bookingId, amount, buyerEmail, providerId } = parsed.data;
 
-    const { url } = await createCheckoutSession({ bookingId, price, buyerEmail });
+    const { url } = await createCheckoutSession({ bookingId, amount, buyerEmail, metadata: { providerId } });
 
     const ip = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
     const userAgent = req.headers.get('user-agent') || 'unknown';
 
     await logActivity(req.user.uid || req.user.email, 'checkout_initiated', {
       bookingId,
-      price,
+      amount,
       providerId,
     }, {
       ip,

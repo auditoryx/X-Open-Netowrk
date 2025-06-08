@@ -7,8 +7,9 @@ import { z } from 'zod';
 
 const schema = z.object({
   bookingId: z.string().min(1),
-  price: z.number().positive(),
+  amount: z.number().positive(),
   buyerEmail: z.string().email(),
+  metadata: z.record(z.any()).optional(),
 });
 
 export async function createCheckoutSession(input: unknown) {
@@ -18,7 +19,7 @@ export async function createCheckoutSession(input: unknown) {
     return { error: 'Invalid request' };
   }
 
-  const { bookingId, price, buyerEmail } = parsed.data;
+  const { bookingId, amount, buyerEmail, metadata } = parsed.data;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -30,14 +31,14 @@ export async function createCheckoutSession(input: unknown) {
           price_data: {
             currency: 'usd',
             product_data: { name: 'Service Booking' },
-            unit_amount: price * 100,
+            unit_amount: amount * 100,
           },
           quantity: 1,
         },
       ],
       payment_intent_data: {
         capture_method: 'manual',
-        metadata: { bookingId },
+        metadata: { bookingId, ...(metadata || {}) },
       },
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/purchases/${bookingId}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/bookings`,

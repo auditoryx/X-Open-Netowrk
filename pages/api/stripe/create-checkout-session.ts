@@ -6,8 +6,9 @@ import { z } from 'zod';
 
 const schema = z.object({
   bookingId: z.string().min(1),
-  price: z.number().positive(),
+  amount: z.number().positive(),
   buyerEmail: z.string().email(),
+  metadata: z.record(z.any()).optional(),
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -25,10 +26,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Invalid input' });
   }
 
-  const { bookingId, price, buyerEmail } = result.data;
+  const { bookingId, amount, buyerEmail, metadata } = result.data;
 
   try {
-    const url = await createCheckoutSession({ bookingId, price, buyerEmail });
+    const url = await createCheckoutSession({ bookingId, amount, buyerEmail, metadata });
     return res.status(200).json({ url });
   } catch (err) {
     console.error('❌ Stripe session failed:', err);
