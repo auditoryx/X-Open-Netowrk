@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import BookingChat from '@/components/booking/BookingChat';
+import BookingChatTopBar from '@/components/booking/BookingChatTopBar';
 import ContractViewer from '@/components/contract/ContractViewer';
 import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 import ReviewForm from '@/components/booking/ReviewForm';
@@ -83,6 +84,11 @@ export default function BookingDetailPage() {
               }}
             />
 
+            <BookingChatTopBar
+              bookingId={bookingId}
+              initialCount={booking.revisionsRemaining ?? 0}
+              isClient={isClient}
+            />
             <BookingChat bookingId={bookingId} />
 
             {typingUsers.length > 0 && (
