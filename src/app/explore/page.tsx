@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import DiscoveryGrid from '@/components/explore/DiscoveryGrid';
 import NewExploreGrid from '@/components/explore/NewExploreGrid';
 import FilterPanel from '@/components/explore/FilterPanel';
@@ -35,6 +36,7 @@ export default function ExplorePage() {
       ? parseInt(searchParams.get('maxBpm')!, 10)
       : undefined,
     proTier: searchParams.get('proTier') || '',
+    availableNow: searchParams.get('availableNow') === '1',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
@@ -54,6 +56,7 @@ export default function ExplorePage() {
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');
     }
+    if (filters.availableNow) query.set('availableNow', '1');
     if (filters.lat) query.set('lat', String(filters.lat));
     if (filters.lng) query.set('lng', String(filters.lng));
     if (filters.radiusKm) query.set('radiusKm', String(filters.radiusKm));
@@ -64,6 +67,11 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
+      <div className="text-right text-xs mb-2">
+        <Link href="/leaderboards/tokyo/producer" className="underline">
+          View Tokyo leaderboard
+        </Link>
+      </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Explore Creators</h1>
         <div className="flex gap-2">

@@ -1,10 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import LocationAutocomplete from './LocationAutocomplete';
 import SavedFilters from './SavedFilters';
 import { Translate } from '@/i18n/Translate';
 import { track } from '@/lib/analytics/track';
-import { useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { createFilterPreset } from '@/lib/firestore/savedFilters';
+import toast from 'react-hot-toast';
 
 type Props = {
   filters: {
@@ -15,6 +18,7 @@ type Props = {
     minBpm?: number;
     maxBpm?: number;
     proTier?: 'standard' | 'verified' | 'signature';
+    availableNow?: boolean;
     searchNearMe?: boolean;
     lat?: number;
     lng?: number;
@@ -25,13 +29,16 @@ type Props = {
 };
 
 export default function FilterPanel({ filters, setFilters }: Props) {
-  /* ——— helper ——— */
+  /* helpers */
   const updateFilters = (newFilters: any) => {
     setFilters(newFilters);
     track('filters_change', newFilters);
   };
 
-  /* ——— toggles ——— */
+  const { user } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  /* geo toggle */
   const handleGeoToggle = () => {
     if (!filters.searchNearMe) {
       navigator.geolocation.getCurrentPosition((pos) =>
@@ -52,6 +59,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
     }
   };
 
+  /* tier toggle */
   const handleTierChange = (tier: 'verified' | 'signature') => {
     updateFilters({
       ...filters,
@@ -59,6 +67,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
     });
   };
 
+  /* genre input */
   const [genreInput, setGenreInput] = useState('');
   const addGenre = () => {
     const val = genreInput.trim();
@@ -67,18 +76,39 @@ export default function FilterPanel({ filters, setFilters }: Props) {
     setGenreInput('');
   };
 
-  /* ——— UI ——— */
+  /* UI */
   return (
     <div className="mb-6 p-4 border border-neutral-800 rounded-lg bg-neutral-900 text-white">
-      <h2 className="font-semibold mb-4 text-lg">
-        <Translate t="filterPanel.filters" />
+      <h2 className="font-semibold mb-4 text-lg flex items-center justify-between">
+        <span>
+          <Translate t="filterPanel.filters" />
+        </span>
+
+        {/* save-filters icon */}
+        <button
+          onClick={async () => {
+            const name = prompt('Preset name');
+            if (!name || !user) return;
+            await createFilterPreset(user.uid, name, filters);
+            toast.success('Filters saved');
+            setRefreshKey((k) => k + 1);
+          }}
+          className="text-sm"
+          aria-label="Save Filters"
+        >
+          💾
+        </button>
       </h2>
 
       <div className="flex flex-col gap-4">
-        {/* Saved filter presets */}
-        <SavedFilters filters={filters} setFilters={updateFilters} />
+        {/* saved presets */}
+        <SavedFilters
+          filters={filters}
+          setFilters={updateFilters}
+          refreshKey={refreshKey}
+        />
 
-        {/* Role select */}
+        {/* role select */}
         <select
           aria-label={Translate.txt('filterPanel.roleLabel')}
           value={filters.role}
@@ -87,15 +117,19 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         >
           <option value="">{Translate.txt('filterPanel.allRoles')}</option>
           <option value="artist">{Translate.txt('filterPanel.role.artist')}</option>
-          <option value="producer">{Translate.txt('filterPanel.role.producer')}</option>
+          <option value="producer">
+            {Translate.txt('filterPanel.role.producer')}
+          </option>
           <option value="studio">{Translate.txt('filterPanel.role.studio')}</option>
           <option value="videographer">
             {Translate.txt('filterPanel.role.videographer')}
           </option>
-          <option value="engineer">{Translate.txt('filterPanel.role.engineer')}</option>
+          <option value="engineer">
+            {Translate.txt('filterPanel.role.engineer')}
+          </option>
         </select>
 
-        {/* Location autocomplete */}
+        {/* location */}
         <LocationAutocomplete
           value={filters.location}
           onChange={(v) => updateFilters({ ...filters, location: v })}
@@ -110,7 +144,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           }
         />
 
-        {/* Radius slider */}
+        {/* radius */}
         <div>
           <label className="text-sm block mb-1" id="radius-label">
             <Translate t="filterPanel.radius" />: {filters.radiusKm ?? 50} km
@@ -128,7 +162,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           />
         </div>
 
-        {/* Service text input */}
+        {/* service text */}
         <input
           aria-label={Translate.txt('filterPanel.serviceLabel')}
           type="text"
@@ -140,7 +174,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           className="input-base"
         />
 
-        {/* Genres multi-select */}
+        {/* genres */}
         <div>
           <label className="text-sm block mb-1">Genres</label>
           <div className="flex flex-wrap gap-1 mb-1">
@@ -210,7 +244,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           </div>
         </div>
 
-        {/* Sort dropdown */}
+        {/* sort */}
         <select
           aria-label={Translate.txt('filterPanel.sort.rating')}
           value={filters.sort || 'rating'}
@@ -219,12 +253,18 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           }
           className="input-base"
         >
-          <option value="rating">{Translate.txt('filterPanel.sort.rating')}</option>
-          <option value="distance">{Translate.txt('filterPanel.sort.distance')}</option>
-          <option value="popularity">{Translate.txt('filterPanel.sort.popularity')}</option>
+          <option value="rating">
+            {Translate.txt('filterPanel.sort.rating')}
+          </option>
+          <option value="distance">
+            {Translate.txt('filterPanel.sort.distance')}
+          </option>
+          <option value="popularity">
+            {Translate.txt('filterPanel.sort.popularity')}
+          </option>
         </select>
 
-        {/* Search-near-me toggle */}
+        {/* toggles */}
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -235,7 +275,22 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           <Translate t="filterPanel.searchNearMe" />
         </label>
 
-        {/* Tier toggles */}
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={!!filters.availableNow}
+            onChange={() => {
+              const next = !filters.availableNow;
+              track('filter_available_now', { on: next });
+              updateFilters({ ...filters, availableNow: next });
+            }}
+            className="accent-green-400"
+            aria-label={Translate.txt('filterPanel.availableNow')}
+          />
+          <Translate t="filterPanel.availableNow" />
+        </label>
+
+        {/* tier checkboxes */}
         <div className="flex gap-4">
           <label className="flex items-center gap-2 text-sm">
             <input

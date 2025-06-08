@@ -24,6 +24,7 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
     queryKey: ['creators-new', filters],
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
+      if (filters.availableNow) params.set('availableNow', '1');
       if (pageParam) params.append('cursor', pageParam as string);
       const res = await fetch(`/api/search?${params.toString()}`);
       const json = await res.json();

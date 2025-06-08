@@ -24,6 +24,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
     queryKey: ['creators', filters],
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams({ limit: '20', ...filters });
+      if (filters.availableNow) params.set('availableNow', '1');
       if (pageParam) params.append('cursor', pageParam as string);
       track('search', { ...filters, page: pageParam ?? 1 });
       const res = await fetch(`/api/search?${params.toString()}`);
