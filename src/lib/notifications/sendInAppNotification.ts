@@ -1,4 +1,4 @@
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 
 type NotificationType =
@@ -20,7 +20,9 @@ export async function sendInAppNotification({
   message: string
   link: string
 }) {
-  await addDoc(collection(db, 'users', to, 'notifications'), {
+  const ref = doc(db, 'notifications', to)
+  await setDoc(ref, {
+    userId: to,
     type,
     title,
     message,
