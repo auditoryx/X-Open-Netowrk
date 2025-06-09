@@ -14,12 +14,12 @@ export default function UpcomingBookingsPage() {
     const fetchBookings = async () => {
       if (!user?.uid) return;
       const db = getFirestore(app);
-      const ref = collection(db, 'bookingRequests');
+      const ref = collection(db, 'bookings');
       const q = query(
         ref,
         where('providerId', '==', user.uid),
         where('status', '==', 'pending'),
-        orderBy('selectedTime', 'asc')
+        orderBy('dateTime', 'asc')
       );
       const snap = await getDocs(q);
       setBookings(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -43,7 +43,7 @@ export default function UpcomingBookingsPage() {
             {bookings.map((b) => (
               <li key={b.id} className="border p-4 rounded">
                 <p><strong>Client ID:</strong> {b.clientId}</p>
-                <p><strong>Time Slot:</strong> {b.selectedTime}</p>
+                <p><strong>Time Slot:</strong> {b.dateTime}</p>
                 <p><strong>Message:</strong> {b.message}</p>
                 {b.providerLocation && (
                   <p><strong>📍 Location:</strong> {b.providerLocation}</p>

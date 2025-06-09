@@ -11,7 +11,7 @@ const db = getFirestore(app);
 async function getBookings(req: NextRequest) {
   const user = await getServerUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const snap = await getDocs(collection(db, 'bookingRequests'));
+  const snap = await getDocs(collection(db, 'bookings'));
   const bookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   return NextResponse.json(bookings);
 }
@@ -26,7 +26,7 @@ async function updateBooking(req: NextRequest) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  const ref = doc(db, 'bookingRequests', id);
+  const ref = doc(db, 'bookings', id);
   await updateDoc(ref, { status });
   return NextResponse.json({ success: true });
 }
