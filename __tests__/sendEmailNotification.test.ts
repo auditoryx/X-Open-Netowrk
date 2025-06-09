@@ -26,16 +26,28 @@ describe('sendEmailNotification env validation', () => {
     delete process.env.SENDGRID_API_KEY
     process.env.SENDGRID_FROM_EMAIL = 'from@example.com'
 
-    await expect(import('@/lib/notifications/sendEmailNotification'))
-      .rejects.toThrow('SENDGRID_API_KEY is not defined')
+    const module = await import('@/lib/notifications/sendEmailNotification')
+    await expect(
+      module.sendEmailNotification({
+        to: 'to@example.com',
+        subject: 'Sub',
+        text: 'hi'
+      })
+    ).rejects.toThrow('SENDGRID_API_KEY is not defined')
   })
 
   test('throws when SENDGRID_FROM_EMAIL is missing', async () => {
     process.env.SENDGRID_API_KEY = 'key'
     delete process.env.SENDGRID_FROM_EMAIL
 
-    await expect(import('@/lib/notifications/sendEmailNotification'))
-      .rejects.toThrow('SENDGRID_FROM_EMAIL is not defined')
+    const module = await import('@/lib/notifications/sendEmailNotification')
+    await expect(
+      module.sendEmailNotification({
+        to: 'to@example.com',
+        subject: 'Sub',
+        text: 'hi'
+      })
+    ).rejects.toThrow('SENDGRID_FROM_EMAIL is not defined')
   })
 
   test('sends when variables are defined', async () => {
