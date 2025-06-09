@@ -72,3 +72,19 @@ This repository contains a Next.js application with a Node.js backend and Fireba
   ```bash
   pnpm test gamification
   ```
+
+## ESLint Rules
+Add the following rule to enforce TypeScript file extensions:
+```json
+{
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Program[sourceType='module'][filename=/\\.jsx?$/]",
+        "message": "All source files must be .ts or .tsx"
+      }
+    ]
+  }
+}
+```
