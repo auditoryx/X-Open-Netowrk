@@ -47,6 +47,7 @@ export async function submitReview(review: Review) {
   const reviewData = {
     ...review,
     createdAt: serverTimestamp(),
+    authorId: review.clientId,
   };
 
   // Write to contract thread
@@ -62,6 +63,7 @@ export async function submitReview(review: Review) {
     addDoc(globalReviewsRef, {
       ...reviewData,
       providerId: review.providerId,
+      authorId: review.clientId,
     }),
     updateDoc(doc(db, 'bookings', review.bookingId), { hasReview: true }),
   ]);
