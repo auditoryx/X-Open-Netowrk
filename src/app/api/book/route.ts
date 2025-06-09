@@ -9,6 +9,7 @@ import {
   query,
   where,
   getDocs,
+  QueryConstraint,
 } from 'firebase/firestore';
 import { z } from 'zod';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
@@ -40,18 +41,20 @@ export async function POST(req: NextRequest) {
   const { serviceId, date, time, message, quote } = parsed.data;
 
   try {
-    const q = query(
-      collection(db, 'bookingRequests'),
-      where('serviceId', '==', serviceId),
-      where('date', '==', date),
-      where('time', '==', time)
-    );
-    const snap = await getDocs(q);
-    if (!snap.empty) {
-      return NextResponse.json(
-        { error: 'Booking slot already taken' },
-        { status: 409 }
-      );
+    const constraints: QueryConstraint[] = [];
+    if (serviceId) constraints.push(where('serviceId', '==', serviceId));
+    if (date) constraints.push(where('date', '==', date));
+    if (time) constraints.push(where('time', '==', time));
+
+    if (constraints.length > 0) {
+      const q = query(collection(db, 'bookingRequests'), ...constraints);
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        return NextResponse.json(
+          { error: 'Booking slot already taken' },
+          { status: 409 }
+        );
+      }
     }
 
     const docRef = await addDoc(collection(db, 'bookingRequests'), {
@@ -60,7 +63,7 @@ export async function POST(req: NextRequest) {
       time,
       message,
       quote,
-      userId: session.user.id,
+      buyerId: session.user.id,
       status: 'pending',
       createdAt: serverTimestamp(),
     });
