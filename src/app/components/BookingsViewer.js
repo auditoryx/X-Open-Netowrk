@@ -27,13 +27,13 @@ export default function BookingsViewer() {
 
   const loadMore = async (uid) => {
     setLoading(true);
-    const db = getFirestore(app);
-    const base = query(
-      collection(db, 'bookings'),
-      where('recipientUid', '==', uid),
-      orderBy('createdAt', 'desc'),
-      limit(10)
-    );
+      const db = getFirestore(app);
+      const base = query(
+        collection(db, 'bookings'),
+        where('providerId', '==', uid),
+        orderBy('createdAt', 'desc'),
+        limit(10)
+      );
     const q = lastDoc ? query(base, startAfter(lastDoc)) : base;
     const snapshot = await getDocs(q);
     const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -53,7 +53,7 @@ export default function BookingsViewer() {
         <ul className="space-y-4">
           {bookings.map((b) => (
             <li key={b.id} className="bg-gray-800 p-4 rounded shadow text-white">
-              <p><strong>From:</strong> {b.senderUid}</p>
+              <p><strong>From:</strong> {b.clientId}</p>
               <p><strong>Message:</strong> {b.message}</p>
               <p><strong>Time Slot:</strong> {b.timeSlot}</p>
               <p><strong>Status:</strong> {b.status}</p>

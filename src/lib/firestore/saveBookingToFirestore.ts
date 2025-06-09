@@ -8,8 +8,8 @@ import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 
 type BookingData = {
   id: string;
-  clientUid: string;
-  providerUid: string;
+  clientId: string;
+  providerId: string;
   providerProfile: UserProfile;
   serviceId: string;
   serviceName: string;
@@ -38,10 +38,15 @@ export async function saveBookingToFirestore(bookingData: BookingData, clientEma
   });
 
   await sendBookingConfirmation(clientEmail, bookingData.id);
-  await createNotification(bookingData.clientUid, 'booking_created', 'Your booking request has been sent!', bookingData.id);
+  await createNotification(
+    bookingData.clientId,
+    'booking_created',
+    'Your booking request has been sent!',
+    bookingData.id
+  );
 
-  await logActivity(bookingData.clientUid, 'booking_created', {
-    providerId: bookingData.providerUid,
+  await logActivity(bookingData.clientId, 'booking_created', {
+    providerId: bookingData.providerId,
     serviceId: bookingData.serviceId,
     date: bookingData.datetime,
   });

@@ -15,10 +15,10 @@ export default function ClientBookings() {
     const user = auth.currentUser;
     if (!user) return;
 
-    const q = query(
-      collection(db, 'bookings'),
-      where('customerId', '==', user.uid)
-    );
+      const q = query(
+        collection(db, 'bookings'),
+        where('clientId', '==', user.uid)
+      );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({

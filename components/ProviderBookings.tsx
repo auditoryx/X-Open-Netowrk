@@ -41,7 +41,7 @@ export default function ProviderBookings() {
   };
 
   const handleMarkCompleted = async (booking: any) => {
-    await markBookingAsCompleted(booking.id, booking.clientUid, booking.providerUid);
+    await markBookingAsCompleted(booking.id, booking.clientId, booking.providerId);
     toast.success('Booking marked as completed. Review prompts sent.');
     fetchBookings();
   };

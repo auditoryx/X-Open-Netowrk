@@ -8,14 +8,14 @@ const db = getFirestore(app)
 export async function createBooking({
   providerId,
   serviceId,
-  userId,
+  clientId,
   date,
   time,
   message
 }: {
   providerId: string
   serviceId: string
-  userId: string
+  clientId: string
   date: string
   time: string
   message: string
@@ -25,7 +25,7 @@ export async function createBooking({
     const docRef = await addDoc(bookingRef, {
       providerId,
       serviceId,
-      userId,
+      clientId,
       date,
       time,
       message,
@@ -38,7 +38,7 @@ export async function createBooking({
     // Store contract info too (optional)
     const contractRef = collection(db, "contracts")
     await addDoc(contractRef, {
-      clientId: userId,
+      clientId,
       providerId,
       bookingId,
       status: "pending",
