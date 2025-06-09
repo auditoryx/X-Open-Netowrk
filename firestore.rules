@@ -64,7 +64,7 @@ service cloud.firestore {
     }
 
     // Logs
-    match /activityLogs/{userId} {
+    match /activityLogs/{userId}/{logId} {
       allow create: if request.auth != null && request.auth.uid == userId;
       allow read: if request.auth != null && request.auth.token.admin == true;
     }
