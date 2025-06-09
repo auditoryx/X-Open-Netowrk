@@ -24,7 +24,7 @@ export async function logActivity(
   };
 
   try {
-    await addDoc(collection(db, 'activityLogs', uid, 'logs'), payload);
+    await addDoc(collection(db, 'activityLogs', uid), payload);
 
     // Award points for key actions
     if (actionType === 'booking_completed') {
