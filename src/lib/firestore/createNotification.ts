@@ -1,9 +1,11 @@
 import { db } from '@lib/firebase/init';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export async function createNotification(uid: string, type: string, message: string, relatedId: string) {
   try {
-    await addDoc(collection(db, 'notifications', uid, 'messages'), {
+    const ref = doc(db, 'notifications', uid);
+    await setDoc(ref, {
+      userId: uid,
       type,
       message,
       relatedId,
