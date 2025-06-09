@@ -48,7 +48,7 @@ export default function ProviderBookings() {
             key={booking.id}
             className="border border-gray-600 p-4 rounded text-white"
           >
-            <p><strong>Customer ID:</strong> {booking.customerId}</p>
+            <p><strong>Customer ID:</strong> {booking.clientId}</p>
             <p><strong>Service:</strong> {booking.serviceName}</p>
             <p><strong>Price:</strong> ${booking.price}</p>
             <p><strong>Status:</strong> {booking.status}</p>

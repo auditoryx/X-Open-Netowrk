@@ -8,8 +8,8 @@ export interface BookingContract {
 
 export interface Booking {
   id: string;
-  clientUid: string;
-  providerUid: string;
+  clientId: string;
+  providerId: string;
   serviceId: string;
   serviceName: string;
   datetime: string;
