@@ -1,4 +1,13 @@
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  serverTimestamp,
+  query,
+  where,
+} from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
 export type SavedFilter = {
@@ -13,7 +22,8 @@ export async function createFilterPreset(
   filters: Record<string, any>
 ) {
   const db = getFirestore(app);
-  await addDoc(collection(db, 'users', uid, 'savedFilters'), {
+  await addDoc(collection(db, 'savedFilters'), {
+    userId: uid,
     name,
     filtersJson: JSON.stringify(filters),
     createdAt: serverTimestamp(),
@@ -22,7 +32,9 @@ export async function createFilterPreset(
 
 export async function fetchFilterPresets(uid: string): Promise<SavedFilter[]> {
   const db = getFirestore(app);
-  const snap = await getDocs(collection(db, 'users', uid, 'savedFilters'));
+  const snap = await getDocs(
+    query(collection(db, 'savedFilters'), where('userId', '==', uid))
+  );
   return snap.docs.map(d => {
     const data = d.data() as any;
     return {
@@ -35,5 +47,11 @@ export async function fetchFilterPresets(uid: string): Promise<SavedFilter[]> {
 
 export async function deleteFilterPreset(uid: string, presetId: string) {
   const db = getFirestore(app);
-  await deleteDoc(doc(db, 'users', uid, 'savedFilters', presetId));
+  const snap = await getDocs(
+    query(collection(db, 'savedFilters'), where('userId', '==', uid))
+  );
+  const target = snap.docs.find(d => d.id === presetId);
+  if (target) {
+    await deleteDoc(target.ref);
+  }
 }
