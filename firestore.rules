@@ -1,29 +1,36 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-  // ✅ Allow users to read/write their own saved filters
-  match /savedFilters/{docId} {
-    allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-  }
 
-  // ✅ Allow public read access to reviews, but only author can write
-  match /reviews/{docId} {
-    allow read: if true;
-    allow write: if request.auth != null && request.auth.uid == resource.data.authorId;
-  }
-  // ✅ Only allow users to read their own bookingRequests
-  match /bookingRequests/{docId} {
-    allow read: if request.auth != null && request.auth.uid == resource.data.buyerId;
-    allow write: if false;
-  }
+    // ✅ Applications (verification)
+    match /applications/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
 
-    // Public services (explore, etc)
+    // ✅ Saved Filters – must store userId
+    match /savedFilters/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    // ✅ Reviews – must write authorId, public read
+    match /reviews/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == resource.data.authorId;
+    }
+
+    // ✅ Booking Requests – user owns via buyerId
+    match /bookingRequests/{docId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.buyerId;
+      allow write: if false;
+    }
+
+    // ✅ Services
     match /services/{serviceId} {
       allow read: if true;
       allow create, update, delete: if request.auth != null && request.auth.uid == resource.data.creatorId;
     }
 
-    // User profiles
+    // ✅ User Profiles & Subcollections
     match /users/{userId} {
       allow read: if true;
       allow write: if request.auth.uid == userId || request.auth.token.admin == true;
@@ -34,63 +41,54 @@ service cloud.firestore {
       }
     }
 
-    // Bookings
+    // ✅ Bookings
     match /bookings/{bookingId} {
       allow read, write: if request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId;
+
       match /messages/{messageId} {
         allow read, write: if request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId;
       }
     }
 
-    // Reviews
-    match /reviews/{reviewId} {
-      allow create: if request.auth != null;
-      allow read: if true;
-      allow update, delete: if false;
-    }
-
-    // Disputes
+    // ✅ Disputes
     match /disputes/{disputeId} {
       allow create: if request.auth != null;
-      allow read, update: if request.auth != null 
-        && request.auth.uid in [resource.data.clientId, resource.data.providerId];
+      allow read, update: if request.auth.uid in [resource.data.clientId, resource.data.providerId];
       allow delete: if false;
     }
 
-    // Contracts
+    // ✅ Contracts – use clientId/providerId
     match /contracts/{contractId} {
-      allow read, write: if request.auth != null 
-        && request.auth.uid in [resource.data.clientId, resource.data.providerId];
+      allow read, write: if request.auth.uid in [resource.data.clientId, resource.data.providerId];
     }
 
-    // Logs
-    match /activityLogs/{userId}/{logId} {
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow read: if request.auth != null && request.auth.token.admin == true;
+    // ✅ Activity Logs
+    match /activityLogs/{userId} {
+      allow create: if request.auth.uid == userId;
+      allow read: if request.auth.token.admin == true;
     }
 
-    // Notifications
+    // ✅ Notifications
     match /notifications/{userId} {
-      allow read, create: if request.auth != null && request.auth.uid == userId;
+      allow read, create: if request.auth.uid == userId;
     }
 
-    // Reports for creator listings or users
+    // ✅ Reports
     match /reports/{id} {
       allow create: if request.auth != null;
       allow read, update: if request.auth.token.admin == true;
     }
 
-    // Optional Admin Data
+    // ✅ Admin Pages / Roles
     match /admin/{docId} {
       allow read, write: if request.auth.token.admin == true;
     }
 
-    // Admin only collection for managing roles/verification
     match /adminOnly/{doc} {
       allow read, write: if request.auth.token.admin == true;
     }
 
-    // ✅ FIXED: Fallback match must be here inside the root document match
+    // ✅ Default Deny All
     match /{document=**} {
       allow read: if false;
     }
