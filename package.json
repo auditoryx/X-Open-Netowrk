@@ -7,7 +7,7 @@
     "seed:services": "ts-node scripts/seedServiceTemplates.ts",
     "cypress": "cypress run --browser chrome --headless",
     "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
-    "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage",
+    "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
     "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
   },
   "dependencies": {
