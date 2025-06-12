@@ -1,0 +1,148 @@
+[
+  {
+    "slug": "signup-social-login",
+    "priority": "P0",
+    "why": "Reduce signup friction + add trust cue",
+    "files": ["src/app/signup/page.tsx"],
+    "bash": [
+      "git checkout -b feat/signup-social-login",
+      "tee -a src/app/signup/page.tsx >/dev/null <<'EOF'\\n// --- injected by signup-social-login task ---\\nimport { signIn } from \\\"next-auth/react\\\"; // Google OAuth\\nEOF",
+      "awk '/<h1 .*<\\\\/h1>/ {print; print \\\"<p className=\\\\\\\"text-xs text-gray-400 mb-2\\\\\\\">No spam — we respect your data.<\\\\/p>\\\\n<button onClick={() => signIn(\\\\\\\"google\\\\\\\")} className=\\\\\\\"btn btn-primary w-full mb-4\\\\\\\">Sign up with Google<\\\\/button>\\\"; next}1' src/app/signup/page.tsx >tmp && mv tmp src/app/signup/page.tsx",
+      "git add src/app/signup/page.tsx",
+      "git commit -m \\\"feat: add Google social login + privacy blurb to signup\\\"",
+      "git push -u origin feat/signup-social-login"
+    ],
+    "rollback": "git restore src/app/signup/page.tsx"
+  },
+  {
+    "slug": "service-add-to-cart",
+    "priority": "P0",
+    "why": "Users can’t buy without a CTA",
+    "files": ["src/app/services/[id]/page.tsx"],
+    "bash": [
+      "git checkout -b feat/service-add-to-cart",
+      "sed -i '1i import { useCart } from \\\"@/context/CartContext\\\";' src/app/services/[id]/page.tsx",
+      "awk '/const ServiceDetail/ {print; print \\\"  const { addItem } = useCart();\\\"; next}1' src/app/services/[id]/page.tsx >tmp && mv tmp src/app/services/[id]/page.tsx",
+      "awk '/{service.price}/ {print; print \\\"<button onClick={() => addItem({ serviceId: id, serviceName: service.title, price: service.price })} className=\\\\\\\"btn mt-4\\\\\\\">Add to Cart<\\\\/button>\\\"; next}1' src/app/services/[id]/page.tsx >tmp && mv tmp src/app/services/[id]/page.tsx",
+      "git add src/app/services/[id]/page.tsx",
+      "git commit -m \\\"feat: add Add-to-Cart button on service page\\\"",
+      "git push -u origin feat/service-add-to-cart"
+    ],
+    "rollback": "git restore src/app/services/[id]/page.tsx"
+  },
+  {
+    "slug": "cart-loading-errors",
+    "priority": "P0",
+    "why": "Prevent double-submits and show failures",
+    "files": ["src/app/cart/page.tsx"],
+    "bash": [
+      "git checkout -b feat/cart-loading-errors",
+      "sed -i '1i import { useState } from \\\"react\\\";' src/app/cart/page.tsx",
+      "sed -i '1a const [isLoading, setIsLoading] = useState(false);' src/app/cart/page.tsx",
+      "awk '/async function checkout/ {print; print \\\"  setIsLoading(true);\\\"; getline; print \\\"  try {\\\"; next}1' src/app/cart/page.tsx >tmp && mv tmp src/app/cart/page.tsx",
+      "awk '/await fetch/ {sub(/await fetch/, \\\"const res = await fetch\\\"); print; print \\\"    if (!res.ok) throw new Error('Checkout failed');\\\"; next}1' src/app/cart/page.tsx >tmp && mv tmp src/app/cart/page.tsx",
+      "awk '/setIsLoading/ {next}1' src/app/cart/page.tsx >tmp && mv tmp src/app/cart/page.tsx",
+      "sed -i 's/<button onClick={checkout}/<button disabled={isLoading} onClick={checkout}/' src/app/cart/page.tsx",
+      "sed -i 's/>Checkout</>{isLoading ? \\\"Processing…\\\" : \\\"Checkout\\\"}</' src/app/cart/page.tsx",
+      "git add src/app/cart/page.tsx",
+      "git commit -m \\\"feat: checkout loading state + error handling\\\"",
+      "git push -u origin feat/cart-loading-errors"
+    ],
+    "rollback": "git restore src/app/cart/page.tsx"
+  },
+  {
+    "slug": "explore-empty-state",
+    "priority": "P0",
+    "why": "Blank screens kill trust",
+    "files": ["src/components/explore/DiscoveryGrid.tsx"],
+    "bash": [
+      "git checkout -b feat/explore-empty-state",
+      "awk '/return \\(/ {print \\\"  if (data?.pages?.[0]?.results?.length === 0) return <p className=\\\\\\\"p-4 text-gray-400\\\\\\\">No creators found.<\\\\/p>;\\\"; print; next}1' src/components/explore/DiscoveryGrid.tsx >tmp && mv tmp src/components/explore/DiscoveryGrid.tsx",
+      "git add src/components/explore/DiscoveryGrid.tsx",
+      "git commit -m \\\"feat: add empty-state message to DiscoveryGrid\\\"",
+      "git push -u origin feat/explore-empty-state"
+    ],
+    "rollback": "git restore src/components/explore/DiscoveryGrid.tsx"
+  },
+  {
+    "slug": "hero-gradient-polish",
+    "priority": "P1",
+    "why": "Stark black hero ≠ premium first impression",
+    "files": ["src/app/page.tsx"],
+    "bash": [
+      "git checkout -b feat/hero-gradient-polish",
+      "sed -i 's/className=\\\"text-center space-y-4\\\"/className=\\\"text-center space-y-4 bg-gradient-to-br from-indigo-700 to-blue-600 px-6 py-10\\\"/' src/app/page.tsx",
+      "git add src/app/page.tsx",
+      "git commit -m \\\"style: add gradient background to hero\\\"",
+      "git push -u origin feat/hero-gradient-polish"
+    ],
+    "rollback": "git restore src/app/page.tsx"
+  },
+  {
+    "slug": "service-ratings-display",
+    "priority": "P1",
+    "why": "Social proof boosts conversions",
+    "files": ["src/app/services/[id]/page.tsx"],
+    "bash": [
+      "git checkout -b feat/service-ratings-display",
+      "sed -i '1i import { getAverageRating, getReviewCount } from \\\"@/lib/reviews\\\";' src/app/services/[id]/page.tsx",
+      "awk '/const ServiceDetail/ {print; print \\\"  const [averageRating, setAverageRating] = React.useState<number|null>(null);\\\"; print \\\"  const [reviewCount, setReviewCount] = React.useState<number>(0);\\\"; print \\\"  React.useEffect(() => { (async () => { setAverageRating(await getAverageRating(id)); setReviewCount(await getReviewCount(id)); })(); }, [id]);\\\"; next}1' src/app/services/[id]/page.tsx >tmp && mv tmp src/app/services/[id]/page.tsx",
+      "awk '/<h1/ {print; print \\\"{averageRating !== null && (<p className=\\\\\\\"text-sm\\\\\\\">⭐ {averageRating.toFixed(1)} ({reviewCount} reviews)<\\\\/p>)}\\\"; next}1' src/app/services/[id]/page.tsx >tmp && mv tmp src/app/services/[id]/page.tsx",
+      "git add src/app/services/[id]/page.tsx",
+      "git commit -m \\\"feat: show star rating + count on service detail\\\"",
+      "git push -u origin feat/service-ratings-display"
+    ],
+    "rollback": "git restore src/app/services/[id]/page.tsx"
+  },
+  {
+    "slug": "verified-badge-listings",
+    "priority": "P1",
+    "why": "Instant trust on discovery cards",
+    "files": ["src/components/explore/DiscoveryGrid.tsx"],
+    "bash": [
+      "git checkout -b feat/verified-badge-listings",
+      "sed -i 's/{creator.name}/{creator.name} {creator.isVerified && <VerifiedBadge \\/>}/' src/components/explore/DiscoveryGrid.tsx",
+      "git add src/components/explore/DiscoveryGrid.tsx",
+      "git commit -m \\\"feat: show verified badge on creator cards\\\"",
+      "git push -u origin feat/verified-badge-listings"
+    ],
+    "rollback": "git restore src/components/explore/DiscoveryGrid.tsx"
+  },
+  {
+    "slug": "skeleton-loaders",
+    "priority": "P1",
+    "why": "Remove jarring blank loads",
+    "files": [
+      "src/components/explore/DiscoveryGrid.tsx",
+      "src/components/leaderboard/LeaderboardList.tsx"
+    ],
+    "bash": [
+      "git checkout -b feat/skeleton-loaders",
+      "npm install react-loading-skeleton@^3",
+      "sed -i '1i import Skeleton from \\\"react-loading-skeleton\\\";' src/components/explore/DiscoveryGrid.tsx",
+      "awk '/if \\(!data/ {print \\\"  if (isLoading) return <Skeleton count={6} height={96} className=\\\\\\\"mb-4 rounded\\\\\\\" />;\\\"; next}1' src/components/explore/DiscoveryGrid.tsx >tmp && mv tmp src/components/explore/DiscoveryGrid.tsx",
+      "git add src/components/explore/DiscoveryGrid.tsx package.json package-lock.json || true",
+      "git commit -m \\\"feat: skeleton loaders on DiscoveryGrid (and dep)\\\"",
+      "git push -u origin feat/skeleton-loaders"
+    ],
+    "rollback": "git restore src/components/explore/DiscoveryGrid.tsx && npm uninstall react-loading-skeleton"
+  },
+  {
+    "slug": "react-imports-pass",
+    "priority": "P2",
+    "why": "Lint nags are a vibe-killer",
+    "files": [
+      "src/components/ui/TierBadge.tsx",
+      "src/components/ui/VerifiedBadge.tsx"
+    ],
+    "bash": [
+      "git checkout -b feat/react-imports-pass",
+      "sed -i '1i import React from \\\"react\\\";' src/components/ui/TierBadge.tsx",
+      "sed -i '1i import React from \\\"react\\\";' src/components/ui/VerifiedBadge.tsx",
+      "git add src/components/ui/TierBadge.tsx src/components/ui/VerifiedBadge.tsx",
+      "git commit -m \\\"chore: prepend React import to client comps\\\"",
+      "git push -u origin feat/react-imports-pass"
+    ],
+    "rollback": "git restore src/components/ui/TierBadge.tsx src/components/ui/VerifiedBadge.tsx"
+  }
+]
