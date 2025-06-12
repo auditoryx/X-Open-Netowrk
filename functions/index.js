@@ -15,4 +15,3 @@ exports.grantAdmin = functions.https.onCall(async (data, context) => {
   return { success: true };
 });
 
-exports.cleanupOldBookings = require('./cleanupOldBookings').cleanupOldBookings;
