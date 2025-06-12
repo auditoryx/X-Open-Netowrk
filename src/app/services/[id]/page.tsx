@@ -1,3 +1,4 @@
+import { useCart } from "@/context/CartContext";
 'use client';
 
 import { useEffect, useState } from 'react';

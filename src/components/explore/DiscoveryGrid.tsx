@@ -58,12 +58,12 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
       }
     };
     window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+  if (data && data.pages[0].results.length === 0) return (<p className="p-4 text-gray-400">No creators found.<\/p>);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
   const router = useRouter();
 
   if (isLoading)
-    return (
+  if (data && data.pages[0].results.length === 0) return (<p className="p-4 text-gray-400">No creators found.<\/p>);
       <div className="text-white">
         <Translate t="explore.loadingResults" />
       </div>
@@ -71,7 +71,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
 
   const creators = data?.pages.flatMap(p => p.results) ?? [];
 
-  return (
+  if (data && data.pages[0].results.length === 0) return (<p className="p-4 text-gray-400">No creators found.<\/p>);
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {creators.map((creator: any) => (
         <div

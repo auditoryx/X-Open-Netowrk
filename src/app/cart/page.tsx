@@ -1,8 +1,9 @@
+import { useState } from "react";
 'use client'
 
 import { useCart } from '@/context/CartContext'
 
-export default function CartPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const { items, clear } = useCart()
 
   const subtotal = items.reduce((s, i) => s + i.price, 0)
@@ -10,7 +11,9 @@ export default function CartPage() {
   const total = subtotal + fee
 
   const checkout = async () => {
-    const res = await fetch('/api/cart/checkout', {
+    const res = try { const res = await fetch('/api/cart/checkout', {
+    if (!res.ok) throw new Error("Checkout failed");
+} catch (e) { alert(e.message); } finally { setIsLoading(false); }
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items }),
@@ -34,7 +37,7 @@ export default function CartPage() {
       <p>Subtotal: ${subtotal}</p>
       <p>Fees: ${fee}</p>
       <p className="font-semibold">Total: ${total}</p>
-      <button onClick={checkout} className="btn mt-4">Checkout</button>
+      <button disabled={isLoading} onClick={checkout} className="btn mt-4">{isLoading ? "Processing…" : "Checkout"}</button>
       <button onClick={clear} className="btn ml-2 mt-4">Clear</button>
     </div>
   )
