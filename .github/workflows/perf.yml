@@ -1,0 +1,11 @@
+name: Lighthouse Budget
+on: pull_request
+jobs:
+  perf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install
+      - run: pnpm run build
+      # Run Lighthouse CI (temporary storage) with budget file
+      - run: npx lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json
