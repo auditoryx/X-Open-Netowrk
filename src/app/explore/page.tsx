@@ -14,11 +14,15 @@ const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), 
 });
 import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
+import CreatorCard from '@/components/cards/CreatorCard';
+import { getFeaturedCreators } from '@/lib/firestore/getFeaturedCreators';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const newExplore = useFeatureFlag('newExplore');
+
+  const [featured, setFeatured] = useState<any[]>([]);
 
   const [view, setView] = useState<'grid' | 'map'>(
     searchParams.get('view') === 'map' ? 'map' : 'grid'
@@ -44,6 +48,10 @@ export default function ExplorePage() {
     radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : 50,
     sort: (searchParams.get('sort') as 'rating' | 'distance' | 'popularity') || 'rating',
   });
+
+  useEffect(() => {
+    getFeaturedCreators().then(setFeatured).catch(() => setFeatured([]));
+  }, []);
 
   useEffect(() => {
     const query = new URLSearchParams();
@@ -92,6 +100,29 @@ export default function ExplorePage() {
       </div>
 
       <FilterPanel filters={filters} setFilters={setFilters} />
+
+      {featured.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-xl font-bold mb-2">🔥 Featured Creators</h2>
+          <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4">
+            {featured.map(c => (
+              <div key={c.uid} className="min-w-[220px]">
+                <CreatorCard
+                  id={c.uid}
+                  name={c.displayName || c.name || 'Unnamed'}
+                  tagline={c.bio}
+                  price={c.price}
+                  location={c.location}
+                  imageUrl={c.photoURL}
+                  rating={c.averageRating}
+                  reviewCount={c.reviewCount}
+                  proTier={c.proTier}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {view === 'grid' ? (
         newExplore ? (
