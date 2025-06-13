@@ -10,6 +10,7 @@ import { SaveButton } from '@/components/profile/SaveButton';
 export default function ServiceDetailPage() {
   const { id: rawId } = useParams();
   const id = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
+
   const router = useRouter();
   const { addItem } = useCart();
 
@@ -27,7 +28,6 @@ export default function ServiceDetailPage() {
       if (snap.exists()) {
         const data = snap.data();
         setService(data);
-
         const [avg, count] = await Promise.all([
           getAverageRating(id),
           getReviewCount(id),
@@ -42,24 +42,18 @@ export default function ServiceDetailPage() {
     fetchService();
   }, [id]);
 
-  if (loading) {
-    return <div className="p-8 text-white">Loading service…</div>;
-  }
-
-  if (!service) {
-    return <div className="p-8 text-red-400">Service not found.</div>;
-  }
+  if (loading) return <div className="p-8 text-white">Loading service…</div>;
+  if (!service) return <div className="p-8 text-red-400">Service not found.</div>;
 
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-4xl py-12 px-6 space-y-6">
-        <h1 className="text-4xl font-bold">{service.title || 'Untitled Service'}</h1>
+        <h1 className="text-4xl font-bold">{service.title}</h1>
         {rating !== null && (
-          <p className="text-sm text-yellow-400">
-            ⭐ {rating.toFixed(1)} ({reviewCount})
-          </p>
+          <p className="text-sm text-yellow-400">⭐ {rating.toFixed(1)} ({reviewCount})</p>
         )}
-        <p className="text-gray-400">{service.description || 'No description provided.'}</p>
+
+        <p className="text-gray-400">{service.description}</p>
 
         <div className="flex items-center justify-between border-y py-4">
           <div>
@@ -69,17 +63,11 @@ export default function ServiceDetailPage() {
           <SaveButton providerId={service.creatorId} />
         </div>
 
-        <p className="text-lg">
-          💵 <strong>${service.price}</strong>
-        </p>
+        <p className="text-lg">💵 <strong>${service.price}</strong></p>
 
         <button
           onClick={() =>
-            addItem({
-              serviceId: id,
-              serviceName: service.title,
-              price: service.price,
-            })
+            addItem({ serviceId: id, serviceName: service.title, price: service.price })
           }
           className="btn btn-primary mt-4"
         >
