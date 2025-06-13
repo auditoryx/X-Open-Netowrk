@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 export default function TierBadge({ tier }: { tier: string }) {
   if (!tier || tier === 'standard') return null;
 
