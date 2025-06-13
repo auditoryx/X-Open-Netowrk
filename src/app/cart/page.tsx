@@ -1,25 +1,35 @@
-import { useState } from "react";
 'use client'
 
+import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
 
-  const [isLoading, setIsLoading] = useState(false);
+export default function CartPage() {
   const { items, clear } = useCart()
+  const [isLoading, setIsLoading] = useState(false)
 
   const subtotal = items.reduce((s, i) => s + i.price, 0)
   const fee = Math.round(subtotal * 0.1)
   const total = subtotal + fee
 
   const checkout = async () => {
-    const res = try { const res = await fetch('/api/cart/checkout', {
-    if (!res.ok) throw new Error("Checkout failed");
-} catch (e) { alert(e.message); } finally { setIsLoading(false); }
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items }),
-    })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/cart/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      })
+      if (!res.ok) {
+        throw new Error('Checkout failed')
+      }
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch (e) {
+      const err = e as Error
+      alert(err.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (items.length === 0) return <div className="p-6 text-white">Cart is empty.</div>
@@ -37,7 +47,13 @@ import { useCart } from '@/context/CartContext'
       <p>Subtotal: ${subtotal}</p>
       <p>Fees: ${fee}</p>
       <p className="font-semibold">Total: ${total}</p>
-      <button disabled={isLoading} onClick={checkout} className="btn mt-4">{isLoading ? "Processing…" : "Checkout"}</button>
+      <button
+        disabled={isLoading}
+        onClick={checkout}
+        className="btn mt-4"
+      >
+        {isLoading ? 'Processing…' : 'Checkout'}
+      </button>
       <button onClick={clear} className="btn ml-2 mt-4">Clear</button>
     </div>
   )
