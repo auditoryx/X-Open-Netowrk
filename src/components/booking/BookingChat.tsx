@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   collection,
   query,
@@ -15,6 +16,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
 import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
 import { markMessagesAsSeen } from '@/lib/firestore/chat/markMessagesAsSeen';
+import { AiOutlinePaperClip } from 'react-icons/ai';
 
 interface Message {
   id: string;
@@ -33,6 +35,8 @@ export default function BookingChat({ bookingId }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
   const [isTyping, setTyping] = useState(false);
   const [isOnline, setIsOnline] = useState(
     typeof navigator !== 'undefined' ? navigator.onLine : true
@@ -49,6 +53,16 @@ export default function BookingChat({ bookingId }: Props) {
       window.removeEventListener('offline', update);
     };
   }, []);
+
+  useEffect(() => {
+    if (!file) {
+      setPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
 
   useEffect(() => {
     if (!bookingId) return;
@@ -86,7 +100,8 @@ export default function BookingChat({ bookingId }: Props) {
   };
 
   const handleSend = async () => {
-    if (!user?.uid || (!text.trim() && !file)) return;
+    if (!user?.uid || (!text.trim() && !file) || sending) return;
+    setSending(true);
 
     let mediaUrl: string | null = null
     if (file) {
@@ -102,7 +117,9 @@ export default function BookingChat({ bookingId }: Props) {
 
     setText('');
     setFile(null);
+    setPreview(null);
     setTypingStatus(bookingId, user.uid, false);
+    setSending(false);
   };
 
   return (
@@ -112,32 +129,34 @@ export default function BookingChat({ bookingId }: Props) {
           You're offline
         </div>
       )}
-      <div className="h-64 overflow-y-auto border rounded p-2 bg-white text-black">
-        {messages.map(msg => (
-          <div
-            key={msg.id}
-            className={`text-sm p-2 my-1 rounded ${
-              msg.senderId === user?.uid ? 'bg-blue-100 text-right' : 'bg-gray-100 text-left'
-            }`}
-          >
-            {msg.mediaUrl && (
-              msg.mediaUrl.endsWith('.mp3') ? (
-                <audio controls src={msg.mediaUrl} className="mb-1 mx-auto" />
-              ) : (
-                <img src={msg.mediaUrl} className="w-32 rounded mb-1 mx-auto" />
-              )
-            )}
-            {msg.text && <p>{msg.text}</p>}
-            <div className="text-xs text-gray-500 mt-1">
-              {format(
-                msg.createdAt?.toDate ? msg.createdAt.toDate() : new Date(),
-                'HH:mm'
+      <div className="overflow-auto">
+        <div className="h-64 overflow-y-auto border rounded p-2 bg-white text-black">
+          {messages.map(msg => (
+            <div
+              key={msg.id}
+              className={`text-sm p-2 my-1 rounded ${
+                msg.senderId === user?.uid ? 'bg-blue-100 text-right' : 'bg-gray-100 text-left'
+              }`}
+            >
+              {msg.mediaUrl && (
+                msg.mediaUrl.endsWith('.mp3') ? (
+                  <audio controls src={msg.mediaUrl} className="mb-1 mx-auto" />
+                ) : (
+                  <img src={msg.mediaUrl} className="w-32 rounded mb-1 mx-auto" />
+                )
               )}
-              {msg.senderId === user?.uid && msg.seenBy?.length > 1 && ' ✓✓'}
+              {msg.text && <p>{msg.text}</p>}
+              <div className="text-xs text-gray-500 mt-1">
+                {format(
+                  msg.createdAt?.toDate ? msg.createdAt.toDate() : new Date(),
+                  'HH:mm'
+                )}
+                {msg.senderId === user?.uid && msg.seenBy?.length > 1 && ' ✓✓'}
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={bottomRef} />
+          ))}
+          <div ref={bottomRef} />
+        </div>
       </div>
 
       {isTyping && (
@@ -145,23 +164,57 @@ export default function BookingChat({ bookingId }: Props) {
       )}
 
       <div className="flex flex-col gap-2">
-        <input
-          className="border p-2 rounded"
-          value={text}
-          onChange={e => {
-            setText(e.target.value);
-            handleTyping();
-          }}
-          placeholder="Type your message..."
-        />
-        <input
-          type="file"
-          accept="image/*,audio/*"
-          onChange={e => setFile(e.target.files?.[0] || null)}
-        />
-        <button className="bg-black text-white px-4 py-2 rounded" onClick={handleSend}>
-          Send
-        </button>
+        <div className="flex items-center gap-2">
+          <input
+            className="border p-2 rounded flex-1"
+            value={text}
+            onChange={e => {
+              setText(e.target.value);
+              handleTyping();
+            }}
+            placeholder="Type your message..."
+          />
+          <label className="p-2 cursor-pointer" htmlFor="chat-file">
+            <AiOutlinePaperClip />
+            <input
+              id="chat-file"
+              type="file"
+              accept="image/*,video/*,audio/*"
+              className="sr-only"
+              onChange={e => setFile(e.target.files?.[0] || null)}
+            />
+          </label>
+          <button
+            className="bg-black text-white px-4 py-2 rounded"
+            onClick={handleSend}
+            disabled={(!text.trim() && !file) || sending}
+          >
+            {sending ? 'Processing…' : 'Send'}
+          </button>
+        </div>
+        {preview && (
+          <div className="mt-2">
+            {file?.type.startsWith('video') ? (
+              <video
+                src={preview}
+                className="w-20 h-20 rounded object-cover cursor-pointer"
+                onClick={() => {
+                  setFile(null);
+                  setPreview(null);
+                }}
+              />
+            ) : (
+              <img
+                src={preview}
+                className="w-20 h-20 rounded object-cover cursor-pointer"
+                onClick={() => {
+                  setFile(null);
+                  setPreview(null);
+                }}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
