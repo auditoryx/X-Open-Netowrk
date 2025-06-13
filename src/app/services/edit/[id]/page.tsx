@@ -64,16 +64,18 @@ export default function EditServicePage() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm mb-1">Title</label>
+            <label htmlFor="edit-title" className="block text-sm mb-1">Title</label>
             <input
+              id="edit-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full bg-neutral-900 border border-neutral-700 rounded px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Description</label>
+            <label htmlFor="edit-description" className="block text-sm mb-1">Description</label>
             <textarea
+              id="edit-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full bg-neutral-900 border border-neutral-700 rounded px-3 py-2"
@@ -81,8 +83,9 @@ export default function EditServicePage() {
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Price (USD)</label>
+            <label htmlFor="edit-price" className="block text-sm mb-1">Price (USD)</label>
             <input
+              id="edit-price"
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}

@@ -57,7 +57,7 @@ const MediaUploader = () => {
 
   return (
     <div className="p-4 border rounded-xl shadow-sm bg-white">
-      <label className="block mb-2 font-medium text-sm">Upload Media Samples</label>
+      <label htmlFor="media-upload" className="block mb-2 font-medium text-sm">Upload Media Samples</label>
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
@@ -66,6 +66,7 @@ const MediaUploader = () => {
       >
         <p className="text-sm text-gray-600">Drag & drop files here or click to browse</p>
         <input
+          id="media-upload"
           ref={inputRef}
           type="file"
           multiple

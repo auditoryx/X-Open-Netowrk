@@ -146,16 +146,20 @@ export default function ApplyRolePage() {
     basic: (
       <>
         <div>
-          <label className="text-sm mb-1 block">City / Location</label>
+          <label htmlFor="location" className="text-sm mb-1 block">
+            City / Location
+          </label>
           <LocationAutocomplete
+            id="location"
             value={location}
             onChange={(v) => setLocation(v)}
             onSelect={(name) => setLocation(name)}
           />
         </div>
         <div>
-          <label className="text-sm mb-1 block">Bio</label>
+          <label htmlFor="bio" className="text-sm mb-1 block">Bio</label>
           <textarea
+            id="bio"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="Tell us what you do, your experience, style, and any key work."
@@ -168,7 +172,7 @@ export default function ApplyRolePage() {
     music: (
       <>
         <div>
-          <label className="text-sm mb-1 block">Genres</label>
+          <label htmlFor="genres" className="text-sm mb-1 block">Genres</label>
           <div className="flex flex-wrap gap-1 mb-1">
             {genres.map((g) => (
               <span key={g} className="bg-neutral-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -178,6 +182,7 @@ export default function ApplyRolePage() {
             ))}
           </div>
           <input
+            id="genres"
             type="text"
             value={genreInput}
             onChange={(e) => setGenreInput(e.target.value)}
@@ -194,8 +199,9 @@ export default function ApplyRolePage() {
         </div>
         <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-sm mb-1 block">Min BPM</label>
+            <label htmlFor="min-bpm" className="text-sm mb-1 block">Min BPM</label>
             <input
+              id="min-bpm"
               type="number"
               value={minBpm ?? ''}
               onChange={(e) => setMinBpm(e.target.value ? +e.target.value : undefined)}
@@ -203,8 +209,9 @@ export default function ApplyRolePage() {
             />
           </div>
           <div className="flex-1">
-            <label className="text-sm mb-1 block">Max BPM</label>
+            <label htmlFor="max-bpm" className="text-sm mb-1 block">Max BPM</label>
             <input
+              id="max-bpm"
               type="number"
               value={maxBpm ?? ''}
               onChange={(e) => setMaxBpm(e.target.value ? +e.target.value : undefined)}
@@ -216,8 +223,9 @@ export default function ApplyRolePage() {
     ),
     photos: (
       <div>
-        <label className="text-sm mb-1 block">Upload Photos</label>
+        <label htmlFor="photos" className="text-sm mb-1 block">Upload Photos</label>
         <input
+          id="photos"
           type="file"
           multiple
           accept="image/*"
@@ -228,8 +236,9 @@ export default function ApplyRolePage() {
     ),
     reel: (
       <div>
-        <label className="text-sm mb-1 block">Reel Link</label>
+        <label htmlFor="reel" className="text-sm mb-1 block">Reel Link</label>
         <input
+          id="reel"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Vimeo or YouTube URL"
@@ -239,8 +248,9 @@ export default function ApplyRolePage() {
     ),
     travel: (
       <div>
-        <label className="text-sm mb-1 block">Travel Details</label>
+        <label htmlFor="travel" className="text-sm mb-1 block">Travel Details</label>
         <input
+          id="travel"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Travel radius or day rate"
@@ -250,8 +260,9 @@ export default function ApplyRolePage() {
     ),
     audio: (
       <div>
-        <label className="text-sm mb-1 block">Audio Links</label>
+        <label htmlFor="audio" className="text-sm mb-1 block">Audio Links</label>
         <input
+          id="audio"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Upload MP3 or link"
@@ -261,8 +272,9 @@ export default function ApplyRolePage() {
     ),
     beats: (
       <div>
-        <label className="text-sm mb-1 block">Beat Links</label>
+        <label htmlFor="beats" className="text-sm mb-1 block">Beat Links</label>
         <input
+          id="beats"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Upload beats or link BeatStars"
@@ -272,8 +284,9 @@ export default function ApplyRolePage() {
     ),
     portfolio: (
       <div>
-        <label className="text-sm mb-1 block">Portfolio Links</label>
+        <label htmlFor="portfolio" className="text-sm mb-1 block">Portfolio Links</label>
         <input
+          id="portfolio"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Before/after mixes, etc."
@@ -283,8 +296,9 @@ export default function ApplyRolePage() {
     ),
     pricing: (
       <div>
-        <label className="text-sm mb-1 block">Pricing Details</label>
+        <label htmlFor="pricing" className="text-sm mb-1 block">Pricing Details</label>
         <input
+          id="pricing"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Describe your pricing"
@@ -294,8 +308,9 @@ export default function ApplyRolePage() {
     ),
     rooms: (
       <div>
-        <label className="text-sm mb-1 block">Rooms & Capacities</label>
+        <label htmlFor="rooms" className="text-sm mb-1 block">Rooms & Capacities</label>
         <textarea
+          id="rooms"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="List room names and capacities"
@@ -306,8 +321,9 @@ export default function ApplyRolePage() {
     ),
     gear: (
       <div>
-        <label className="text-sm mb-1 block">Gear List</label>
+        <label htmlFor="gear" className="text-sm mb-1 block">Gear List</label>
         <textarea
+          id="gear"
           value={links}
           onChange={(e) => setLinks(e.target.value)}
           placeholder="Mics, console, outboard"
@@ -318,9 +334,10 @@ export default function ApplyRolePage() {
     ),
     availability: (
       <div>
-        <label className="text-sm mb-1 block">Availability</label>
+        <label htmlFor="availability" className="text-sm mb-1 block">Availability</label>
         <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
           <WeeklyCalendarSelector
+            id="availability"
             availability={allAvailability}
             multiSelect
             onSelect={(slots) =>
