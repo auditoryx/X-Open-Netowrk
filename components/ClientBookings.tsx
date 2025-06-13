@@ -75,8 +75,11 @@ export default function ClientBookings() {
 
           {b.status === 'completed' && !b.review && (
             <div className='mt-4'>
-              <label className='block text-sm mb-1 text-white'>Rating (1–5 Stars)</label>
+              <label htmlFor={`rating-${b.id}`} className='block text-sm mb-1 text-white'>
+                Rating (1–5 Stars)
+              </label>
               <select
+                id={`rating-${b.id}`}
                 value={ratings[b.id] || ''}
                 onChange={(e) =>
                   setRatings((prev) => ({ ...prev, [b.id]: parseInt(e.target.value) }))

@@ -10,11 +10,13 @@ export function WeeklyCalendarSelector({
   onSelect,
   multiSelect = false,
   value,
+  id,
 }: {
   availability: string[]
   onSelect: (selection: string | string[]) => void
   multiSelect?: boolean
   value?: string | string[]
+  id?: string
 }) {
   const initial = Array.isArray(value) ? value : value ? [value] : []
   const [selected, setSelected] = useState<string[]>(initial)
@@ -39,7 +41,7 @@ export function WeeklyCalendarSelector({
   }
 
   return (
-    <div className="mt-6">
+    <div id={id} className="mt-6">
       <h2 className="text-lg font-semibold mb-4">Choose a time</h2>
       <div className="grid grid-cols-7 gap-2 text-sm">
         {[...Array(7)].map((_, dayIndex) => {

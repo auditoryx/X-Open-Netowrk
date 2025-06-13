@@ -29,8 +29,11 @@ export default function DragDropUpload({ onUploadComplete }: Props) {
 
   return (
     <div className='border p-4 rounded'>
-      <label className='block mb-2 font-semibold'>Upload Media</label>
+      <label htmlFor='drag-upload' className='block mb-2 font-semibold'>
+        Upload Media
+      </label>
       <input
+        id='drag-upload'
         type='file'
         multiple
         accept='image/*,video/*'

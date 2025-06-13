@@ -42,8 +42,11 @@ export default function AvailabilityForm() {
       <h2 className="text-xl font-bold mb-2">Set Weekly Availability</h2>
       {Object.keys(availability).map((day) => (
         <div key={day} className="flex items-center gap-4">
-          <label className="capitalize">{day}</label>
+          <label htmlFor={`avail-${day}`} className="capitalize">
+            {day}
+          </label>
           <input
+            id={`avail-${day}`}
             type="checkbox"
             checked={availability[day]}
             onChange={() => handleChange(day)}

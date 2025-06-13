@@ -18,6 +18,12 @@ export default function LeaderboardPage() {
     load()
   }, [])
 
+  if (!entries?.length) {
+    return (
+      <p className="p-6 text-center text-gray-400">No scores this week — check back soon!</p>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-black text-white p-6">
       <h1 className="text-3xl font-bold mb-4">Weekly Leaderboard</h1>

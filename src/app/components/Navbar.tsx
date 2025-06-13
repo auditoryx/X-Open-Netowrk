@@ -33,7 +33,7 @@ export default function Navbar() {
       </Link>
 
       <div className="space-x-6 text-sm flex items-center">
-        <Link href="/explore" className="hover:underline">
+        <Link href="/explore" id="nav-explore" className="hover:underline">
           <Translate t="nav.explore" />
         </Link>
         {!user && (
@@ -51,7 +51,7 @@ export default function Navbar() {
         )}
         {user && (
           <>
-            <Link href="/dashboard" className="hover:underline">
+            <Link href="/dashboard" id="nav-dashboard" className="hover:underline">
               <Translate t="nav.dashboard" />
             </Link>
             <button

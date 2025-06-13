@@ -1,82 +1,84 @@
-import { useCart } from "@/context/CartContext";
 'use client';
-
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { getAverageRating, getReviewCount } from '@/lib/reviews';
+import { useCart } from '@/context/CartContext';
 import { SaveButton } from '@/components/profile/SaveButton';
-import { getAverageRating, getReviewCount } from "@/lib/reviews";
 
 export default function ServiceDetailPage() {
   const { id: rawId } = useParams();
   const id = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
-  const { addItem } = useCart();
-  const [service, setService] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [averageRating, setAverageRating] = useState<number | null>(null);
-  const [reviewCount, setReviewCount] = useState(0);
+
   const router = useRouter();
+  const { addItem } = useCart();
+
+  const [service, setService] = useState<any>(null);
+  const [rating, setRating] = useState<number | null>(null);
+  const [reviewCount, setReviewCount] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) return;
     const fetchService = async () => {
       const db = getFirestore(app);
       const ref = doc(db, 'services', id);
       const snap = await getDoc(ref);
-
       if (snap.exists()) {
-        setService(snap.data());
+        const data = snap.data();
+        setService(data);
+        const [avg, count] = await Promise.all([
+          getAverageRating(id),
+          getReviewCount(id),
+        ]);
+        setRating(avg);
+        setReviewCount(count);
       } else {
         setService(null);
       }
-
       setLoading(false);
     };
-
-    if (id) fetchService();
+    fetchService();
   }, [id]);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      if (!service?.creatorId) return;
-      const [avg, count] = await Promise.all([
-        getAverageRating(service.creatorId),
-        getReviewCount(service.creatorId),
-      ]);
-      setAverageRating(avg);
-      setReviewCount(count);
-    };
-    fetchRatings();
-  }, [service]);
-
-  if (loading) return <div className="text-white p-8">Loading service...</div>;
-  if (!service) return <div className="text-red-400 p-8">Service not found.</div>;
+  if (loading) return <div className="p-8 text-white">Loading service…</div>;
+  if (!service) return <div className="p-8 text-red-400">Service not found.</div>;
 
   return (
     <div className="min-h-screen bg-black text-white">
-            <div className="max-w-4xl mx-auto py-12 px-6">
-        <h1 className="text-4xl font-bold mb-1">{service.title || 'Untitled Service'}</h1>
-        {averageRating !== null && (
-          <p className="text-sm">⭐ {averageRating.toFixed(1)} ({reviewCount} reviews)</p>
+      <div className="mx-auto max-w-4xl py-12 px-6 space-y-6">
+        <h1 className="text-4xl font-bold">{service.title}</h1>
+        {rating !== null && (
+          <p className="text-sm text-yellow-400">⭐ {rating.toFixed(1)} ({reviewCount})</p>
         )}
-        <p className="text-gray-400 mb-6">{service.description || 'No description provided.'}</p>
 
-        <div className="flex items-center justify-between border-t border-b py-4 mb-6">
+        <p className="text-gray-400">{service.description}</p>
+
+        <div className="flex items-center justify-between border-y py-4">
           <div>
             <p className="text-sm text-gray-300">Provided by</p>
-            <p className="font-semibold">{service.creatorName || 'Unknown'}</p>
+            <p className="font-semibold">{service.creatorName}</p>
           </div>
-          <SaveButton providerId={service.creatorId || ''} />
+          <SaveButton providerId={service.creatorId} />
         </div>
 
-        <p className="text-lg">💵 ${service.price}</p>
+        <p className="text-lg">💵 <strong>${service.price}</strong></p>
+
         <button
           onClick={() =>
             addItem({ serviceId: id, serviceName: service.title, price: service.price })
           }
-          className="btn mt-4"
+          className="btn btn-primary mt-4"
         >
           Add to Cart
+        </button>
+
+        <button
+          onClick={() => router.push(`/profile/${service.creatorId}`)}
+          className="mt-2 text-sm underline"
+        >
+          View provider profile →
         </button>
       </div>
     </div>

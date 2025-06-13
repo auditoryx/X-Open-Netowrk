@@ -32,8 +32,9 @@ export default function QuoteCalculator({ rooms, onChange }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="text-sm font-medium block mb-1">Room</label>
+        <label htmlFor="room" className="text-sm font-medium block mb-1">Room</label>
         <select
+          id="room"
           className="input-base"
           value={roomIndex}
           onChange={(e) => setRoomIndex(Number(e.target.value))}
@@ -46,8 +47,9 @@ export default function QuoteCalculator({ rooms, onChange }: Props) {
         </select>
       </div>
       <div>
-        <label className="text-sm font-medium block mb-1">Hours</label>
+        <label htmlFor="hours" className="text-sm font-medium block mb-1">Hours</label>
         <input
+          id="hours"
           type="number"
           className="input-base"
           step={room.minBlock}
@@ -57,8 +59,9 @@ export default function QuoteCalculator({ rooms, onChange }: Props) {
         />
       </div>
       {room.hasEngineer && (
-        <label className="flex items-center gap-2">
+        <label htmlFor="with-engineer" className="flex items-center gap-2">
           <input
+            id="with-engineer"
             type="checkbox"
             className="w-4 h-4"
             checked={withEngineer}

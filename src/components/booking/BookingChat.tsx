@@ -1,22 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import {
   collection,
   query,
   orderBy,
   onSnapshot
 } from 'firebase/firestore';
-import { format } from 'date-fns'
-import { sendMessage } from '@/lib/firestore/chat/sendMessage'
-import { uploadChatMedia } from '@/lib/firebase/uploadChatMedia'
-import { db } from '@/lib/firebase'
+import { format } from 'date-fns';
+import { sendMessage } from '@/lib/firestore/chat/sendMessage';
+import { uploadChatMedia } from '@/lib/firebase/uploadChatMedia';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
 import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
 import { markMessagesAsSeen } from '@/lib/firestore/chat/markMessagesAsSeen';
 import { AiOutlinePaperClip } from 'react-icons/ai';
+perClip } from 'react-icons/ai';
 
 interface Message {
   id: string;
@@ -33,6 +34,7 @@ type Props = {
 export default function BookingChat({ bookingId }: Props) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -66,6 +68,7 @@ export default function BookingChat({ bookingId }: Props) {
 
   useEffect(() => {
     if (!bookingId) return;
+    setLoading(true);
     const q = query(
       collection(db, 'bookings', bookingId, 'messages'),
       orderBy('createdAt', 'asc')
@@ -73,6 +76,7 @@ export default function BookingChat({ bookingId }: Props) {
     const unsub = onSnapshot(q, snap => {
       const msgs = snap.docs.map(d => ({ id: d.id, ...(d.data() as any) }));
       setMessages(msgs);
+      setLoading(false);
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
       if (user?.uid) markMessagesAsSeen(bookingId, user.uid);
     });
@@ -121,6 +125,10 @@ export default function BookingChat({ bookingId }: Props) {
     setTypingStatus(bookingId, user.uid, false);
     setSending(false);
   };
+
+  if (isLoading && messages.length === 0) {
+    return <Skeleton count={5} height={32} className="mb-2 rounded" />;
+  }
 
   return (
     <div className="space-y-4">

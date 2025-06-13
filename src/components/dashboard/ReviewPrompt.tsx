@@ -44,7 +44,7 @@ export default function ReviewPrompt() {
   if (!booking || !open) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white text-black p-4 rounded shadow-lg w-80 z-50">
+    <div id="review-prompt" className="fixed bottom-4 right-4 bg-white text-black p-4 rounded shadow-lg w-80 z-50">
       <div className="flex justify-between items-center mb-2">
         <h3 className="font-semibold text-sm">Leave a review?</h3>
         <button onClick={() => setOpen(false)} className="text-xs text-gray-500">✕</button>

@@ -146,11 +146,11 @@ export default function FilterPanel({ filters, setFilters }: Props) {
 
         {/* radius */}
         <div>
-          <label className="text-sm block mb-1" id="radius-label">
+          <label htmlFor="radius" className="text-sm block mb-1" id="radius-label">
             <Translate t="filterPanel.radius" />: {filters.radiusKm ?? 50} km
           </label>
           <input
-            aria-labelledby="radius-label"
+            id="radius"
             type="range"
             min={1}
             max={100}
@@ -176,7 +176,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
 
         {/* genres */}
         <div>
-          <label className="text-sm block mb-1">Genres</label>
+          <label htmlFor="genres-input" className="text-sm block mb-1">Genres</label>
           <div className="flex flex-wrap gap-1 mb-1">
             {filters.genres.map((g) => (
               <span
@@ -199,6 +199,7 @@ export default function FilterPanel({ filters, setFilters }: Props) {
             ))}
           </div>
           <input
+            id="genres-input"
             type="text"
             value={genreInput}
             onChange={(e) => setGenreInput(e.target.value)}
@@ -215,8 +216,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         {/* BPM range */}
         <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-sm block mb-1">Min BPM</label>
+            <label htmlFor="min-bpm-filter" className="text-sm block mb-1">Min BPM</label>
             <input
+              id="min-bpm-filter"
               type="number"
               value={filters.minBpm ?? ''}
               onChange={(e) =>
@@ -229,8 +231,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
             />
           </div>
           <div className="flex-1">
-            <label className="text-sm block mb-1">Max BPM</label>
+            <label htmlFor="max-bpm-filter" className="text-sm block mb-1">Max BPM</label>
             <input
+              id="max-bpm-filter"
               type="number"
               value={filters.maxBpm ?? ''}
               onChange={(e) =>
@@ -265,8 +268,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
         </select>
 
         {/* toggles */}
-        <label className="flex items-center gap-2 text-sm">
+        <label htmlFor="search-near-me" className="flex items-center gap-2 text-sm">
           <input
+            id="search-near-me"
             type="checkbox"
             checked={!!filters.searchNearMe}
             onChange={handleGeoToggle}
@@ -275,8 +279,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
           <Translate t="filterPanel.searchNearMe" />
         </label>
 
-        <label className="flex items-center gap-2 text-sm">
+        <label htmlFor="available-now" className="flex items-center gap-2 text-sm">
           <input
+            id="available-now"
             type="checkbox"
             checked={!!filters.availableNow}
             onChange={() => {
@@ -292,8 +297,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
 
         {/* tier checkboxes */}
         <div className="flex gap-4">
-          <label className="flex items-center gap-2 text-sm">
+          <label htmlFor="tier-signature" className="flex items-center gap-2 text-sm">
             <input
+              id="tier-signature"
               type="checkbox"
               checked={filters.proTier === 'signature'}
               onChange={() => handleTierChange('signature')}
@@ -303,8 +309,9 @@ export default function FilterPanel({ filters, setFilters }: Props) {
             <Translate t="filterPanel.signature" />
           </label>
 
-          <label className="flex items-center gap-2 text-sm">
+          <label htmlFor="tier-verified" className="flex items-center gap-2 text-sm">
             <input
+              id="tier-verified"
               type="checkbox"
               checked={filters.proTier === 'verified'}
               onChange={() => handleTierChange('verified')}
