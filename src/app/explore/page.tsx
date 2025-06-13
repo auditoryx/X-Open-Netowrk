@@ -20,6 +20,20 @@ export default function ExplorePage() {
   const router = useRouter();
   const newExplore = useFeatureFlag('newExplore');
 
+  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Collapse filters by default on small screens
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setFiltersOpen(false);
+      }
+    }
+  }, []);
+
   const [view, setView] = useState<'grid' | 'map'>(
     searchParams.get('view') === 'map' ? 'map' : 'grid'
   );
@@ -91,7 +105,28 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      <FilterPanel filters={filters} setFilters={setFilters} />
+      {!filtersOpen && (
+        <button
+          onClick={() => setFiltersOpen(true)}
+          className="btn btn-sm mb-4"
+        >
+          Show Filters
+        </button>
+      )}
+
+      {filtersOpen && (
+        <div className="mb-4">
+          {isMobile && (
+            <button
+              onClick={() => setFiltersOpen(false)}
+              className="btn btn-sm mb-2"
+            >
+              Hide Filters
+            </button>
+          )}
+          <FilterPanel filters={filters} setFilters={setFilters} />
+        </div>
+      )}
 
       {view === 'grid' ? (
         newExplore ? (
