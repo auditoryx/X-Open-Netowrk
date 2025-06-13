@@ -46,8 +46,9 @@ export default function AuthModal() {
       <form onSubmit={handleSubmit}>
         {!isLogin && (
           <div className="mb-4">
-            <label className="block text-gray-400 mb-1">Name</label>
+            <label htmlFor="auth-name" className="block text-gray-400 mb-1">Name</label>
             <input
+              id="auth-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -58,8 +59,9 @@ export default function AuthModal() {
         )}
         
         <div className="mb-4">
-          <label className="block text-gray-400 mb-1">Email</label>
+          <label htmlFor="auth-email" className="block text-gray-400 mb-1">Email</label>
           <input
+            id="auth-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -69,8 +71,9 @@ export default function AuthModal() {
         </div>
         
         <div className="mb-4">
-          <label className="block text-gray-400 mb-1">Password</label>
+          <label htmlFor="auth-password" className="block text-gray-400 mb-1">Password</label>
           <input
+            id="auth-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -81,8 +84,9 @@ export default function AuthModal() {
         
         {!isLogin && (
           <div className="mb-4">
-            <label className="block text-gray-400 mb-1">Role</label>
+            <label htmlFor="auth-role" className="block text-gray-400 mb-1">Role</label>
             <select
+              id="auth-role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className="w-full bg-gray-800 border border-gray-700 p-2 rounded"

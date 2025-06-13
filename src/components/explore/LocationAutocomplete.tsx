@@ -7,10 +7,12 @@ export default function LocationAutocomplete({
   value,
   onChange,
   onSelect,
+  id,
 }: {
   value: string;
   onChange: (v: string) => void;
   onSelect: (name: string, lat: number, lng: number) => void;
+  id?: string;
 }) {
   const [query, setQuery] = useState(value);
   const [results, setResults] = useState<any[]>([]);
@@ -73,6 +75,7 @@ export default function LocationAutocomplete({
   return (
     <div className="relative" ref={containerRef}>
       <input
+        id={id}
         aria-label={<Translate t="filterPanel.locationPlaceholder" /> as unknown as string}
         type="text"
         value={query}

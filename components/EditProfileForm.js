@@ -32,16 +32,22 @@ export default function EditProfileForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
       <div>
-        <label className="block mb-1">Display Name</label>
+        <label htmlFor="display-name" className="block mb-1">
+          Display Name
+        </label>
         <input
+          id="display-name"
           className="input-base"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
         />
       </div>
       <div>
-        <label className="block mb-1">Bio</label>
+        <label htmlFor="bio" className="block mb-1">
+          Bio
+        </label>
         <textarea
+          id="bio"
           className="textarea-base"
           value={bio}
           onChange={(e) => setBio(e.target.value)}

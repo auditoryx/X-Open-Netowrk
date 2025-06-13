@@ -42,8 +42,9 @@ export default function RoleSwitcher() {
 
   return (
     <div className="mb-4">
-      <label className="text-sm mr-2">Current Role:</label>
+      <label htmlFor="role-switcher" className="text-sm mr-2">Current Role:</label>
       <select
+        id="role-switcher"
         value={current}
         onChange={handleSwitch}
         className="bg-neutral-800 border border-neutral-700 px-2 py-1 rounded text-white text-sm"
