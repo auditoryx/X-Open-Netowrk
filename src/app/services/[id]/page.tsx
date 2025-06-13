@@ -11,6 +11,7 @@ import { getAverageRating, getReviewCount } from "@/lib/reviews";
 export default function ServiceDetailPage() {
   const { id: rawId } = useParams();
   const id = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
+  const { addItem } = useCart();
   const [service, setService] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [averageRating, setAverageRating] = useState<number | null>(null);
@@ -69,6 +70,14 @@ export default function ServiceDetailPage() {
         </div>
 
         <p className="text-lg">💵 ${service.price}</p>
+        <button
+          onClick={() =>
+            addItem({ serviceId: id, serviceName: service.title, price: service.price })
+          }
+          className="btn mt-4"
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );
