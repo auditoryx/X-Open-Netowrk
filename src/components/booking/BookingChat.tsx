@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import {
   collection,
   query,
@@ -31,6 +32,7 @@ type Props = {
 export default function BookingChat({ bookingId }: Props) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [isTyping, setTyping] = useState(false);
@@ -52,6 +54,7 @@ export default function BookingChat({ bookingId }: Props) {
 
   useEffect(() => {
     if (!bookingId) return;
+    setLoading(true);
     const q = query(
       collection(db, 'bookings', bookingId, 'messages'),
       orderBy('createdAt', 'asc')
@@ -59,6 +62,7 @@ export default function BookingChat({ bookingId }: Props) {
     const unsub = onSnapshot(q, snap => {
       const msgs = snap.docs.map(d => ({ id: d.id, ...(d.data() as any) }));
       setMessages(msgs);
+      setLoading(false);
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
       if (user?.uid) markMessagesAsSeen(bookingId, user.uid);
     });
@@ -104,6 +108,10 @@ export default function BookingChat({ bookingId }: Props) {
     setFile(null);
     setTypingStatus(bookingId, user.uid, false);
   };
+
+  if (isLoading && messages.length === 0) {
+    return <Skeleton count={5} height={32} className="mb-2 rounded" />;
+  }
 
   return (
     <div className="space-y-4">
