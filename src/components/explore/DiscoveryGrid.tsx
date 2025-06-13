@@ -12,6 +12,7 @@ import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { Translate } from '@/i18n/Translate';
 import GenreBadges from '@/components/explore/GenreBadges';
+import Skeleton from 'react-loading-skeleton';
 
 type Page = { results: any[]; nextCursor?: string };
 
@@ -63,11 +64,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
   const router = useRouter();
 
   if (isLoading)
-  if (data && data.pages[0].results.length === 0) return (<p className="p-4 text-gray-400">No creators found.<\/p>);
-      <div className="text-white">
-        <Translate t="explore.loadingResults" />
-      </div>
-    );
+    return <Skeleton count={6} height={96} className="mb-4 rounded" />;
 
   const creators = data?.pages.flatMap(p => p.results) ?? [];
 
