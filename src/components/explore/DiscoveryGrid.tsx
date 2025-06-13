@@ -12,6 +12,7 @@ import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { Translate } from '@/i18n/Translate';
 import GenreBadges from '@/components/explore/GenreBadges';
+import VerifiedBadge from '@/components/ui/VerifiedBadge';
 
 type Page = { results: any[]; nextCursor?: string };
 
@@ -80,7 +81,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
         >
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-bold">
-              {creator.name || <Translate t="common.unnamed" />}
+              {creator.name || <Translate t="common.unnamed" />} {creator.isVerified && <VerifiedBadge />}
             </h2>
             <SaveButton providerId={creator.uid} />
           </div>
