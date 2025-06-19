@@ -8,11 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#1E1E2F',
-        secondary: '#7B61FF',
-        accent: '#FFBC00',
-        'neutral-light': '#F5F5F5',
-        'neutral-dark': '#1A1A1A',
+        ebony:  '#0B0B0B',
+        panel:  '#111315',
+        brand:  { DEFAULT: '#BA8CFF', dark: '#7A4FCC' },
+        accent: { gold: '#D4AF37', green: '#10B981' },
+      },
+      fontFamily: {
+        display: ['"Space Grotesk"', ...fontFamily.sans],
+        sans: ['Inter', ...fontFamily.sans],
       },
       fontFamily: {
         heading: ['Poppins', ...fontFamily.sans],

@@ -1,5 +1,4 @@
-import '@fontsource/poppins/400.css';
-import '@fontsource/poppins/700.css';
+import '@fontsource/space-grotesk/variable.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
 
@@ -46,6 +45,7 @@ export default function RootLayout({
               </QueryProvider>
             </CartProvider>
           </LanguageProvider>
+        </div>
         </AuthProvider>
       </body>
     </html>
