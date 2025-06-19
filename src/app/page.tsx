@@ -1,3 +1,4 @@
+import Button from '@/components/ui/Button';
 import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -35,20 +36,24 @@ export default function Home() {
         />
       </Head>
 
-      <main className="min-h-screen bg-black text-white px-6 py-16">
+      <main className="min-h-screen bg-ebony text-gray-100 px-6 py-16">
         <div className="mx-auto max-w-6xl space-y-20">
 
           {/* HERO */}
           <section className="text-center space-y-4 bg-gradient-to-br from-indigo-700 via-blue-600 to-blue-500 text-white rounded-xl py-14 px-6">
-            <h1 className="text-4xl font-bold">The Global Creative Network Built for Music.</h1>
-            <p className="text-lg text-gray-200">Book talent, sell your services, and get paid.</p>
+            <h1 className="text-4xl font-bold">
+              The Global Creative Network Built for Music.
+            </h1>
+            <p className="text-lg text-gray-200">
+              Book talent, sell your services, and get paid.
+            </p>
             <div className="flex justify-center gap-4 pt-6">
-              <Link href="/explore" className="btn btn-primary">
-                🔍 Explore Creators
-              </Link>
-              <Link href="/apply" className="btn btn-secondary">
-                ✍️ Apply to Join
-              </Link>
+              <Button asChild variant="primary">
+                <Link href="/explore">🔍 Explore Creators</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/apply">✍️ Apply to Join</Link>
+              </Button>
             </div>
           </section>
 
@@ -82,7 +87,7 @@ export default function Home() {
             ].map((f) => (
               <div
                 key={f.title}
-                className="min-h-[160px] rounded-xl bg-neutral-900 border border-neutral-800 p-6 space-y-2 hover:border-white/20 transition"
+                className="min-h-[160px] rounded-xl bg-panel ring-1 ring-neutral-800 p-6 space-y-2 hover:ring-white/20 transition"
               >
                 <h2 className="text-xl font-semibold">{f.title}</h2>
                 <p className="text-sm text-gray-400">{f.desc}</p>
@@ -110,7 +115,7 @@ export default function Home() {
               {[...Array(5)].map((_, i) => (
                 <div
                   key={i}
-                  className="min-w-[220px] rounded-xl bg-neutral-900 border border-neutral-800 p-4"
+                  className="min-w-[220px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4"
                 >
                   <div className="mb-2 h-12 w-12 rounded-full bg-white" />
                   <p className="font-semibold text-sm">Creator {i + 1}</p>
@@ -135,7 +140,7 @@ export default function Home() {
                 <Link
                   key={role}
                   href={`/explore?role=${role}`}
-                  className="rounded-lg border border-neutral-700 py-4 transition hover:border-white/60"
+                  className="rounded-lg ring-1 ring-neutral-700 py-4 transition hover:ring-white/60"
                 >
                   <span className="block text-2xl">{icon}</span>
                   <span className="capitalize text-sm text-gray-300">{role}</span>
@@ -152,7 +157,7 @@ export default function Home() {
                 <Link
                   key={city}
                   href={`/explore?location=${city}`}
-                  className="rounded-full border border-neutral-700 px-4 py-2 text-sm text-gray-300 transition hover:border-white"
+                  className="rounded-full ring-1 ring-neutral-700 px-4 py-2 text-sm text-gray-300 transition hover:ring-white"
                 >
                   {city}
                 </Link>
@@ -161,15 +166,12 @@ export default function Home() {
           </section>
 
           {/* APPLY BANNER */}
-          <section className="rounded-xl border border-neutral-800 bg-neutral-900 p-8 text-center space-y-4">
+          <section className="rounded-xl ring-1 ring-neutral-800 bg-panel p-8 text-center space-y-4">
             <h3 className="text-xl font-semibold">Want to offer services on AuditoryX?</h3>
             <p className="text-sm text-gray-400">Apply as a creator and start getting booked.</p>
-            <Link
-              href="/apply"
-              className="inline-block rounded border px-6 py-2 transition hover:bg-white hover:text-black"
-            >
-              📍 Apply Now
-            </Link>
+            <Button asChild variant="secondary">
+              <Link href="/apply">📍 Apply Now</Link>
+            </Button>
           </section>
 
         </div>
