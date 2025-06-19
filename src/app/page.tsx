@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -6,7 +5,9 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   openGraph: {
-    images: 'https://placehold.co/1200x630/png',
+    images: [
+      'https://placehold.co/1200x630/png'
+    ],
   },
 };
 
