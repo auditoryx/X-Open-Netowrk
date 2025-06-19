@@ -56,3 +56,5 @@ h5,
 h6 {
   @apply font-heading leading-snug;
 }
+
+body {@apply bg-ebony text-gray-100;}
