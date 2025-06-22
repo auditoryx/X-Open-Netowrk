@@ -35,12 +35,12 @@ describe('abuse detection', () => {
     mockedWhere.mockReturnValue('whereRef' as any)
     mockedTimestampFromDate.mockReturnValue('startTs')
     mockedGetDocs.mockResolvedValue({ docs: [] } as any)
-    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ points: 0, streakCount: 0 }) } as any)
+    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ xp: 0, streakCount: 0 }) } as any)
   })
 
   test('prevents duplicate context events', async () => {
     mockedGetDocs.mockResolvedValueOnce({ empty: false, docs: [{}] } as any)
-    const awarded = await logXpEvent('u1', 10, 'test', { contextId: 'abc' })
+    const awarded = await logXpEvent('u1', 'bookingConfirmed', { contextId: 'abc' })
     expect(awarded).toBe(0)
     expect(mockedAddDoc).toHaveBeenCalledWith('collRef', expect.objectContaining({ contextId: 'abc' }))
   })

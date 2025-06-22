@@ -12,8 +12,6 @@ import {
 } from 'firebase/firestore'
 import { logXpEvent } from '@/lib/gamification'
 
-const REFERRAL_XP = 500
-
 async function getReferralCode(uid: string): Promise<string | null> {
   const codesRef = collection(db, 'referralCodes')
   const q = query(codesRef, where('ownerId', '==', uid))
@@ -49,6 +47,6 @@ export async function redeemReferralCode(
 
   await updateDoc(codeRef, { redeemedBy: uid, redeemedAt: serverTimestamp() })
   await updateDoc(userRef, { referredBy: data.ownerId })
-  await logXpEvent(uid, REFERRAL_XP, 'referral')
+  await logXpEvent(uid, 'creatorReferral')
   return true
 }

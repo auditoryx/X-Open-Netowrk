@@ -1,4 +1,5 @@
 import { logXpEvent } from '@/lib/gamification'
+import { XP_VALUES } from '@/constants/gamification'
 import { collection, addDoc, doc, getDoc, updateDoc, query, where, getDocs, serverTimestamp, Timestamp } from 'firebase/firestore'
 
 jest.mock('@/lib/firebase', () => ({ db: {} }))
@@ -35,35 +36,35 @@ describe('gamification helpers', () => {
     mockedWhere.mockReturnValue('whereRef' as any)
     mockedTimestampFromDate.mockReturnValue('startTs')
     mockedGetDocs.mockResolvedValue({ docs: [] } as any)
-    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ points: 0, streakCount: 0, lastActivityAt: { toMillis: () => Date.now() } }) } as any)
+    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ xp: 0, streakCount: 0, lastActivityAt: { toMillis: () => Date.now() } }) } as any)
   })
 
   test('accumulates XP up to daily cap', async () => {
-    await logXpEvent('u1', 10, 'test')
-    expect(mockedAddDoc).toHaveBeenCalledWith('collRef', expect.objectContaining({ xp: 10 }))
-    expect(mockedUpdateDoc).toHaveBeenCalledWith('docRef', expect.objectContaining({ points: 10 }))
+    await logXpEvent('u1', 'bookingConfirmed')
+    expect(mockedAddDoc).toHaveBeenCalledWith('collRef', expect.objectContaining({ xp: XP_VALUES.bookingConfirmed }))
+    expect(mockedUpdateDoc).toHaveBeenCalledWith('docRef', expect.objectContaining({ xp: XP_VALUES.bookingConfirmed }))
   })
 
   test('enforces daily 100 XP cap', async () => {
     mockedGetDocs.mockResolvedValue({ docs: [{ data: () => ({ xp: 60 }) }, { data: () => ({ xp: 40 }) }] } as any)
-    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ points: 100, streakCount: 0 }) } as any)
-    await logXpEvent('u1', 20, 'test')
+    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ xp: 100, streakCount: 0 }) } as any)
+    await logXpEvent('u1', 'onTimeDelivery')
     expect(mockedAddDoc).toHaveBeenCalledWith('collRef', expect.objectContaining({ xp: 0 }))
-    expect(mockedUpdateDoc).toHaveBeenCalledWith('docRef', expect.objectContaining({ points: 100 }))
+    expect(mockedUpdateDoc).toHaveBeenCalledWith('docRef', expect.objectContaining({ xp: 100 }))
   })
 
   test('streak increments and resets correctly', async () => {
     const now = Date.now()
     jest.spyOn(Date, 'now').mockReturnValue(now)
     // within 24h
-    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ points: 0, streakCount: 3, lastActivityAt: { toMillis: () => now - 2 * 60 * 60 * 1000 } }) } as any)
-    await logXpEvent('u1', 5, 'quick', { quickReply: true })
+    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ xp: 0, streakCount: 3, lastActivityAt: { toMillis: () => now - 2 * 60 * 60 * 1000 } }) } as any)
+    await logXpEvent('u1', 'bookingConfirmed', { quickReply: true })
     expect(mockedUpdateDoc).toHaveBeenCalledWith('docRef', expect.objectContaining({ streakCount: 4 }))
 
     // after 24h gap
     mockedUpdateDoc.mockClear()
-    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ points: 0, streakCount: 3, lastActivityAt: { toMillis: () => now - 25 * 60 * 60 * 1000 } }) } as any)
-    await logXpEvent('u1', 5, 'quick', { quickReply: true })
+    mockedGetDoc.mockResolvedValue({ exists: () => true, data: () => ({ xp: 0, streakCount: 3, lastActivityAt: { toMillis: () => now - 25 * 60 * 60 * 1000 } }) } as any)
+    await logXpEvent('u1', 'bookingConfirmed', { quickReply: true })
     expect(mockedUpdateDoc).toHaveBeenCalledWith('docRef', expect.objectContaining({ streakCount: 1 }))
   })
 })
