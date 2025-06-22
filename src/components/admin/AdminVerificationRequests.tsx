@@ -41,7 +41,7 @@ export default function AdminVerificationRequests() {
         <div key={req.id} className="border p-4 rounded-md">
           <p><b>Email:</b> {req.email}</p>
           {req.idDocumentUrl && (
-            <a href={req.idDocumentUrl} target="_blank" className="text-blue-400 underline">View ID</a>
+            <a href={req.idDocumentUrl} target="_blank" className="text-blue-400 underline" rel="noreferrer">View ID</a>
           )}
           <div className="mt-2 space-x-2">
             <button onClick={() => approve(req.id)} className="btn btn-primary text-sm">Approve</button>

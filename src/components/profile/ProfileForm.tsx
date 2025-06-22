@@ -79,13 +79,55 @@ export default function ProfileForm() {
       <p className="text-sm text-gray-400">{percent}% complete</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input\1 id="auto-id" name="auto-name"\2>
-        <input\1 id="auto-id" name="auto-name"\2>
-        <textarea name="bio" placeholder="Short Bio" value={form.bio} onChange={handleChange} className="textarea-base" />
-        <input\1 id="auto-id" name="auto-name"\2>
-        <input\1 id="auto-id" name="auto-name"\2>
-        <input\1 id="auto-id" name="auto-name"\2>
-        <input\1 id="auto-id" name="auto-name"\2>
+        <input
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Display Name"
+          className="input input-bordered w-full"
+        />
+        <input
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+          placeholder="Role"
+          className="input input-bordered w-full"
+        />
+        <textarea
+          name="bio"
+          placeholder="Short Bio"
+          value={form.bio}
+          onChange={handleChange}
+          className="textarea-base"
+        />
+        <input
+          name="instagram"
+          value={form.instagram}
+          onChange={handleChange}
+          placeholder="Instagram"
+          className="input input-bordered w-full"
+        />
+        <input
+          name="availability"
+          value={form.availability}
+          onChange={handleChange}
+          placeholder="Availability"
+          className="input input-bordered w-full"
+        />
+        <input
+          name="location"
+          value={form.location}
+          onChange={handleChange}
+          placeholder="Location"
+          className="input input-bordered w-full"
+        />
+        <input
+          name="timezone"
+          value={form.timezone}
+          onChange={handleChange}
+          placeholder="Time Zone"
+          className="input input-bordered w-full"
+        />
 
         <div className="flex items-center space-x-2">
           <label htmlFor="visible" className="text-sm font-medium">Publicly Visible:</label>

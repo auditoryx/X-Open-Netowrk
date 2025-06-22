@@ -42,7 +42,10 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-bold mb-4">Create an Account</h1>
-<p className="text-xs text-gray-400 mb-2">No spam — we respect your data.</p>\n<button onClick={() => signIn(\"google\")} className="btn btn-primary w-full mb-4">Sign up with Google</button>
+      <p className="text-xs text-gray-400 mb-2">No spam — we respect your data.</p>
+      <button onClick={() => signIn('google')} className="btn btn-primary w-full mb-4">
+        Sign up with Google
+      </button>
       <div className="flex flex-col gap-2 w-full max-w-sm mb-6">
         <button
           onClick={() => handleOAuthSignup('google')}
@@ -97,6 +100,3 @@ export default function SignupPage() {
     </div>
   );
 }
-// --- injected by inject_p0_fixes.sh ---
-import { signIn } from "next-auth/react";          // Google OAuth
-// trust cue below header

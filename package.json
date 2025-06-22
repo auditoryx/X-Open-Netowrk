@@ -8,7 +8,8 @@
     "cypress": "cypress run --browser chrome --headless",
     "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
     "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
-    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
+    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage",
+    "lint": "next lint"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
@@ -70,13 +71,18 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
     "autoprefixer": "^10.4.21",
     "cypress": "^14.4.1",
+    "eslint-config-next": "^15.3.4",
+    "eslint-config-prettier": "^10.1.5",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
     "postcss-nested": "^7.0.2",
+    "prettier": "^3.5.3",
     "prisma": "^6.4.1",
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.3.4",
