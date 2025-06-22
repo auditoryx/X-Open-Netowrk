@@ -14,7 +14,6 @@ export interface UserProfile {
     twitter?: string;
     spotify?: string;
   };
-  isVerified: boolean;
   /**
    * Status of the user's ID verification request. If undefined, no verification
    * has been submitted yet.
@@ -23,10 +22,6 @@ export interface UserProfile {
   status: 'approved' | 'rejected';
   createdAt: any;
   timezone: string; // ✅ Required for isProfileComplete
-  /**
-   * Community contribution points. Starts at 0.
-   */
-  points?: number;
   /** Rooms for studio profiles */
   rooms?: Room[];
 }
@@ -47,6 +42,9 @@ export interface User {
   photoURL: string;
   providerId: string;
   role: 'creator' | 'admin' | 'user';
+  /** Whether the user has completed ID verification */
+  isVerified?: boolean;
+  proTier?: 'standard' | 'verified' | 'signature';
   isVisible?: boolean; // ✅ Optional for isProfileComplete
   /**
    * Total XP points accumulated by the user.
