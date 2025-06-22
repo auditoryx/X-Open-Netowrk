@@ -14,6 +14,7 @@ const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), 
 });
 import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
@@ -21,18 +22,12 @@ export default function ExplorePage() {
   const newExplore = useFeatureFlag('newExplore');
 
   const [filtersOpen, setFiltersOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile(768);
 
-  // Collapse filters by default on small screens
+  // Collapse or expand when screen size changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (mobile) {
-        setFiltersOpen(false);
-      }
-    }
-  }, []);
+    setFiltersOpen(!isMobile);
+  }, [isMobile]);
 
   const [view, setView] = useState<'grid' | 'map'>(
     searchParams.get('view') === 'map' ? 'map' : 'grid'
