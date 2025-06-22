@@ -5,6 +5,7 @@ import '@fontsource/inter/700.css';
 import '@/styles/globals.css';
 import Navbar from './components/Navbar';
 import OnboardingTour from '@/components/onboarding/OnboardingTour';
+import TourTooltip from '@/components/onboarding/TourTooltip';
 import { Metadata } from 'next';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
@@ -40,6 +41,7 @@ export default function RootLayout({
                 <Toaster position="top-center" />
                 <StreakToast />
                 <OnboardingTour />
+                <TourTooltip />
                 <Navbar />
                 {children}
               </QueryProvider>
