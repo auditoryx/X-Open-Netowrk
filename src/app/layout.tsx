@@ -9,6 +9,7 @@ import { Metadata } from 'next';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
+import { TourProvider } from '@/context/TourContext';
 import { Toaster } from 'react-hot-toast';
 import QueryProvider from '../../providers/QueryProvider';
 import StreakToast from '../components/gamification/StreakToast';
@@ -33,20 +34,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          <LanguageProvider>
-            <CartProvider>
-              <QueryProvider>
-                <Toaster position="top-center" />
-                <StreakToast />
-                <OnboardingTour />
-                <Navbar />
-                {children}
-              </QueryProvider>
-            </CartProvider>
-          </LanguageProvider>
-        </div>
-        </AuthProvider>
+        <TourProvider>
+          <AuthProvider>
+            <LanguageProvider>
+              <CartProvider>
+                <QueryProvider>
+                  <Toaster position="top-center" />
+                  <StreakToast />
+                  <OnboardingTour />
+                  <Navbar />
+                  {children}
+                </QueryProvider>
+              </CartProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </TourProvider>
       </body>
     </html>
   );
