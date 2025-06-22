@@ -14,7 +14,7 @@ export interface UserProfile {
     twitter?: string;
     spotify?: string;
   };
-  isVerified: boolean;
+  tier: 'standard' | 'verified' | 'signature';
   /**
    * Status of the user's ID verification request. If undefined, no verification
    * has been submitted yet.
@@ -23,10 +23,10 @@ export interface UserProfile {
   status: 'approved' | 'rejected';
   createdAt: any;
   timezone: string; // ✅ Required for isProfileComplete
-  /**
-   * Community contribution points. Starts at 0.
-   */
-  points?: number;
+  xp: number;
+  rankScore: number;
+  lateDeliveries: number;
+  tierFrozen: boolean;
   /** Rooms for studio profiles */
   rooms?: Room[];
 }
@@ -48,10 +48,10 @@ export interface User {
   providerId: string;
   role: 'creator' | 'admin' | 'user';
   isVisible?: boolean; // ✅ Optional for isProfileComplete
-  /**
-   * Total XP points accumulated by the user.
-   */
-  points?: number;
+  xp: number;
+  rankScore: number;
+  lateDeliveries: number;
+  tierFrozen: boolean;
   /**
    * Current reply streak count.
    */
@@ -68,5 +68,5 @@ export interface UserWithProfile extends User {
   isCreator: boolean;
   isAdmin: boolean;
   isUser: boolean;
-  isVerified: boolean;
+  tier: 'standard' | 'verified' | 'signature';
 }
