@@ -49,6 +49,6 @@ export async function redeemReferralCode(
 
   await updateDoc(codeRef, { redeemedBy: uid, redeemedAt: serverTimestamp() })
   await updateDoc(userRef, { referredBy: data.ownerId })
-  await logXpEvent(uid, REFERRAL_XP, 'referral')
+  await logXpEvent(uid, 'creatorReferral', code)
   return true
 }

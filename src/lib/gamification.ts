@@ -1,87 +1,58 @@
-import { db } from '@/lib/firebase'
 import {
   doc,
-  getDoc,
-  updateDoc,
-  collection,
-  addDoc,
+  increment,
   serverTimestamp,
-  query,
-  where,
-  getDocs,
-  Timestamp
+  getDoc,
+  setDoc,
 } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { XP_VALUES } from '@/constants/gamification'
 
-const DAY_MS = 24 * 60 * 60 * 1000
+export type GamificationEvent =
+  | 'bookingConfirmed'
+  | 'fiveStarReview'
+  | 'onTimeDelivery'
+  | 'sevenDayStreak'
+  | 'creatorReferral'
 
-export interface LogOptions {
-  quickReply?: boolean
-  /** Optional id used to deduplicate events (e.g. booking or message id) */
-  contextId?: string
-}
+export type UserTier = 'standard' | 'verified' | 'signature'
 
+/**
+ * Atomically award XP; enforces 100-XP/day cap & duplicate-context guard.
+ */
 export async function logXpEvent(
   uid: string,
-  xp: number,
-  type: string,
-  options: LogOptions = {}
+  event: GamificationEvent,
+  contextId: string,           // bookingId | reviewId | referralId
 ) {
-  const userRef = doc(db, 'users', uid)
-  const userSnap = await getDoc(userRef)
-  const userData = userSnap.exists() ? (userSnap.data() as any) : {}
+  const xp = XP_VALUES[event]
+  const xpRef = doc(db, 'users', uid)
+  const metaRef = doc(db, 'users', uid, 'xpMeta', contextId)
+  const dayKey = new Date().toISOString().slice(0, 10)
+  const dailyRef = doc(db, 'users', uid, 'xpDaily', dayKey)
 
-  const now = Date.now()
-  const start = new Date(now)
-  start.setHours(0, 0, 0, 0)
-  const activitiesRef = collection(db, 'users', uid, 'activities')
-  if (options.contextId) {
-    const dupQ = query(activitiesRef, where('contextId', '==', options.contextId))
-    const dupSnap = await getDocs(dupQ)
-    if (!dupSnap.empty) {
-      await addDoc(collection(db, 'abuseLogs'), {
-        uid,
-        type,
-        contextId: options.contextId,
-        createdAt: serverTimestamp(),
-      })
-      return 0
-    }
-  }
-  const q = query(activitiesRef, where('createdAt', '>=', Timestamp.fromDate(start)))
-  const todaySnap = await getDocs(q)
-  const earnedToday = todaySnap.docs.reduce((sum, d) => sum + (d.data().xp || 0), 0)
+  const [metaSnap, dailySnap] = await Promise.all([getDoc(metaRef), getDoc(dailyRef)])
+  if (metaSnap.exists()) return // duplicate: ignore
 
-  const remaining = Math.max(0, 100 - earnedToday)
+  const used = dailySnap.exists() ? (dailySnap.data() as any).total || 0 : 0
+  const remaining = Math.max(0, 100 - used)
   const awarded = Math.min(xp, remaining)
 
-  await addDoc(activitiesRef, {
-    xp: awarded,
-    type,
-    contextId: options.contextId,
-    createdAt: serverTimestamp(),
-  })
-
-  const last = userData.lastActivityAt?.toMillis
-    ? userData.lastActivityAt.toMillis()
-    : userData.lastActivityAt
-      ? new Date(userData.lastActivityAt).getTime()
-      : undefined
-  let streak = userData.streakCount || 0
-  if (options.quickReply) {
-    if (last && now - last < DAY_MS) {
-      streak += 1
-    } else {
-      streak = 1
-    }
-  } else if (!last || now - last >= DAY_MS) {
-    streak = 0
+  if (awarded > 0) {
+    await setDoc(
+      xpRef,
+      {
+        xp: increment(awarded),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true },
+    )
+    await setDoc(
+      dailyRef,
+      { total: increment(awarded), updatedAt: serverTimestamp() },
+      { merge: true },
+    )
   }
 
-  await updateDoc(userRef, {
-    points: (userData.points || 0) + awarded,
-    streakCount: streak,
-    lastActivityAt: serverTimestamp(),
-  })
-
-  return awarded
+  await setDoc(metaRef, { event, xp: awarded, at: serverTimestamp() })
 }
