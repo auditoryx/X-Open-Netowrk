@@ -13,8 +13,15 @@ import {
 } from 'firebase/firestore'
 import { XP_VALUES } from '@/constants/gamification'
 
+/** Maximum XP a user can earn in a single day. */
+export const DAILY_XP_CAP = 100
+
 const DAY_MS = 24 * 60 * 60 * 1000
 
+/**
+ * Valid event keys that can award XP. Maintained alongside
+ * `XP_VALUES` so each event has a numeric reward.
+ */
 export type GamificationEvent = keyof typeof XP_VALUES
 
 export interface LogOptions {
@@ -23,6 +30,12 @@ export interface LogOptions {
   contextId?: string
 }
 
+/**
+ * Record an XP earning event for a user.
+ *
+ * Returns the amount of XP actually awarded after
+ * enforcing the daily cap and duplicate checks.
+ */
 export async function logXpEvent(
   uid: string,
   event: GamificationEvent,
@@ -53,7 +66,7 @@ export async function logXpEvent(
   const todaySnap = await getDocs(q)
   const earnedToday = todaySnap.docs.reduce((sum, d) => sum + (d.data().xp || 0), 0)
 
-  const remaining = Math.max(0, 100 - earnedToday)
+  const remaining = Math.max(0, DAILY_XP_CAP - earnedToday)
   const xp = XP_VALUES[event]
   const awarded = Math.min(xp, remaining)
 
