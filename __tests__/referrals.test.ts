@@ -65,7 +65,7 @@ describe('referral helpers', () => {
     const ok = await redeemReferralCode('u2', 'CODE')
     expect(ok).toBe(true)
     expect(mockedUpdateDoc).toHaveBeenCalledTimes(2)
-    expect(mockedLogXp).toHaveBeenCalledWith('u2', 500, 'referral')
+    expect(mockedLogXp).toHaveBeenCalledWith('u2', 'creatorReferral')
   })
 
   test('fails for invalid code', async () => {

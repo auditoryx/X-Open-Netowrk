@@ -9,10 +9,13 @@ import {
   query,
   where,
   getDocs,
-  Timestamp
+  Timestamp,
 } from 'firebase/firestore'
+import { XP_VALUES } from '@/constants/gamification'
 
 const DAY_MS = 24 * 60 * 60 * 1000
+
+export type GamificationEvent = keyof typeof XP_VALUES
 
 export interface LogOptions {
   quickReply?: boolean
@@ -22,8 +25,7 @@ export interface LogOptions {
 
 export async function logXpEvent(
   uid: string,
-  xp: number,
-  type: string,
+  event: GamificationEvent,
   options: LogOptions = {}
 ) {
   const userRef = doc(db, 'users', uid)
@@ -40,7 +42,7 @@ export async function logXpEvent(
     if (!dupSnap.empty) {
       await addDoc(collection(db, 'abuseLogs'), {
         uid,
-        type,
+        event,
         contextId: options.contextId,
         createdAt: serverTimestamp(),
       })
@@ -52,11 +54,12 @@ export async function logXpEvent(
   const earnedToday = todaySnap.docs.reduce((sum, d) => sum + (d.data().xp || 0), 0)
 
   const remaining = Math.max(0, 100 - earnedToday)
+  const xp = XP_VALUES[event]
   const awarded = Math.min(xp, remaining)
 
   await addDoc(activitiesRef, {
     xp: awarded,
-    type,
+    event,
     contextId: options.contextId,
     createdAt: serverTimestamp(),
   })
@@ -78,7 +81,7 @@ export async function logXpEvent(
   }
 
   await updateDoc(userRef, {
-    points: (userData.points || 0) + awarded,
+    xp: (userData.xp || 0) + awarded,
     streakCount: streak,
     lastActivityAt: serverTimestamp(),
   })
