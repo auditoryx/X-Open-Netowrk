@@ -1,4 +1,4 @@
-import { GamificationEvent } from '@/lib/gamification'
+import { GamificationEvent, UserTier } from '@/lib/gamification'
 
 /** XP rewards per event (single source of truth). */
 export const XP_VALUES: Record<GamificationEvent, number> = {

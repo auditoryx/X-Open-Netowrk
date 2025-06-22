@@ -13,6 +13,9 @@ import {
 } from 'firebase/firestore'
 import { XP_VALUES } from '@/constants/gamification'
 
+/** Creator tier type used in ranking calculations. */
+export type UserTier = 'standard' | 'verified' | 'signature'
+
 /** Maximum XP a user can earn in a single day. */
 export const DAILY_XP_CAP = 100
 
