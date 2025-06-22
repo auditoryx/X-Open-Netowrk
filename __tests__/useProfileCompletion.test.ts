@@ -11,12 +11,15 @@ function createProfile(overrides: Partial<UserProfile> = {}): UserProfile {
     media: [],
     availability: [],
     socials: {},
-    isVerified: false,
     verificationStatus: undefined,
     status: 'approved',
     createdAt: null,
     timezone: 'UTC',
-    points: 0,
+    tier: 'standard',
+    xp: 0,
+    rankScore: 0,
+    lateDeliveries: 0,
+    tierFrozen: false,
     ...overrides,
   } as UserProfile;
 }
