@@ -24,7 +24,7 @@ export const queryCreators = async (filters: {
   sortKey?: string;
   sortDirection?: 'asc' | 'desc';
 }) => {
-  let ref = collection(db, 'users');
+  const ref = collection(db, 'users');
   const constraints = [];
 
   if (filters.role) {

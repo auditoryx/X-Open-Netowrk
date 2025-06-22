@@ -30,7 +30,7 @@ export default function VerificationRequestsPage() {
       {requests.map((r) => (
         <div key={r.id} className="mb-4 border-b border-white pb-3">
           <p><strong>{r.name}</strong> ({r.email})</p>
-          <a href={r.idDocumentUrl} target="_blank" className="underline text-blue-400">View ID</a>
+          <a href={r.idDocumentUrl} target="_blank" className="underline text-blue-400" rel="noreferrer">View ID</a>
           <button onClick={() => approve(r.id)} className="ml-4 bg-green-600 px-3 py-1 rounded">
             Approve
           </button>

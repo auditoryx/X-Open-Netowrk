@@ -1,5 +1,3 @@
-## BEGIN src/components/ui/TourTooltip.tsx
-tee src/components/ui/TourTooltip.tsx <<'EOF'
 'use client'
 
 import React from 'react'
@@ -50,5 +48,3 @@ export default function TourTooltip() {
     </>
   )
 }
-EOF
-## END src/components/ui/TourTooltip.tsx

@@ -17,7 +17,6 @@ import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
 import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
 import { markMessagesAsSeen } from '@/lib/firestore/chat/markMessagesAsSeen';
 import { AiOutlinePaperClip } from 'react-icons/ai';
-perClip } from 'react-icons/ai';
 
 interface Message {
   id: string;

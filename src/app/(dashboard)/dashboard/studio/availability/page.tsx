@@ -29,7 +29,13 @@ function Page() {
     <div className="p-6 space-y-6 text-white">
       <h1 className="text-xl font-bold">Studio Availability</h1>
       <div className="space-x-4">
-        <input\1 id="auto-id" name="auto-name"\2>
+        <input
+          id="csv-upload"
+          type="file"
+          accept=".csv"
+          onChange={handleImport}
+          className="hidden"
+        />
         <label htmlFor="csv-upload" className="btn">Import CSV</label>
         <a href="/sample-availability.csv" className="underline text-sm">Download sample</a>
       </div>

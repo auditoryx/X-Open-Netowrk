@@ -45,11 +45,10 @@ export default function RootLayout({
                 <Navbar />
                 {children}
               </QueryProvider>
-            </CartProvider>
-          </LanguageProvider>
-        </div>
-        </AuthProvider>
-      </body>
-    </html>
+              </CartProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </body>
+      </html>
   );
 }
