@@ -20,6 +20,7 @@ exports.createCheckoutSession = require('./src/stripe/createCheckoutSession');
 // Maintenance jobs
 // exports.cleanupOldBookings  = require('./src/maintenance/cleanupOldBookings'); // ⬅ keep commented until implemented
 exports.streakReset           = require('./src/maintenance/streakReset');
+exports.calcTierAndRank       = require('./src/cron/calcTierAndRank');
 
 // Dev-only admin helper (consider gating by env)
 exports.grantAdmin = functions.https.onCall(async (data, context) => {
