@@ -22,6 +22,9 @@ module.exports = {
           dark: '#1c1c1e',
           light: '#f5f5f5',
         },
+        border: '#23272f',
+        surface: '#18181b',
+        muted: '#6b7280',
       },
       fontFamily: {
         display: ['"Space Grotesk"', ...fontFamily.sans],
@@ -29,7 +32,19 @@ module.exports = {
         heading: ['Poppins', ...fontFamily.sans],
         body: ['Inter', ...fontFamily.sans],
       },
+      boxShadow: {
+        card: '0 2px 12px 0 rgba(0,0,0,0.08)',
+        navbar: '0 2px 8px 0 rgba(0,0,0,0.10)',
+      },
+      borderRadius: {
+        xl: '1rem',
+        '2xl': '1.5rem',
+      },
+      spacing: {
+        18: '4.5rem',
+        22: '5.5rem',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
 };
