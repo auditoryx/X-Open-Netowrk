@@ -16,6 +16,7 @@ import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import CreatorCard from '@/components/cards/CreatorCard';
 import { getFeaturedCreators } from '@/lib/firestore/getFeaturedCreators';
+import { useRankedCreators } from '@/hooks/useRankedCreators';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
@@ -40,13 +41,13 @@ export default function ExplorePage() {
     maxBpm: searchParams.get('maxBpm')
       ? parseInt(searchParams.get('maxBpm')!, 10)
       : undefined,
-    proTier: searchParams.get('proTier') || '',
+    tier: searchParams.get('tier') || 'pro', // pre-check pro filter
     availableNow: searchParams.get('availableNow') === '1',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
     radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : 50,
-    sort: (searchParams.get('sort') as 'rating' | 'distance' | 'popularity') || 'rating',
+    sort: (searchParams.get('sort') as 'recommended' | 'rating' | 'distance' | 'popularity') || 'recommended',
   });
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export default function ExplorePage() {
     if (filters.genres.length) query.set('genres', filters.genres.join(','));
     if (filters.minBpm !== undefined) query.set('minBpm', String(filters.minBpm));
     if (filters.maxBpm !== undefined) query.set('maxBpm', String(filters.maxBpm));
-    if (filters.proTier) query.set('proTier', filters.proTier);
+    if (filters.tier) query.set('tier', filters.tier);
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');
     }
@@ -73,6 +74,10 @@ export default function ExplorePage() {
     query.set('view', view);
     router.replace('/explore?' + query.toString());
   }, [filters, view]);
+
+  // Use the new ranked creators hook for grid view
+  const { data: rankedCreatorsPages } = useRankedCreators({ filters, pageSize: 20 });
+  const rankedCreators = rankedCreatorsPages?.pages?.flat() || [];
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
@@ -116,7 +121,10 @@ export default function ExplorePage() {
                   imageUrl={c.photoURL}
                   rating={c.averageRating}
                   reviewCount={c.reviewCount}
-                  proTier={c.proTier}
+                  tier={c.tier}
+                  xp={c.xp}
+                  rankScore={c.rankScore}
+                  tierFrozen={c.tierFrozen}
                 />
               </div>
             ))}
@@ -125,11 +133,25 @@ export default function ExplorePage() {
       )}
 
       {view === 'grid' ? (
-        newExplore ? (
-          <NewExploreGrid filters={filters} />
-        ) : (
-          <DiscoveryGrid filters={filters} />
-        )
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {rankedCreators.map(c => (
+            <CreatorCard
+              key={c.id}
+              id={c.id}
+              name={c.name}
+              tagline={c.tagline}
+              price={c.price}
+              location={c.location}
+              imageUrl={c.imageUrl}
+              rating={c.rating}
+              reviewCount={c.reviewCount}
+              tier={c.tier}
+              xp={c.xp}
+              rankScore={c.rankScore}
+              tierFrozen={c.tierFrozen}
+            />
+          ))}
+        </div>
       ) : (
         <div className="h-[80vh] rounded overflow-hidden border border-white">
           <Suspense fallback={<div className="p-4">Loading map...</div>}>

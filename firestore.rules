@@ -33,7 +33,12 @@ service cloud.firestore {
     // ✅ User Profiles & Subcollections
     match /users/{userId} {
       allow read: if true;
-      allow write: if request.auth.uid == userId || request.auth.token.admin == true;
+      allow write: if (request.auth.uid == userId || request.auth.token.admin == true)
+        && !('tier' in request.resource.data.diff(resource.data))
+        && !('xp' in request.resource.data.diff(resource.data))
+        && !('rankScore' in request.resource.data.diff(resource.data))
+        && !('lateDeliveries' in request.resource.data.diff(resource.data))
+        && !('tierFrozen' in request.resource.data.diff(resource.data));
 
       match /activities/{activityId} {
         allow create: if request.auth.uid == userId;

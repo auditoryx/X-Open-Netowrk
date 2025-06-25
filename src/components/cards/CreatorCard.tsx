@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import TierBadge from '@/components/ui/TierBadge';
+import ProgressRing from '@/components/ui/ProgressRing';
 import Image from 'next/image';
 
 export default function CreatorCard({
@@ -13,7 +14,10 @@ export default function CreatorCard({
   imageUrl,
   rating,
   reviewCount,
-  proTier,
+  tier,
+  xp,
+  rankScore,
+  tierFrozen,
 }: {
   id: string;
   name: string;
@@ -23,7 +27,10 @@ export default function CreatorCard({
   imageUrl?: string;
   rating?: number;
   reviewCount?: number;
-  proTier?: string;
+  tier?: string;
+  xp?: number;
+  rankScore?: number;
+  tierFrozen?: boolean;
 }) {
   return (
     <Link
@@ -45,9 +52,18 @@ export default function CreatorCard({
         )}
 
         <div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold">{name}</h2>
-            {proTier && <TierBadge tier={proTier} />}
+            {tier && <TierBadge tier={tier} frozen={tierFrozen} />}
+            {typeof xp === 'number' && (
+              <ProgressRing
+                radius={12}
+                stroke={3}
+                progress={Math.min(100, xp)}
+                tooltip={`XP: ${xp}`}
+                color="#3b82f6"
+              />
+            )}
           </div>
           <p className="text-sm text-gray-400">{location || 'Unknown'}</p>
         </div>
