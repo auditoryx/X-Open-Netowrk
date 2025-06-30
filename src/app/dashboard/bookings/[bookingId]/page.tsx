@@ -12,7 +12,6 @@ import ReviewForm from '@/components/booking/ReviewForm';
 import DisputeForm from '@/components/disputes/DisputeForm';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
-import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
 
 export default function BookingDetailPage() {
   const { bookingId: rawId } = useParams();
@@ -46,7 +45,6 @@ export default function BookingDetailPage() {
   if (!booking) return <div className="p-6 text-white">Booking not found.</div>;
 
   const isClient = user?.uid === booking.buyerId;
-  const isProvider = user?.uid === booking.providerId;
 
   return (
     <div className="min-h-screen bg-black text-white">

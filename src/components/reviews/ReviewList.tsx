@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { db } from '@/lib/firebase';
 import {
@@ -22,7 +22,7 @@ export function ReviewList({ providerId }: { providerId: string }) {
   const [hasMore, setHasMore] = useState(true);
   const { user } = useAuth();
 
-  const fetchReviews = (startDoc: QueryDocumentSnapshot<DocumentData> | null = null) => {
+  const fetchReviews = useCallback((startDoc: QueryDocumentSnapshot<DocumentData> | null = null) => {
     const baseQuery = query(
       collection(db, 'reviews'),
       where('providerId', '==', providerId),
@@ -43,12 +43,12 @@ export function ReviewList({ providerId }: { providerId: string }) {
       setLastDoc(snap.docs[snap.docs.length - 1]);
       setLoading(false);
     });
-  };
+  }, [providerId]);
 
   useEffect(() => {
     const unsub = fetchReviews();
     return () => unsub();
-  }, [providerId]);
+  }, [fetchReviews]);
 
   const avgRating = reviews.length
     ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length

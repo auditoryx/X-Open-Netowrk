@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Translate } from '@/i18n/Translate';
@@ -9,7 +9,6 @@ import { Translate } from '@/i18n/Translate';
 export default function EditServicePage() {
   const { id: rawId } = useParams();
   const id = typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : '';
-  const router = useRouter();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

@@ -24,7 +24,7 @@ export default function AssignRoleForm() {
     try {
       await assignRole(uid, role)
       alert('Role assigned successfully')
-    } catch (err) {
+    } catch {
       alert('Failed to assign role')
     } finally {
       setLoading(false)

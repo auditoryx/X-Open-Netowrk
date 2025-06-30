@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 
@@ -13,11 +13,7 @@ export default function BookingsList({ uid }: Props) {
   const [lastDoc, setLastDoc] = useState<any | null>(null)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    loadMore()
-  }, [uid])
-
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     setLoading(true)
     const base = query(
       collection(db, 'bookings'),
@@ -31,7 +27,11 @@ export default function BookingsList({ uid }: Props) {
     setLastDoc(snapshot.docs[snapshot.docs.length - 1] || lastDoc)
     setBookings(prev => [...prev, ...docs])
     setLoading(false)
-  }
+  }, [db, lastDoc, uid])
+
+  useEffect(() => {
+    loadMore()
+  }, [loadMore, uid])
 
   if (!bookings.length) return <p>No bookings found.</p>
 

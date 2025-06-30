@@ -11,7 +11,7 @@ export async function getServerUser(token: string) {
 
     if (data?.banned) return null // 🔒 Block banned users
     return { uid, email: decoded.email, ...data }
-  } catch (err) {
+  } catch {
     return null
   }
 }

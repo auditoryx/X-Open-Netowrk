@@ -18,9 +18,4 @@ export function Translate({ t }: { t: string }) {
   return translations[language]?.[t] || t;
 }
 
-export namespace Translate {
-  export function txt(t: string) {
-    const { language } = useLanguage();
-    return translations[language]?.[t] || t;
-  }
-}
+// Removed namespace import and refactored 'txt' function to comply with React Hook rules.

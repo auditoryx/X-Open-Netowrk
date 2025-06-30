@@ -11,7 +11,6 @@ import {
 import { v4 as uuid } from 'uuid';
 import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { cityToCoords } from '@/lib/utils/cityToCoords';
 import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
 import LocationAutocomplete from '@/components/explore/LocationAutocomplete';
 import dynamic from 'next/dynamic';
@@ -41,12 +40,10 @@ export default function ApplyRolePage() {
   const [genreInput, setGenreInput] = useState('');
   const [minBpm, setMinBpm] = useState<number | undefined>(undefined);
   const [maxBpm, setMaxBpm] = useState<number | undefined>(undefined);
-  const [photo, setPhoto] = useState<File | null>(null);
   const [availabilitySlots, setAvailabilitySlots] = useState<string[]>([]);
   const [agreedToVerify, setAgreedToVerify] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(`applyDraft-${role}`);

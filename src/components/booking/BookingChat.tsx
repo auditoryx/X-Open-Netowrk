@@ -17,6 +17,7 @@ import { listenToTyping } from '@/lib/firestore/chat/listenToTyping';
 import { setTypingStatus } from '@/lib/firestore/chat/setTypingStatus';
 import { markMessagesAsSeen } from '@/lib/firestore/chat/markMessagesAsSeen';
 import { AiOutlinePaperClip } from 'react-icons/ai';
+import Image from 'next/image';
 
 interface Message {
   id: string;
@@ -133,7 +134,7 @@ export default function BookingChat({ bookingId }: Props) {
     <div className="space-y-4">
       {!isOnline && (
         <div className="bg-red-600 text-white text-center text-xs p-1 rounded">
-          You're offline
+          You&apos;re offline
         </div>
       )}
       <div className="overflow-auto">
@@ -149,7 +150,13 @@ export default function BookingChat({ bookingId }: Props) {
                 msg.mediaUrl.endsWith('.mp3') ? (
                   <audio controls src={msg.mediaUrl} className="mb-1 mx-auto" />
                 ) : (
-                  <img src={msg.mediaUrl} className="w-32 rounded mb-1 mx-auto" />
+                  <Image
+                    src={msg.mediaUrl}
+                    alt="Message media"
+                    width={500}
+                    height={500}
+                    className="w-32 rounded mb-1 mx-auto"
+                  />
                 )
               )}
               {msg.text && <p>{msg.text}</p>}
@@ -211,8 +218,9 @@ export default function BookingChat({ bookingId }: Props) {
                 }}
               />
             ) : (
-              <img
+              <Image
                 src={preview}
+                alt="Preview of uploaded file"
                 className="w-20 h-20 rounded object-cover cursor-pointer"
                 onClick={() => {
                   setFile(null);

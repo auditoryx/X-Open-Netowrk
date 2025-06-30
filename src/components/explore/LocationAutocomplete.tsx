@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Translate } from '@/i18n/Translate';
+import Image from 'next/image';
 
 export default function LocationAutocomplete({
   value,
@@ -94,6 +95,7 @@ export default function LocationAutocomplete({
               key={r.id}
               tabIndex={0}
               role="option"
+              aria-selected={false}
               onKeyDown={(e) => e.key === 'Enter' && handleSelect(r)}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleSelect(r)}
@@ -105,7 +107,7 @@ export default function LocationAutocomplete({
         </ul>
       )}
       {mapUrl && (
-        <img src={mapUrl} alt="Map preview" className="mt-2 rounded" />
+        <Image src={mapUrl} alt="Map preview" className="mt-2 rounded" />
       )}
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function Inbox({ userId }) {
+export default function Inbox() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {

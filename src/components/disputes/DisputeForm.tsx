@@ -5,10 +5,9 @@ import { toast } from 'sonner';
 
 type Props = {
   bookingId: string;
-  clientId: string;
 };
 
-export default function DisputeForm({ bookingId, clientId }: Props) {
+export default function DisputeForm({ bookingId }: Props) {
   const [reason, setReason] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -124,7 +123,7 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
   );
 }
 // Usage example
-// <DisputeForm bookingId="12345" clientId="67890" />
+// <DisputeForm bookingId="12345" />
 // This component can be used in a booking details page or a similar context
 // where the user can submit a dispute for a specific booking.
 // Make sure to replace the `createDispute` function with your actual implementation
@@ -168,4 +167,4 @@ export default function DisputeForm({ bookingId, clientId }: Props) {
 // The `loading` state is used to disable the button and show a loading indicator
 // while the dispute is being processed.
 // The `submitted` state is used to show a success message
-// instead of the form when the dispute has already been submitted. 
+// instead of the form when the dispute has already been submitted.

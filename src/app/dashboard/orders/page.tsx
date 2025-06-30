@@ -44,7 +44,7 @@ export default function OrdersPage() {
     };
 
     fetchOrders();
-  }, []);
+  }, [router]);
 
   if (loading) {
     return <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white text-center p-6"><h2 className="text-xl font-bold mb-2">�� No one has booked you yet.</h2><p className="text-gray-400 mb-4">Share your profile to attract your first booking.</p><button onClick={() => router.push("/dashboard")} className="px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition">�� Share Your Profile</button></div>;

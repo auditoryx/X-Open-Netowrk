@@ -4,7 +4,7 @@ import { logger } from '@lib/logger';
 
 export async function POST(req) {
   try {
-    const { token, email, uid } = await req.json();
+    const { email, uid } = await req.json();
     
     // Since we can't verify with Firebase Admin, we'll trust the token from the client
     // In a production app, you'd want proper verification

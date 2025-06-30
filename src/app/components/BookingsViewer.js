@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs, orderBy, startAfter, limit } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
@@ -25,7 +25,7 @@ export default function BookingsViewer() {
     return () => unsubscribe();
   }, []);
 
-  const loadMore = async (uid) => {
+  const loadMore = useCallback(async (uid) => {
     setLoading(true);
       const db = getFirestore(app);
       const base = query(
@@ -40,7 +40,11 @@ export default function BookingsViewer() {
     setLastDoc(snapshot.docs[snapshot.docs.length - 1] || lastDoc);
     setBookings((prev) => [...prev, ...results]);
     setLoading(false);
-  };
+  }, [lastDoc]);
+
+  useEffect(() => {
+    loadMore(uidState);
+  }, [loadMore, uidState]);
 
   if (loading) return <p className="text-white">Loading bookings...</p>;
 

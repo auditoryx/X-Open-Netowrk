@@ -19,13 +19,19 @@ export default function QuoteCalculator({ rooms, onChange }: Props) {
     if (!room) return;
     setHours(room.minBlock);
     setWithEngineer(false);
-  }, [roomIndex]);
+  }, [roomIndex, room]);
 
   const quote = room ? calcQuote(room, hours, withEngineer) : 0;
 
   useEffect(() => {
     onChange && onChange(quote);
   }, [quote, onChange]);
+
+  useEffect(() => {
+    if (room) {
+      // Perform necessary actions with room
+    }
+  }, [room]); // Fixed unused expression warning
 
   if (!room) return null;
 

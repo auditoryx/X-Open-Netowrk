@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useAuth } from '@/lib/hooks/useAuth';
-import toast from 'react-hot-toast';
-import WeeklyCalendarSelector from './WeeklyCalendarSelector';
-import { createBooking } from '@lib/firestore/createBooking';
-import { checkBookingConflict } from '@/lib/firestore/checkBookingConflict';
-import { useProviderAvailability } from '@/lib/hooks/useProviderAvailability';
-import { getNextDateForWeekday } from '@/lib/google/utils';
+import { useState } from "react";
+import { useAuth } from "@/lib/hooks/useAuth";
+import toast from "react-hot-toast";
+import { WeeklyCalendarSelector } from "./WeeklyCalendarSelector";
+import { createBooking } from "@lib/firestore/createBooking";
+import { checkBookingConflict } from "@/lib/firestore/checkBookingConflict";
+import { useProviderAvailability } from "@/lib/hooks/useProviderAvailability";
+import { getNextDateForWeekday } from "@/lib/google/utils";
 
 type BookingFormProps = {
   providerId: string;
@@ -17,18 +17,14 @@ type BookingFormProps = {
 export default function BookingForm({ providerId, onBooked }: BookingFormProps) {
   const { user } = useAuth();
   const { slots, busySlots, timezone } = useProviderAvailability(providerId);
-  const [service, setService] = useState('');
+  const [service, setService] = useState("");
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!user) {
-    return (
-      <div className="p-4 border rounded bg-white text-black space-y-2">
-        <p>Please log in to request a booking.</p>
-        <a href="/login" className="btn btn-primary">Login</a>
-      </div>
-    );
+    toast.error("User is not logged in.");
+    return;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,12 +32,12 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
     const trimmed = message.trim();
 
     if (!user) {
-      toast.error('Please log in to send a booking request.');
+      toast.error("Please log in to send a booking request.");
       return;
     }
 
     if (!selectedTime) {
-      toast.error('Please select a time slot.');
+      toast.error("Please select a time slot.");
       return;
     }
 
@@ -51,7 +47,7 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
     try {
       const conflict = await checkBookingConflict(providerId, selectedTime);
       if (conflict) {
-        toast.error('Time slot already booked');
+        toast.error("Time slot already booked");
         setLoading(false);
         return;
       }
@@ -62,14 +58,14 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
         dateTime: selectedTime,
         message: trimmed,
       });
-      toast.success('Booking request sent!');
-      setMessage('');
-      setService('');
+      toast.success("Booking request sent!");
+      setMessage("");
+      setService("");
       setSelectedTime(null);
       onBooked && onBooked();
     } catch (err) {
-      console.error('Booking submission failed:', err);
-      toast.error('Failed to send booking request.');
+      console.error("Booking submission failed:", err);
+      toast.error("Failed to send booking request.");
     } finally {
       setLoading(false);
     }
@@ -101,7 +97,9 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
         onSelect={(dt) => setSelectedTime(dt as string)}
       />
 
-      <p className="text-xs text-gray-600">Provider timezone: {timezone || 'N/A'}</p>
+      <p className="text-xs text-gray-600">
+        Provider timezone: {timezone || "N/A"}
+      </p>
 
       <label htmlFor="booking-message" className="text-sm font-medium">
         Message to provider
@@ -111,19 +109,23 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
         aria-label="Booking message"
         placeholder="Type your message..."
         value={message}
-        onChange={(e) => setMessage(e.target.value.replace(/\s{2,}/g, ' '))}
+        onChange={(e) =>
+          setMessage(e.target.value.replace(/\s{2,}/g, " "))
+        }
         className="textarea-base"
         maxLength={500}
         disabled={loading}
       />
-      <div className="text-xs text-right text-gray-500">{message.length}/500</div>
+      <div className="text-xs text-right text-gray-500">
+        {message.length}/500
+      </div>
       <button
         type="submit"
         aria-label="Send booking request"
         disabled={loading || !message.trim() || !selectedTime}
         className="btn btn-primary"
       >
-        {loading ? 'Sending…' : 'Send Booking Request'}
+        {loading ? "Sending…" : "Send Booking Request"}
       </button>
     </form>
   );

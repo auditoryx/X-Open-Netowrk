@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Props {
-  bookingId: string;
   terms: string;
   agreedByClient: boolean;
   agreedByProvider: boolean;
@@ -13,7 +12,6 @@ interface Props {
 }
 
 export default function ContractViewer({
-  bookingId,
   terms,
   agreedByClient,
   agreedByProvider,

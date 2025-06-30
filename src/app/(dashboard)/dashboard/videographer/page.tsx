@@ -40,13 +40,13 @@ function VideographerDashboardPage() {
       {profile && <DashboardRoleOverview profile={profile} />}
       {profile && <ProfileCompletionMeter profile={profile} />}
 
+      <p>Select an option from the sidebar to manage your account.</p>
+
       {!complete && (
         <div className="bg-yellow-700 text-yellow-100 p-4 rounded-lg mb-4">
-          🚨 Your profile is incomplete. You won't appear in search results or be bookable until it’s complete.
+          🚨 Your profile is incomplete. You won&apos;t appear in search results or be bookable until it’s complete.
         </div>
       )}
-
-      <p>Select an option from the sidebar to manage your account.</p>
     </div>
   );
 }

@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, doc, updateDoc } from 'firebase/firestore';
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { firebaseConfig } from '@/lib/firebase';
+import { app } from '@/lib/firebase';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 export async function POST(req: NextRequest) {

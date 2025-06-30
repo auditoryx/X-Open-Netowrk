@@ -46,7 +46,7 @@ export default function PurchasesPage() {
     };
 
     fetchPurchases();
-  }, []);
+  }, [router]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading your purchases...</div>;

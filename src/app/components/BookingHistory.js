@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, orderBy, limit, startAfter } from 'firebase/firestore';
 
@@ -9,11 +9,7 @@ export default function BookingHistory({ userId }) {
   const [lastDoc, setLastDoc] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadMore();
-  }, [userId]);
-
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     setLoading(true);
     const base = query(
       collection(db, 'bookings'),
@@ -30,7 +26,11 @@ export default function BookingHistory({ userId }) {
     setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1] || lastDoc);
     setBookings((prev) => [...prev, ...results]);
     setLoading(false);
-  };
+  }, [lastDoc, userId]);
+
+  useEffect(() => {
+    loadMore();
+  }, [loadMore]);
 
   return (
     <div className="mt-8">

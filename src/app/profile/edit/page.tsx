@@ -116,7 +116,7 @@ export default function EditProfilePage() {
       <div className="mt-10 w-full max-w-md border-t pt-6">
         <h2 className="text-xl font-semibold mb-2">Apply for Verification</h2>
         {submitted ? (
-          <p className="text-green-400 text-sm">✅ Request submitted! We'll review it soon.</p>
+          <p className="text-green-400 text-sm">✅ Request submitted! We&apos;ll review it soon.</p>
         ) : (
           <>
             <textarea

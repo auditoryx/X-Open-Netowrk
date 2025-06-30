@@ -72,6 +72,7 @@ export default function ProviderBookings() {
           </li>
         ))}
       </ul>
+      <p>Welcome to the provider&apos;s booking page!</p>
     </div>
   );
 }

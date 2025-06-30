@@ -1,13 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import DiscoveryGrid from '@/components/explore/DiscoveryGrid';
-import NewExploreGrid from '@/components/explore/NewExploreGrid';
-import FilterPanel from '@/components/explore/FilterPanel';
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 
 const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), {
   ssr: false,
@@ -17,11 +13,11 @@ import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import CreatorCard from '@/components/cards/CreatorCard';
 import { getFeaturedCreators } from '@/lib/firestore/getFeaturedCreators';
 import { useRankedCreators } from '@/hooks/useRankedCreators';
+import FilterPanel from '@/components/explore/FilterPanel';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const newExplore = useFeatureFlag('newExplore');
 
   const [featured, setFeatured] = useState<any[]>([]);
 
@@ -73,7 +69,7 @@ export default function ExplorePage() {
     if (filters.sort) query.set('sort', filters.sort);
     query.set('view', view);
     router.replace('/explore?' + query.toString());
-  }, [filters, view]);
+  }, [filters, view, router]);
 
   // Use the new ranked creators hook for grid view
   const { data: rankedCreatorsPages } = useRankedCreators({ filters, pageSize: 20 });

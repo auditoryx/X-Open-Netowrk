@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { firebaseConfig } from '@/lib/firebase';
+import { app } from '@/lib/firebase';
 import { getServerUser } from '@/lib/auth/getServerUser';
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 
 // GET bookings (auth-protected)

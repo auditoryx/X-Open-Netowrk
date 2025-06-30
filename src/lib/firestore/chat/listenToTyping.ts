@@ -1,8 +1,7 @@
 import { db } from '@/lib/firebase'
 import {
   collection,
-  onSnapshot,
-  DocumentData
+  onSnapshot
 } from 'firebase/firestore'
 
 type TypingCallback = (typingUsers: string[]) => void

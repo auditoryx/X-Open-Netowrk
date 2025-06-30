@@ -13,7 +13,7 @@ export default function withAdminProtection(Component: any) {
       if (user && !user.admin) {
         router.push('/'); // Redirect non-admins to home
       }
-    }, [user]);
+    }, [user, router]);
 
     return user?.admin ? <Component {...props} /> : null;
   };

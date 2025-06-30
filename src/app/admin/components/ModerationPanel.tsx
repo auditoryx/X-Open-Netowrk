@@ -9,7 +9,6 @@ import {
   updateDoc,
   orderBy,
   query,
-  where,
 } from 'firebase/firestore';
 
 type Dispute = {

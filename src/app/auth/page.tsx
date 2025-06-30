@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { auth } from '@/firebase/firebaseConfig';
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import BannedNotice from '@/components/BannedNotice';
 
@@ -47,7 +43,7 @@ export default function AuthPage() {
     });
 
     return () => unsub();
-  }, []);
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

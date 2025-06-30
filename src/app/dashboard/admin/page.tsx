@@ -11,11 +11,9 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
-  const router = useRouter();
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

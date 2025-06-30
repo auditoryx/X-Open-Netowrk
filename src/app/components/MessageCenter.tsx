@@ -12,6 +12,7 @@ import { db } from '../firebase'
 import { markConversationMessagesAsSeen } from '@/lib/firestore/chat/markConversationMessagesAsSeen'
 import { format } from 'date-fns'
 import { uploadChatMedia } from '@/lib/firebase/uploadChatMedia'
+import Image from 'next/image'
 
 interface Props {
   userId: string
@@ -100,7 +101,13 @@ export default function MessageCenter({ userId, contactId }: Props) {
                   msg.mediaUrl.endsWith('.mp3') ? (
                     <audio controls src={msg.mediaUrl} className="mb-1 mx-auto" />
                   ) : (
-                    <img src={msg.mediaUrl} className="w-32 rounded mb-1 mx-auto" />
+                    <Image
+                      src={msg.mediaUrl}
+                      alt="Message media"
+                      width={128}
+                      height={128}
+                      className="w-32 rounded mb-1 mx-auto"
+                    />
                   )
                 )}
                 {msg.content && (

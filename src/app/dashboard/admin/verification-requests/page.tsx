@@ -21,7 +21,7 @@ export default function VerificationRequestsPage() {
 
   const approve = async (uid: string) => {
     await approveUserVerification(uid)
-    setRequests(r => r.filter(u => r.id !== uid))
+    setRequests(r => r.filter(r => r.id !== uid))
   }
 
   return (

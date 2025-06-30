@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { track } from '@/lib/analytics/track';
 import mapboxgl from 'mapbox-gl';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -245,7 +245,11 @@ export default function DiscoveryMap({ filters }: Props) {
         });
       });
     }
-  }, [data, filters, language]);
+  }, [data, filters, language, translations]);
+
+  const memoizedTranslations = useMemo(() => {
+    return translations;
+  }, [language, translations]);
 
   return (
     <div
@@ -254,7 +258,7 @@ export default function DiscoveryMap({ filters }: Props) {
       role="application"
       tabIndex={0}
       aria-label={
-        translations[language]?.['explore.mapLabel'] || 'Creator map'
+        memoizedTranslations[language]?.['explore.mapLabel'] || 'Creator map'
       }
     />
   );

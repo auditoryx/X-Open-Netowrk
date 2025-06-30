@@ -15,7 +15,7 @@ export default function AboutPage() {
 
         <p className="text-gray-300 text-lg leading-relaxed">
           The music industry has been gatekept for too long. Success shouldn’t depend on who you know, how many followers you have,
-          or if you're part of the right clique. We believe opportunity should be **accessible**, **fair**, and **global**.
+          or if you&apos;re part of the right clique. We believe opportunity should be **accessible**, **fair**, and **global**.
         </p>
 
         <p className="text-gray-300 text-lg leading-relaxed">

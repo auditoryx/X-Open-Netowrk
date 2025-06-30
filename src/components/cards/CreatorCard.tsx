@@ -16,7 +16,6 @@ export default function CreatorCard({
   reviewCount,
   tier,
   xp,
-  rankScore,
   tierFrozen,
 }: {
   id: string;
@@ -29,7 +28,6 @@ export default function CreatorCard({
   reviewCount?: number;
   tier?: string;
   xp?: number;
-  rankScore?: number;
   tierFrozen?: boolean;
 }) {
   return (

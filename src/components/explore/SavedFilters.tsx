@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import {
   fetchFilterPresets,
@@ -27,9 +27,13 @@ export default function SavedFilters({
     setPresets(list);
   };
 
-  useEffect(() => {
+  const memoizedLoad = useCallback(() => {
     load();
-  }, [user, refreshKey]);
+  }, [user]);
+
+  useEffect(() => {
+    memoizedLoad();
+  }, [memoizedLoad, refreshKey]);
 
   const apply = (preset: SavedFilter) => {
     setFilters({ ...filters, ...preset.filters });

@@ -13,14 +13,15 @@ type Role =
   | 'producer'
   | 'studio'
   | 'videographer';
-type WithRoleProtectionProps = {
-  [key: string]: any;
+type WithRoleProtectionPropsInternal<P> = P & {
+  user?: { role: Role };
+  loading?: boolean;
 };
 
-export function withRoleProtection<P extends WithRoleProtectionProps>(
+export function withRoleProtection<P extends WithRoleProtectionPropsInternal<P>>(
   Component: React.ComponentType<P>,
   allowedRoles: Role[]
-) {
+): React.ComponentType<P> {
   return function ProtectedComponent(props: P) {
     const { user, loading } = useAuth();
     const router = useRouter();

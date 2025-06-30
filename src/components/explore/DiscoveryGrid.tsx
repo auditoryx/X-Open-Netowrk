@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import Skeleton from 'react-loading-skeleton';
 
 import { track } from '@/lib/analytics/track';
 import { getNextAvailable } from '@/lib/firestore/getNextAvailable';

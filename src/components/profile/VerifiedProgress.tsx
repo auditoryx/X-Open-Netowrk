@@ -2,7 +2,6 @@ export function VerifiedProgress({ points, verificationStatus, proTier }: { poin
   if (proTier === 'verified') return null
 
   const progress = Math.min(points || 0, 500)
-  const remaining = 500 - progress
 
   return (
     <p className="text-sm text-gray-400" title="XP progress toward Verified tier">

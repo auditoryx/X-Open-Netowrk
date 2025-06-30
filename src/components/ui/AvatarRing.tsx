@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 type Tier = 'standard' | 'verified' | 'signature';
 export default function AvatarRing(
   { tier = 'standard', src, alt = '', ...props }:
@@ -9,5 +10,5 @@ export default function AvatarRing(
     verified: 'ring-2 ring-brand',
     signature:'ring-2 ring-brand animate-pulse',
   }[tier];
-  return <img {...props} src={src} alt={alt} className={`h-12 w-12 rounded-full ${ring}`} />;
+  return <Image {...props} src={src} alt={alt} width={48} height={48} className={`h-12 w-12 rounded-full ${ring}`} />;
 }

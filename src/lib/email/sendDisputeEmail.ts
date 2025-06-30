@@ -6,16 +6,6 @@ export async function sendDisputeEmail(
   reason: string
 ) {
   const subject = `🛑 New Dispute Submitted – Booking ${bookingId}`;
-  const body = `
-    A new dispute has been submitted.
-
-    🔒 Booking ID: ${bookingId}
-    👤 Submitted by: ${fromUser}
-    📝 Reason:
-    ${reason}
-
-    Please review it in the Admin Dashboard.
-  `;
 
   try {
     const result = await sendEmail(

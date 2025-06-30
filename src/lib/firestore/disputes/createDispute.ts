@@ -41,7 +41,7 @@ export async function createDispute(input: unknown) {
     return { error: 'Invalid dispute data' }
   }
 
-  let { bookingId, fromUser, reason, clientId, providerId } = parsed.data
+  const { bookingId, fromUser, reason, clientId, providerId } = parsed.data
 
   if (!clientId || !providerId) {
     const bookingSnap = await getDoc(doc(db, 'bookings', bookingId))

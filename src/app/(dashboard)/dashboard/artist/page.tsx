@@ -8,7 +8,6 @@ import { UserProfile } from '@/types/user';
 import ProfileCompletionMeter from '@/components/dashboard/ProfileCompletionMeter';
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import DashboardRoleOverview from '@/components/dashboard/DashboardRoleOverview';
-import { withRoleProtection } from '@/lib/utils/withRoleProtection';
 
 function ArtistDashboardPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -42,7 +41,7 @@ function ArtistDashboardPage() {
 
       {!complete && (
         <div className="bg-yellow-700 text-yellow-100 p-4 rounded-lg mb-4">
-          🚨 Your profile is incomplete. You won't appear in search results or be bookable until it’s complete.
+          🚨 Your profile is incomplete. You won&apos;t appear in search results or be bookable until it’s complete.
         </div>
       )}
 
@@ -51,4 +50,4 @@ function ArtistDashboardPage() {
   );
 }
 
-export default withRoleProtection(ArtistDashboardPage, ['artist']);
+export default ArtistDashboardPage;
