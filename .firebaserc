@@ -2,7 +2,8 @@
   "projects": {
     "default": "auditory-x-open-network",
     "dev": "auditory-x-dev-f",
-    "prod": "auditory-x-open-network"
+    "prod": "auditory-x-open-network",
+    "production": "auditory-x-open-network"
   },
   "targets": {},
   "etags": {}

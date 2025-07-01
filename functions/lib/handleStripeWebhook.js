@@ -1,48 +1,28 @@
-import * as functions from 'firebase-functions';
-import Stripe from 'stripe';
-import * as admin from 'firebase-admin';
-import { markAsHeld } from './markAsHeld';
-import sgMail from '@sendgrid/mail';
-import * as fs from 'fs';
-import * as path from 'path';
-
-const stripe = new Stripe(functions.config().stripe.secret, { apiVersion: '2023-10-16' });
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleStripeWebhook = void 0;
+const functions = require("firebase-functions");
+const stripe_1 = require("stripe");
+const admin = require("firebase-admin");
+const markAsHeld_1 = require("./markAsHeld");
+const mail_1 = require("@sendgrid/mail");
+const stripe = new stripe_1.default(functions.config().stripe.secret, { apiVersion: '2023-10-16' });
 const endpointSecret = functions.config().stripe.webhook_secret;
-
 let apiKeySet = false;
-
-interface BookingData {
-  id: string;
-  clientName?: string;
-  clientEmail?: string;
-  providerName?: string;
-  serviceName?: string;
-  serviceTitle?: string;
-  total?: number;
-  price?: number;
-  bookingDate?: string;
-  datetime?: string;
-  stripeSessionId?: string;
-  contractId?: string;
-}
-
-const sendBookingConfirmation = async (toEmail: string, booking: BookingData) => {
-  const apiKey = functions.config().sendgrid.api_key;
-  const fromEmail = functions.config().sendgrid.from_email || 'booking@auditoryx.com';
-
-  if (!apiKey) {
-    console.error('SendGrid API key is not configured');
-    throw new Error('SendGrid API key is not configured');
-  }
-
-  if (!apiKeySet) {
-    sgMail.setApiKey(apiKey);
-    apiKeySet = true;
-  }
-
-  try {
-    // Create HTML email template inline since file system access is limited in Cloud Functions
-    const html = `
+const sendBookingConfirmation = async (toEmail, booking) => {
+    const apiKey = functions.config().sendgrid.api_key;
+    const fromEmail = functions.config().sendgrid.from_email || 'booking@auditoryx.com';
+    if (!apiKey) {
+        console.error('SendGrid API key is not configured');
+        throw new Error('SendGrid API key is not configured');
+    }
+    if (!apiKeySet) {
+        mail_1.default.setApiKey(apiKey);
+        apiKeySet = true;
+    }
+    try {
+        // Create HTML email template inline since file system access is limited in Cloud Functions
+        const html = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -212,95 +192,89 @@ const sendBookingConfirmation = async (toEmail: string, booking: BookingData) =>
       </body>
       </html>
     `;
-
-    await sgMail.send({
-      to: toEmail,
-      from: fromEmail,
-      subject: 'Your Booking is Confirmed 🎉',
-      html: html,
-    });
-
-    console.log('📧 Booking confirmation email sent to', toEmail);
-  } catch (error) {
-    console.error('❌ Booking confirmation email failed:', error);
-    throw error;
-  }
-};
-
-export const handleStripeWebhook = functions.https.onRequest(async (req, res) => {
-  const sig = req.headers['stripe-signature'] as string;
-  let event: Stripe.Event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
-  } catch (err) {
-    console.error('Webhook signature verify failed', err);
-    res.status(400).send('Webhook Error');
-    return;
-  }
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const bookingId = session.metadata?.bookingId;
-    
-    if (bookingId) {
-      try {
-        // Update booking status
-        await admin.firestore().doc(`bookings/${bookingId}`).update({ 
-          status: 'paid',
-          stripeSessionId: session.id 
+        await mail_1.default.send({
+            to: toEmail,
+            from: fromEmail,
+            subject: 'Your Booking is Confirmed 🎉',
+            html: html,
         });
-        await markAsHeld(bookingId);
-
-        // Fetch booking details from Firestore
-        const bookingDoc = await admin.firestore().doc(`bookings/${bookingId}`).get();
-        const bookingData = bookingDoc.data();
-
-        if (bookingData) {
-          let clientEmail = bookingData.clientEmail;
-          let clientName = bookingData.clientName;
-
-          // If client email is not in booking, fetch it from user profile
-          if (!clientEmail && (bookingData.clientId || bookingData.buyerId)) {
-            const userId = bookingData.clientId || bookingData.buyerId;
-            try {
-              const userDoc = await admin.firestore().doc(`users/${userId}`).get();
-              const userData = userDoc.data();
-              if (userData) {
-                clientEmail = userData.email;
-                clientName = clientName || userData.name || userData.displayName;
-              }
-            } catch (userError) {
-              console.warn(`⚠️ Could not fetch user data for ${userId}:`, userError);
-            }
-          }
-
-          if (clientEmail) {
-            // Send booking confirmation email
-            await sendBookingConfirmation(clientEmail, {
-              id: bookingId,
-              clientName: clientName,
-              clientEmail: clientEmail,
-              providerName: bookingData.providerName,
-              serviceName: bookingData.serviceName || bookingData.serviceTitle,
-              total: bookingData.total || bookingData.price,
-              stripeSessionId: session.id,
-              contractId: bookingData.contractId
-            });
-            
-            console.log(`✅ Booking confirmation email sent to ${clientEmail} for booking ${bookingId}`);
-          } else {
-            console.warn(`⚠️ No client email found for booking ${bookingId}. Cannot send confirmation.`);
-          }
-        } else {
-          console.warn(`⚠️ Booking ${bookingId} not found in Firestore.`);
-        }
-      } catch (error) {
-        console.error(`❌ Error processing booking confirmation for ${bookingId}:`, error);
-        // Don't fail the webhook - log the error but continue
-      }
+        console.log('📧 Booking confirmation email sent to', toEmail);
     }
-  }
-
-  res.sendStatus(200);
+    catch (error) {
+        console.error('❌ Booking confirmation email failed:', error);
+        throw error;
+    }
+};
+exports.handleStripeWebhook = functions.https.onRequest(async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
+    }
+    catch (err) {
+        console.error('Webhook signature verify failed', err);
+        res.status(400).send('Webhook Error');
+        return;
+    }
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        const bookingId = session.metadata?.bookingId;
+        if (bookingId) {
+            try {
+                // Update booking status
+                await admin.firestore().doc(`bookings/${bookingId}`).update({
+                    status: 'paid',
+                    stripeSessionId: session.id
+                });
+                await (0, markAsHeld_1.markAsHeld)(bookingId);
+                // Fetch booking details from Firestore
+                const bookingDoc = await admin.firestore().doc(`bookings/${bookingId}`).get();
+                const bookingData = bookingDoc.data();
+                if (bookingData) {
+                    let clientEmail = bookingData.clientEmail;
+                    let clientName = bookingData.clientName;
+                    // If client email is not in booking, fetch it from user profile
+                    if (!clientEmail && (bookingData.clientId || bookingData.buyerId)) {
+                        const userId = bookingData.clientId || bookingData.buyerId;
+                        try {
+                            const userDoc = await admin.firestore().doc(`users/${userId}`).get();
+                            const userData = userDoc.data();
+                            if (userData) {
+                                clientEmail = userData.email;
+                                clientName = clientName || userData.name || userData.displayName;
+                            }
+                        }
+                        catch (userError) {
+                            console.warn(`⚠️ Could not fetch user data for ${userId}:`, userError);
+                        }
+                    }
+                    if (clientEmail) {
+                        // Send booking confirmation email
+                        await sendBookingConfirmation(clientEmail, {
+                            id: bookingId,
+                            clientName: clientName,
+                            clientEmail: clientEmail,
+                            providerName: bookingData.providerName,
+                            serviceName: bookingData.serviceName || bookingData.serviceTitle,
+                            total: bookingData.total || bookingData.price,
+                            stripeSessionId: session.id,
+                            contractId: bookingData.contractId
+                        });
+                        console.log(`✅ Booking confirmation email sent to ${clientEmail} for booking ${bookingId}`);
+                    }
+                    else {
+                        console.warn(`⚠️ No client email found for booking ${bookingId}. Cannot send confirmation.`);
+                    }
+                }
+                else {
+                    console.warn(`⚠️ Booking ${bookingId} not found in Firestore.`);
+                }
+            }
+            catch (error) {
+                console.error(`❌ Error processing booking confirmation for ${bookingId}:`, error);
+                // Don't fail the webhook - log the error but continue
+            }
+        }
+    }
+    res.sendStatus(200);
 });

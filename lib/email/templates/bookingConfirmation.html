@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .confirmation-badge {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .booking-details {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .booking-details h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #34495e;
+        }
+        .detail-value {
+            color: #2c3e50;
+        }
+        .cta-button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .detail-value {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Booking Confirmed!</h1>
+            <div class="confirmation-badge">✅ Payment Successful</div>
+        </div>
+        
+        <p>Hi {clientName},</p>
+        
+        <p>Great news! Your booking has been confirmed and your payment has been processed successfully. Here are your booking details:</p>
+        
+        <div class="booking-details">
+            <h3>📋 Booking Details</h3>
+            <div class="detail-row">
+                <span class="detail-label">Service Provider:</span>
+                <span class="detail-value">{providerName}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Service:</span>
+                <span class="detail-value">{service}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Total Amount:</span>
+                <span class="detail-value">¥{total}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Reference:</span>
+                <span class="detail-value">{sessionId}</span>
+            </div>
+        </div>
+        
+        <a href="{contractLink}" class="cta-button">
+            📄 View Booking Details
+        </a>
+        
+        <div style="background-color: #e8f5e8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0; color: #27ae60;"><strong>🔒 Your payment is secure:</strong> Your funds are held safely and will be released to the provider once the service is completed to your satisfaction.</p>
+        </div>
+        
+        <p>What happens next:</p>
+        <ul>
+            <li>Your provider will contact you to confirm the session details</li>
+            <li>You'll receive a booking contract to review and sign</li>
+            <li>After the session, you can release the funds and leave a review</li>
+        </ul>
+        
+        <div class="footer">
+            <p>Need help? <a href="mailto:support@auditoryx.com">Contact our support team</a></p>
+            <p>This is an automated message from AuditoryX</p>
+        </div>
+    </div>
+</body>
+</html>

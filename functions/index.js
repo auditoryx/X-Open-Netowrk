@@ -13,14 +13,14 @@ admin.initializeApp();
 /* ───────── Cloud Functions ───────── */
 
 // Stripe
-exports.handleStripeWebhook   = require('./src/stripe/handleStripeWebhook');
-exports.createCheckoutSession = require('./src/stripe/createCheckoutSession');
+exports.stripeWebhook = require('./src/payments/simpleWebhook.js');
+// exports.createCheckoutSession = require('./src/payments/createCheckoutSession');
 
 
 // Maintenance jobs
 // exports.cleanupOldBookings  = require('./src/maintenance/cleanupOldBookings'); // ⬅ keep commented until implemented
-exports.streakReset           = require('./src/maintenance/streakReset');
-exports.calcTierAndRank       = require('./src/cron/calcTierAndRank');
+// exports.streakReset           = require('./src/cron/streakReset'); // ⬅ commented out for deployment
+// exports.calcTierAndRank       = require('./src/cron/calcTierAndRank'); // ⬅ commented out for deployment
 
 // Dev-only admin helper (consider gating by env)
 exports.grantAdmin = functions.https.onCall(async (data, context) => {
