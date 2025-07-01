@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import BookingSummary from '@/components/BookingSummary';
-import { BookingType } from '@/lib/pdf/generateContract';
+import { BookingType } from '@lib/pdf/generateContract';
 
 export default function BookingPage() {
   // For demo, use a hardcoded bookingId. In real app, get from route params.

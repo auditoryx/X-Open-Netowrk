@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateContract, BookingType } from '@/lib/pdf/generateContract';
+import { generateContract, BookingType } from '@lib/pdf/generateContract';
 
 interface BookingSummaryProps {
   bookingData: BookingType;

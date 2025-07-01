@@ -2,9 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/firebase/firebaseConfig';
 import BookingSummary from '@/components/BookingSummary';
-import { BookingType } from '@/lib/pdf/generateContract';
+import { BookingType } from '@lib/pdf/generateContract';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default function BookingDetailPage() {
@@ -75,7 +75,24 @@ export default function BookingDetailPage() {
       <h1 className="text-4xl font-bold mb-4">Booking Details</h1>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {authorized && bookingData && <BookingSummary bookingData={bookingData} />}
+      {authorized && bookingData && (
+        <div className="space-y-6">
+          <BookingSummary bookingData={bookingData} />
+          
+          {/* Chat Link */}
+          <div className="text-center">
+            <button
+              onClick={() => router.push(`/booking/${bookingId}/chat`)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
+              💬 Open Chat
+            </button>
+            <p className="text-gray-400 text-sm mt-2">
+              Communicate with the other party about this booking
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
