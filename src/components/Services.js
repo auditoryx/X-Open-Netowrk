@@ -1,1 +1,1 @@
-// Removed unused import 'Link'.
+// Removed unused import 'Link'

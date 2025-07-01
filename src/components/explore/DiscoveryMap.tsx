@@ -25,9 +25,14 @@ export default function DiscoveryMap({ filters }: Props) {
   const map = useRef<mapboxgl.Map | null>(null);
   const featuresRef = useRef<any[]>([]);
   const { language } = useLanguage();
-  const translations: Record<string, Record<string, string>> = { en, jp, kr };
 
-  const translationsMemo = useMemo(() => translations, [translations]);
+  const translations = useMemo(() => {
+    return {
+      en,
+      jp,
+      kr,
+    };
+  }, []);
 
   /* ───────────────────────── QUERY ───────────────────────── */
   const {
@@ -212,7 +217,7 @@ export default function DiscoveryMap({ filters }: Props) {
           });
 
           const viewLabel =
-            translationsMemo[language]?.['common.viewProfile'] || 'View Profile';
+            translations[language]?.['common.viewProfile'] || 'View Profile';
 
           const badgeCfg = roleBadges[props.role as RoleKey];
           const key = badgeCfg?.label.toLowerCase();
@@ -247,7 +252,7 @@ export default function DiscoveryMap({ filters }: Props) {
         });
       });
     }
-  }, [data, filters, language, translationsMemo]);
+  }, [data, filters, language, translations]);
 
   const memoizedTranslations = useMemo(() => translations[language], [language]);
 

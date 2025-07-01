@@ -21,19 +21,15 @@ export default function SavedFilters({
   const { user } = useAuth();
   const [presets, setPresets] = useState<SavedFilter[]>([]);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!user) return;
     const list = await fetchFilterPresets(user.uid);
     setPresets(list);
-  };
-
-  const loadCallback = useCallback(() => {
-    load();
-  }, [load]);
+  }, [user]);
 
   useEffect(() => {
-    loadCallback();
-  }, [loadCallback, refreshKey]);
+    load();
+  }, [load, refreshKey]);
 
   const apply = (preset: SavedFilter) => {
     setFilters({ ...filters, ...preset.filters });
