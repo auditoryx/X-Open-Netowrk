@@ -27,6 +27,8 @@ export default function DiscoveryMap({ filters }: Props) {
   const { language } = useLanguage();
   const translations: Record<string, Record<string, string>> = { en, jp, kr };
 
+  const translationsMemo = useMemo(() => translations, [translations]);
+
   /* ───────────────────────── QUERY ───────────────────────── */
   const {
     data,
@@ -210,7 +212,7 @@ export default function DiscoveryMap({ filters }: Props) {
           });
 
           const viewLabel =
-            translations[language]?.['common.viewProfile'] || 'View Profile';
+            translationsMemo[language]?.['common.viewProfile'] || 'View Profile';
 
           const badgeCfg = roleBadges[props.role as RoleKey];
           const key = badgeCfg?.label.toLowerCase();
@@ -245,11 +247,9 @@ export default function DiscoveryMap({ filters }: Props) {
         });
       });
     }
-  }, [data, filters, language, translations]);
+  }, [data, filters, language, translationsMemo]);
 
-  const memoizedTranslations = useMemo(() => {
-    return translations;
-  }, [language, translations]);
+  const memoizedTranslations = useMemo(() => translations[language], [language]);
 
   return (
     <div

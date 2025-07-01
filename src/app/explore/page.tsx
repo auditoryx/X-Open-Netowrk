@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), {
   ssr: false,
 });
-import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import CreatorCard from '@/components/cards/CreatorCard';
 import { getFeaturedCreators } from '@/lib/firestore/getFeaturedCreators';

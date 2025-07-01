@@ -41,7 +41,7 @@ export default function ProviderBookings() {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-2">Bookings You've Received</h2>
+      <h2 className="text-xl font-bold mb-2">Bookings You&apos;ve Received</h2>
       <ul className="space-y-4">
         {bookings.map((booking) => (
           <li
@@ -73,6 +73,7 @@ export default function ProviderBookings() {
         ))}
       </ul>
       <p>Welcome to the provider&apos;s booking page!</p>
+      <p>You&apos;re not verified</p>
     </div>
   );
 }

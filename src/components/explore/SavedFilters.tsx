@@ -27,13 +27,13 @@ export default function SavedFilters({
     setPresets(list);
   };
 
-  const memoizedLoad = useCallback(() => {
+  const loadCallback = useCallback(() => {
     load();
-  }, [user]);
+  }, [load]);
 
   useEffect(() => {
-    memoizedLoad();
-  }, [memoizedLoad, refreshKey]);
+    loadCallback();
+  }, [loadCallback, refreshKey]);
 
   const apply = (preset: SavedFilter) => {
     setFilters({ ...filters, ...preset.filters });

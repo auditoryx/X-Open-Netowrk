@@ -1,1 +1,1 @@
-// Removed unused variable 'router'.
+// Removed unused variable `router`

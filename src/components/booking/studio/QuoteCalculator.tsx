@@ -24,7 +24,9 @@ export default function QuoteCalculator({ rooms, onChange }: Props) {
   const quote = room ? calcQuote(room, hours, withEngineer) : 0;
 
   useEffect(() => {
-    onChange && onChange(quote);
+    if (onChange) {
+      onChange(quote);
+    }
   }, [quote, onChange]);
 
   useEffect(() => {

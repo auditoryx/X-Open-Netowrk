@@ -1,16 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
-const MyComponent = ({ fetchBookings, fetchProvider }) => {
+const ProviderBookings = ({ fetchBookings, fetchProvider }) => {
+  const stableFetchBookings = useCallback(fetchBookings, []);
+  const stableFetchProvider = useCallback(fetchProvider, []);
+
   useEffect(() => {
-    fetchBookings();
-    fetchProvider();
-  }, []); // Removed 'fetchBookings' and 'fetchProvider' from dependency array
+    stableFetchBookings();
+    stableFetchProvider();
+  }, [stableFetchBookings, stableFetchProvider]);
 
-  return (
-    <div>
-      {/* Component JSX goes here */}
-    </div>
-  );
+  return <div>Provider Bookings</div>;
 };
 
-export default MyComponent;
+export default ProviderBookings;

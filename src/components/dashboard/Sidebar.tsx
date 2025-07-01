@@ -2,12 +2,10 @@
 
 import { useSidebarToggle } from '@/hooks/useSidebarToggle';
 import SidebarItem from '@/components/ui/SidebarItem';
-import { useAuth } from '@/lib/hooks/useAuth';
 import { Translate } from '@/i18n/Translate';
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const { open: isOpen, toggle } = useSidebarToggle();
-  const { userData } = useAuth();
 
   const links = [
     { href: '/dashboard/home', label: <Translate t="sidebar.dashboardHome" /> },

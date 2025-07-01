@@ -1,1 +1,1 @@
-// Removed unused variables 'recipientId' and 'recipientRole'.
+// Removed unused variables `recipientId` and `recipientRole`

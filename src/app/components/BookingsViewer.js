@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs, orderBy, startAfter, limit } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import React, { useEffect, useState, useCallback } from 'react';
 
 export default function BookingsViewer() {
   const [bookings, setBookings] = useState([]);
@@ -13,7 +13,6 @@ export default function BookingsViewer() {
 
   useEffect(() => {
     const auth = getAuth(app);
-    const db = getFirestore(app);
 
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) return;
@@ -27,13 +26,12 @@ export default function BookingsViewer() {
 
   const loadMore = useCallback(async (uid) => {
     setLoading(true);
-      const db = getFirestore(app);
-      const base = query(
-        collection(db, 'bookings'),
-        where('providerId', '==', uid),
-        orderBy('createdAt', 'desc'),
-        limit(10)
-      );
+    const base = query(
+      collection(getFirestore(app), 'bookings'),
+      where('providerId', '==', uid),
+      orderBy('createdAt', 'desc'),
+      limit(10)
+    );
     const q = lastDoc ? query(base, startAfter(lastDoc)) : base;
     const snapshot = await getDocs(q);
     const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -43,8 +41,10 @@ export default function BookingsViewer() {
   }, [lastDoc]);
 
   useEffect(() => {
-    loadMore(uidState);
-  }, [loadMore, uidState]);
+    if (uidState) {
+      loadMore(uidState);
+    }
+  }, [uidState, loadMore]);
 
   if (loading) return <p className="text-white">Loading bookings...</p>;
 

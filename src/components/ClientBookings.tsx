@@ -1,9 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 const MyComponent = ({ fetch }) => {
-  useEffect(() => {
+  const stableFetch = useCallback(() => {
     fetch();
-  }, []);
+  }, [fetch]);
+
+  useEffect(() => {
+    stableFetch();
+  }, [stableFetch]);
 
   return <div>My Component</div>;
 };

@@ -27,7 +27,7 @@ export default function BookingsList({ uid }: Props) {
     setLastDoc(snapshot.docs[snapshot.docs.length - 1] || lastDoc)
     setBookings(prev => [...prev, ...docs])
     setLoading(false)
-  }, [db, lastDoc, uid])
+  }, [lastDoc, uid])
 
   useEffect(() => {
     loadMore()

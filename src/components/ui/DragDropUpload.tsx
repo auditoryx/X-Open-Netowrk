@@ -1,3 +1,4 @@
 import Image from 'next/image';
 
-<Image src="path/to/image" alt="description" />
+// Replaced <img> with <Image /> for Next.js optimization
+<Image src="/path/to/image" alt="Description" width={500} height={500} />

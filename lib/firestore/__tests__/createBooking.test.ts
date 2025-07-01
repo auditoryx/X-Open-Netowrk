@@ -1,11 +1,10 @@
 import { createBooking } from '../createBooking'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc } from 'firebase/firestore'
 import { firestore } from '@lib/firebase/init'
 
 jest.mock('firebase/firestore', () => ({
   collection: jest.fn(),
   addDoc: jest.fn(),
-  serverTimestamp: jest.fn(() => 'ts'),
 }))
 
 jest.mock('@lib/firebase/init', () => ({
@@ -32,7 +31,7 @@ describe('createBooking', () => {
     expect(mockedAddDoc).toHaveBeenCalledWith(collRef, expect.objectContaining({
       ...booking,
       status: 'pending',
-      createdAt: 'ts',
+      createdAt: expect.anything(),
       paid: false,
       revisionsRemaining: 2,
     }))

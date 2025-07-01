@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import withAuth from '@/app/api/_utils/withAuth';
 import { requestRevision } from '@/lib/firestore/bookings/requestRevision';
+import { verifyAuth } from '@/app/api/_utils/withAuth'; // Fixed import to match export in withAuth
 
-async function handler(req: NextRequest & { user: any }) {
+export async function POST(req: NextRequest) {
+  const user = await verifyAuth(req);
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const body = await req.json();
   const result = await requestRevision({
     bookingId: body.bookingId,
-    userId: req.user.id || req.user.uid,
+    userId: user.id || user.uid,
   });
 
   if ('error' in result) {
@@ -16,6 +21,3 @@ async function handler(req: NextRequest & { user: any }) {
 
   return NextResponse.json(result);
 }
-
-export const POST = withAuth(handler);
-export { handler }; // for testing

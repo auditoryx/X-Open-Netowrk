@@ -62,7 +62,9 @@ export default function BookingForm({ providerId, onBooked }: BookingFormProps) 
       setMessage("");
       setService("");
       setSelectedTime(null);
-      onBooked && onBooked();
+      if (onBooked) {
+        onBooked();
+      }
     } catch (err) {
       console.error("Booking submission failed:", err);
       toast.error("Failed to send booking request.");

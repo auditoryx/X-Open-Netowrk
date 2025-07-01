@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import { useAuth } from '@/lib/hooks/useAuth';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
 
 export default function DashboardHomePage() {
   const router = useRouter();
-  const { user } = useAuth();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
