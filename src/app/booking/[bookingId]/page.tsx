@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
+import { db } from '@/lib/firebase';
 import BookingSummary from '@/components/BookingSummary';
 import ReviewForm from '@/components/ReviewForm';
 import { BookingType } from '@lib/pdf/generateContract';

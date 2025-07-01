@@ -10,15 +10,17 @@
     "incremental": true,
     "moduleResolution": "Node",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "jsxImportSource": "react",
     "types": ["node", "next", "next-auth", "jest", "react", "stripe"],
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@lib/*": ["lib/*"]
+      "@/*": ["./src/*"],
+      "@lib/*": ["./lib/*"]
     },
     "plugins": [
       {

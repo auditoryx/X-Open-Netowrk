@@ -173,7 +173,7 @@ export default function PublicProfilePage() {
 
       {/* Reviews */}
       <div className="mt-10 w-full max-w-3xl">
-        <ReviewList uid={uid} />
+        <ReviewList providerId={uid} />
       </div>
 
       {/* Bottom action bar */}
