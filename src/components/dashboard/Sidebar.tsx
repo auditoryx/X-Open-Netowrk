@@ -10,6 +10,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const links = [
     { href: '/dashboard/home', label: <Translate t="sidebar.dashboardHome" /> },
     { href: '/dashboard/bookings', label: <Translate t="sidebar.bookings" /> },
+    { href: '/dashboard/collabs', label: <Translate t="sidebar.collabs" /> },
     { href: '/dashboard/messages', label: <Translate t="sidebar.messages" /> },
     { href: '/dashboard/availability', label: <Translate t="sidebar.availability" /> },
     { href: '/dashboard/earnings', label: <Translate t="sidebar.finances" /> },

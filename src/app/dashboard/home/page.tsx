@@ -9,8 +9,9 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
 import { RankProgress } from '@/src/components/dashboard/RankProgress';
+import CollabStatsWidget from '@/components/dashboard/collab/CollabStatsWidget';
 import Link from 'next/link';
-import { MessageCircle, Bell, Calendar, Settings, Shield } from 'lucide-react';
+import { MessageCircle, Bell, Calendar, Settings, Shield, Users } from 'lucide-react';
 
 export default function DashboardHomePage() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function DashboardHomePage() {
       {/* Quick Navigation Cards */}
       <section>
         <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-        <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${isAdmin ? 'lg:grid-cols-5' : 'lg:grid-cols-4'}`}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${isAdmin ? 'lg:grid-cols-6' : 'lg:grid-cols-5'}`}>
           <Link 
             href="/dashboard/inbox"
             className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
@@ -88,6 +89,19 @@ export default function DashboardHomePage() {
               <div>
                 <h3 className="font-semibold">Bookings</h3>
                 <p className="text-sm text-gray-400">Manage your bookings</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link 
+            href="/dashboard/collabs"
+            className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Users className="h-6 w-6 text-cyan-400" />
+              <div>
+                <h3 className="font-semibold">Collaborations</h3>
+                <p className="text-sm text-gray-400">Manage collab packages</p>
               </div>
             </div>
           </Link>
@@ -133,6 +147,11 @@ export default function DashboardHomePage() {
           />
         </section>
       )}
+
+      {/* Collab Stats Widget */}
+      <section>
+        <CollabStatsWidget />
+      </section>
 
       <section>
         <h2 className="text-xl font-bold mb-2">Upcoming Bookings</h2>

@@ -67,8 +67,14 @@
     "zod": "^3.25.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@lhci/cli": "^0.15.0",
     "@testing-library/cypress": "^10.0.3",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
     "@types/luxon": "^3.6.2",
     "@types/nodemailer": "^6.4.17",
@@ -77,6 +83,7 @@
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
     "autoprefixer": "^10.4.21",
+    "babel-jest": "^30.0.2",
     "cypress": "^14.4.1",
     "eslint": "^9.29.0",
     "eslint-config-next": "^15.3.4",
