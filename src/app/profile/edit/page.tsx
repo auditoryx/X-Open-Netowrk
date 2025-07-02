@@ -6,15 +6,14 @@ import { getFirestore, doc, getDoc, setDoc, collection, serverTimestamp } from '
 import { useRouter } from 'next/navigation';
 import { app } from '@/lib/firebase';
 import ProfileCompletionMeter from '@/components/dashboard/ProfileCompletionMeter';
+import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
 import { UserProfile } from '@/types/user';
 
 export default function EditProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [bio, setBio] = useState('');
   const [socialLink, setSocialLink] = useState('');
-  const [verificationMessage, setVerificationMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -60,26 +59,6 @@ export default function EditProfilePage() {
     router.push(`/profile/${user.uid}`);
   };
 
-  const handleVerificationSubmit = async () => {
-    const auth = getAuth(app);
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const db = getFirestore(app);
-    const ref = collection(db, 'verificationRequests');
-
-    await setDoc(doc(ref, user.uid), {
-      uid: user.uid,
-      email: user.email,
-      message: verificationMessage,
-      status: 'pending',
-      createdAt: serverTimestamp()
-    });
-
-    setSubmitted(true);
-    setVerificationMessage('');
-  };
-
   if (loading) return <div className="p-6 text-white">Loading profile...</div>;
 
   return (
@@ -112,28 +91,19 @@ export default function EditProfilePage() {
         </button>
       </form>
 
-      {/* 🟦 Apply for Verification */}
-      <div className="mt-10 w-full max-w-md border-t pt-6">
-        <h2 className="text-xl font-semibold mb-2">Apply for Verification</h2>
-        {submitted ? (
-          <p className="text-green-400 text-sm">✅ Request submitted! We&apos;ll review it soon.</p>
-        ) : (
-          <>
-            <textarea
-              placeholder="Why should we verify you? (Optional)"
-              value={verificationMessage}
-              onChange={(e) => setVerificationMessage(e.target.value)}
-              className="w-full p-2 rounded text-black mb-2"
-              rows={3}
-            />
-            <button
-              onClick={handleVerificationSubmit}
-              className="w-full bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-            >
-              Submit Verification Request
-            </button>
-          </>
-        )}
+      {/* Apply for Verification */}
+      <div className="mt-10 w-full max-w-md">
+        <h2 className="text-xl font-semibold mb-4">Verification</h2>
+        <ApplyVerificationButton
+          userId={profile?.uid || ''}
+          userData={{
+            name: profile?.displayName || profile?.name || 'Unknown',
+            role: profile?.role || 'User',
+            isVerified: profile?.isVerified || false
+          }}
+          variant="card"
+          className="w-full"
+        />
       </div>
     </div>
   );

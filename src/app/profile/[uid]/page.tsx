@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 /* UI components */
 import { ReviewList } from '@/components/reviews/ReviewList';
@@ -16,6 +17,7 @@ import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import RatingBarChart from '@/components/profile/RatingBarChart';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import SignatureBadge from '@/components/badges/SignatureBadge';
+import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
 
 /* Data helpers */
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
@@ -25,6 +27,7 @@ import { getMediaSamples } from '@/lib/firestore/getMediaSamples';
 
 export default function PublicProfilePage() {
   const rawParams = useParams();
+  const { user } = useAuth();
   const uid =
     typeof rawParams.uid === 'string'
       ? rawParams.uid
@@ -36,6 +39,9 @@ export default function PublicProfilePage() {
   const [loading, setLoading] = useState(true);
   const [distribution, setDistribution] =
     useState<Record<number, number> | null>(null);
+
+  // Check if this is the current user's own profile
+  const isOwnProfile = user?.uid === uid;
 
   /* ───────────── fetch profile + extras ───────────── */
   useEffect(() => {
@@ -99,6 +105,22 @@ export default function PublicProfilePage() {
         >
           ✔ Verified Creator
         </p>
+      )}
+
+      {/* Verification Button (only for own profile) */}
+      {isOwnProfile && (
+        <div className="mb-4">
+          <ApplyVerificationButton
+            userId={uid}
+            userData={{
+              name: profile.name || profile.displayName || 'Unknown',
+              role: profile.role || 'User',
+              isVerified: profile.proTier === 'verified' || profile.isVerified
+            }}
+            variant="button"
+            className="text-sm"
+          />
+        </div>
       )}
 
       {profile.averageRating !== undefined && (
