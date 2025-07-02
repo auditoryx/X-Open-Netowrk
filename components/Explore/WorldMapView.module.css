@@ -1,0 +1,38 @@
+.creatorMarker {
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  transition: transform 0.2s;
+}
+
+.creatorMarker:hover {
+  transform: scale(1.1);
+  z-index: 1000;
+}
+
+.creatorMarker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Override default leaflet popup styles */
+:global(.leaflet-popup-content-wrapper) {
+  border-radius: 8px;
+  padding: 0;
+}
+
+:global(.leaflet-popup-content) {
+  margin: 8px;
+  min-width: 180px;
+}
+
+:global(.leaflet-container a.leaflet-popup-close-button) {
+  top: 5px;
+  right: 5px;
+}
