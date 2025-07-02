@@ -18,6 +18,7 @@ import RatingBarChart from '@/components/profile/RatingBarChart';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import SignatureBadge from '@/components/badges/SignatureBadge';
 import { TierBadge } from '@/src/components/badges/TierBadge';
+import { ReportUserButton } from '@/src/components/profile/ReportUserButton';
 import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
 
 /* Data helpers */
@@ -127,6 +128,16 @@ export default function PublicProfilePage() {
             }}
             variant="button"
             className="text-sm"
+          />
+        </div>
+      )}
+
+      {/* Report User Button (only for other users' profiles) */}
+      {!isOwnProfile && (
+        <div className="mb-4">
+          <ReportUserButton 
+            targetUid={uid}
+            targetName={profile.name || profile.displayName}
           />
         </div>
       )}
