@@ -1,11 +1,14 @@
 import Button from '@/components/ui/Button';
 import React from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  title: 'AuditoryX - The Global Creative Network Built for Music',
+  description: 'Book talent, sell your services, and get paid. Connect with creators worldwide.',
   openGraph: {
+    title: 'AuditoryX - The Global Creative Network Built for Music',
+    description: 'Book talent, sell your services, and get paid. Connect with creators worldwide.',
     images: 'https://placehold.co/1200x630/png',
   },
 };
@@ -29,12 +32,10 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
-        />
-      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
+      />
 
       <main className="min-h-screen bg-ebony text-gray-100 px-6 py-16">
         <div className="mx-auto max-w-6xl space-y-20">

@@ -199,7 +199,7 @@
 }
 
 .card-interactive {
-  @apply card-hover cursor-pointer active:scale-98;
+  @apply card-hover cursor-pointer active:scale-95;
 }
 
 .card-elevated {
