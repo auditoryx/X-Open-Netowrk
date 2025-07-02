@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/hooks/useAuth';
 import EventTeamPanel from '@/components/dashboard/EventTeamPanel';
+import MentorshipPanel from '@/components/dashboard/MentorshipPanel';
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -35,6 +36,7 @@ export default function Dashboard() {
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
+            <MentorshipPanel />
             <EventTeamPanel />
             
             {/* Other dashboard sections can be added here */}
