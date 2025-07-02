@@ -8,6 +8,7 @@ import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
+import { RankProgress } from '@/src/components/dashboard/RankProgress';
 import Link from 'next/link';
 import { MessageCircle, Bell, Calendar, Settings, Shield } from 'lucide-react';
 
@@ -121,6 +122,17 @@ export default function DashboardHomePage() {
           )}
         </div>
       </section>
+
+      {/* Rank Progress Widget */}
+      {userData?.uid && userData?.role && (
+        <section>
+          <RankProgress 
+            userId={userData.uid} 
+            userRole={userData.role} 
+            className="max-w-md mx-auto lg:mx-0"
+          />
+        </section>
+      )}
 
       <section>
         <h2 className="text-xl font-bold mb-2">Upcoming Bookings</h2>

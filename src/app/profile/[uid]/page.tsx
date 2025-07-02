@@ -17,6 +17,7 @@ import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import RatingBarChart from '@/components/profile/RatingBarChart';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import SignatureBadge from '@/components/badges/SignatureBadge';
+import { TierBadge } from '@/src/components/badges/TierBadge';
 import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
 
 /* Data helpers */
@@ -92,6 +93,13 @@ export default function PublicProfilePage() {
       {profile.signature && (
         <div className="mb-2">
           <SignatureBadge size="md" />
+        </div>
+      )}
+
+      {/* Tier Badge */}
+      {profile.tier && (
+        <div className="mb-2 flex justify-center">
+          <TierBadge tier={profile.tier} size="lg" />
         </div>
       )}
 
