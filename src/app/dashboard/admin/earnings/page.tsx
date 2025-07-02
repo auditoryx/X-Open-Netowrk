@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../../context/AuthContext';
+import { useState } from 'react';
+import withAdminProtection from '@/middleware/withAdminProtection';
 import { useEarningsData } from '../../../../hooks/useEarningsData';
 import EarningsChart from '../../../../components/admin/EarningsChart';
 import TopRolesCard from '../../../../components/admin/TopRolesCard';
@@ -10,11 +9,8 @@ import { formatCurrency } from '../../../../lib/utils/formatCurrency';
 
 type PeriodType = 'weekly' | 'monthly';
 
-export default function AdminEarningsPage() {
-  const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+function AdminEarningsPage() {
   const [period, setPeriod] = useState<PeriodType>('monthly');
-  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const {
     data: earningsData,
@@ -22,36 +18,6 @@ export default function AdminEarningsPage() {
     error: dataError,
     refetch
   } = useEarningsData(period);
-
-  // Check admin authorization
-  useEffect(() => {
-    if (authLoading) return;
-
-    if (!user) {
-      router.push('/auth');
-      return;
-    }
-
-    // Check if user has admin role
-    if (user.role !== 'admin') {
-      router.push('/dashboard');
-      return;
-    }
-
-    setIsAuthorized(true);
-  }, [user, authLoading, router]);
-
-  // Don't render anything until auth check is complete
-  if (authLoading || !isAuthorized) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verifying admin access...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (dataError) {
     return (
@@ -275,3 +241,5 @@ export default function AdminEarningsPage() {
     </div>
   );
 }
+
+export default withAdminProtection(AdminEarningsPage);

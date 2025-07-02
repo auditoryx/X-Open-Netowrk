@@ -1,16 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getFirestore, doc, updateDoc } from 'firebase/firestore';
-import { app } from '@/lib/firebase';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/authOptions';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { withAdminCheck } from '@/lib/auth/withAdminCheck';
+import { z } from 'zod';
 
-const db = getFirestore(app);
+const schema = z.object({
+  uid: z.string().min(1),
+  role: z.enum(['user', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'admin', 'moderator']),
+});
 
-export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (session?.user?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  const { uid, role } = await req.json();
-  const userRef = doc(db, 'users', uid);
-  await updateDoc(userRef, { role });
-  return NextResponse.json({ success: true });
+async function handler(req: NextRequest & { admin: any }) {
+  const body = await req.json();
+  const parsed = schema.safeParse(body);
+  
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid input', details: parsed.error.issues },
+      { status: 400 }
+    );
+  }
+
+  const { uid, role } = parsed.data;
+
+  try {
+    const userRef = doc(db, 'users', uid);
+    await updateDoc(userRef, { 
+      role,
+      roleUpdatedAt: new Date().toISOString(),
+      roleUpdatedBy: req.admin.uid
+    });
+    
+    return NextResponse.json({ 
+      success: true,
+      message: `User role updated to ${role}`
+    });
+  } catch (error: any) {
+    console.error('Error updating role:', error);
+    return NextResponse.json(
+      { error: 'Failed to update role', details: error.message },
+      { status: 500 }
+    );
+  }
 }
+
+export const POST = withAdminCheck(handler);

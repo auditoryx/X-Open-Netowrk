@@ -11,8 +11,9 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
+import withAdminProtection from '@/middleware/withAdminProtection';
 
-export default function AdminDashboard() {
+function AdminDashboard() {
   const { user } = useAuth();
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -147,3 +148,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+export default withAdminProtection(AdminDashboard);

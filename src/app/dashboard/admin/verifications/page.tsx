@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { useRouter } from 'next/navigation';
 import { getAllVerifications } from '@/lib/firestore/updateVerificationStatus';
 import { VerificationRequest } from '@/lib/firestore/submitVerificationRequest';
 import VerificationReviewCard from '@/components/admin/VerificationReviewCard';
+import withAdminProtection from '@/src/middleware/withAdminProtection';
 import { 
   Shield, 
   Clock, 
@@ -18,25 +18,13 @@ import {
 
 type StatusFilter = 'all' | 'pending' | 'approved' | 'rejected';
 
-export default function AdminVerificationsPage() {
-  const { user, userData } = useAuth();
-  const router = useRouter();
+function AdminVerificationsPage() {
+  const { user } = useAuth();
   const [verifications, setVerifications] = useState<VerificationRequest[]>([]);
   const [filteredVerifications, setFilteredVerifications] = useState<VerificationRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<StatusFilter>('pending');
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Check admin access
-  useEffect(() => {
-    if (!user) return;
-    
-    // Check if user has admin privileges
-    if (!userData?.role || !['admin', 'moderator'].includes(userData.role.toLowerCase())) {
-      router.push('/dashboard');
-      return;
-    }
-  }, [user, userData, router]);
 
   // Fetch verifications
   const fetchVerifications = async () => {
@@ -52,10 +40,10 @@ export default function AdminVerificationsPage() {
   };
 
   useEffect(() => {
-    if (user && userData?.role && ['admin', 'moderator'].includes(userData.role.toLowerCase())) {
+    if (user) {
       fetchVerifications();
     }
-  }, [user, userData]);
+  }, [user]);
 
   // Filter and search verifications
   useEffect(() => {
@@ -99,23 +87,11 @@ export default function AdminVerificationsPage() {
     };
   };
 
-  // Show loading or access denied
-  if (!user || loading) {
+  // Show loading state
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (!userData?.role || !['admin', 'moderator'].includes(userData.role.toLowerCase())) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Shield className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h1 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h1>
-          <p className="text-gray-600">You don't have permission to access this page</p>
-        </div>
       </div>
     );
   }
@@ -258,3 +234,5 @@ export default function AdminVerificationsPage() {
     </div>
   );
 }
+
+export default withAdminProtection(AdminVerificationsPage, { allowModerators: true });

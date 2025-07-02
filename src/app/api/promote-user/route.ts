@@ -1,24 +1,45 @@
 import { db } from '@/lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { NextRequest, NextResponse } from 'next/server';
-import withAuth from '@/app/api/_utils/withAuth';
+import { withAdminCheck } from '@/lib/auth/withAdminCheck';
+import { z } from 'zod';
 
-async function handler(req: NextRequest & { user: any }) {
-  if (req.user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  const { uid, role } = await req.json();
+const schema = z.object({
+  uid: z.string().min(1),
+  role: z.enum(['user', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'admin', 'moderator']),
+});
 
-  if (!uid || !role) {
-    return NextResponse.json({ error: 'Missing uid or role' }, { status: 400 });
+async function handler(req: NextRequest & { admin: any }) {
+  const body = await req.json();
+  const parsed = schema.safeParse(body);
+  
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid input', details: parsed.error.issues },
+      { status: 400 }
+    );
   }
 
-  // Optional: limit who can promote
-  // if (req.user.role !== 'admin') {
-  //   return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  // }
+  const { uid, role } = parsed.data;
 
-  await updateDoc(doc(db, 'users', uid), { role });
-
-  return NextResponse.json({ success: true });
+  try {
+    await updateDoc(doc(db, 'users', uid), { 
+      role,
+      roleUpdatedAt: new Date().toISOString(),
+      roleUpdatedBy: req.admin.uid
+    });
+    
+    return NextResponse.json({ 
+      success: true,
+      message: `User promoted to ${role}`
+    });
+  } catch (error: any) {
+    console.error('Error promoting user:', error);
+    return NextResponse.json(
+      { error: 'Failed to promote user', details: error.message },
+      { status: 500 }
+    );
+  }
 }
 
-export const POST = withAuth(handler);
+export const POST = withAdminCheck(handler);

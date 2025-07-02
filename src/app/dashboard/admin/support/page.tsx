@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getDocs, collection, query, orderBy } from 'firebase/firestore';
 import { db } from '@/firebase/firebaseConfig';
+import withAdminProtection from '@/middleware/withAdminProtection';
 import Link from 'next/link';
 
 type Ticket = {
@@ -14,7 +15,7 @@ type Ticket = {
   createdAt?: any;
 };
 
-export default function SupportDashboard() {
+export default export default function SupportDashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,3 +73,5 @@ export default function SupportDashboard() {
     </div>
   );
 }
+
+export default withAdminProtection(SupportDashboard);

@@ -6,6 +6,7 @@ import { collection, query, orderBy, getDocs, doc, updateDoc } from 'firebase/fi
 import { db } from '@/lib/firebase';
 import { Flag, Eye, CheckCircle, X, Clock, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import withAdminProtection from '@/middleware/withAdminProtection';
 
 interface Report {
   id: string;
@@ -17,20 +18,15 @@ interface Report {
   createdAt: any;
 }
 
-export default function AdminReportsPage() {
+function AdminReportsPage() {
   const { user, userData } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  // Check if user is admin
-  const isAdmin = userData?.role && ['admin', 'moderator'].includes(userData.role.toLowerCase());
-
   useEffect(() => {
-    if (isAdmin) {
-      fetchReports();
-    }
-  }, [isAdmin]);
+    fetchReports();
+  }, []);
 
   const fetchReports = async () => {
     try {
@@ -93,24 +89,6 @@ export default function AdminReportsPage() {
       default: return <AlertTriangle className="w-4 h-4" />;
     }
   };
-
-  if (!user) {
-    return (
-      <div className="p-6 text-center">
-        <p className="text-gray-600 dark:text-gray-400">Please log in to access this page.</p>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="p-6 text-center">
-        <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Access Denied</h2>
-        <p className="text-gray-600 dark:text-gray-400">You need administrator privileges to view this page.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -215,3 +193,5 @@ export default function AdminReportsPage() {
     </div>
   );
 }
+
+export default withAdminProtection(AdminReportsPage);

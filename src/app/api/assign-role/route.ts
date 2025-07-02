@@ -1,22 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
-import withAuth from '@/app/api/_utils/withAuth';
+import { withAdminCheck } from '@/lib/auth/withAdminCheck';
 import { logger } from '@lib/logger';
+import { z } from 'zod';
 
-async function handler(req: NextRequest & { user: any }) {
-  if (req.user.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+const schema = z.object({
+  uid: z.string().min(1),
+  role: z.enum(['user', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'admin', 'moderator']),
+});
+
+async function handler(req: NextRequest & { admin: any }) {
+  const body = await req.json();
+  const parsed = schema.safeParse(body);
+  
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid input', details: parsed.error.issues },
+      { status: 400 }
+    );
   }
-  const { uid, role } = await req.json();
+
+  const { uid, role } = parsed.data;
 
   try {
+    // Set custom claims
     await getAuth(admin).setCustomUserClaims(uid, { role });
-    return NextResponse.json({ success: true });
-  } catch (error) {
+    
+    // Also update Firestore document for consistency
+    await admin.firestore().collection('users').doc(uid).update({
+      role,
+      roleUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      roleUpdatedBy: req.admin.uid
+    });
+    
+    logger.info(`Role assigned: ${role} to user ${uid} by admin ${req.admin.uid}`);
+    
+    return NextResponse.json({ 
+      success: true,
+      message: `Role ${role} assigned successfully`
+    });
+  } catch (error: any) {
     logger.error('Error setting role:', error);
-    return NextResponse.json({ error: 'Role assignment failed' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Role assignment failed', details: error.message },
+      { status: 500 }
+    );
   }
 }
 
-export const POST = withAuth(handler);
+export const POST = withAdminCheck(handler);

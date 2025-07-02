@@ -8,7 +8,7 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore';
-import withAdminProtection from '@/middleware/withAdminProtection';
+import withAdminProtection from '@/src/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
 import { toggleSignatureTier } from '@/lib/firestore/updateUserTier';
 import SignatureBadge from '@/components/badges/SignatureBadge';

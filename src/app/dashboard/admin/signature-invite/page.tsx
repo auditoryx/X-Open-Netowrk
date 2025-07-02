@@ -2,8 +2,9 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, updateDoc, query, orderBy } from 'firebase/firestore';
+import withAdminProtection from '@/middleware/withAdminProtection';
 
-export default function SignatureInvitePage() {
+function SignatureInvitePage() {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,3 +54,5 @@ export default function SignatureInvitePage() {
     </div>
   );
 }
+
+export default withAdminProtection(SignatureInvitePage);

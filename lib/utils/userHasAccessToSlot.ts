@@ -3,6 +3,10 @@ import { BookingSlot } from "../types/BookingSlot";
 interface User {
   uid: string;
   rank?: 'verified' | 'signature' | 'top5';
+  proTier?: 'standard' | 'verified' | 'signature';
+  isVerified?: boolean;
+  signature?: boolean;
+  verified?: boolean;
   email?: string;
 }
 
@@ -25,7 +29,10 @@ export function userHasAccessToSlot(slot: BookingSlot, user: User): boolean {
   }
 
   // Check if user meets minimum rank requirement
-  if (slot.minRank && user.rank) {
+  if (slot.minRank) {
+    // Determine user's actual rank from various sources
+    const userRank = getUserRank(user);
+    
     // Rank hierarchy: top5 > signature > verified
     const rankValues = {
       'verified': 1,
@@ -33,11 +40,37 @@ export function userHasAccessToSlot(slot: BookingSlot, user: User): boolean {
       'top5': 3
     };
 
-    if (rankValues[user.rank] >= rankValues[slot.minRank]) {
+    const requiredLevel = rankValues[slot.minRank];
+    const userLevel = userRank ? rankValues[userRank] : 0;
+
+    if (userLevel >= requiredLevel) {
       return true;
     }
   }
 
   // User does not meet any access criteria
   return false;
+}
+
+/**
+ * Determines user's rank from various properties
+ */
+function getUserRank(user: User): 'verified' | 'signature' | 'top5' | null {
+  // Check explicit rank property first
+  if (user.rank) {
+    return user.rank;
+  }
+
+  // Check signature tier (highest priority)
+  if (user.signature || user.proTier === 'signature') {
+    return 'signature';
+  }
+
+  // Check verified status
+  if (user.isVerified || user.verified || user.proTier === 'verified') {
+    return 'verified';
+  }
+
+  // No qualifying rank
+  return null;
 }
