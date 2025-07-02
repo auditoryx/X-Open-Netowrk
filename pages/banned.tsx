@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import BannedModal from '@/components/BannedModal';
+import BannedModal from '@/src/components/BannedModal';
 import { Shield, Mail, LogOut, AlertCircle } from 'lucide-react';
 
 export default function BannedPage() {
