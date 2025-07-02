@@ -139,11 +139,27 @@ export default function BookingDetailPage() {
                   fullBookingData.status === 'completed' ? 'text-green-400' :
                   fullBookingData.status === 'paid' ? 'text-blue-400' :
                   fullBookingData.status === 'pending' ? 'text-yellow-400' :
+                  fullBookingData.status === 'accepted' ? 'text-purple-400' :
                   'text-gray-400'
                 }`}>
                   {fullBookingData.status}
                 </span>
               </p>
+              
+              {/* Contract Preview Button - Show for accepted bookings */}
+              {fullBookingData.status === 'accepted' && currentUserId === fullBookingData.clientUid && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => router.push(`/booking/preview/${bookingId}`)}
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    📄 Review Contract & Pay
+                  </button>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Review the service contract before proceeding to payment
+                  </p>
+                </div>
+              )}
             </div>
           )}
           
