@@ -1,5 +1,6 @@
 import { Booking } from '@/lib/types/Booking';
 import { useAuth } from '@/lib/hooks/useAuth';
+import RevenueSplitViewer from '@/components/booking/RevenueSplitViewer';
 
 interface BookingCardProps {
   booking: Booking;
@@ -16,7 +17,15 @@ export default function BookingCard({ booking }: BookingCardProps) {
       <p className="text-sm">Role: {userRole}</p>
       <p className="text-sm">Scheduled for: {new Date(booking.scheduledAt.toMillis()).toLocaleString()}</p>
       
-      {booking.contractUrl && (
+      {/* Display the revenue split viewer if a contract is available */}
+      {booking.revenueSplit && booking.contractUrl && (
+        <div className="mt-4">
+          <RevenueSplitViewer booking={booking} />
+        </div>
+      )}
+      
+      {/* Fallback for bookings with contract but no revenue split */}
+      {!booking.revenueSplit && booking.contractUrl && (
         <a 
           href={booking.contractUrl} 
           target="_blank" 
