@@ -5,15 +5,20 @@ import { useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { useAuth } from '@/lib/hooks/useAuth';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
 import Link from 'next/link';
-import { MessageCircle, Bell, Calendar, Settings } from 'lucide-react';
+import { MessageCircle, Bell, Calendar, Settings, Shield } from 'lucide-react';
 
 export default function DashboardHomePage() {
   const router = useRouter();
+  const { user, userData } = useAuth();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Check if user is admin/moderator
+  const isAdmin = userData?.role && ['admin', 'moderator'].includes(userData.role.toLowerCase());
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -46,7 +51,7 @@ export default function DashboardHomePage() {
       {/* Quick Navigation Cards */}
       <section>
         <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${isAdmin ? 'lg:grid-cols-5' : 'lg:grid-cols-4'}`}>
           <Link 
             href="/dashboard/inbox"
             className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
@@ -98,6 +103,22 @@ export default function DashboardHomePage() {
               </div>
             </div>
           </Link>
+
+          {/* Admin Panel - Only show for admin/moderator users */}
+          {isAdmin && (
+            <Link 
+              href="/dashboard/admin/verifications"
+              className="bg-neutral-800 border border-red-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Shield className="h-6 w-6 text-red-400" />
+                <div>
+                  <h3 className="font-semibold">Admin Panel</h3>
+                  <p className="text-sm text-gray-400">Manage verifications</p>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
       </section>
 
