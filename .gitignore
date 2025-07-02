@@ -134,3 +134,8 @@ firebaseAdminServer/key.json
 # Local archives
 stripe.tar.gz
 TypeScript:
+
+# Playwright Test Results
+/test-results/
+/playwright-report/
+/playwright/.cache/
