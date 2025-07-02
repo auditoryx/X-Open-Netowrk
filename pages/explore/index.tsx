@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MapToggle from '@/components/Explore/MapToggle';
 import WorldMapView from '@/components/Explore/WorldMapView';
+import SearchBar, { SearchFilters } from '@/components/Explore/SearchBar';
+import { searchCreators, CreatorSearchResult, CreatorSearchFilters } from '@/lib/firestore/searchCreators';
 import { getCoordsFromCity } from '@/lib/utils/getCoordsFromCity';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { searchCreators } from '@/lib/firestore/searchCreators'; // Import the function to search creators
 
-// Interface for creator
-interface Creator {
+// Interface for creator (extending the search result)
+interface Creator extends CreatorSearchResult {
   id: string;
   displayName: string;
   location?: string;
@@ -29,30 +30,40 @@ export default function ExplorePage() {
   
   const [creators, setCreators] = useState<Creator[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
   const [selectedCreator, setSelectedCreator] = useState<Creator | null>(null);
   
-  const [filters, setFilters] = useState({
+  // Initialize filters from URL parameters
+  const [currentFilters, setCurrentFilters] = useState<SearchFilters>({
+    searchTerm: searchParams.get('q') || '',
     role: searchParams.get('role') || '',
+    tags: searchParams.get('tags') ? searchParams.get('tags')!.split(',').filter(Boolean) : [],
     location: searchParams.get('location') || '',
-    genre: searchParams.get('genre') ? searchParams.get('genre')!.split(',') : [],
   });
 
-  // Load creators
+  // Load creators based on current filters
   useEffect(() => {
     async function loadCreators() {
       setLoading(true);
       try {
-        // Use the searchCreators function to get creators based on filters and search term
-        const creatorsData = await searchCreators({
-          searchTerm,
-          role: filters.role,
-          location: filters.location,
-          genre: filters.genre.join(','),
+        // Convert SearchFilters to CreatorSearchFilters
+        const searchFilters: CreatorSearchFilters = {
+          searchTerm: currentFilters.searchTerm,
+          role: currentFilters.role,
+          tags: currentFilters.tags,
+          location: currentFilters.location,
           limit: 100
-        });
+        };
         
-        setCreators(creatorsData);
+        const creatorsData = await searchCreators(searchFilters);
+        
+        // Convert CreatorSearchResult to Creator format
+        const formattedCreators: Creator[] = creatorsData.map(creator => ({
+          ...creator,
+          id: creator.uid,
+          profileImageUrl: creator.profileImage
+        }));
+        
+        setCreators(formattedCreators);
       } catch (error) {
         console.error('Error loading creators:', error);
       } finally {
@@ -61,41 +72,45 @@ export default function ExplorePage() {
     }
     
     loadCreators();
-  }, [searchTerm, filters]);
+  }, [currentFilters]);
 
   const handleCreatorClick = (creator: Creator) => {
     setSelectedCreator(creator);
-    // Show a modal or navigate to creator profile
+    // Navigate to creator profile
     router.push(`/profile/${creator.id}`);
   };
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
+  const handleSearch = (filters: SearchFilters) => {
+    setCurrentFilters(filters);
     
-    // Update URL
+    // Update URL with new filters
     const params = new URLSearchParams(searchParams.toString());
-    if (term) {
-      params.set('q', term);
+    
+    if (filters.searchTerm) {
+      params.set('q', filters.searchTerm);
     } else {
       params.delete('q');
     }
-    router.push(`/explore?${params.toString()}`);
-  };
-
-  const handleFilterChange = (name: string, value: any) => {
-    setFilters(prev => ({
-      ...prev,
-      [name]: value
-    }));
     
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (value && (Array.isArray(value) ? value.length > 0 : value !== '')) {
-      params.set(name, Array.isArray(value) ? value.join(',') : value);
+    if (filters.role) {
+      params.set('role', filters.role);
     } else {
-      params.delete(name);
+      params.delete('role');
     }
-    router.push(`/explore?${params.toString()}`);
+    
+    if (filters.tags && filters.tags.length > 0) {
+      params.set('tags', filters.tags.join(','));
+    } else {
+      params.delete('tags');
+    }
+    
+    if (filters.location) {
+      params.set('location', filters.location);
+    } else {
+      params.delete('location');
+    }
+    
+    router.push(`/explore?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -115,47 +130,11 @@ export default function ExplorePage() {
         </div>
         
         <div className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Search creators by name, role, location..."
-                className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex gap-4">
-              <select
-                className="px-3 py-2 border rounded-lg"
-                value={filters.role}
-                onChange={(e) => handleFilterChange('role', e.target.value)}
-              >
-                <option value="">All Roles</option>
-                <option value="producer">Producer</option>
-                <option value="singer">Singer</option>
-                <option value="songwriter">Songwriter</option>
-                <option value="engineer">Engineer</option>
-                <option value="dj">DJ</option>
-                <option value="instrumentalist">Instrumentalist</option>
-              </select>
-              
-              <select
-                className="px-3 py-2 border rounded-lg"
-                value={filters.location}
-                onChange={(e) => handleFilterChange('location', e.target.value)}
-              >
-                <option value="">All Locations</option>
-                <option value="New York">New York</option>
-                <option value="Los Angeles">Los Angeles</option>
-                <option value="London">London</option>
-                <option value="Tokyo">Tokyo</option>
-                <option value="Berlin">Berlin</option>
-                <option value="Paris">Paris</option>
-              </select>
-            </div>
-          </div>
+          <SearchBar 
+            onSearch={handleSearch}
+            initialFilters={currentFilters}
+            className="w-full"
+          />
         </div>
         
         {loading ? (
