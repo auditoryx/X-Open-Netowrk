@@ -120,6 +120,7 @@ export default function ExplorePage() {
                   xp={c.xp}
                   rankScore={c.rankScore}
                   tierFrozen={c.tierFrozen}
+                  signature={c.signature}
                 />
               </div>
             ))}
@@ -144,6 +145,7 @@ export default function ExplorePage() {
               xp={c.xp}
               rankScore={c.rankScore}
               tierFrozen={c.tierFrozen}
+              signature={c.signature}
             />
           ))}
         </div>

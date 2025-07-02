@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import TierBadge from '@/components/ui/TierBadge';
+import SignatureBadge from '@/components/badges/SignatureBadge';
 import ProgressRing from '@/components/ui/ProgressRing';
 import Image from 'next/image';
 
@@ -17,6 +18,7 @@ export default function CreatorCard({
   tier,
   xp,
   tierFrozen,
+  signature,
 }: {
   id: string;
   name: string;
@@ -29,6 +31,7 @@ export default function CreatorCard({
   tier?: string;
   xp?: number;
   tierFrozen?: boolean;
+  signature?: boolean;
 }) {
   return (
     <Link
@@ -50,8 +53,9 @@ export default function CreatorCard({
         )}
 
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-lg font-semibold">{name}</h2>
+            {signature && <SignatureBadge />}
             {tier && <TierBadge tier={tier} frozen={tierFrozen} />}
             {typeof xp === 'number' && (
               <ProgressRing

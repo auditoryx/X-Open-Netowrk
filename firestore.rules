@@ -43,7 +43,8 @@ service cloud.firestore {
         && !('xp' in request.resource.data.diff(resource.data))
         && !('rankScore' in request.resource.data.diff(resource.data))
         && !('lateDeliveries' in request.resource.data.diff(resource.data))
-        && !('tierFrozen' in request.resource.data.diff(resource.data));
+        && !('tierFrozen' in request.resource.data.diff(resource.data))
+        && !('signature' in request.resource.data.diff(resource.data) && request.auth.token.admin != true);
 
       match /activities/{activityId} {
         allow create: if request.auth.uid == userId;

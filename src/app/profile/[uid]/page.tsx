@@ -15,6 +15,7 @@ import BookingForm from '@/components/booking/BookingForm';
 import ProfileActionBar from '@/components/profile/ProfileActionBar';
 import RatingBarChart from '@/components/profile/RatingBarChart';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
+import SignatureBadge from '@/components/badges/SignatureBadge';
 
 /* Data helpers */
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
@@ -80,6 +81,13 @@ export default function PublicProfilePage() {
       <h1 className="text-3xl font-bold mb-1">
         {profile.name || 'Unnamed User'}
       </h1>
+
+      {/* Signature Badge */}
+      {profile.signature && (
+        <div className="mb-2">
+          <SignatureBadge size="md" />
+        </div>
+      )}
 
       {profile.proTier === 'signature' && (
         <p className="text-purple-400 text-sm mb-2">💎 Signature Creator</p>

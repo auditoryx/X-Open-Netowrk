@@ -10,6 +10,8 @@ import {
 } from 'firebase/firestore';
 import withAdminProtection from '@/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
+import { toggleSignatureTier } from '@/lib/firestore/updateUserTier';
+import SignatureBadge from '@/components/badges/SignatureBadge';
 
 function AdminUsersPage() {
   const [allUsers, setAllUsers] = useState<any[]>([]);
@@ -85,6 +87,20 @@ function AdminUsersPage() {
     }
   };
 
+  const handleSignatureToggle = async (uid: string, signature: boolean) => {
+    try {
+      await toggleSignatureTier(uid, signature);
+      toast.success(`User ${signature ? 'granted' : 'removed from'} Signature tier`);
+      
+      setAllUsers((prev) =>
+        prev.map((u) => (u.id === uid ? { ...u, signature } : u))
+      );
+    } catch (error) {
+      console.error('Error toggling signature tier:', error);
+      toast.error('Failed to update signature tier');
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">User Directory</h1>
@@ -115,14 +131,18 @@ function AdminUsersPage() {
       ) : (
         filtered.map((user) => (
           <div key={user.id} className="bg-gray-900 p-4 rounded space-y-1">
-            <p><strong>UID:</strong> {user.id}</p>
+            <div className="flex items-center gap-2">
+              <p><strong>UID:</strong> {user.id}</p>
+              {user.signature && <SignatureBadge />}
+            </div>
             <p><strong>Email:</strong> {user.email || 'N/A'}</p>
             <p><strong>Name:</strong> {user.name || '—'}</p>
             <p><strong>Role:</strong> {user.role || 'user'}</p>
             <p><strong>Banned:</strong> {user.banned ? 'Yes' : 'No'}</p>
+            <p><strong>Signature Tier:</strong> {user.signature ? 'Yes' : 'No'}</p>
             <p><strong>Joined:</strong> {user.createdAt?.seconds ? new Date(user.createdAt.seconds * 1000).toLocaleString() : 'Unknown'}</p>
 
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               <select
                 className="p-1 rounded text-black"
                 value={user.role || ''}
@@ -137,7 +157,7 @@ function AdminUsersPage() {
                 className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
                 onClick={() => handleRoleChange(user.id, user.role)}
               >
-                Update
+                Update Role
               </button>
               <button
                 className={`${
@@ -146,6 +166,17 @@ function AdminUsersPage() {
                 onClick={() => toggleBan(user.id, !user.banned)}
               >
                 {user.banned ? 'Unban' : 'Ban'}
+              </button>
+              <button
+                className={`${
+                  user.signature 
+                    ? 'bg-purple-600 hover:bg-purple-700' 
+                    : 'bg-gray-600 hover:bg-gray-700'
+                } text-white px-3 py-1 rounded text-sm transition-colors`}
+                onClick={() => handleSignatureToggle(user.id, !user.signature)}
+                title={user.signature ? 'Remove Signature tier' : 'Grant Signature tier'}
+              >
+                {user.signature ? '💎 Remove Signature' : '💎 Grant Signature'}
               </button>
             </div>
           </div>
