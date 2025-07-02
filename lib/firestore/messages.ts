@@ -31,7 +31,8 @@ export const sendMessage = async (
     content,
     mediaUrl,
     timestamp: serverTimestamp(),
-    seen: false,
+    seen: false, // Keep for backwards compatibility
+    seenBy: [senderId], // New: sender automatically sees their own message
     clientId: booking.clientId,
     providerId: booking.providerId,
   });
