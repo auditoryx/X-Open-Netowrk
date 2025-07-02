@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { NoReviews } from '@/components/ui/EmptyState';
+import SkeletonCard from '@/components/ui/SkeletonCard';
 
 type Review = {
   text: string;
@@ -10,7 +12,15 @@ type Review = {
   fromUser?: string;
 };
 
-export default function ProfileReviewList({ uid }: { uid: string }) {
+export default function ProfileReviewList({ 
+  uid, 
+  isOwnProfile = false,
+  onRequestReview 
+}: { 
+  uid: string;
+  isOwnProfile?: boolean;
+  onRequestReview?: () => void;
+}) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +42,28 @@ export default function ProfileReviewList({ uid }: { uid: string }) {
   }, [uid]);
 
   if (loading) {
-    return <p className="text-sm text-gray-400">Loading reviews...</p>;
+    return (
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold mb-4">Reviews</h3>
+        <div className="space-y-3">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <SkeletonCard key={i} variant="booking" showImage={false} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (reviews.length === 0) {
-    return <p className="text-sm text-gray-400">No reviews yet.</p>;
+    return (
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold mb-4">Reviews</h3>
+        <NoReviews 
+          isOwnProfile={isOwnProfile} 
+          onRequestReview={onRequestReview}
+        />
+      </div>
+    );
   }
 
   return (

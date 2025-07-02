@@ -8,17 +8,24 @@ import { updateAvailability } from '@/lib/firestore/updateAvailability';
 import { markBookingAsCompleted } from '@/lib/firestore/bookings/markBookingAsCompleted';
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
 import ContractViewer from '@/components/contract/ContractViewer';
+import { NoBookings } from '@/components/ui/EmptyState';
+import SkeletonCard from '@/components/ui/SkeletonCard';
 import toast from 'react-hot-toast';
 import StripeCheckout from './StripeCheckout';
+import { useRouter } from 'next/navigation';
 
 export default function ProviderBookings() {
   const { user } = useAuth();
+  const router = useRouter();
   const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [provider, setProvider] = useState<any>(null);
 
   const fetchBookings = async () => {
+    setLoading(true);
     const data = await getUserBookings(user.uid, 'provider');
     setBookings(data);
+    setLoading(false);
   };
 
   const fetchProvider = async () => {
@@ -55,7 +62,20 @@ export default function ProviderBookings() {
   return (
     <div>
       <h2 className="text-lg font-semibold mb-2">Bookings You Received</h2>
-      {bookings.map((b) => (
+      
+      {loading ? (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <SkeletonCard key={i} variant="booking" showImage={false} />
+          ))}
+        </div>
+      ) : bookings.length === 0 ? (
+        <NoBookings 
+          userRole="provider" 
+          onCreateService={() => router.push('/dashboard?tab=services')}
+        />
+      ) : (
+        bookings.map((b) => (
         <div key={b.id} className="border p-3 rounded mb-4 bg-white text-black">
           <p><strong>From:</strong> {b.clientId}</p>
           <p><strong>Service:</strong> {b.service}</p>
@@ -103,7 +123,8 @@ export default function ProviderBookings() {
             </button>
           )}
         </div>
-      ))}
+      ))
+      )}
     </div>
   );
 }

@@ -11,6 +11,8 @@ const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), 
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import CreatorCard from '@/components/cards/CreatorCard';
 import SearchBar from '@/components/explore/SearchBar';
+import SkeletonCard from '@/components/ui/SkeletonCard';
+import { NoCreatorsFound, NoSearchResults } from '@/components/ui/EmptyState';
 import { getFeaturedCreators } from '@/lib/firestore/getFeaturedCreators';
 import { searchCreators } from '@/lib/firestore/searchCreators';
 import { useRankedCreators } from '@/hooks/useRankedCreators';
@@ -22,6 +24,7 @@ export default function ExplorePage() {
   const router = useRouter();
 
   const [featured, setFeatured] = useState<any[]>([]);
+  const [featuredLoading, setFeaturedLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [searchResults, setSearchResults] = useState<SearchableCreator[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -53,7 +56,11 @@ export default function ExplorePage() {
   });
 
   useEffect(() => {
-    getFeaturedCreators().then(setFeatured).catch(() => setFeatured([]));
+    setFeaturedLoading(true);
+    getFeaturedCreators()
+      .then(setFeatured)
+      .catch(() => setFeatured([]))
+      .finally(() => setFeaturedLoading(false));
   }, []);
 
   // Handle search query from URL params
@@ -136,8 +143,31 @@ export default function ExplorePage() {
   }, [filters, view, router]);
 
   // Use the new ranked creators hook for grid view
-  const { data: rankedCreatorsPages } = useRankedCreators({ filters, pageSize: 20 });
+  const { 
+    data: rankedCreatorsPages, 
+    isLoading: rankedCreatorsLoading,
+    error: rankedCreatorsError 
+  } = useRankedCreators({ filters, pageSize: 20 });
   const rankedCreators = rankedCreatorsPages?.pages?.flat() || [];
+
+  // Function to clear all filters
+  const clearFilters = () => {
+    setFilters({
+      role: '',
+      location: '',
+      service: '',
+      genres: [],
+      minBpm: undefined,
+      maxBpm: undefined,
+      tier: '',
+      availableNow: false,
+      searchNearMe: false,
+      lat: undefined,
+      lng: undefined,
+      radiusKm: 50,
+      sort: 'recommended',
+    });
+  };
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
@@ -200,13 +230,8 @@ export default function ExplorePage() {
           
           {searchLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-gray-800 rounded-lg p-4 animate-pulse">
-                  <div className="w-full h-32 bg-gray-700 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-700 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-700 rounded mb-1"></div>
-                  <div className="h-3 bg-gray-700 rounded w-2/3"></div>
-                </div>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SkeletonCard key={i} variant="creator" />
               ))}
             </div>
           ) : searchResults.length > 0 ? (
@@ -231,20 +256,26 @@ export default function ExplorePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-lg mb-2">No creators found</div>
-              <div className="text-gray-500 text-sm">
-                Try adjusting your search terms or filters
-              </div>
-            </div>
+            <NoSearchResults 
+              query={searchQuery} 
+              onClearSearch={clearSearch} 
+            />
           )}
         </section>
       ) : (
         <>
           {/* Featured Creators (only show when not searching) */}
-          {featured.length > 0 && (
-            <section className="mb-6">
-              <h2 className="text-xl font-bold mb-2">🔥 Featured Creators</h2>
+          <section className="mb-6">
+            <h2 className="text-xl font-bold mb-2">🔥 Featured Creators</h2>
+            {featuredLoading ? (
+              <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="min-w-[220px]">
+                    <SkeletonCard variant="creator" />
+                  </div>
+                ))}
+              </div>
+            ) : featured.length > 0 ? (
               <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4">
                 {featured.map(c => (
                   <div key={c.uid} className="min-w-[220px]">
@@ -266,31 +297,41 @@ export default function ExplorePage() {
                   </div>
                 ))}
               </div>
-            </section>
-          )}
+            ) : null}
+          </section>
 
           {/* Main Content Grid/Map */}
           {view === 'grid' ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {rankedCreators.map(c => (
-                <CreatorCard
-                  key={c.id}
-                  id={c.id}
-                  name={c.name}
-                  tagline={c.tagline}
-                  price={c.price}
-                  location={c.location}
-                  imageUrl={c.imageUrl}
-                  rating={c.rating}
-                  reviewCount={c.reviewCount}
-                  tier={c.tier}
-                  xp={c.xp}
-                  rankScore={c.rankScore}
-                  tierFrozen={c.tierFrozen}
-                  signature={c.signature}
-                />
-              ))}
-            </div>
+            rankedCreatorsLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <SkeletonCard key={i} variant="creator" />
+                ))}
+              </div>
+            ) : rankedCreators.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {rankedCreators.map(c => (
+                  <CreatorCard
+                    key={c.id}
+                    id={c.id}
+                    name={c.name}
+                    tagline={c.tagline}
+                    price={c.price}
+                    location={c.location}
+                    imageUrl={c.imageUrl}
+                    rating={c.rating}
+                    reviewCount={c.reviewCount}
+                    tier={c.tier}
+                    xp={c.xp}
+                    rankScore={c.rankScore}
+                    tierFrozen={c.tierFrozen}
+                    signature={c.signature}
+                  />
+                ))}
+              </div>
+            ) : (
+              <NoCreatorsFound onClearFilters={clearFilters} />
+            )
           ) : (
             <div className="h-[80vh] rounded overflow-hidden border border-white">
               <Suspense fallback={<div className="p-4">Loading map...</div>}>

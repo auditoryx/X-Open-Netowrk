@@ -11,14 +11,24 @@ import { db as firestore } from '../firebase/firebaseConfig';
 import toast from 'react-hot-toast';
 import ContractViewer from '@/components/contract/ContractViewer';
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
+import { NoBookings } from '@/components/ui/EmptyState';
+import SkeletonCard from '@/components/ui/SkeletonCard';
+import { useRouter } from 'next/navigation';
 
 export default function ClientBookings() {
   const { user } = useAuth();
+  const router = useRouter();
   const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [reviewText, setReviewText] = useState<{ [key: string]: string }>({});
   const [ratings, setRatings] = useState<{ [key: string]: number }>({});
 
-  const fetch = () => getUserBookings(user.uid, 'client').then(setBookings);
+  const fetch = () => {
+    setLoading(true);
+    return getUserBookings(user.uid, 'client')
+      .then(setBookings)
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     if (user?.uid) fetch();
@@ -55,7 +65,20 @@ export default function ClientBookings() {
   return (
     <div>
       <h2 className='text-lg font-semibold mb-2'>Your Booking Requests</h2>
-      {bookings.map((b) => (
+      
+      {loading ? (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <SkeletonCard key={i} variant="booking" showImage={false} />
+          ))}
+        </div>
+      ) : bookings.length === 0 ? (
+        <NoBookings 
+          userRole="client" 
+          onExplore={() => router.push('/explore')}
+        />
+      ) : (
+        bookings.map((b) => (
         <div key={b.id} className='border p-3 rounded mb-4'>
           <p><strong>To:</strong> {b.providerId}</p>
           <p><strong>Service:</strong> {b.service}</p>
@@ -115,7 +138,8 @@ export default function ClientBookings() {
             </div>
           )}
         </div>
-      ))}
+      ))
+      )}
     </div>
   );
 }
