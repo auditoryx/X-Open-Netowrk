@@ -19,6 +19,13 @@ export interface Booking {
   updatedAt: Timestamp;
   createdBy: string; // UID of the user who initiated the booking
 
+  // Event-related fields
+  eventId?: string; // Links to parent event if this is part of an event booking
+  eventTitle?: string; // Event title for display
+  
+  // Service identification
+  serviceId?: string;
+
   // Revenue Split
   revenueSplit?: RevenueSplit;
   contractUrl?: string; // URL to the generated PDF contract
