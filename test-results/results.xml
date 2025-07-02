@@ -1,0 +1,112 @@
+<testsuites id="" name="" tests="26" failures="0" skipped="26" errors="0" time="0.3418570000000001">
+<testsuite name="adminEarnings.spec.ts" timestamp="2025-07-02T18:15:43.272Z" hostname="chromium" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Admin Earnings Dashboard E2E › should display admin earnings dashboard with correct totals" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should toggle between weekly and monthly views" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should display top roles and cities analytics" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should refresh data when refresh button is clicked" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should prevent non-admin access" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should handle empty earnings data gracefully" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should display earnings chart with correct data" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should show correct commission calculations" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should handle error states appropriately" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should export earnings data" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Admin Earnings Dashboard E2E › should filter earnings by date range" classname="adminEarnings.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="bookingFlow.spec.ts" timestamp="2025-07-02T18:15:43.272Z" hostname="chromium" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Booking Flow E2E › should complete full booking flow from search to confirmation" classname="bookingFlow.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Booking Flow E2E › should handle booking with invalid payment card" classname="bookingFlow.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Booking Flow E2E › should prevent booking on unavailable dates" classname="bookingFlow.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Booking Flow E2E › should handle booking form validation" classname="bookingFlow.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Booking Flow E2E › should show provider availability correctly" classname="bookingFlow.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Booking Flow E2E › should send booking request to provider" classname="bookingFlow.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="reviewSubmission.spec.ts" timestamp="2025-07-02T18:15:43.272Z" hostname="chromium" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Review Submission E2E › should submit review for completed booking" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should validate review form fields" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should prevent duplicate reviews" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should allow editing review within time limit" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should show review on provider profile" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should handle low rating with required explanation" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should notify provider of new review" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should filter and sort reviews" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Review Submission E2E › should handle review reporting" classname="reviewSubmission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>
