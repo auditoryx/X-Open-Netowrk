@@ -7,6 +7,8 @@ import { getFirestore, collection, getDocs, query, where } from 'firebase/firest
 import { app } from '@/lib/firebase';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
+import Link from 'next/link';
+import { MessageCircle, Bell, Calendar, Settings } from 'lucide-react';
 
 export default function DashboardHomePage() {
   const router = useRouter();
@@ -40,6 +42,65 @@ export default function DashboardHomePage() {
   return (
     <div className="p-6 text-white space-y-8">
       <NotificationsPanel />
+      
+      {/* Quick Navigation Cards */}
+      <section>
+        <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link 
+            href="/dashboard/inbox"
+            className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <MessageCircle className="h-6 w-6 text-blue-400" />
+              <div>
+                <h3 className="font-semibold">Booking Inbox</h3>
+                <p className="text-sm text-gray-400">Manage bookings & messages</p>
+              </div>
+            </div>
+          </Link>
+          
+          <Link 
+            href="/dashboard/notifications"
+            className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Bell className="h-6 w-6 text-green-400" />
+              <div>
+                <h3 className="font-semibold">Notifications</h3>
+                <p className="text-sm text-gray-400">View all notifications</p>
+              </div>
+            </div>
+          </Link>
+          
+          <Link 
+            href="/dashboard/bookings"
+            className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Calendar className="h-6 w-6 text-purple-400" />
+              <div>
+                <h3 className="font-semibold">Bookings</h3>
+                <p className="text-sm text-gray-400">Manage your bookings</p>
+              </div>
+            </div>
+          </Link>
+          
+          <Link 
+            href="/dashboard/settings"
+            className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:bg-neutral-700 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Settings className="h-6 w-6 text-orange-400" />
+              <div>
+                <h3 className="font-semibold">Settings</h3>
+                <p className="text-sm text-gray-400">Account preferences</p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       <section>
         <h2 className="text-xl font-bold mb-2">Upcoming Bookings</h2>
         {bookings.length === 0 ? (

@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Test Booking Inbox Components",
+			"type": "shell",
+			"command": "echo 'Testing Booking Inbox and Notification Bell components...' && npm run dev",
+			"group": "test",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

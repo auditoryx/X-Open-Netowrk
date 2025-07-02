@@ -7,6 +7,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Translate } from '@/i18n/Translate';
+import NotificationBell from '@/components/ui/NotificationBell';
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -54,6 +55,7 @@ export default function Navbar() {
             <Link href="/dashboard" id="nav-dashboard" className="hover:underline">
               <Translate t="nav.dashboard" />
             </Link>
+            <NotificationBell />
             <button
               onClick={handleLogout}
               className="hover:underline text-red-400"
