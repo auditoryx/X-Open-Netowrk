@@ -48,12 +48,22 @@ export default function Home() {
             <p className="text-lg text-gray-200">
               Book talent, sell your services, and get paid.
             </p>
-            <div className="flex justify-center gap-4 pt-6">
-              <Link href="/explore" className="btn-primary btn-md">
-                🔍 Explore Creators
+            <div className="flex flex-col items-center gap-4 pt-8">
+              {/* Primary CTA - Much larger and more prominent */}
+              <Link 
+                href="/explore" 
+                className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-brand"
+              >
+                🔍 Explore 10K+ Creators
               </Link>
-              <Link href="/apply" className="btn-secondary btn-md">
-                ✍️ Apply to Join
+              <p className="text-xs text-gray-400 -mt-2">No signup required • Browse freely</p>
+              
+              {/* Secondary CTA - Much smaller */}
+              <Link 
+                href="/apply" 
+                className="text-gray-300 hover:text-white text-sm border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition-colors"
+              >
+                I'm a creator →
               </Link>
             </div>
           </section>
@@ -133,7 +143,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold">Featured Creators</h2>
             <div className="flex gap-4 overflow-x-auto pb-2">
               {/* Oogie Mane - Producer */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/oogie-mane" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
                   OM
                 </div>
@@ -145,10 +155,10 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $500</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🎵 "Known for hard-hitting 808s"</p>
-              </div>
+              </Link>
 
               {/* ThouxanBanFauni - Artist */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/thouxanbanfauni" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-lg">
                   TBF
                 </div>
@@ -160,10 +170,10 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $1,200</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🎤 "Melodic flows & unique style"</p>
-              </div>
+              </Link>
 
               {/* UnoTheActivist - Artist */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/unotheactivist" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg">
                   UTA
                 </div>
@@ -175,10 +185,10 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $1,500</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🔥 "Innovative sound & energy"</p>
-              </div>
+              </Link>
 
               {/* Cole Bennett - Videographer */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/cole-bennett" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-yellow-500 to-red-500 flex items-center justify-center text-white font-bold text-lg">
                   CB
                 </div>
@@ -190,10 +200,10 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $5,000</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🎬 "Lyrical Lemonade founder"</p>
-              </div>
+              </Link>
 
               {/* Tree Sound Studios */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/tree-sound-studios" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg">
                   TS
                 </div>
@@ -205,10 +215,10 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $150/hr</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🏢 "Where hits are made"</p>
-              </div>
+              </Link>
 
               {/* Alex Tumay - Engineer */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/alex-tumay" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
                   AT
                 </div>
@@ -220,10 +230,10 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $800</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🎚️ "Young Thug's go-to engineer"</p>
-              </div>
+              </Link>
 
               {/* Metro Boomin - Producer */}
-              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+              <Link href="/profile/metro-boomin" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
                 <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-black to-gray-700 flex items-center justify-center text-white font-bold text-lg">
                   MB
                 </div>
@@ -235,7 +245,7 @@ export default function Home() {
                   <p className="text-xs text-brand-400">From $2,500</p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">🔥 "If Metro don't trust you..."</p>
-              </div>
+              </Link>
             </div>
           </section>
 

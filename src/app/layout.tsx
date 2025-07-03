@@ -16,6 +16,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { CartProvider } from '@/context/CartContext';
 import QueryProvider from '@/providers/QueryProvider';
+import { ProgressiveOnboardingProvider } from '@/components/onboarding/ProgressiveOnboarding';
+import OnboardingManager from '@/components/onboarding/OnboardingManager';
 
 export const metadata = {
   title: 'AuditoryX – Global Creative Network',
@@ -39,12 +41,15 @@ export default function RootLayout({
           <LanguageProvider>
             <CartProvider>
               <QueryProvider>
-                <Navbar />
-                <StreakToast />
-                <Toaster position="top-center" />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  {children}
-                </div>
+                <ProgressiveOnboardingProvider>
+                  <Navbar />
+                  <StreakToast />
+                  <Toaster position="top-center" />
+                  <OnboardingManager />
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {children}
+                  </div>
+                </ProgressiveOnboardingProvider>
               </QueryProvider>
             </CartProvider>
           </LanguageProvider>

@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
 
 const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), {
   ssr: false,
@@ -18,10 +19,13 @@ import { searchCreators } from '@/lib/firestore/searchCreators';
 import { useRankedCreators } from '@/hooks/useRankedCreators';
 import FilterPanel from '@/components/explore/FilterPanel';
 import { SearchableCreator } from '@/lib/utils/filterByKeyword';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { trackAction } = useProgressiveOnboarding();
+  const { user } = useAuth();
 
   const [featured, setFeatured] = useState<any[]>([]);
   const [featuredLoading, setFeaturedLoading] = useState(true);
@@ -87,6 +91,9 @@ export default function ExplorePage() {
       params.set('q', query);
       setIsSearchMode(true);
       setSearchLoading(true);
+      
+      // Track search action for progressive onboarding
+      trackAction('search');
       
       try {
         const results = await searchCreators(query, {
@@ -193,6 +200,30 @@ export default function ExplorePage() {
           </button>
         </div>
       </div>
+
+      {/* Guest Welcome Banner */}
+      {!user && (
+        <div className="bg-gradient-to-r from-brand-900/30 to-purple-900/30 border border-brand-500/20 rounded-xl p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-brand-300 mb-1">
+                🌟 Browsing as a guest? You're in the right place!
+              </h2>
+              <p className="text-sm text-gray-300">
+                Explore 10K+ creators, view profiles, and listen to samples. Sign up when you're ready to connect.
+              </p>
+            </div>
+            <div className="flex gap-2 ml-4">
+              <Link
+                href="/login"
+                className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Search Bar */}
       <div className="mb-6">

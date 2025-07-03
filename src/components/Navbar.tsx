@@ -34,20 +34,28 @@ export default function Navbar() {
       </Link>
 
       <div className="space-x-6 text-sm flex items-center">
-        <Link href="/explore" id="nav-explore" className="hover:underline">
+        <Link href="/explore" id="nav-explore" className="hover:underline font-medium text-brand-400">
           <Translate t="nav.explore" />
         </Link>
         {!user && (
           <>
-            <Link href="/apply" className="hover:underline">
+            <Link href="/apply" className="hover:underline text-gray-300">
               <Translate t="nav.apply" />
             </Link>
-            <button
-              onClick={() => router.push('/login')}
-              className="hover:underline font-semibold text-blue-400"
-            >
-              <Translate t="nav.login" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.push('/login')}
+                className="hover:underline text-gray-300"
+              >
+                <Translate t="nav.login" />
+              </button>
+              <button
+                onClick={() => router.push('/login')}
+                className="bg-gradient-to-r from-brand-500 to-purple-600 hover:from-brand-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
+              >
+                Get Started
+              </button>
+            </div>
           </>
         )}
         {user && (

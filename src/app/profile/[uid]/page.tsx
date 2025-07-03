@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
 
 /* UI components */
 import { ReviewList } from '@/components/reviews/ReviewList';
@@ -20,6 +21,7 @@ import SignatureBadge from '@/components/badges/SignatureBadge';
 import { TierBadge } from '@/components/badges/TierBadge';
 import { ReportUserButton } from '@/components/profile/ReportUserButton';
 import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
+import ContactModal from '@/components/profile/ContactModal';
 
 /* Data helpers */
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
@@ -30,6 +32,7 @@ import { getMediaSamples } from '@/lib/firestore/getMediaSamples';
 export default function PublicProfilePage() {
   const rawParams = useParams();
   const { user } = useAuth();
+  const { trackAction } = useProgressiveOnboarding();
   const uid =
     typeof rawParams.uid === 'string'
       ? rawParams.uid
@@ -41,6 +44,7 @@ export default function PublicProfilePage() {
   const [loading, setLoading] = useState(true);
   const [distribution, setDistribution] =
     useState<Record<number, number> | null>(null);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   // Check if this is the current user's own profile
   const isOwnProfile = user?.uid === uid;
@@ -70,13 +74,18 @@ export default function PublicProfilePage() {
           mediaSamples: media,
         });
         setDistribution(dist);
+        
+        // Track profile view for progressive onboarding
+        if (!isOwnProfile) {
+          trackAction('profile_view');
+        }
       }
 
       setLoading(false);
     };
 
     fetchProfile();
-  }, [uid]);
+  }, [uid, isOwnProfile, trackAction]);
 
   /* ───────────── loading / 404 ───────────── */
   if (loading) return <div className="p-6 text-white">Loading...</div>;
@@ -184,8 +193,16 @@ export default function PublicProfilePage() {
         </a>
       )}
 
-      <div className="mb-6">
+      <div className="mb-6 flex flex-col items-center gap-3">
         <SaveButton providerId={uid} />
+        {!isOwnProfile && (
+          <button
+            onClick={() => setShowContactModal(true)}
+            className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-medium px-6 py-2 rounded-lg transition-all flex items-center gap-2"
+          >
+            💬 Send Message
+          </button>
+        )}
       </div>
 
       {/* Availability list */}
@@ -212,7 +229,11 @@ export default function PublicProfilePage() {
         <h2 className="text-xl font-semibold mb-2">
           📩 Send Booking Request
         </h2>
-        <BookingForm providerId={uid} onBook={() => {}} />
+        <BookingForm 
+          providerId={uid} 
+          providerName={profile.name || 'this creator'}
+          onBooked={() => {}} 
+        />
       </div>
 
       {/* Media carousel */}
@@ -234,6 +255,14 @@ export default function PublicProfilePage() {
         }}
       />
       <FloatingCartButton />
+      
+      {/* Contact Modal */}
+      <ContactModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        creatorName={profile?.name || 'this creator'}
+        creatorId={uid}
+      />
     </div>
   );
 }
