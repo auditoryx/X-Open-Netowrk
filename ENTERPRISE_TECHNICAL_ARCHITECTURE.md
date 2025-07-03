@@ -1,16 +1,16 @@
-generator client {
-  provider = "prisma-client-js"
-}
+# Enterprise Technical Architecture
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+## 🏗️ Multi-Tenant Architecture Design
 
-// ===============================
-// MULTI-TENANT ENTERPRISE SCHEMA
-// ===============================
+### Database Strategy: Row-Level Security (RLS) Multi-Tenancy
 
+We'll implement a shared database with tenant isolation using row-level security for optimal performance and cost efficiency.
+
+## 📊 Enhanced Database Schema
+
+### Core Multi-Tenancy Models
+
+```prisma
 // Organization/Tenant Management
 model Organization {
   id              String   @id @default(cuid())
@@ -32,8 +32,6 @@ model Organization {
   projects        Project[]
   analytics       Analytics[]
   subscriptions   Subscription[]
-  invoices        Invoice[]
-  contracts       Contract[]
   
   @@map("organizations")
 }
@@ -57,8 +55,11 @@ enum SubscriptionPlan {
   WHITE_LABEL
   CUSTOM
 }
+```
 
-// Enhanced User Management
+### Enhanced User Management
+
+```prisma
 model User {
   id              String   @id @default(cuid())
   organizationId  String
@@ -68,15 +69,11 @@ model User {
   permissions     Json?
   isActive        Boolean  @default(true)
   lastLoginAt     DateTime?
-  avatar          String?
-  phone           String?
-  timezone        String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
   // Relationships
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  artist          Artist?
+  organization    Organization @relation(fields: [organizationId], references: [id])
   createdBookings Booking[]   @relation("BookingCreator")
   assignedBookings Booking[]  @relation("BookingAssignee")
   projects        ProjectUser[]
@@ -95,12 +92,15 @@ enum UserRole {
   CLIENT
   VIEWER
 }
+```
 
-// Artist/Creator Management
+### Artist/Creator Management
+
+```prisma
 model Artist {
   id              String   @id @default(cuid())
   organizationId  String
-  userId          String?  @unique // If artist is also a user
+  userId          String?  // If artist is also a user
   name            String
   stageName       String?
   email           String?
@@ -114,17 +114,15 @@ model Artist {
   verificationStatus VerificationStatus @default(PENDING)
   rating          Float?
   totalBookings   Int      @default(0)
-  totalEarnings   Decimal  @default(0) @db.Decimal(10, 2)
-  hourlyRate      Decimal? @db.Decimal(10, 2)
-  availability    Json?
-  portfolio       Json?
+  totalEarnings   Decimal  @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
   // Relationships
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization @relation(fields: [organizationId], references: [id])
   user            User?        @relation(fields: [userId], references: [id])
   bookings        Booking[]
+  portfolio       Portfolio[]
   analytics       ArtistAnalytics[]
   contracts       Contract[]
   
@@ -137,14 +135,17 @@ enum VerificationStatus {
   REJECTED
   SUSPENDED
 }
+```
 
-// Booking & Session Management
+### Booking & Project Management
+
+```prisma
 model Booking {
   id              String   @id @default(cuid())
   organizationId  String
   projectId       String?
   artistId        String
-  clientId        String?
+  clientId        String
   createdBy       String
   assignedTo      String?
   
@@ -161,21 +162,20 @@ model Booking {
   location        String?
   isRemote        Boolean  @default(false)
   
-  budget          Decimal? @db.Decimal(10, 2)
-  finalPrice      Decimal? @db.Decimal(10, 2)
+  budget          Decimal?
+  finalPrice      Decimal?
   currency        String   @default("USD")
   paymentStatus   PaymentStatus @default(PENDING)
   
   requirements    Json?
   deliverables    Json?
   notes           String?
-  metadata        Json?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
   // Relationships
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization @relation(fields: [organizationId], references: [id])
   project         Project?     @relation(fields: [projectId], references: [id])
   artist          Artist       @relation(fields: [artistId], references: [id])
   creator         User         @relation("BookingCreator", fields: [createdBy], references: [id])
@@ -194,9 +194,6 @@ enum BookingType {
   CONSULTATION
   PERFORMANCE
   WORKSHOP
-  VOICE_OVER
-  SOUND_DESIGN
-  COMPOSITION
   OTHER
 }
 
@@ -225,8 +222,11 @@ enum PaymentStatus {
   REFUNDED
   DISPUTED
 }
+```
 
-// Project Management
+### Project Management
+
+```prisma
 model Project {
   id              String   @id @default(cuid())
   organizationId  String
@@ -240,20 +240,19 @@ model Project {
   endDate         DateTime?
   deadline        DateTime?
   
-  budget          Decimal? @db.Decimal(10, 2)
-  spent           Decimal  @default(0) @db.Decimal(10, 2)
+  budget          Decimal?
+  spent           Decimal  @default(0)
   currency        String   @default("USD")
   
   clientInfo      Json?
   requirements    Json?
   deliverables    Json?
-  metadata        Json?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
   // Relationships
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization @relation(fields: [organizationId], references: [id])
   bookings        Booking[]
   users           ProjectUser[]
   milestones      ProjectMilestone[]
@@ -269,9 +268,6 @@ enum ProjectType {
   COMMERCIAL
   FILM_SCORE
   GAME_AUDIO
-  AUDIOBOOK
-  LIVE_EVENT
-  EDUCATION
   OTHER
 }
 
@@ -288,9 +284,8 @@ model ProjectUser {
   projectId String
   userId    String
   role      ProjectRole
-  joinedAt  DateTime @default(now())
   
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project @relation(fields: [projectId], references: [id])
   user      User    @relation(fields: [userId], references: [id])
   
   @@unique([projectId, userId])
@@ -312,9 +307,8 @@ model ProjectMilestone {
   dueDate     DateTime?
   status      MilestoneStatus @default(PENDING)
   order       Int
-  createdAt   DateTime @default(now())
   
-  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project     Project @relation(fields: [projectId], references: [id])
   
   @@map("project_milestones")
 }
@@ -325,150 +319,128 @@ enum MilestoneStatus {
   COMPLETED
   OVERDUE
 }
+```
 
-// Subscription Management
-model Subscription {
-  id              String   @id @default(cuid())
-  organizationId  String
-  plan            SubscriptionPlan
-  status          SubscriptionStatus
-  billingCycle    BillingCycle
-  amount          Decimal  @db.Decimal(10, 2)
-  currency        String   @default("USD")
-  startDate       DateTime
-  endDate         DateTime?
-  trialEndDate    DateTime?
-  cancelledAt     DateTime?
-  metadata        Json?
-  
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  
-  @@map("subscriptions")
-}
+## 🔧 Technical Components
 
-enum SubscriptionStatus {
-  ACTIVE
-  TRIALING
-  PAST_DUE
-  CANCELLED
-  EXPIRED
-}
+### 1. Multi-Tenant Middleware
 
-enum BillingCycle {
-  MONTHLY
-  QUARTERLY
-  ANNUALLY
+```typescript
+// middleware/tenancy.ts
+export class TenancyMiddleware {
+  async resolve(organizationId: string) {
+    // Set tenant context for database queries
+    // Implement row-level security
+    // Cache tenant configuration
+  }
 }
+```
 
-// Contract Management
-model Contract {
-  id              String   @id @default(cuid())
-  organizationId  String
-  bookingId       String?
-  artistId        String
-  title           String
-  content         String
-  terms           Json?
-  status          ContractStatus
-  signedAt        DateTime?
-  expiresAt       DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  booking         Booking?     @relation(fields: [bookingId], references: [id])
-  artist          Artist       @relation(fields: [artistId], references: [id])
-  
-  @@map("contracts")
-}
+### 2. Enterprise Service Layer
 
-enum ContractStatus {
-  DRAFT
-  PENDING_SIGNATURE
-  SIGNED
-  EXPIRED
-  CANCELLED
+```typescript
+// services/enterpriseService.ts
+export class EnterpriseService {
+  async createOrganization(data: CreateOrganizationDto) {}
+  async setupWhiteLabel(orgId: string, config: WhiteLabelConfig) {}
+  async bulkCreateUsers(orgId: string, users: CreateUserDto[]) {}
+  async generateAnalytics(orgId: string, filters: AnalyticsFilters) {}
 }
+```
 
-// Invoice Management
-model Invoice {
-  id              String   @id @default(cuid())
-  organizationId  String
-  bookingId       String?
-  invoiceNumber   String   @unique
-  amount          Decimal  @db.Decimal(10, 2)
-  tax             Decimal? @db.Decimal(10, 2)
-  total           Decimal  @db.Decimal(10, 2)
-  currency        String   @default("USD")
-  status          InvoiceStatus
-  dueDate         DateTime
-  paidAt          DateTime?
-  items           Json?
-  metadata        Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  booking         Booking?     @relation(fields: [bookingId], references: [id])
-  
-  @@map("invoices")
-}
+### 3. Role-Based Access Control (RBAC)
 
-enum InvoiceStatus {
-  DRAFT
-  SENT
-  PAID
-  OVERDUE
-  CANCELLED
+```typescript
+// auth/rbac.ts
+export class RBACService {
+  async checkPermission(userId: string, resource: string, action: string) {}
+  async getUserPermissions(userId: string) {}
+  async assignRole(userId: string, role: UserRole) {}
 }
+```
 
-// Analytics Models
-model Analytics {
-  id              String   @id @default(cuid())
-  organizationId  String
-  type            AnalyticsType
-  period          AnalyticsPeriod
-  data            Json
-  generatedAt     DateTime @default(now())
-  
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  
-  @@map("analytics")
-}
+## 🎨 UI/UX Architecture
 
-enum AnalyticsType {
-  REVENUE
-  BOOKINGS
-  ARTISTS
-  PROJECTS
-  PERFORMANCE
-  TRENDS
-}
+### Component Structure
+```
+components/
+├── enterprise/
+│   ├── dashboard/
+│   │   ├── LabelDashboard.tsx
+│   │   ├── AnalyticsDashboard.tsx
+│   │   └── ProjectOverview.tsx
+│   ├── booking/
+│   │   ├── BulkBookingInterface.tsx
+│   │   ├── CalendarOptimizer.tsx
+│   │   └── ResourceMatcher.tsx
+│   ├── management/
+│   │   ├── ArtistRoster.tsx
+│   │   ├── UserManagement.tsx
+│   │   └── OrganizationSettings.tsx
+│   └── whitelabel/
+│       ├── BrandingCustomizer.tsx
+│       ├── DomainManager.tsx
+│       └── FeatureConfigurator.tsx
+```
 
-enum AnalyticsPeriod {
-  DAILY
-  WEEKLY
-  MONTHLY
-  QUARTERLY
-  YEARLY
-}
+## 🔌 API Architecture
 
-model ArtistAnalytics {
-  id              String   @id @default(cuid())
-  artistId        String
-  period          AnalyticsPeriod
-  totalBookings   Int      @default(0)
-  totalEarnings   Decimal  @default(0) @db.Decimal(10, 2)
-  averageRating   Float?
-  completionRate  Float?
-  responseTime    Float?   // in hours
-  data            Json?
-  periodStart     DateTime
-  periodEnd       DateTime
-  generatedAt     DateTime @default(now())
-  
-  artist          Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
-  
-  @@unique([artistId, period, periodStart])
-  @@map("artist_analytics")
-}
+### Enterprise API Endpoints
+
+```typescript
+// API Routes Structure
+/api/enterprise/
+├── organizations/
+│   ├── POST   /create
+│   ├── GET    /:id
+│   ├── PUT    /:id
+│   └── DELETE /:id
+├── users/
+│   ├── POST   /bulk-create
+│   ├── GET    /roster
+│   └── PUT    /:id/role
+├── bookings/
+│   ├── POST   /bulk-book
+│   ├── GET    /calendar
+│   └── GET    /analytics
+├── projects/
+│   ├── POST   /create
+│   ├── GET    /:id/overview
+│   └── PUT    /:id/milestone
+└── analytics/
+    ├── GET    /dashboard
+    ├── GET    /reports
+    └── POST   /export
+```
+
+## 🔒 Security & Compliance
+
+### Data Isolation
+- Row-level security policies
+- Tenant-specific encryption keys
+- Audit logging per organization
+- GDPR compliance tools
+
+### API Security
+- JWT with organization context
+- Rate limiting per tenant
+- API key management
+- Webhook security
+
+## 📊 Monitoring & Analytics
+
+### Performance Metrics
+- Query performance per tenant
+- API response times
+- Feature usage analytics
+- Resource utilization
+
+### Business Metrics
+- Revenue per tenant
+- Feature adoption rates
+- User engagement scores
+- Support ticket patterns
+
+---
+
+This architecture provides a solid foundation for enterprise-level multi-tenancy while maintaining performance and security standards.
