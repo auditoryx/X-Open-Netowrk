@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import { MessageSquare, Send, X } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
+import { messageService } from '@/lib/services/messageService';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -14,12 +17,14 @@ interface ContactModalProps {
 
 export default function ContactModal({ isOpen, onClose, creatorName, creatorId }: ContactModalProps) {
   const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
   const { user } = useAuth();
   const { trackAction } = useProgressiveOnboarding();
+  const router = useRouter();
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!user) {
@@ -35,10 +40,42 @@ export default function ContactModal({ isOpen, onClose, creatorName, creatorId }
       return;
     }
 
-    // If user is logged in, handle the actual message sending
-    console.log('Sending message to:', creatorId, 'Message:', message);
-    // TODO: Implement actual message sending logic
-    onClose();
+    if (!message.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    setSending(true);
+    
+    try {
+      // Create or get thread between current user and creator
+      const threadId = await messageService.getOrCreateThread(
+        user.uid,
+        creatorId,
+        creatorName,
+        user.displayName || user.email || 'Unknown User'
+      );
+
+      // Send the message
+      await messageService.sendMessage(
+        threadId,
+        user.uid,
+        creatorId,
+        message.trim()
+      );
+
+      toast.success('Message sent successfully!');
+      onClose();
+      setMessage('');
+      
+      // Navigate to the conversation
+      router.push(`/dashboard/messages/${threadId}`);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -82,10 +119,11 @@ export default function ContactModal({ isOpen, onClose, creatorName, creatorId }
           
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-brand-500 to-purple-600 hover:from-brand-600 hover:to-purple-700 text-white font-medium py-3 rounded-lg transition-all flex items-center justify-center gap-2"
+            disabled={sending || (!user && !message.trim())}
+            className="w-full bg-gradient-to-r from-brand-500 to-purple-600 hover:from-brand-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-all flex items-center justify-center gap-2"
           >
             <Send className="w-4 h-4" />
-            {user ? 'Send Message' : 'Sign Up to Send Message'}
+            {sending ? 'Sending...' : (user ? 'Send Message' : 'Sign Up to Send Message')}
           </button>
         </form>
 

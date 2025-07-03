@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getUserMessages, getUnreadMessageCount, MessageThread } from '@/lib/firestore/getUserMessages';
+import { messageService, MessageThread } from '@/lib/services/messageService';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface MessagesPreviewProps {
@@ -22,13 +22,16 @@ export default function MessagesPreview({ limit = 5 }: MessagesPreviewProps) {
     const fetchMessages = async () => {
       try {
         setLoading(true);
-        const [messagesData, unreadData] = await Promise.all([
-          getUserMessages(user.uid, limit),
-          getUnreadMessageCount(user.uid)
-        ]);
+        const messagesData = await messageService.getUserThreads(user.uid);
+        const limitedMessages = messagesData.slice(0, limit);
         
-        setMessages(messagesData);
-        setUnreadCount(unreadData);
+        // Calculate total unread count
+        const totalUnread = messagesData.reduce((total, thread) => {
+          return total + (thread.unreadCount[user.uid] || 0);
+        }, 0);
+        
+        setMessages(limitedMessages);
+        setUnreadCount(totalUnread);
         setError(null);
       } catch (err) {
         console.error('Error fetching messages:', err);
@@ -39,6 +42,19 @@ export default function MessagesPreview({ limit = 5 }: MessagesPreviewProps) {
     };
 
     fetchMessages();
+
+    // Set up real-time listener
+    const unsubscribe = messageService.listenToUserThreads(user.uid, (updatedThreads) => {
+      const limitedMessages = updatedThreads.slice(0, limit);
+      const totalUnread = updatedThreads.reduce((total, thread) => {
+        return total + (thread.unreadCount[user.uid] || 0);
+      }, 0);
+      
+      setMessages(limitedMessages);
+      setUnreadCount(totalUnread);
+    });
+
+    return () => unsubscribe();
   }, [user?.uid, limit]);
 
   const formatTimestamp = (timestamp: any) => {
@@ -66,8 +82,9 @@ export default function MessagesPreview({ limit = 5 }: MessagesPreviewProps) {
     }
   };
 
-  const getOtherParticipant = (participants: string[]) => {
-    return participants.find(p => p !== user?.uid) || 'Unknown';
+  const getOtherParticipant = (thread: MessageThread) => {
+    const otherParticipantId = thread.participants.find(p => p !== user?.uid);
+    return otherParticipantId ? thread.participantNames[otherParticipantId] : 'Unknown User';
   };
 
   const truncateMessage = (content: string, maxLength: number = 50) => {
@@ -137,8 +154,9 @@ export default function MessagesPreview({ limit = 5 }: MessagesPreviewProps) {
       ) : (
         <div className="space-y-3">
           {messages.map((thread) => {
-            const otherParticipant = getOtherParticipant(thread.participants);
-            const isUnread = thread.unreadCount && thread.unreadCount > 0;
+            const otherParticipant = getOtherParticipant(thread);
+            const userUnreadCount = user?.uid ? thread.unreadCount[user.uid] || 0 : 0;
+            const isUnread = userUnreadCount > 0;
             
             return (
               <Link
@@ -157,28 +175,22 @@ export default function MessagesPreview({ limit = 5 }: MessagesPreviewProps) {
                       <h4 className={`font-medium truncate ${isUnread ? 'text-white' : 'text-gray-300'}`}>
                         {otherParticipant}
                       </h4>
-                      <span className="text-xs text-gray-500 flex-shrink-0">
-                        {formatTimestamp(thread.lastMessage?.timestamp)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {isUnread && (
+                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
+                            {userUnreadCount}
+                          </span>
+                        )}
+                        <span className="text-xs text-gray-500 flex-shrink-0">
+                          {formatTimestamp(thread.lastMessageAt)}
+                        </span>
+                      </div>
                     </div>
                     
                     <p className={`text-sm truncate ${isUnread ? 'text-gray-300' : 'text-gray-400'}`}>
-                      {thread.lastMessage?.senderId === user?.uid && 'You: '}
-                      {truncateMessage(thread.lastMessage?.content || 'No messages yet')}
+                      {truncateMessage(thread.lastMessage || 'No messages yet')}
                     </p>
-                    
-                    {thread.bookingId && (
-                      <div className="flex items-center mt-1">
-                        <span className="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded">
-                          📅 Booking Chat
-                        </span>
-                      </div>
-                    )}
                   </div>
-                  
-                  {isUnread && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
-                  )}
                 </div>
               </Link>
             );
