@@ -4,17 +4,22 @@ import React, { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
 import toast from 'react-hot-toast';
 import { Translate } from '@/i18n/Translate';
 
-export function SaveButton({ providerId }: { providerId: string }) {
+export function SaveButton({ providerId, providerName }: { providerId: string; providerName?: string }) {
   const { user } = useAuth();
+  const { trackAction } = useProgressiveOnboarding();
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.uid) return;
+    if (!user?.uid) {
+      setLoading(false);
+      return;
+    }
 
     const checkSaved = async () => {
       const ref = doc(db, 'users', user.uid, 'favorites', providerId);
@@ -27,6 +32,20 @@ export function SaveButton({ providerId }: { providerId: string }) {
   }, [user, providerId]);
 
   const toggleSave = async () => {
+    if (!user) {
+      // Track the favorite attempt for progressive onboarding
+      trackAction('favorite_attempt');
+      
+      // Trigger email capture modal
+      window.dispatchEvent(new CustomEvent('show-email-capture', {
+        detail: { 
+          trigger: 'save_attempt',
+          creatorName: providerName 
+        }
+      }));
+      return;
+    }
+
     const ref = doc(db, 'users', user!.uid, 'favorites', providerId);
     if (isSaved) {
       await deleteDoc(ref);

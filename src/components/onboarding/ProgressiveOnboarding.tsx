@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { emailService, EmailCaptureData } from '@/lib/services/emailService';
 
 interface OnboardingState {
   hasVisited: boolean;
@@ -10,6 +11,10 @@ interface OnboardingState {
   profileViewed: number;
   searchPerformed: number;
   lastVisit: string;
+  lastCreatorViewed?: string;
+  lastCreatorName?: string;
+  favoriteTried: boolean;
+  exitIntentShown: boolean;
 }
 
 interface OnboardingContextType {
@@ -17,7 +22,9 @@ interface OnboardingContextType {
   updateState: (updates: Partial<OnboardingState>) => void;
   shouldShowEmailCapture: () => boolean;
   shouldShowSignupPrompt: () => boolean;
-  trackAction: (action: 'profile_view' | 'search' | 'contact_attempt' | 'booking_attempt') => void;
+  shouldShowExitIntent: () => boolean;
+  trackAction: (action: 'profile_view' | 'search' | 'contact_attempt' | 'booking_attempt' | 'favorite_attempt', metadata?: any) => void;
+  captureEmail: (email: string, source: EmailCaptureData['source']) => Promise<{ success: boolean; message?: string }>;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
@@ -33,6 +40,10 @@ export function ProgressiveOnboardingProvider({ children }: { children: React.Re
     profileViewed: 0,
     searchPerformed: 0,
     lastVisit: new Date().toISOString(),
+    lastCreatorViewed: undefined,
+    lastCreatorName: undefined,
+    favoriteTried: false,
+    exitIntentShown: false,
   });
 
   // Load state from localStorage on mount
@@ -61,8 +72,8 @@ export function ProgressiveOnboardingProvider({ children }: { children: React.Re
     // Don't show if user is already logged in or email already captured
     if (user || state.emailCaptured) return false;
     
-    // Show after user has viewed 2+ profiles or performed 1+ search
-    return state.profileViewed >= 2 || state.searchPerformed >= 1;
+    // Show after user has viewed 3+ profiles or performed 2+ searches or tried to favorite
+    return state.profileViewed >= 3 || state.searchPerformed >= 2 || state.favoriteTried;
   };
 
   const shouldShowSignupPrompt = () => {
@@ -73,13 +84,52 @@ export function ProgressiveOnboardingProvider({ children }: { children: React.Re
     return false;
   };
 
-  const trackAction = (action: 'profile_view' | 'search' | 'contact_attempt' | 'booking_attempt') => {
+  const shouldShowExitIntent = () => {
+    // Don't show if user is logged in, email captured, or already shown
+    if (user || state.emailCaptured || state.exitIntentShown) return false;
+    
+    // Show if user has engaged but hasn't converted
+    return state.profileViewed >= 2 || state.searchPerformed >= 1;
+  };
+
+  const captureEmail = async (email: string, source: EmailCaptureData['source']) => {
+    try {
+      const result = await emailService.captureEmail({
+        email,
+        source,
+        metadata: {
+          profileViewed: state.profileViewed,
+          searchPerformed: state.searchPerformed,
+          lastCreatorViewed: state.lastCreatorViewed,
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      if (result.success) {
+        updateState({ emailCaptured: true });
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Failed to capture email:', error);
+      return { success: false, message: 'Failed to capture email' };
+    }
+  };
+
+  const trackAction = (action: 'profile_view' | 'search' | 'contact_attempt' | 'booking_attempt' | 'favorite_attempt', metadata?: any) => {
     switch (action) {
       case 'profile_view':
-        updateState({ profileViewed: state.profileViewed + 1 });
+        updateState({ 
+          profileViewed: state.profileViewed + 1,
+          lastCreatorViewed: metadata?.creatorId,
+          lastCreatorName: metadata?.creatorName,
+        });
         break;
       case 'search':
         updateState({ searchPerformed: state.searchPerformed + 1 });
+        break;
+      case 'favorite_attempt':
+        updateState({ favoriteTried: true });
         break;
       case 'contact_attempt':
       case 'booking_attempt':
@@ -94,7 +144,9 @@ export function ProgressiveOnboardingProvider({ children }: { children: React.Re
       updateState,
       shouldShowEmailCapture,
       shouldShowSignupPrompt,
+      shouldShowExitIntent,
       trackAction,
+      captureEmail,
     }}>
       {children}
     </OnboardingContext.Provider>

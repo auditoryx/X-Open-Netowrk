@@ -22,6 +22,7 @@ import { TierBadge } from '@/components/badges/TierBadge';
 import { ReportUserButton } from '@/components/profile/ReportUserButton';
 import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
 import ContactModal from '@/components/profile/ContactModal';
+import CreatorNotificationButton from '@/components/profile/CreatorNotificationButton';
 
 /* Data helpers */
 import { getAverageRating } from '@/lib/reviews/getAverageRating';
@@ -77,7 +78,10 @@ export default function PublicProfilePage() {
         
         // Track profile view for progressive onboarding
         if (!isOwnProfile) {
-          trackAction('profile_view');
+          trackAction('profile_view', {
+            creatorId: uid,
+            creatorName: data.name
+          });
         }
       }
 
@@ -194,14 +198,20 @@ export default function PublicProfilePage() {
       )}
 
       <div className="mb-6 flex flex-col items-center gap-3">
-        <SaveButton providerId={uid} />
+        <SaveButton providerId={uid} providerName={profile?.name} />
         {!isOwnProfile && (
-          <button
-            onClick={() => setShowContactModal(true)}
-            className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-medium px-6 py-2 rounded-lg transition-all flex items-center gap-2"
-          >
-            💬 Send Message
-          </button>
+          <>
+            <button
+              onClick={() => setShowContactModal(true)}
+              className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-medium px-6 py-2 rounded-lg transition-all flex items-center gap-2"
+            >
+              💬 Send Message
+            </button>
+            <CreatorNotificationButton 
+              creatorId={uid}
+              creatorName={profile?.name || 'this creator'}
+            />
+          </>
         )}
       </div>
 
