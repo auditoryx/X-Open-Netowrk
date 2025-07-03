@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftIcon, HomeIcon, SearchIcon, PlayIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, HomeIcon, MagnifyingGlassIcon, PlayIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 
 export default function NotFoundPage() {
@@ -73,7 +73,7 @@ export default function NotFoundPage() {
             </Link>
             
             <Link href="/search" className="btn-outline btn-lg group">
-              <SearchIcon className="w-5 h-5 mr-2" />
+              <MagnifyingGlassIcon className="w-5 h-5 mr-2" />
               Discover
             </Link>
           </div>

@@ -49,12 +49,12 @@ export default function Home() {
               Book talent, sell your services, and get paid.
             </p>
             <div className="flex justify-center gap-4 pt-6">
-              <Button asChild variant="primary">
-                <Link href="/explore">🔍 Explore Creators</Link>
-              </Button>
-              <Button asChild variant="secondary">
-                <Link href="/apply">✍️ Apply to Join</Link>
-              </Button>
+              <Link href="/explore" className="btn-primary btn-md">
+                🔍 Explore Creators
+              </Link>
+              <Link href="/apply" className="btn-secondary btn-md">
+                ✍️ Apply to Join
+              </Link>
             </div>
           </section>
 
@@ -170,9 +170,9 @@ export default function Home() {
           <section className="rounded-xl ring-1 ring-neutral-800 bg-panel p-8 text-center space-y-4">
             <h3 className="text-xl font-semibold">Want to offer services on AuditoryX?</h3>
             <p className="text-sm text-gray-400">Apply as a creator and start getting booked.</p>
-            <Button asChild variant="secondary">
-              <Link href="/apply">📍 Apply Now</Link>
-            </Button>
+            <Link href="/apply" className="btn-secondary btn-md">
+              📍 Apply Now
+            </Link>
           </section>
 
         </div>

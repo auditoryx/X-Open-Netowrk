@@ -8,7 +8,18 @@
 
 /* Global overrides */
 body {
-  @apply bg-ebony text-neutral-light font-body leading-relaxed min-h-screen antialiased selection:bg-brand/30 selection:text-white;
+  @apply bg-ebony text-neutral-light font-body leading-relaxed min-h-screen antialiased;
+}
+
+/* Custom selection styles */
+::selection {
+  background-color: rgba(139, 92, 246, 0.3); /* brand-500 with 30% opacity */
+  color: white;
+}
+
+::-moz-selection {
+  background-color: rgba(139, 92, 246, 0.3); /* brand-500 with 30% opacity */
+  color: white;
 }
 
 h1 {

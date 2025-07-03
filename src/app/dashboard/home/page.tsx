@@ -8,7 +8,7 @@ import { app } from '@/lib/firebase';
 import { useAuth } from '@/lib/hooks/useAuth';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
-import { RankProgress } from '@/src/components/dashboard/RankProgress';
+import { RankProgress } from '@/components/dashboard/RankProgress';
 import CollabStatsWidget from '@/components/dashboard/collab/CollabStatsWidget';
 import Link from 'next/link';
 import { MessageCircle, Bell, Calendar, Settings, Shield, Users } from 'lucide-react';

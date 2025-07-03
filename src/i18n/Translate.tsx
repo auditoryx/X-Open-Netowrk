@@ -18,4 +18,11 @@ export function Translate({ t }: { t: string }) {
   return translations[language]?.[t] || t;
 }
 
-// Removed namespace import and refactored 'txt' function to comply with React Hook rules.
+// Create a txt function that can be used outside React components
+// This will default to English when language context is not available
+export const txt = (key: string, lang: string = 'en'): string => {
+  return translations[lang]?.[key] || key;
+};
+
+// For backward compatibility, attach txt to Translate
+(Translate as any).txt = txt;

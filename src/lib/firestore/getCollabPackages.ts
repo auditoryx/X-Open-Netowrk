@@ -374,38 +374,38 @@ export async function getCollabPackageStats(uid: string): Promise<{
 /**
  * Helper function to calculate search relevance score
  */
-function getSearchScore(package: CollabPackage, searchTerm: string): number {
+function getSearchScore(collabPackage: CollabPackage, searchTerm: string): number {
   let score = 0;
   
   // Title matches are most important
-  if (package.title.toLowerCase().includes(searchTerm)) {
+  if (collabPackage.title.toLowerCase().includes(searchTerm)) {
     score += 10;
   }
   
   // Description matches
-  if (package.description.toLowerCase().includes(searchTerm)) {
+  if (collabPackage.description.toLowerCase().includes(searchTerm)) {
     score += 5;
   }
   
   // Tag matches
-  score += package.tags.filter(tag => tag.includes(searchTerm)).length * 3;
+  score += collabPackage.tags.filter(tag => tag.includes(searchTerm)).length * 3;
   
   // Genre matches
-  score += (package.genre || []).filter(g => g.toLowerCase().includes(searchTerm)).length * 2;
+  score += (collabPackage.genre || []).filter(g => g.toLowerCase().includes(searchTerm)).length * 2;
   
   // Creator name matches
-  const creatorMatches = Object.values(package.roleDetails || {}).filter(detail => 
+  const creatorMatches = Object.values(collabPackage.roleDetails || {}).filter(detail => 
     detail?.name.toLowerCase().includes(searchTerm)
   ).length;
   score += creatorMatches * 4;
   
   // Boost for featured packages
-  if (package.featured) {
+  if (collabPackage.featured) {
     score += 2;
   }
   
   // Boost for packages with more bookings
-  score += (package.bookingCount || 0) * 0.1;
+  score += (collabPackage.bookingCount || 0) * 0.1;
   
   return score;
 }

@@ -134,3 +134,4 @@ const TierBadge: React.FC<TierBadgeProps> = ({
 };
 
 export default TierBadge;
+export { TierBadge };

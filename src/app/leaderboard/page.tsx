@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Leaderboard } from '@/src/components/leaderboard/Leaderboard';
+import { Leaderboard } from '@/components/leaderboard/Leaderboard';
 import { Trophy, Users, Target } from 'lucide-react';
 
 const ROLES = [

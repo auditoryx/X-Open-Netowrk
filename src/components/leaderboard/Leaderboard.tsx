@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getLeaderboard, getTopCreators, LeaderboardEntry } from '@/src/lib/firestore/getLeaderboard';
-import { TierBadge } from '@/src/components/badges/TierBadge';
-import { SkeletonCard } from '@/src/components/ui/SkeletonCard';
-import { EmptyState } from '@/src/components/ui/EmptyState';
+import { TierBadge } from '@/components/badges/TierBadge';
+import { SkeletonCard } from '@/components/ui/SkeletonCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { Trophy, Medal, Award, Crown, Star } from 'lucide-react';
 
 interface LeaderboardProps {

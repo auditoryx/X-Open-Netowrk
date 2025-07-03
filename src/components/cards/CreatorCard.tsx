@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { TierBadge } from '@/src/components/badges/TierBadge';
+import TierBadge from '@/components/badges/TierBadge';
 import SignatureBadge from '@/components/badges/SignatureBadge';
 import ProgressRing from '@/components/ui/ProgressRing';
 import Image from 'next/image';

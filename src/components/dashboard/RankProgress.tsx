@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUserTier, UserTierData } from '@/lib/firestore/getUserTier';
 import { getUserLeaderboardPosition } from '@/lib/firestore/getLeaderboard';
-import { TierBadge } from '@/src/components/badges/TierBadge';
+import { TierBadge } from '@/components/badges/TierBadge';
 import { Star, TrendingUp, Award, Target } from 'lucide-react';
 
 interface RankProgressProps {

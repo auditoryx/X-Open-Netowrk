@@ -1,6 +1,6 @@
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { calculateTier, TIER_REQUIREMENTS } from '@/src/constants/gamification';
+import { calculateTier, TIER_REQUIREMENTS } from '@/constants/gamification';
 
 export interface UserTierData {
   tier: string;
