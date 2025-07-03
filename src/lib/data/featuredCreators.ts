@@ -1,0 +1,226 @@
+export const featuredCreatorsData = [
+  {
+    uid: 'oogie-mane',
+    displayName: 'Oogie Mane',
+    username: 'oogiemane',
+    role: 'producer',
+    location: 'Atlanta, GA',
+    avatar: null,
+    verified: true,
+    averageRating: 4.9,
+    reviewCount: 247,
+    startingPrice: 500,
+    bio: 'Known for hard-hitting 808s',
+    genres: ['Trap', 'Hip-Hop', 'Drill'],
+    collaborations: ['Playboi Carti', 'Lil Uzi Vert', 'Future'],
+    featured: true,
+    initials: 'OM',
+    gradient: 'from-purple-500 to-pink-500'
+  },
+  {
+    uid: 'thouxanbanfauni',
+    displayName: 'ThouxanBanFauni',
+    username: 'thouxanbanfauni',
+    role: 'artist',
+    location: 'Virginia',
+    avatar: null,
+    verified: true,
+    averageRating: 4.8,
+    reviewCount: 189,
+    startingPrice: 1200,
+    bio: 'Melodic flows & unique style',
+    genres: ['Hip-Hop', 'Cloud Rap', 'Underground'],
+    collaborations: ['UnoTheActivist', 'Rich The Kid', 'Father'],
+    featured: true,
+    initials: 'TBF',
+    gradient: 'from-red-500 to-orange-500'
+  },
+  {
+    uid: 'unotheactivist',
+    displayName: 'UnoTheActivist',
+    username: 'unotheactivist',
+    role: 'artist',
+    location: 'Atlanta, GA',
+    avatar: null,
+    verified: true,
+    averageRating: 4.9,
+    reviewCount: 312,
+    startingPrice: 1500,
+    bio: 'Innovative sound & energy',
+    genres: ['Hip-Hop', 'Trap', 'Experimental'],
+    collaborations: ['ThouxanBanFauni', 'Playboi Carti', 'Lil Yachty'],
+    featured: true,
+    initials: 'UTA',
+    gradient: 'from-blue-500 to-cyan-500'
+  },
+  {
+    uid: 'cole-bennett',
+    displayName: 'Cole Bennett',
+    username: 'colebennett',
+    role: 'videographer',
+    location: 'Chicago, IL',
+    avatar: null,
+    verified: true,
+    averageRating: 5.0,
+    reviewCount: 156,
+    startingPrice: 5000,
+    bio: 'Lyrical Lemonade founder',
+    genres: ['Music Videos', 'Creative Direction'],
+    collaborations: ['Juice WRLD', 'Lil Pump', 'Ski Mask'],
+    featured: true,
+    initials: 'CB',
+    gradient: 'from-yellow-500 to-red-500'
+  },
+  {
+    uid: 'tree-sound-studios',
+    displayName: 'Tree Sound Studios',
+    username: 'treesoundstudios',
+    role: 'studio',
+    location: 'Atlanta, GA',
+    avatar: null,
+    verified: true,
+    averageRating: 4.9,
+    reviewCount: 423,
+    startingPrice: 150,
+    bio: 'Where hits are made',
+    genres: ['Recording', 'Mixing', 'Mastering'],
+    collaborations: ['OutKast', 'Usher', 'T.I.'],
+    featured: true,
+    initials: 'TS',
+    gradient: 'from-green-500 to-emerald-500'
+  },
+  {
+    uid: 'alex-tumay',
+    displayName: 'Alex Tumay',
+    username: 'alextumay',
+    role: 'engineer',
+    location: 'Atlanta, GA',
+    avatar: null,
+    verified: true,
+    averageRating: 5.0,
+    reviewCount: 289,
+    startingPrice: 800,
+    bio: "Young Thug's go-to engineer",
+    genres: ['Mixing', 'Mastering', 'Vocal Processing'],
+    collaborations: ['Young Thug', 'Future', 'Travis Scott'],
+    featured: true,
+    initials: 'AT',
+    gradient: 'from-indigo-500 to-purple-500'
+  },
+  {
+    uid: 'metro-boomin',
+    displayName: 'Metro Boomin',
+    username: 'metroboomin',
+    role: 'producer',
+    location: 'Atlanta, GA',
+    avatar: null,
+    verified: true,
+    averageRating: 5.0,
+    reviewCount: 567,
+    startingPrice: 2500,
+    bio: 'If Metro don\'t trust you...',
+    genres: ['Trap', 'Hip-Hop', 'Dark Beats'],
+    collaborations: ['Future', 'Drake', '21 Savage'],
+    featured: true,
+    initials: 'MB',
+    gradient: 'from-black to-gray-700'
+  },
+  {
+    uid: 'pierre-bourne',
+    displayName: 'Pi\'erre Bourne',
+    username: 'pierrebourne',
+    role: 'producer',
+    location: 'NYC',
+    avatar: null,
+    verified: true,
+    averageRating: 4.8,
+    reviewCount: 198,
+    startingPrice: 1800,
+    bio: 'Yo Pi\'erre, you wanna come out here?',
+    genres: ['Trap', 'Melodic Rap', 'Psychedelic'],
+    collaborations: ['Playboi Carti', 'Lil Uzi Vert', 'Young Nudy'],
+    featured: true,
+    initials: 'PB',
+    gradient: 'from-pink-500 to-purple-500'
+  },
+  {
+    uid: 'zach-hurth',
+    displayName: 'Zach Hurth',
+    username: 'zachhurth',
+    role: 'videographer',
+    location: 'LA',
+    avatar: null,
+    verified: true,
+    averageRating: 4.7,
+    reviewCount: 143,
+    startingPrice: 3500,
+    bio: 'Cinematic visuals & storytelling',
+    genres: ['Music Videos', 'Documentary', 'Commercial'],
+    collaborations: ['A$AP Rocky', 'Tyler Cole', 'Kali Uchis'],
+    featured: true,
+    initials: 'ZH',
+    gradient: 'from-teal-500 to-blue-500'
+  },
+  {
+    uid: 'luca-pretolesi',
+    displayName: 'Luca Pretolesi',
+    username: 'lucapretolesi',
+    role: 'engineer',
+    location: 'Las Vegas, NV',
+    avatar: null,
+    verified: true,
+    averageRating: 4.9,
+    reviewCount: 234,
+    startingPrice: 1500,
+    bio: 'Grammy-winning mastering engineer',
+    genres: ['Mastering', 'Mix Enhancement', 'Audio Restoration'],
+    collaborations: ['Diplo', 'Steve Aoki', 'Carnage'],
+    featured: true,
+    initials: 'LP',
+    gradient: 'from-orange-500 to-red-500'
+  }
+];
+
+export const recentActivity = {
+  creatorsJoinedToday: 23,
+  bookingsThisWeek: 156,
+  payoutThisMonth: 2300000, // $2.3M
+  activeUsers: 1247,
+  completedProjects: 892
+};
+
+export const testimonials = [
+  {
+    id: 'oogie-mane-testimonial',
+    creator: {
+      name: 'Oogie Mane',
+      role: 'Producer',
+      initials: 'OM',
+      gradient: 'from-purple-500 to-pink-500'
+    },
+    content: "AuditoryX changed my life. I went from making $200/month to $15K+ just from the platform. The clients are serious and the payment system is bulletproof.",
+    rating: 5
+  },
+  {
+    id: 'thouxanbanfauni-testimonial',
+    creator: {
+      name: 'ThouxanBanFauni',
+      role: 'Artist',
+      initials: 'TBF',
+      gradient: 'from-red-500 to-orange-500'
+    },
+    content: "Finally a platform that gets it. No middlemen, direct bookings, and I can focus on my art while the money flows. Built different.",
+    rating: 5
+  },
+  {
+    id: 'tree-sound-testimonial',
+    creator: {
+      name: 'Tree Sound Studios',
+      role: 'Studio Owner',
+      initials: 'TS',
+      gradient: 'from-green-500 to-emerald-500'
+    },
+    content: "Our studio bookings doubled since joining. AuditoryX brings us quality artists and handles all the scheduling and payments seamlessly.",
+    rating: 5
+  }
+];

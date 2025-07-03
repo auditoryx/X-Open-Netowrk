@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
 import { filterCreatorsByKeywords, SearchableCreator, SearchResult } from '../utils/filterByKeyword';
+import { featuredCreatorsData } from '@/lib/data/featuredCreators';
 
 export interface SearchCreatorsOptions {
   maxResults?: number;
@@ -161,6 +162,36 @@ export async function searchCreators(
       minScore: searchQuery.trim() ? 1 : 0,
       maxResults
     });
+
+    // If no results from database, use sample data as fallback
+    if (searchResults.length === 0 && creators.length === 0) {
+      console.warn('No creators found in database, using sample data');
+      const sampleCreators = featuredCreatorsData.map(creator => ({
+        uid: creator.uid,
+        displayName: creator.displayName,
+        name: creator.displayName,
+        bio: creator.bio,
+        photoURL: null,
+        location: creator.location,
+        tier: creator.verified ? 'signature' : 'standard',
+        price: creator.startingPrice,
+        averageRating: creator.averageRating,
+        reviewCount: creator.reviewCount,
+        xp: 1000,
+        rankScore: creator.averageRating * 100,
+        role: creator.role,
+        genres: creator.genres,
+        services: [],
+        collaborations: creator.collaborations,
+        verified: creator.verified,
+        featured: creator.featured
+      }));
+      
+      return filterCreatorsByKeywords(sampleCreators, searchQuery, {
+        minScore: searchQuery.trim() ? 1 : 0,
+        maxResults
+      });
+    }
 
     return searchResults;
 

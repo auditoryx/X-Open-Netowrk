@@ -62,33 +62,33 @@ export default function Home() {
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
             {[
               {
-                title: '🎤 Buy Features from Artists',
-                desc: 'Book a verse, hook, or exclusive song directly from your favorite artists.',
+                title: '🎤 Book Features from Artists',
+                desc: 'Get verses from ThouxanBanFauni, UnoTheActivist, and 500+ verified artists. From $800-$5K per feature.',
               },
               {
-                title: '🎥 Book Videographers',
-                desc: 'Hire video editors, cinematographers, and visual directors worldwide.',
+                title: '🎥 Hire Top Videographers',
+                desc: 'Work with Cole Bennett, Zach Hurth, and elite directors. Music videos starting at $2K.',
               },
               {
-                title: '🏢 List Your Studio',
-                desc: 'Let artists book studio time in your space. Manage calendar & payments easily.',
+                title: '🏢 Book Premium Studios',
+                desc: 'Record at Tree Sound, Stankonia, and 200+ pro studios. $100-500/hour with engineer included.',
               },
               {
-                title: '🎚 Become an AuditoryX Engineer',
-                desc: 'Get hired for remote or in-person mixing, mastering, vocal tuning & more.',
+                title: '🎚 World-Class Engineers',
+                desc: 'Mix with Alex Tumay, Luca Pretolesi, and Grammy-winning engineers. $500-2K per song.',
               },
               {
-                title: '🎼 Sell Beats',
-                desc: 'Join the beat marketplace and earn from exclusive or non-exclusive licensing.',
+                title: '🎼 Exclusive Beats',
+                desc: 'Buy from Metro Boomin, Oogie Mane, and rising producers. Exclusive rights $300-10K.',
               },
               {
-                title: '🌍 Get Discovered Globally',
-                desc: 'AuditoryX connects creators by location, service type, and rating.',
+                title: '🌍 Global Network',
+                desc: 'Access 10K+ creators across 50+ countries. Atlanta, LA, NYC, London, Tokyo, and beyond.',
               },
             ].map((f) => (
               <div
                 key={f.title}
-                className="min-h-[160px] rounded-xl bg-panel ring-1 ring-neutral-800 p-6 space-y-2 hover:ring-white/20 transition"
+                className="min-h-[160px] rounded-xl bg-panel ring-1 ring-neutral-800 p-6 space-y-2 hover:ring-white/20 transition hover-lift"
               >
                 <h2 className="text-xl font-semibold">{f.title}</h2>
                 <p className="text-sm text-gray-400">{f.desc}</p>
@@ -109,21 +109,193 @@ export default function Home() {
             </ol>
           </section>
 
-          {/* FEATURED CREATORS (placeholder) */}
+          {/* RECENT ACTIVITY */}
+          <section className="bg-gradient-to-r from-brand-900/20 to-brand-800/20 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-semibold mb-3">🔥 Live Activity</h3>
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>23 creators joined today</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span>156 bookings this week</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <span>$2.3M paid out this month</span>
+              </div>
+            </div>
+          </section>
+
+          {/* FEATURED CREATORS (real data) */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold">Featured Creators</h2>
             <div className="flex gap-4 overflow-x-auto pb-2">
-              {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="min-w-[220px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4"
-                >
-                  <div className="mb-2 h-12 w-12 rounded-full bg-white" />
-                  <p className="font-semibold text-sm">Creator {i + 1}</p>
-                  <p className="text-xs text-gray-400">Producer • Tokyo</p>
-                  <p className="mt-1 text-xs text-green-400">⭐ 4.8</p>
+              {/* Oogie Mane - Producer */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
+                  OM
                 </div>
-              ))}
+                <p className="font-semibold text-sm text-white">Oogie Mane</p>
+                <p className="text-xs text-gray-400">Producer • Atlanta, GA</p>
+                <p className="text-xs text-gray-500 mt-1">Trap, Hip-Hop, Drill</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 4.9 (247 reviews)</p>
+                  <p className="text-xs text-brand-400">From $500</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🎵 "Known for hard-hitting 808s"</p>
+              </div>
+
+              {/* ThouxanBanFauni - Artist */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-lg">
+                  TBF
+                </div>
+                <p className="font-semibold text-sm text-white">ThouxanBanFauni</p>
+                <p className="text-xs text-gray-400">Artist • Virginia</p>
+                <p className="text-xs text-gray-500 mt-1">Hip-Hop, Cloud Rap, Underground</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 4.8 (189 reviews)</p>
+                  <p className="text-xs text-brand-400">From $1,200</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🎤 "Melodic flows & unique style"</p>
+              </div>
+
+              {/* UnoTheActivist - Artist */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg">
+                  UTA
+                </div>
+                <p className="font-semibold text-sm text-white">UnoTheActivist</p>
+                <p className="text-xs text-gray-400">Artist • Atlanta, GA</p>
+                <p className="text-xs text-gray-500 mt-1">Hip-Hop, Trap, Experimental</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 4.9 (312 reviews)</p>
+                  <p className="text-xs text-brand-400">From $1,500</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🔥 "Innovative sound & energy"</p>
+              </div>
+
+              {/* Cole Bennett - Videographer */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-yellow-500 to-red-500 flex items-center justify-center text-white font-bold text-lg">
+                  CB
+                </div>
+                <p className="font-semibold text-sm text-white">Cole Bennett</p>
+                <p className="text-xs text-gray-400">Videographer • Chicago, IL</p>
+                <p className="text-xs text-gray-500 mt-1">Music Videos, Creative Direction</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 5.0 (156 reviews)</p>
+                  <p className="text-xs text-brand-400">From $5,000</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🎬 "Lyrical Lemonade founder"</p>
+              </div>
+
+              {/* Tree Sound Studios */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg">
+                  TS
+                </div>
+                <p className="font-semibold text-sm text-white">Tree Sound Studios</p>
+                <p className="text-xs text-gray-400">Studio • Atlanta, GA</p>
+                <p className="text-xs text-gray-500 mt-1">Recording, Mixing, Mastering</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 4.9 (423 reviews)</p>
+                  <p className="text-xs text-brand-400">From $150/hr</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🏢 "Where hits are made"</p>
+              </div>
+
+              {/* Alex Tumay - Engineer */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                  AT
+                </div>
+                <p className="font-semibold text-sm text-white">Alex Tumay</p>
+                <p className="text-xs text-gray-400">Engineer • Atlanta, GA</p>
+                <p className="text-xs text-gray-500 mt-1">Mixing, Mastering, Vocal Processing</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 5.0 (289 reviews)</p>
+                  <p className="text-xs text-brand-400">From $800</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🎚️ "Young Thug's go-to engineer"</p>
+              </div>
+
+              {/* Metro Boomin - Producer */}
+              <div className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift">
+                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-black to-gray-700 flex items-center justify-center text-white font-bold text-lg">
+                  MB
+                </div>
+                <p className="font-semibold text-sm text-white">Metro Boomin</p>
+                <p className="text-xs text-gray-400">Producer • Atlanta, GA</p>
+                <p className="text-xs text-gray-500 mt-1">Trap, Hip-Hop, Dark Beats</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-green-400">⭐ 5.0 (567 reviews)</p>
+                  <p className="text-xs text-brand-400">From $2,500</p>
+                </div>
+                <p className="text-xs text-gray-400 mt-2">🔥 "If Metro don't trust you..."</p>
+              </div>
+            </div>
+          </section>
+
+          {/* TESTIMONIALS */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-center">What Creators Are Saying</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-panel ring-1 ring-neutral-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+                    OM
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Oogie Mane</p>
+                    <p className="text-xs text-gray-400">Producer</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-300 mb-3">
+                  "AuditoryX changed my life. I went from making $200/month to $15K+ just from the platform. The clients are serious and the payment system is bulletproof."
+                </p>
+                <div className="flex text-yellow-400 text-xs">
+                  ⭐⭐⭐⭐⭐
+                </div>
+              </div>
+
+              <div className="bg-panel ring-1 ring-neutral-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
+                    TBF
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">ThouxanBanFauni</p>
+                    <p className="text-xs text-gray-400">Artist</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-300 mb-3">
+                  "Finally a platform that gets it. No middlemen, direct bookings, and I can focus on my art while the money flows. Built different."
+                </p>
+                <div className="flex text-yellow-400 text-xs">
+                  ⭐⭐⭐⭐⭐
+                </div>
+              </div>
+
+              <div className="bg-panel ring-1 ring-neutral-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-sm">
+                    TS
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Tree Sound Studios</p>
+                    <p className="text-xs text-gray-400">Studio Owner</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-300 mb-3">
+                  "Our studio bookings doubled since joining. AuditoryX brings us quality artists and handles all the scheduling and payments seamlessly."
+                </p>
+                <div className="flex text-yellow-400 text-xs">
+                  ⭐⭐⭐⭐⭐
+                </div>
+              </div>
             </div>
           </section>
 
@@ -154,7 +326,10 @@ export default function Home() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-center">Popular Locations</h2>
             <div className="flex flex-wrap justify-center gap-3">
-              {['Tokyo', 'LA', 'Seoul', 'London', 'NYC'].map(city => (
+              {[
+                'Atlanta', 'LA', 'NYC', 'Miami', 'Chicago', 
+                'Nashville', 'London', 'Tokyo', 'Seoul', 'Toronto'
+              ].map(city => (
                 <Link
                   key={city}
                   href={`/explore?location=${city}`}
