@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { toggleMFA, getUserMFASettings, MFASettings } from '@/src/lib/firestore/toggleMFA';
+import { toggleMFA, getUserMFASettings, MFASettings } from '@/lib/firestore/toggleMFA';
 import { Settings, Shield, CreditCard, Bell, User, Lock, AlertTriangle, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 

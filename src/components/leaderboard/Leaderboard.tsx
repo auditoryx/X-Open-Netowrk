@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { getLeaderboard, getTopCreators, LeaderboardEntry } from '@/src/lib/firestore/getLeaderboard';
+import { getLeaderboard, getTopCreators, LeaderboardEntry } from '@/lib/firestore/getLeaderboard';
 import { TierBadge } from '@/components/badges/TierBadge';
 import { SkeletonCard } from '@/components/ui/SkeletonCard';
 import { EmptyState } from '@/components/ui/EmptyState';

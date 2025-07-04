@@ -11,7 +11,7 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import withAdminProtection from '@/src/middleware/withAdminProtection';
+import withAdminProtection from '@/middleware/withAdminProtection';
 
 function VerificationsPage() {
   const [requests, setRequests] = useState<any[]>([]);

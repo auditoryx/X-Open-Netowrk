@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getBookingById, BookingData } from '@/lib/firestore/getBookingById';
 import { getUserProfile } from '@/lib/firestore/getUserProfile';
-import { ContractPreview } from '@/src/components/booking/ContractPreview';
+import { ContractPreview } from '@/components/booking/ContractPreview';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function BookingPreviewPage() {

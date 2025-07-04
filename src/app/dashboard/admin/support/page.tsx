@@ -15,7 +15,7 @@ type Ticket = {
   createdAt?: any;
 };
 
-export default export default function SupportDashboard() {
+function SupportDashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
 

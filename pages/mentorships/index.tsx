@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { firestore } from '@/lib/firebase/firebaseAdmin';
+// Firebase admin is server-side only
 import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { Mentorship } from '@/lib/types/Mentorship';
 import Link from 'next/link';

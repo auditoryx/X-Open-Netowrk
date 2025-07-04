@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Mentorship, isCreatorOfMentorship } from '@/lib/types/Mentorship';
 import { doc, getDoc, toggleMentorshipActive } from '@/lib/firestore/createMentorshipService';
-import { firestore } from '@/lib/firebase/firebaseAdmin';
+// Firebase admin is server-side only
 import MentorshipBookingForm from '@/components/forms/MentorshipBookingForm';
 import Link from 'next/link';
 import toast from 'react-hot-toast';

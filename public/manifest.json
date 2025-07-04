@@ -1,0 +1,231 @@
+{
+  "name": "AuditoryX - Music Creator Platform",
+  "short_name": "AuditoryX",
+  "description": "Connect with talented music creators, producers, and audio engineers. Book studio time, collaborate on projects, and bring your musical vision to life.",
+  "version": "1.0.0",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["music", "entertainment", "productivity", "social"],
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Home screen showing featured creators and search functionality"
+    },
+    {
+      "src": "/screenshots/mobile-search.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mobile search interface with AI-powered suggestions"
+    },
+    {
+      "src": "/screenshots/mobile-creator.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Creator profile with portfolio and booking options"
+    },
+    {
+      "src": "/screenshots/mobile-dashboard.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Dashboard with bookings and messages"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search Creators",
+      "short_name": "Search",
+      "description": "Find music creators and audio professionals",
+      "url": "/search",
+      "icons": [
+        {
+          "src": "/icons/search-shortcut.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "My Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your bookings and messages",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/icons/dashboard-shortcut.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "short_name": "Messages",
+      "description": "Chat with creators and collaborators",
+      "url": "/dashboard/messages",
+      "icons": [
+        {
+          "src": "/icons/messages-shortcut.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "short_name": "Bookings",
+      "description": "Manage your studio bookings",
+      "url": "/dashboard/bookings",
+      "icons": [
+        {
+          "src": "/icons/bookings-shortcut.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.auditoryx.app",
+      "id": "com.auditoryx.app"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/app/auditoryx/id123456789",
+      "id": "123456789"
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+auditoryx",
+      "url": "/creator/%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/upload",
+      "accept": {
+        "audio/*": [".mp3", ".wav", ".m4a", ".flac", ".aiff"],
+        "video/*": [".mp4", ".mov", ".avi"],
+        "image/*": [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+      },
+      "icons": [
+        {
+          "src": "/icons/file-handler.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "audio",
+          "accept": ["audio/*"]
+        },
+        {
+          "name": "image",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  },
+  "permissions": [
+    "microphone",
+    "camera",
+    "notifications",
+    "persistent-storage",
+    "background-sync",
+    "geolocation"
+  ],
+  "features": [
+    "ai-powered-search",
+    "real-time-collaboration",
+    "offline-mode",
+    "push-notifications",
+    "file-sharing",
+    "video-calls",
+    "payment-processing",
+    "calendar-integration"
+  ],
+  "iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9"
+}

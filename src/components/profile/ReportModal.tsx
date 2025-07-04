@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { submitUserReport } from '@/src/lib/firestore/submitUserReport';
+import { submitUserReport } from '@/lib/firestore/submitUserReport';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { X, AlertTriangle, Flag, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';

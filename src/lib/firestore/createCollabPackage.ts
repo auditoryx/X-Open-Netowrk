@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, doc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { CollabPackage, CollabPackageCreator } from '@/src/lib/types/CollabPackage';
-import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
+import { getUserProfile } from '@/lib/firestore/getUserProfile';
 
 export interface CreateCollabPackageData {
   title: string;

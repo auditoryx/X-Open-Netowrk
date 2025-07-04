@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { getAllVerifications } from '@/lib/firestore/updateVerificationStatus';
 import { VerificationRequest } from '@/lib/firestore/submitVerificationRequest';
 import VerificationReviewCard from '@/components/admin/VerificationReviewCard';
-import withAdminProtection from '@/src/middleware/withAdminProtection';
+import withAdminProtection from '@/middleware/withAdminProtection';
 import { 
   Shield, 
   Clock, 
