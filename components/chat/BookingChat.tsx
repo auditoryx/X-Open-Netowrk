@@ -84,7 +84,6 @@ const BookingChat: React.FC<{ bookingId: string }> = ({ bookingId }) => {
   };
 
   return (
-  return (
     <div className="flex flex-col h-full max-h-96 bg-white rounded-lg shadow-sm border">
       {/* Chat Header */}
       <div className="px-4 py-3 border-b bg-gray-50 rounded-t-lg">

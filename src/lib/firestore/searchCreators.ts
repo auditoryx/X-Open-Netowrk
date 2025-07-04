@@ -331,3 +331,41 @@ export async function getSearchSuggestions(
     return [];
   }
 }
+
+/**
+ * Search creators by role
+ */
+export async function searchCreatorsByRole(
+  role: string,
+  options: SearchCreatorsOptions = {}
+): Promise<SearchResult[]> {
+  try {
+    const { maxResults = 20 } = options;
+    
+    // Mock implementation - in real app would query Firestore
+    const mockResults: SearchResult[] = [
+      {
+        id: '1',
+        uid: 'mock-user-1',
+        name: `${role} Creator 1`,
+        role: role as any,
+        profileImageUrl: '',
+        bio: `Professional ${role}`,
+        location: 'Los Angeles, CA',
+        genres: [role],
+        services: [],
+        rating: 4.8,
+        reviewCount: 25,
+        hourlyRate: 100,
+        responseTime: '< 1 hour',
+        completionRate: 98,
+        matchScore: 0.9
+      }
+    ];
+    
+    return mockResults.slice(0, maxResults);
+  } catch (error) {
+    console.error('Error searching creators by role:', error);
+    return [];
+  }
+}

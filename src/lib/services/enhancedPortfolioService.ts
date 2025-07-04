@@ -630,3 +630,44 @@ class EnhancedPortfolioService {
 }
 
 export const enhancedPortfolioService = new EnhancedPortfolioService();
+
+/**
+ * Upload portfolio media files to Firebase Storage
+ * @param creatorId - The creator's ID
+ * @param file - The file to upload
+ * @param metadata - Optional metadata for the file
+ * @returns Promise<string> - The download URL
+ */
+export async function uploadPortfolioMedia(
+  creatorId: string,
+  file: File,
+  metadata?: { category?: string; subcategory?: string }
+): Promise<string> {
+  try {
+    // Generate unique filename
+    const timestamp = Date.now();
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `${timestamp}-${Math.random().toString(36).substring(2)}.${fileExtension}`;
+    
+    // Create storage reference
+    const storageRef = ref(storage, `portfolio/${creatorId}/${fileName}`);
+    
+    // Upload file
+    const snapshot = await uploadBytes(storageRef, file, {
+      customMetadata: {
+        category: metadata?.category || 'general',
+        subcategory: metadata?.subcategory || 'other',
+        uploadedBy: creatorId,
+        uploadedAt: new Date().toISOString()
+      }
+    });
+    
+    // Get download URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    
+    return downloadURL;
+  } catch (error) {
+    console.error('Error uploading portfolio media:', error);
+    throw new Error('Failed to upload portfolio media');
+  }
+}

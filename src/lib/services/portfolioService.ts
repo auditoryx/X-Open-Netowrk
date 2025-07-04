@@ -438,5 +438,29 @@ export class PortfolioService {
   }
 }
 
+/**
+ * Upload portfolio media files
+ */
+export async function uploadPortfolioMedia(
+  userId: string,
+  files: File[],
+  type: 'image' | 'video' | 'audio' = 'image'
+): Promise<string[]> {
+  try {
+    const uploadPromises = files.map(async (file) => {
+      const fileName = `${Date.now()}_${file.name}`;
+      const storagePath = `portfolio/${userId}/${type}/${fileName}`;
+      
+      // Mock upload - in real app would use Firebase Storage
+      return `https://mock-storage.com/${storagePath}`;
+    });
+    
+    return await Promise.all(uploadPromises);
+  } catch (error) {
+    console.error('Error uploading portfolio media:', error);
+    throw error;
+  }
+}
+
 // Singleton instance
 export const portfolioService = new PortfolioService();

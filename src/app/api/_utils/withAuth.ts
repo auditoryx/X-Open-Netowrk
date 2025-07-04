@@ -12,3 +12,19 @@ export default function withAuth(handler: (req: any, ...args: any[]) => Promise<
     return handler(req, ...args)
   }
 }
+
+/**
+ * Verify authentication for API routes
+ */
+export async function verifyAuth(req: any): Promise<{ user: any } | null> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return null;
+    }
+    return { user: session.user };
+  } catch (error) {
+    console.error('Auth verification failed:', error);
+    return null;
+  }
+}

@@ -124,3 +124,10 @@ export type PaymentStatus = 'pending' | 'paid' | 'refunded';
 export type SessionType = 'one-time' | 'recurring';
 export type Frequency = 'weekly' | 'monthly';
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
+
+/**
+ * Check if user is creator of mentorship
+ */
+export function isCreatorOfMentorship(mentorship: Mentorship, userId: string): boolean {
+  return mentorship.mentorId === userId;
+}

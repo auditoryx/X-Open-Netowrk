@@ -179,3 +179,45 @@ export async function updateMentorship(
     throw new Error('Failed to update mentorship');
   }
 }
+
+// Re-export needed Firestore functions
+export { getDoc, doc } from 'firebase/firestore';
+
+/**
+ * Toggle mentorship active status
+ */
+export async function toggleMentorshipActive(mentorshipId: string, isActive: boolean): Promise<void> {
+  try {
+    const mentorshipRef = doc(db, 'mentorshipServices', mentorshipId);
+    await updateDoc(mentorshipRef, {
+      isActive,
+      updatedAt: new Date()
+    });
+  } catch (error) {
+    console.error('Error toggling mentorship status:', error);
+    throw error;
+  }
+}
+
+/**
+ * Check if a user is the creator of a mentorship
+ * @param mentorshipId - The mentorship ID
+ * @param userId - The user ID to check
+ * @returns Promise<boolean> - Whether the user is the creator
+ */
+export async function isCreatorOfMentorship(mentorshipId: string, userId: string): Promise<boolean> {
+  try {
+    const mentorshipRef = doc(db, 'mentorships', mentorshipId);
+    const mentorshipDoc = await getDoc(mentorshipRef);
+    
+    if (!mentorshipDoc.exists()) {
+      return false;
+    }
+    
+    const mentorshipData = mentorshipDoc.data();
+    return mentorshipData.mentorId === userId;
+  } catch (error) {
+    console.error('Error checking mentorship creator:', error);
+    return false;
+  }
+}

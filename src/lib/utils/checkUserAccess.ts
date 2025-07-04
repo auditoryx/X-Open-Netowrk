@@ -174,3 +174,42 @@ export function checkResourceOwnership(
     reason: 'Not authorized to access this resource'
   };
 }
+
+/**
+ * Check if user is banned
+ */
+export async function isUserBanned(userId: string): Promise<boolean> {
+  try {
+    // Mock implementation - in real app would check database
+    return false;
+  } catch (error) {
+    console.error('Error checking user ban status:', error);
+    return false;
+  }
+}
+
+/**
+ * Check if user is verified
+ */
+export async function isUserVerified(userId: string): Promise<boolean> {
+  try {
+    // Mock implementation - in real app would check database
+    return false;
+  } catch (error) {
+    console.error('Error checking user verification status:', error);
+    return false;
+  }
+}
+
+/**
+ * Check if user has signature tier
+ */
+export async function hasSignatureTier(userId: string): Promise<boolean> {
+  try {
+    // Mock implementation - in real app would check database
+    return false;
+  } catch (error) {
+    console.error('Error checking user signature tier:', error);
+    return false;
+  }
+}

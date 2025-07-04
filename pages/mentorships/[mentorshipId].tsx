@@ -2,8 +2,9 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Mentorship, isCreatorOfMentorship } from '@/lib/types/Mentorship';
-import { doc, getDoc, toggleMentorshipActive } from '@/lib/firestore/createMentorshipService';
-// Firebase admin is server-side only
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { toggleMentorshipActive } from '@/lib/firestore/createMentorshipService';
 import MentorshipBookingForm from '@/components/forms/MentorshipBookingForm';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -25,7 +26,7 @@ export default function MentorshipDetailPage() {
   
   const fetchMentorship = async (id: string) => {
     try {
-      const mentorshipDoc = await getDoc(doc(firestore, 'mentorships', id));
+      const mentorshipDoc = await getDoc(doc(db, 'mentorships', id));
       
       if (!mentorshipDoc.exists()) {
         toast.error('Mentorship not found');

@@ -99,3 +99,4 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({
 };
 
 export default SkeletonCard;
+export { SkeletonCard };

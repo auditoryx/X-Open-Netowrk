@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, Filter, Trending, Star, MapPin, Music, User, Clock, Bookmark } from 'lucide-react';
+import { Search, Filter, TrendingUp as Trending, Star, MapPin, Music, User, Clock, Bookmark } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { AdvancedSearchService, SearchSuggestion, SmartRecommendation } from '@/lib/services/advancedSearchService';
 import { useAuth } from '@/lib/hooks/useAuth';

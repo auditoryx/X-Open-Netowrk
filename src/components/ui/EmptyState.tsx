@@ -228,3 +228,4 @@ export const NoMessages: React.FC<{ onExplore?: () => void }> = ({ onExplore }) 
 );
 
 export default EmptyState;
+export { EmptyState };

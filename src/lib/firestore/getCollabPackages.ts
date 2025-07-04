@@ -130,6 +130,47 @@ export async function getCollabPackagesForUser(
 }
 
 /**
+ * Get collaboration packages for a user
+ */
+export async function getCollabPackages(
+  userId: string,
+  filters: CollabPackageFilters = {}
+): Promise<CollabPackage[]> {
+  try {
+    const { status, category, maxResults = 50 } = filters;
+    
+    // Mock implementation - in real app would query Firestore
+    const mockPackages: CollabPackage[] = [
+      {
+        id: 'mock-package-1',
+        creatorId: userId,
+        title: 'Studio Session Package',
+        description: 'Professional recording session with mixing',
+        category: 'recording',
+        price: 500,
+        duration: 4,
+        status: 'active',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isActive: true,
+        tags: ['recording', 'mixing'],
+        locations: ['Los Angeles, CA'],
+        equipment: ['Pro Tools', 'SSL Console'],
+        deliverables: ['Mixed Track', 'Stems'],
+        bookings: 0,
+        rating: 0,
+        reviewCount: 0
+      }
+    ];
+    
+    return mockPackages.slice(0, maxResults);
+  } catch (error) {
+    console.error('Error getting collab packages:', error);
+    return [];
+  }
+}
+
+/**
  * Get public collaboration packages with filters
  */
 export async function getPublicCollabPackages(

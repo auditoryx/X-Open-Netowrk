@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createEventTeamBooking } from '@/lib/firestore/createEventTeamBooking';
 import { useAuth } from '@/lib/hooks/useAuth';
 import toast from 'react-hot-toast';
