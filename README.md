@@ -178,6 +178,65 @@ FIREBASE_CLIENT_EMAIL=your_service_account_email
 FIREBASE_PRIVATE_KEY=your_private_key
 ```
 
+## 🔄 CI/CD Pipeline
+
+AuditoryX uses GitHub Actions for automated testing and deployment.
+
+### Workflow Overview
+- **Linting & Type Checking** - ESLint and TypeScript validation
+- **Unit Testing** - Jest with coverage reporting
+- **End-to-End Testing** - Playwright automated browser tests
+- **Security Audits** - Dependency vulnerability scanning
+- **Automated Deployment** - Staging and production deployments
+
+### Pipeline Triggers
+- **Pull Requests** - Full test suite runs on all PRs
+- **Main Branch** - Automatic deployment to production
+- **Develop Branch** - Automatic deployment to staging
+
+### Running CI Locally
+```bash
+# Run the full CI pipeline locally
+npm run lint          # Code linting
+npm run type-check     # TypeScript validation
+npm run test:coverage  # Unit tests with coverage
+npm run test:e2e       # End-to-end tests
+npm run build          # Production build
+```
+
+### Coverage Requirements
+- **Minimum 70% code coverage** for all new code
+- **90%+ accessibility score** on key user flows
+- **Zero high-severity security vulnerabilities**
+
+### Deployment Process
+1. Code merged to main/develop
+2. Automated tests run
+3. Build and security checks pass
+4. Automatic deployment to respective environment
+5. Post-deployment health checks
+
+## 🛡️ Security & Monitoring
+
+### Error Monitoring
+AuditoryX uses **Sentry** for comprehensive error tracking:
+- Real-time error reporting
+- Performance monitoring
+- User session replay
+- Custom error boundaries
+
+Access the Sentry dashboard at your configured Sentry project URL.
+
+### Accessibility Compliance
+Run accessibility audits on key user flows:
+```bash
+# Run automated accessibility audit
+./scripts/accessibility-audit.sh
+
+# Target: 90%+ accessibility score
+# Covers: Homepage, booking flow, dashboard, profile pages
+```
+
 ## 🧪 Testing
 
 ### Unit Tests
