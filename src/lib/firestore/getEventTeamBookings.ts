@@ -1,10 +1,9 @@
 import { db } from '@/lib/firebase';
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, getDoc, doc } from 'firebase/firestore';
 import { EventBooking } from '@/lib/types/EventBooking';
-import { collection, query, where, getDocs, getDoc, doc, orderBy } from 'firebase/firestore';
 
 export async function getEventTeamBookings(uid: string): Promise<EventBooking[]> {
-  const eventsCollection = collection(firestore, 'events');
+  const eventsCollection = collection(db, 'events');
   
   // Get events where user is either the client or a team member
   const clientQuery = query(
