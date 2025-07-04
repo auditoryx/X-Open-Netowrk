@@ -1,4 +1,5 @@
-import { firestore } from '@/lib/firebase/firebaseAdmin';
+import { db } from '@/lib/firebase';
+import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { EventBooking } from '@/lib/types/EventBooking';
 import { collection, query, where, getDocs, getDoc, doc, orderBy } from 'firebase/firestore';
 
