@@ -4,15 +4,20 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
+    "type-check": "tsc --noEmit",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "clean": "rm -rf .next",
     "seed:services": "ts-node scripts/seedServiceTemplates.ts",
     "cypress": "cypress run --browser chrome --headless",
     "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
     "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
-    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage",
-    "lint": "next lint"
+    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
