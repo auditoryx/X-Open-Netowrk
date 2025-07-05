@@ -22,8 +22,8 @@ const nextConfig = {
     }
     return config;
   },
-  experimental: {
-    esmExternals: false,
+  images: {
+    formats: ['image/webp', 'image/avif'],
   },
 };
 
