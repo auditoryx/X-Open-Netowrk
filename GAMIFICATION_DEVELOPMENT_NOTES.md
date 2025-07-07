@@ -332,3 +332,81 @@ import { serverTimestamp } from 'firebase/firestore';
 10. **Test thoroughly** before any production deployment
 
 This system is designed to be **robust, scalable, and maintainable** while providing engaging gamification features that drive user engagement and platform growth.
+
+## Badge System Development Notes
+
+### Badge Service Implementation (Phase 2A Complete)
+
+#### Key Patterns and Architecture Decisions
+```typescript
+// Singleton pattern for badge service
+export const badgeService = BadgeService.getInstance();
+
+// Badge definitions stored both in memory and Firestore
+// Memory cache for performance, Firestore for persistence
+private badgeDefinitions: Map<string, BadgeDefinition> = new Map();
+
+// Auto-awarding integrated into XP flow
+if (result.success && result.xpAwarded > 0) {
+  const badgeResult = await badgeService.checkAndAwardBadges(userId, event, metadata);
+}
+```
+
+#### Testing Patterns for Badge System
+```typescript
+// Mock Firestore functions for badge tests
+jest.mock('firebase/firestore', () => ({
+  collection: jest.fn(),
+  doc: jest.fn(),
+  setDoc: jest.fn(),
+  getDoc: jest.fn(),
+  getDocs: jest.fn(),
+  runTransaction: jest.fn(),
+  Timestamp: { now: jest.fn(() => ({ toMillis: () => Date.now() })) }
+}));
+
+// Mock badge service dependencies
+jest.mock('../xpService', () => ({
+  xpService: {
+    getUserProgress: jest.fn(),
+    getUserXPHistory: jest.fn()
+  }
+}));
+```
+
+#### Badge Auto-Awarding Best Practices
+1. **Non-blocking**: Badge checking never blocks XP awarding
+2. **Error resilient**: Badge failures are logged but don't propagate
+3. **Performance**: Definitions cached in memory, async checking
+4. **Audit trail**: All badge awards logged with metadata
+5. **Duplicate prevention**: Transaction-based awarding prevents double awards
+
+#### Firestore Schema Decisions
+```javascript
+// User badges use composite document IDs for efficient queries
+userBadges/{userId}_{badgeId}
+
+// Badge definitions separate from user data for shared access
+badgeDefinitions/{badgeId}
+
+// Progress calculated on-demand vs stored for real-time accuracy
+```
+
+#### Integration Points Established
+- Enhanced XP Service: Badge checking after successful XP awards
+- Booking completion: Session Starter and Studio Regular badges
+- Review submission: Certified Mix badge
+- Future: Tier progression for Verified Pro badge
+
+#### Performance Considerations
+- Badge definitions loaded once and cached
+- Progress calculations use existing XP history data
+- Badge checking runs after XP transaction completes
+- No impact on critical booking/review flows
+
+#### Next Phase 2B: Badge UI Components
+Ready for implementation:
+- BadgeGrid and BadgeCard components
+- Profile integration points identified
+- Badge notification system patterns established
+- Progress tracking UI requirements defined

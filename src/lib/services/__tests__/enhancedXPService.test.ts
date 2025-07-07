@@ -143,4 +143,90 @@ describe('EnhancedXPService', () => {
       expect(true).toBe(true);
     });
   });
+
+  describe('Badge Integration', () => {
+    it('should check and award badges after successful XP award', async () => {
+      // Mock successful XP award
+      (xpValidationService.validateAndAwardXP as jest.Mock).mockResolvedValue({
+        success: true,
+        xpAwarded: 100,
+        message: 'XP awarded successfully'
+      });
+
+      // Mock badge checking
+      const mockBadgeService = {
+        checkAndAwardBadges: jest.fn().mockResolvedValue({
+          success: true,
+          badgesAwarded: ['session_starter'],
+          message: 'Badge awarded'
+        })
+      };
+
+      // Replace the import with our mock
+      jest.doMock('../badgeService', () => ({
+        badgeService: mockBadgeService
+      }));
+
+      const result = await enhancedXPService.awardXP(mockUserId, 'bookingCompleted', {
+        bookingId: 'test-booking-123'
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.xpAwarded).toBe(100);
+      expect(result.badges).toEqual(['session_starter']);
+      expect(mockBadgeService.checkAndAwardBadges).toHaveBeenCalledWith(
+        mockUserId,
+        'bookingCompleted',
+        expect.objectContaining({
+          bookingId: 'test-booking-123',
+          xpAwarded: 100
+        })
+      );
+    });
+
+    it('should continue XP award even if badge checking fails', async () => {
+      (xpValidationService.validateAndAwardXP as jest.Mock).mockResolvedValue({
+        success: true,
+        xpAwarded: 100,
+        message: 'XP awarded successfully'
+      });
+
+      // Mock badge service to throw error
+      const mockBadgeService = {
+        checkAndAwardBadges: jest.fn().mockRejectedValue(new Error('Badge service error'))
+      };
+
+      jest.doMock('../badgeService', () => ({
+        badgeService: mockBadgeService
+      }));
+
+      const result = await enhancedXPService.awardXP(mockUserId, 'bookingCompleted');
+
+      expect(result.success).toBe(true);
+      expect(result.xpAwarded).toBe(100);
+      expect(result.badges).toBeUndefined();
+    });
+
+    it('should not check badges if XP award fails', async () => {
+      (xpValidationService.validateAndAwardXP as jest.Mock).mockResolvedValue({
+        success: false,
+        xpAwarded: 0,
+        message: 'XP award failed'
+      });
+
+      const mockBadgeService = {
+        checkAndAwardBadges: jest.fn()
+      };
+
+      jest.doMock('../badgeService', () => ({
+        badgeService: mockBadgeService
+      }));
+
+      const result = await enhancedXPService.awardXP(mockUserId, 'bookingCompleted');
+
+      expect(result.success).toBe(false);
+      expect(result.xpAwarded).toBe(0);
+      expect(mockBadgeService.checkAndAwardBadges).not.toHaveBeenCalled();
+    });
+  });
 });

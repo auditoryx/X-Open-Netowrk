@@ -1,10 +1,11 @@
 import { xpService, XPEvent } from './xpService';
 import { xpValidationService } from './xpValidationService';
 import { performanceMonitoringService } from './performanceMonitoringService';
+import { badgeService } from './badgeService';
 
 /**
- * Enhanced XP Service with validation and performance monitoring
- * This wraps the core XP service with additional validation layers
+ * Enhanced XP Service with validation, monitoring, and badge integration
+ * Wraps core XP service with additional features for production use
  */
 export class EnhancedXPService {
   private static instance: EnhancedXPService;
@@ -17,7 +18,7 @@ export class EnhancedXPService {
   }
 
   /**
-   * Award XP with comprehensive validation and monitoring
+   * Award XP with validation, monitoring, and badge checking
    */
   async awardXP(
     userId: string,
@@ -34,6 +35,7 @@ export class EnhancedXPService {
     dailyCapReached: boolean;
     message: string;
     validationBypass?: boolean;
+    badges?: string[];
   }> {
     return await performanceMonitoringService.measureXPOperation(
       'enhanced_xp_award',
@@ -58,6 +60,27 @@ export class EnhancedXPService {
 
         // Award XP using core service
         const result = await xpService.awardXP(userId, event, options);
+
+        // Check and award badges after successful XP award
+        if (result.success && result.xpAwarded > 0) {
+          try {
+            const badgeResult = await badgeService.checkAndAwardBadges(
+              userId,
+              event,
+              { ...options.metadata, xpAwarded: result.xpAwarded }
+            );
+
+            if (badgeResult.success && badgeResult.badgesAwarded.length > 0) {
+              return {
+                ...result,
+                badges: badgeResult.badgesAwarded
+              };
+            }
+          } catch (error) {
+            console.error('Error checking badges after XP award:', error);
+            // Don't fail the XP award if badge checking fails
+          }
+        }
 
         return {
           ...result,
