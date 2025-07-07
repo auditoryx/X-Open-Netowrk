@@ -12,6 +12,7 @@ import { RankProgress } from '@/components/dashboard/RankProgress';
 import CollabStatsWidget from '@/components/dashboard/collab/CollabStatsWidget';
 import XPWidget from '@/components/gamification/XPWidget';
 import BadgeProgress from '@/components/gamification/BadgeProgress';
+import LeaderboardWidget from '@/components/rankings/LeaderboardWidget';
 import { VerificationStatusWidget } from '@/components/verification/VerificationStatusWidget';
 import { useBadgeData } from '@/lib/hooks/useBadgeData';
 import { useVerificationData } from '@/lib/hooks/useVerificationData';
@@ -61,7 +62,7 @@ export default function DashboardHomePage() {
       {userData?.uid && (
         <section>
           <h2 className="text-xl font-bold mb-4">Your Progress</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <XPWidget showHistory={true} />
             
             <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
@@ -92,6 +93,14 @@ export default function DashboardHomePage() {
                 className="bg-transparent border-0"
               />
             </div>
+
+            {/* Leaderboard Widget */}
+            <LeaderboardWidget 
+              className="bg-neutral-800 border-neutral-700"
+              showHeader={true}
+              maxEntries={5}
+              category="global"
+            />
           </div>
         </section>
       )}
