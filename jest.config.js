@@ -1,16 +1,27 @@
 require("dotenv").config({ path: ".env.test" });
-/** @type {import('ts-jest').JestConfigWithTsJest} */
+
+/** @type {import('jest').Config} */
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.spec.ts', '**/__tests__/**/*.test.tsx', '**/__tests__/**/*.spec.tsx'],
+  testMatch: [
+    '**/__tests__/**/*.test.ts', 
+    '**/__tests__/**/*.spec.ts', 
+    '**/__tests__/**/*.test.tsx', 
+    '**/__tests__/**/*.spec.tsx'
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@lib/(.*)$': '<rootDir>/lib/$1'
+    '^@lib/(.*)$': '<rootDir>/lib/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': 'jest-transform-stub'
   },
   transform: {
     '^.+\\.(ts|tsx)$': 'babel-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(.*\\.mjs$))'
+  ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   
   // Coverage configuration

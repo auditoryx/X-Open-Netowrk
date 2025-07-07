@@ -36,16 +36,16 @@ const XP_VALUES = {
 - [x] Unit tests for XP calculations
 
 ### **Week 1B: Basic XP Display**
-- [ ] Add XP display to user profiles
-- [ ] Create XP progress component
-- [ ] Show XP in dashboard
-- [ ] Add XP gained notifications (toast messages)
+- [x] Add XP display to user profiles
+- [x] Create XP progress component
+- [x] Show XP in dashboard
+- [x] Add XP gained notifications (toast messages)
 
 **Deliverables**:
-- [ ] `XPDisplay` component
-- [ ] `XPProgressBar` component  
-- [ ] Integration with existing profile pages
-- [ ] XP notification system
+- [x] `XPDisplay` component
+- [x] `XPProgressBar` component  
+- [x] Integration with existing profile pages
+- [x] XP notification system
 
 ### **Week 2A: Admin XP Controls**
 - [ ] Build admin XP dashboard
