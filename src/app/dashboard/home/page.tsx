@@ -10,6 +10,7 @@ import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
 import { RankProgress } from '@/components/dashboard/RankProgress';
 import CollabStatsWidget from '@/components/dashboard/collab/CollabStatsWidget';
+import XPWidget from '@/components/gamification/XPWidget';
 import Link from 'next/link';
 import { MessageCircle, Bell, Calendar, Settings, Shield, Users } from 'lucide-react';
 
@@ -49,6 +50,14 @@ export default function DashboardHomePage() {
   return (
     <div className="p-6 text-white space-y-8">
       <NotificationsPanel />
+      
+      {/* XP Widget */}
+      {userData?.uid && (
+        <section>
+          <h2 className="text-xl font-bold mb-4">Your Progress</h2>
+          <XPWidget showHistory={true} className="max-w-md mx-auto lg:mx-0" />
+        </section>
+      )}
       
       {/* Quick Navigation Cards */}
       <section>
