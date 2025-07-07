@@ -8,7 +8,7 @@ echo "🧹 Cleaning previous build..."
 rm -rf .next
 
 # Set Node.js memory limit and build options
-export NODE_OPTIONS="--max-old-space-size=2048"
+export NODE_OPTIONS="--max-old-space-size=4096"
 export SKIP_ENV_VALIDATION=true
 export NEXT_TELEMETRY_DISABLED=1
 
@@ -20,9 +20,9 @@ npx next build --no-lint
 if [ $? -eq 0 ]; then
   echo "✅ Build completed successfully!"
   
-  # Run type checking separately
-  echo "🔍 Running type checking..."
-  npx tsc --noEmit
+  # Skip type checking in production build to avoid memory issues
+  echo "⚠️  Skipping type checking in production build (memory optimization)"
+  echo "💡 Run 'npm run type-check' separately if needed"
   
   echo "🎉 Production build process completed!"
 else

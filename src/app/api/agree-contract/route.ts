@@ -11,27 +11,35 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-  const body = await req.json();
-  const parsed = schema.safeParse(body);
+    const body = await req.json();
+    const parsed = schema.safeParse(body);
 
-  if (!parsed.success) {
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Invalid input', issues: parsed.error.format() },
+        { status: 400 }
+      );
+    }
+
+    const { bookingId, role } = parsed.data;
+    const result = await agreeToContract(bookingId, role, session.user.id);
+
+    if (result.success) {
+      await logActivity(session.user.id, 'contract_agreed', { bookingId, role });
+    }
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('Agreement API error:', error);
     return NextResponse.json(
-      { error: 'Invalid input', issues: parsed.error.format() },
-      { status: 400 }
+      { error: 'Internal server error' },
+      { status: 500 }
     );
   }
-
-  const { bookingId, role } = parsed.data;
-  const result = await agreeToContract(bookingId, role, session.user.id);
-
-  if (result.success) {
-    await logActivity(session.user.id, 'contract_agreed', { bookingId, role });
-  }
-
-  return NextResponse.json(result);
 }
