@@ -11,11 +11,13 @@ import '@fontsource/inter/700.css';
 import '@/styles/globals.css';
 import Navbar from '@/components/Navbar';
 import StreakToast from '@/components/gamification/StreakToast';
+import VerificationNotificationManager from '@/components/verification/VerificationNotificationManager';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { CartProvider } from '@/context/CartContext';
 import QueryProvider from '@/providers/QueryProvider';
+import { VerificationProvider } from '@/providers/VerificationProvider';
 import { ProgressiveOnboardingProvider } from '@/components/onboarding/ProgressiveOnboarding';
 import OnboardingManager from '@/components/onboarding/OnboardingManager';
 
@@ -41,15 +43,18 @@ export default function RootLayout({
           <LanguageProvider>
             <CartProvider>
               <QueryProvider>
-                <ProgressiveOnboardingProvider>
-                  <Navbar />
-                  <StreakToast />
-                  <Toaster position="top-center" />
-                  <OnboardingManager />
-                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {children}
-                  </div>
-                </ProgressiveOnboardingProvider>
+                <VerificationProvider>
+                  <ProgressiveOnboardingProvider>
+                    <Navbar />
+                    <StreakToast />
+                    <VerificationNotificationManager />
+                    <Toaster position="top-center" />
+                    <OnboardingManager />
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                      {children}
+                    </div>
+                  </ProgressiveOnboardingProvider>
+                </VerificationProvider>
               </QueryProvider>
             </CartProvider>
           </LanguageProvider>
