@@ -410,3 +410,79 @@ Ready for implementation:
 - Profile integration points identified
 - Badge notification system patterns established
 - Progress tracking UI requirements defined
+
+## 🔧 **Verification System Patterns**
+
+### **Eligibility Checking Architecture**
+```typescript
+// Standard pattern for eligibility checking
+async checkEligibility(userId: string): Promise<EligibilityResult> {
+  // 1. Gather all required data in parallel where possible
+  const [userProgress, userData, bookingHistory] = await Promise.all([
+    xpService.getUserProgress(userId),
+    getUserData(userId),
+    getBookingHistory(userId)
+  ]);
+
+  // 2. Calculate each criterion individually
+  const criteria = {
+    xp: { met: userProgress.totalXP >= this.criteria.minimumXP, ... },
+    profile: { met: calculateCompleteness(userData) >= 90, ... },
+    // ... other criteria
+  };
+
+  // 3. Return comprehensive result with next steps
+  return {
+    isEligible: Object.values(criteria).every(c => c.met),
+    criteria,
+    nextSteps: generateNextSteps(criteria)
+  };
+}
+```
+
+### **Auto-Trigger Integration**
+```typescript
+// Pattern for seamless integration with existing flows
+try {
+  await verificationService.autoTriggerApplication(userId);
+} catch (verificationError) {
+  console.error('Error auto-triggering verification:', verificationError);
+  // NEVER fail parent operation if verification fails
+}
+```
+
+**Integration Rules:**
+- ✅ Always use try-catch for verification operations
+- ✅ Never block core flows (XP, badges) if verification fails
+- ✅ Log errors but continue normal operation
+- ✅ Check eligibility before attempting application
+
+### **Admin Workflow Pattern**
+```typescript
+// Transactional pattern for admin operations
+async reviewApplication(applicationId, adminId, decision) {
+  return await runTransaction(db, async (transaction) => {
+    // 1. Validate application exists and is pending
+    const app = await transaction.get(appRef);
+    if (!app.exists() || app.data().status !== 'pending') {
+      throw new Error('Invalid application state');
+    }
+
+    // 2. Update application status
+    transaction.update(appRef, { status: decision, reviewedBy: adminId });
+
+    // 3. If approved, update user tier
+    if (decision === 'approve') {
+      transaction.update(userRef, { tier: 'verified' });
+    }
+
+    return { success: true };
+  });
+}
+```
+
+**Admin Operation Rules:**
+- ✅ Use Firestore transactions for multi-document updates
+- ✅ Validate state before making changes
+- ✅ Log all admin actions for audit trail
+- ✅ Award "Verified Pro" badge on approval

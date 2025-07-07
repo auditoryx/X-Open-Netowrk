@@ -2,6 +2,7 @@ import { xpService, XPEvent } from './xpService';
 import { xpValidationService } from './xpValidationService';
 import { performanceMonitoringService } from './performanceMonitoringService';
 import { badgeService } from './badgeService';
+import { verificationService } from './verificationService';
 
 /**
  * Enhanced XP Service with validation, monitoring, and badge integration
@@ -69,6 +70,14 @@ export class EnhancedXPService {
               event,
               { ...options.metadata, xpAwarded: result.xpAwarded }
             );
+
+            // Auto-trigger verification application if user might be eligible
+            try {
+              await verificationService.autoTriggerApplication(userId);
+            } catch (verificationError) {
+              console.error('Error auto-triggering verification:', verificationError);
+              // Don't fail the XP award if verification check fails
+            }
 
             if (badgeResult.success && badgeResult.badgesAwarded.length > 0) {
               // Trigger badge notification event for UI
@@ -229,6 +238,35 @@ export class EnhancedXPService {
         performanceMs: Date.now() - startTime
       };
     }
+  }
+
+  /**
+   * Get user verification status
+   */
+  async getUserVerificationStatus(userId: string) {
+    return await performanceMonitoringService.measureXPOperation(
+      'get_verification_status',
+      () => verificationService.getUserVerificationStatus(userId),
+      userId
+    );
+  }
+
+  /**
+   * Check verification eligibility
+   */
+  async checkVerificationEligibility(userId: string) {
+    return await performanceMonitoringService.measureXPOperation(
+      'check_verification_eligibility',
+      () => verificationService.checkEligibility(userId),
+      userId
+    );
+  }
+
+  /**
+   * Get verification statistics for admin
+   */
+  async getVerificationStatistics() {
+    return await verificationService.getVerificationStatistics();
   }
 }
 

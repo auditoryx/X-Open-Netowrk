@@ -152,6 +152,24 @@ service cloud.firestore {
       allow write: if false; // Only server and admin can write badge audit logs
     }
 
+    // ✅ Verification System
+    match /verificationApplications/{applicationId} {
+      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
+      allow create: if request.auth.uid == request.resource.data.userId;
+      allow update: if request.auth.token.admin == true; // Only admins can review applications
+      allow delete: if false; // Applications cannot be deleted
+    }
+
+    match /verificationActivityLog/{logId} {
+      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
+      allow write: if false; // Only server can write verification activity logs
+    }
+
+    match /userViolations/{violationId} {
+      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
+      allow write: if request.auth.token.admin == true; // Only admins can manage violations
+    }
+
     // ✅ Default Deny All
     match /{document=**} {
       allow read: if false;
