@@ -1,4 +1,5 @@
 import { xpService, XPEvent } from '@/lib/services/xpService';
+import { EnhancedXPService } from '@/lib/services/enhancedXPService';
 
 /**
  * Enhanced XP service with automatic notifications
@@ -50,8 +51,9 @@ class XPServiceWithNotifications {
       const previousProgress = await xpService.getUserProgress(userId);
       const previousTier = previousProgress?.tier || 'standard';
 
-      // Award XP using core service
-      const result = await xpService.awardXP(userId, event, options);
+      // Award XP using enhanced service with validation
+      const enhancedXPService = EnhancedXPService.getInstance();
+      const result = await enhancedXPService.awardXP(userId, event, options);
 
       if (result.success && result.xpAwarded > 0) {
         // Trigger XP gained notification

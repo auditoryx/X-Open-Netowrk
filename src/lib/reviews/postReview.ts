@@ -5,6 +5,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { EnhancedXPService } from '@/lib/services/enhancedXPService';
 
 interface PostReviewParams {
   bookingId: string;
@@ -60,6 +61,26 @@ export async function postReview({
 
   try {
     await setDoc(reviewRef, reviewData);
+
+    // Award XP for five-star review if applicable using enhanced validation
+    if (rating === 5) {
+      const enhancedXPService = EnhancedXPService.getInstance();
+      try {
+        await enhancedXPService.awardXP(clientUid, 'fiveStarReview', {
+          contextId: `review-${bookingId}`,
+          metadata: {
+            bookingId,
+            providerId: providerUid,
+            rating,
+            reviewSubmittedAt: new Date().toISOString(),
+            source: 'review_submission'
+          }
+        });
+      } catch (xpError) {
+        console.error('Error awarding XP for five-star review:', xpError);
+        // Don't fail the review submission if XP awarding fails
+      }
+    }
   } catch (error) {
     console.error('Error posting review:', error);
     throw new Error('Failed to submit review. Please try again.');

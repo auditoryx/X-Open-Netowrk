@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
+import { EnhancedXPService } from '@/lib/services/enhancedXPService';
 
 async function notifyProvider(providerId: string, bookingId: string, rating: number) {
   const db = getFirestore(app)
@@ -84,4 +85,24 @@ export async function submitReview(review: Review) {
   await logActivity(review.clientId, 'review_submitted', {
     bookingId: review.bookingId,
   });
+
+  // Award XP for five-star review if applicable using enhanced validation
+  if (review.rating === 5) {
+    const enhancedXPService = EnhancedXPService.getInstance();
+    try {
+      await enhancedXPService.awardXP(review.clientId, 'fiveStarReview', {
+        contextId: `review-${review.bookingId}`,
+        metadata: {
+          bookingId: review.bookingId,
+          providerId: review.providerId,
+          rating: review.rating,
+          reviewSubmittedAt: new Date().toISOString(),
+          source: 'review_submission_legacy'
+        }
+      });
+    } catch (xpError) {
+      console.error('Error awarding XP for five-star review:', xpError);
+      // Don't fail the review submission if XP awarding fails
+    }
+  }
 }

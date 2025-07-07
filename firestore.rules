@@ -118,6 +118,16 @@ service cloud.firestore {
       allow write: if false; // Only server can write XP transactions
     }
 
+    match /xpAuditLog/{auditId} {
+      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
+      allow write: if false; // Only server and admin can write XP audit logs
+    }
+
+    match /adminXPOperations/{operationId} {
+      allow read, create: if request.auth.token.admin == true;
+      allow update, delete: if false; // Admin operations are immutable
+    }
+
     match /suspiciousActivity/{activityId} {
       allow read, write: if request.auth.token.admin == true;
     }

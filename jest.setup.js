@@ -23,36 +23,53 @@ jest.mock('next/link', () => {
 });
 
 // Mock Firebase
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn(),
-  getApps: jest.fn(() => []),
-  getApp: jest.fn(),
+jest.mock('@/lib/firebase', () => ({
+  app: {},
+  db: {
+    collection: jest.fn(),
+    doc: jest.fn(),
+    runTransaction: jest.fn(),
+  },
+  storage: {},
 }));
 
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(() => ({
-    currentUser: null,
-    onAuthStateChanged: jest.fn(),
-  })),
-  signInWithEmailAndPassword: jest.fn(),
-  createUserWithEmailAndPassword: jest.fn(),
-  signOut: jest.fn(),
-}));
-
+// Mock Firebase services
 jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(),
-  collection: jest.fn(),
-  doc: jest.fn(),
-  getDoc: jest.fn(),
-  getDocs: jest.fn(),
-  addDoc: jest.fn(),
-  setDoc: jest.fn(),
-  updateDoc: jest.fn(),
-  deleteDoc: jest.fn(),
-  query: jest.fn(),
-  where: jest.fn(),
-  orderBy: jest.fn(),
-  limit: jest.fn(),
+  getFirestore: jest.fn(() => ({})),
+  collection: jest.fn(() => ({})),
+  doc: jest.fn(() => ({})),
+  addDoc: jest.fn(() => Promise.resolve({ id: 'mock-doc-id' })),
+  getDocs: jest.fn(() => Promise.resolve({ docs: [] })),
+  getDoc: jest.fn(() => Promise.resolve({ exists: () => false, data: () => ({}) })),
+  setDoc: jest.fn(() => Promise.resolve()),
+  updateDoc: jest.fn(() => Promise.resolve()),
+  deleteDoc: jest.fn(() => Promise.resolve()),
+  onSnapshot: jest.fn(() => () => {}),
+  serverTimestamp: jest.fn(() => new Date()),
+  Timestamp: {
+    now: jest.fn(() => ({ toDate: () => new Date() })),
+    fromDate: jest.fn((date) => ({ toDate: () => date })),
+  },
+  runTransaction: jest.fn((db, callback) => callback({
+    get: jest.fn(() => Promise.resolve({ exists: () => false, data: () => ({}) })),
+    set: jest.fn(() => Promise.resolve()),
+    update: jest.fn(() => Promise.resolve()),
+    delete: jest.fn(() => Promise.resolve()),
+  })),
+  query: jest.fn(() => ({})),
+  where: jest.fn(() => ({})),
+  orderBy: jest.fn(() => ({})),
+  limit: jest.fn(() => ({})),
+  startAfter: jest.fn(() => ({})),
+}));
+
+// Mock Firebase auth
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(() => ({})),
+  onAuthStateChanged: jest.fn(() => () => {}),
+  signInWithEmailAndPassword: jest.fn(() => Promise.resolve({ user: { uid: 'test-uid' } })),
+  signOut: jest.fn(() => Promise.resolve()),
+  createUserWithEmailAndPassword: jest.fn(() => Promise.resolve({ user: { uid: 'test-uid' } })),
 }));
 
 // Mock React Hot Toast
