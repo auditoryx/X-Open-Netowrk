@@ -22,48 +22,48 @@ jest.mock('next/link', () => {
   };
 });
 
-// Mock auth hook
-jest.mock('@/lib/hooks/useAuth', () => ({
-  useAuth: () => ({
-    user: {
-      uid: 'test-user-id',
-      email: 'test@example.com',
-      displayName: 'Test User'
-    },
-    loading: false,
-    userData: {
-      uid: 'test-user-id',
-      role: 'artist'
-    }
-  }),
-}));
+// Mock auth hook - temporarily disabled
+// jest.mock('@/lib/hooks/useAuth', () => ({
+//   useAuth: () => ({
+//     user: {
+//       uid: 'test-user-id',
+//       email: 'test@example.com',
+//       displayName: 'Test User'
+//     },
+//     loading: false,
+//     userData: {
+//       uid: 'test-user-id',
+//       role: 'artist'
+//     }
+//   }),
+// }));
 
-// Mock Firebase
-jest.mock('@/lib/firebase', () => ({
-  db: {},
-  auth: {},
-}));
+// Mock Firebase - temporarily disabled
+// jest.mock('@/lib/firebase', () => ({
+//   db: {},
+//   auth: {},
+// }));
 
-// Mock Firestore functions
-jest.mock('firebase/firestore', () => ({
-  collection: jest.fn(),
-  query: jest.fn(),
-  where: jest.fn(),
-  orderBy: jest.fn(),
-  onSnapshot: jest.fn((q, callback) => {
-    callback({ docs: [] });
-    return jest.fn(); // unsubscribe function
-  }),
-  doc: jest.fn(),
-  updateDoc: jest.fn(),
-  getCountFromServer: jest.fn(() => Promise.resolve({ data: () => ({ count: 0 }) })),
-}));
+// Mock Firestore functions - temporarily disabled
+// jest.mock('firebase/firestore', () => ({
+//   collection: jest.fn(),
+//   query: jest.fn(),
+//   where: jest.fn(),
+//   orderBy: jest.fn(),
+//   onSnapshot: jest.fn((q, callback) => {
+//     callback({ docs: [] });
+//     return jest.fn(); // unsubscribe function
+//   }),
+//   doc: jest.fn(),
+//   updateDoc: jest.fn(),
+//   getCountFromServer: jest.fn(() => Promise.resolve({ data: () => ({ count: 0 }) })),
+// }));
 
-// Mock collab package functions
-jest.mock('@/lib/firestore/getCollabPackages', () => ({
-  getCollabPackages: jest.fn(() => Promise.resolve({ packages: [] })),
-}));
+// Mock collab package functions - temporarily disabled
+// jest.mock('@/lib/firestore/getCollabPackages', () => ({
+//   getCollabPackages: jest.fn(() => Promise.resolve({ packages: [] })),
+// }));
 
-jest.mock('@/lib/firestore/createCollabPackage', () => ({
-  archiveCollabPackage: jest.fn(() => Promise.resolve()),
-}));
+// jest.mock('@/lib/firestore/createCollabPackage', () => ({
+//   archiveCollabPackage: jest.fn(() => Promise.resolve()),
+// }));

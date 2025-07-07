@@ -107,6 +107,25 @@ service cloud.firestore {
       allow read, write: if request.auth.token.admin == true;
     }
 
+    // ✅ XP and Gamification System
+    match /userProgress/{userId} {
+      allow read: if request.auth.uid == userId || request.auth.token.admin == true;
+      allow write: if false; // Only server can write user progress
+    }
+
+    match /xpTransactions/{transactionId} {
+      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
+      allow write: if false; // Only server can write XP transactions
+    }
+
+    match /suspiciousActivity/{activityId} {
+      allow read, write: if request.auth.token.admin == true;
+    }
+
+    match /adminActions/{actionId} {
+      allow read, write: if request.auth.token.admin == true;
+    }
+
     // ✅ Default Deny All
     match /{document=**} {
       allow read: if false;

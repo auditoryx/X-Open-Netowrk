@@ -12,12 +12,13 @@ import {
   Timestamp,
 } from 'firebase/firestore'
 import { XP_VALUES } from '@/constants/gamification'
+import { xpService } from '@/lib/services/xpService'
 
 /** Creator tier type used in ranking calculations. */
 export type UserTier = 'standard' | 'verified' | 'signature'
 
 /** Maximum XP a user can earn in a single day. */
-export const DAILY_XP_CAP = 100
+export const DAILY_XP_CAP = 300 // Updated to match blueprint
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
@@ -35,6 +36,9 @@ export interface LogOptions {
 
 /**
  * Record an XP earning event for a user.
+ * 
+ * @deprecated Use xpService.awardXP() instead for new implementations
+ * This function is maintained for backward compatibility
  *
  * Returns the amount of XP actually awarded after
  * enforcing the daily cap and duplicate checks.
@@ -44,63 +48,60 @@ export async function logXpEvent(
   event: GamificationEvent,
   options: LogOptions = {}
 ) {
-  const userRef = doc(db, 'users', uid)
-  const userSnap = await getDoc(userRef)
-  const userData = userSnap.exists() ? (userSnap.data() as any) : {}
-
-  const now = Date.now()
-  const start = new Date(now)
-  start.setHours(0, 0, 0, 0)
-  const activitiesRef = collection(db, 'users', uid, 'activities')
-  if (options.contextId) {
-    const dupQ = query(activitiesRef, where('contextId', '==', options.contextId))
-    const dupSnap = await getDocs(dupQ)
-    if (!dupSnap.empty) {
-      await addDoc(collection(db, 'abuseLogs'), {
-        uid,
-        event,
-        contextId: options.contextId,
-        createdAt: serverTimestamp(),
-      })
-      return 0
+  try {
+    // Use new XP service for consistency
+    const result = await xpService.awardXP(uid, event, {
+      contextId: options.contextId,
+      metadata: { quickReply: options.quickReply }
+    })
+    
+    // Handle legacy streak logic if quickReply is specified
+    if (options.quickReply && result.success) {
+      await updateUserStreak(uid)
     }
+    
+    return result.xpAwarded
+  } catch (error) {
+    console.error('Error in logXpEvent:', error)
+    return 0
   }
-  const q = query(activitiesRef, where('createdAt', '>=', Timestamp.fromDate(start)))
-  const todaySnap = await getDocs(q)
-  const earnedToday = todaySnap.docs.reduce((sum, d) => sum + (d.data().xp || 0), 0)
+}
 
-  const remaining = Math.max(0, DAILY_XP_CAP - earnedToday)
-  const xp = XP_VALUES[event]
-  const awarded = Math.min(xp, remaining)
-
-  await addDoc(activitiesRef, {
-    xp: awarded,
-    event,
-    contextId: options.contextId,
-    createdAt: serverTimestamp(),
-  })
-
-  const last = userData.lastActivityAt?.toMillis
-    ? userData.lastActivityAt.toMillis()
-    : userData.lastActivityAt
-      ? new Date(userData.lastActivityAt).getTime()
-      : undefined
-  let streak = userData.streakCount || 0
-  if (options.quickReply) {
+/**
+ * Update user streak for quick reply events
+ * @deprecated This logic will be moved to the new XP service in future versions
+ */
+async function updateUserStreak(uid: string) {
+  try {
+    const userRef = doc(db, 'users', uid)
+    const userSnap = await getDoc(userRef)
+    
+    if (!userSnap.exists()) {
+      return
+    }
+    
+    const userData = userSnap.data()
+    const now = Date.now()
+    
+    const last = userData.lastActivityAt?.toMillis
+      ? userData.lastActivityAt.toMillis()
+      : userData.lastActivityAt
+        ? new Date(userData.lastActivityAt).getTime()
+        : undefined
+    
+    let streak = userData.streakCount || 0
+    
     if (last && now - last < DAY_MS) {
       streak += 1
     } else {
       streak = 1
     }
-  } else if (!last || now - last >= DAY_MS) {
-    streak = 0
+    
+    await updateDoc(userRef, {
+      streakCount: streak,
+      lastActivityAt: serverTimestamp(),
+    })
+  } catch (error) {
+    console.error('Error updating user streak:', error)
   }
-
-  await updateDoc(userRef, {
-    xp: (userData.xp || 0) + awarded,
-    streakCount: streak,
-    lastActivityAt: serverTimestamp(),
-  })
-
-  return awarded
 }
