@@ -71,6 +71,17 @@ export class EnhancedXPService {
             );
 
             if (badgeResult.success && badgeResult.badgesAwarded.length > 0) {
+              // Trigger badge notification event for UI
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('badges-awarded', {
+                  detail: {
+                    userId,
+                    badges: badgeResult.badgesAwarded,
+                    event
+                  }
+                }));
+              }
+
               return {
                 ...result,
                 badges: badgeResult.badgesAwarded

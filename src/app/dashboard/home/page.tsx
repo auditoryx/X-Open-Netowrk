@@ -11,12 +11,15 @@ import { ProfileTrustStats } from '@/components/profile/ProfileTrustStats';
 import { RankProgress } from '@/components/dashboard/RankProgress';
 import CollabStatsWidget from '@/components/dashboard/collab/CollabStatsWidget';
 import XPWidget from '@/components/gamification/XPWidget';
+import BadgeProgress from '@/components/gamification/BadgeProgress';
+import { useBadgeData } from '@/lib/hooks/useBadgeData';
 import Link from 'next/link';
 import { MessageCircle, Bell, Calendar, Settings, Shield, Users } from 'lucide-react';
 
 export default function DashboardHomePage() {
   const router = useRouter();
   const { user, userData } = useAuth();
+  const { badges } = useBadgeData();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -55,7 +58,26 @@ export default function DashboardHomePage() {
       {userData?.uid && (
         <section>
           <h2 className="text-xl font-bold mb-4">Your Progress</h2>
-          <XPWidget showHistory={true} className="max-w-md mx-auto lg:mx-0" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <XPWidget showHistory={true} />
+            <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4">
+              <BadgeProgress 
+                badges={badges}
+                title="Next Badges to Earn"
+                maxVisible={3}
+                showCompleted={false}
+                compact={true}
+              />
+              <div className="mt-4">
+                <Link 
+                  href="/dashboard/profile"
+                  className="text-sm text-blue-400 hover:text-blue-300 font-medium"
+                >
+                  View all badges →
+                </Link>
+              </div>
+            </div>
+          </div>
         </section>
       )}
       
