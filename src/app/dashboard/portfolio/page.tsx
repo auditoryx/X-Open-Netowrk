@@ -1,3 +1,4 @@
+import Image from 'next/image';
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -161,7 +162,7 @@ export default function PortfolioManagementPage() {
           {/* Media Preview */}
           <div className="relative aspect-video bg-neutral-700">
             {item.category === 'image' ? (
-              <img 
+              <Image 
                 src={item.thumbnailUrl || item.mediaUrl} 
                 alt={item.title}
                 className="w-full h-full object-cover"

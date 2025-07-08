@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import Image from 'next/image';
 import { BadgeProgress as BadgeProgressType } from '@/lib/services/badgeService';
 
 interface BadgeProgressProps {
@@ -112,9 +113,11 @@ function BadgeProgressItem({ badge, compact }: BadgeProgressItemProps) {
         {/* Badge Icon */}
         <div className="flex-shrink-0">
           {badge.iconUrl.startsWith('/') ? (
-            <img 
+            <Image 
               src={badge.iconUrl} 
               alt={badge.name}
+              width={32}
+              height={32}
               className="w-8 h-8 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -179,9 +182,11 @@ function BadgeProgressItem({ badge, compact }: BadgeProgressItemProps) {
           )}
           
           {badge.iconUrl.startsWith('/') ? (
-            <img 
+            <Image 
               src={badge.iconUrl} 
               alt={badge.name}
+              width={48}
+              height={48}
               className="w-12 h-12 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';

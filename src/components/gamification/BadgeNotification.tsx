@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Timestamp } from 'firebase/firestore';
 
 interface BadgeNotificationProps {
@@ -128,9 +129,11 @@ export default function BadgeNotification({
         <div className="flex justify-center mb-4">
           <div className="relative">
             {iconUrl.startsWith('/') ? (
-              <img 
+              <Image 
                 src={iconUrl} 
                 alt={name}
+                width={80}
+                height={80}
                 className="w-20 h-20 object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';

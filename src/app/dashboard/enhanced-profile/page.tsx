@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { skillsBadgeService, CreatorProfile, ExpertiseBadge, SkillCategory } from '@/lib/services/skillsBadgeService';
 import { 
@@ -313,7 +314,7 @@ function ProfileHeaderCard({ profile, editMode, onSave }: ProfileHeaderCardProps
         <div className="absolute -top-16 left-6">
           <div className="w-24 h-24 bg-white rounded-full border-4 border-white shadow-lg flex items-center justify-center">
             {profile?.avatar ? (
-              <img src={profile.avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+              <Image src={profile.avatar} alt="Avatar" width={96} height={96} className="w-full h-full rounded-full object-cover" />
             ) : (
               <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
                 <Users className="w-8 h-8 text-gray-400" />

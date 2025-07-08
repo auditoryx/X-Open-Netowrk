@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -283,7 +284,7 @@ export default function CollabPackagePage() {
                     >
                       <div className="relative">
                         {member.profileImage ? (
-                          <img
+                          <Image
                             src={member.profileImage}
                             alt={member.name}
                             className="w-12 h-12 rounded-full object-cover"

@@ -21,4 +21,5 @@ jobs:
         with:
           args: deploy --only hosting
         env:
+          NODE_ENV: production
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
