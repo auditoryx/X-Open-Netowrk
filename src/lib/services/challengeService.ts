@@ -308,7 +308,7 @@ class ChallengeService {
   /**
    * Auto-generate monthly challenges
    */
-  async generateMonthlyCharlenges(): Promise<string[]> {
+  async generateMonthlyChallenges(): Promise<string[]> {
     try {
       const currentDate = new Date();
       const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);

@@ -135,7 +135,7 @@ const ChallengeAdministration: React.FC = () => {
   const handleGenerateMonthlyChallenge = async () => {
     try {
       setIsLoading(true);
-      const challengeIds = await challengeService.generateMonthlyCharlenges();
+      const challengeIds = await challengeService.generateMonthlyChallenges();
       toast.success(`Generated ${challengeIds.length} monthly challenges`);
       await loadChallenges();
     } catch (error) {
