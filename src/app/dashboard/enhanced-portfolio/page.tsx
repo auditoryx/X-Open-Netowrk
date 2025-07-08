@@ -1,3 +1,4 @@
+import Image from 'next/image';
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -440,7 +441,7 @@ function PortfolioCard({ item, onToggleLike, onToggleFeatured }: PortfolioCardPr
       {/* Media Preview */}
       <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 rounded-t-xl">
         {item.category === 'image' && item.primaryMedia.url ? (
-          <img
+          <Image
             src={item.primaryMedia.url}
             alt={item.title}
             className="w-full h-full object-cover rounded-t-xl"

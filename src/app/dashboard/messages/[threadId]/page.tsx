@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { messageService, Message, MessageThread } from '@/lib/services/messageService';
@@ -209,9 +210,11 @@ export default function MessageThreadPage() {
                     {message.mediaUrl && (
                       <div className="mt-2">
                         {message.mediaUrl.includes('image') ? (
-                          <img 
+                          <Image 
                             src={message.mediaUrl} 
                             alt="Shared media" 
+                            width={300}
+                            height={200}
                             className="max-w-full rounded"
                           />
                         ) : (

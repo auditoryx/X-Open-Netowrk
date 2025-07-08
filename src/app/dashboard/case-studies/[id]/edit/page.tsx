@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { caseStudyService, CaseStudy } from '@/lib/services/caseStudyService';
 import { portfolioService } from '@/lib/services/portfolioService';
@@ -656,9 +657,11 @@ function SectionEditor({ section, isActive, onUpdate, onRemove, onImageUpload, u
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {section.content.images.map((url: string, index: number) => (
                   <div key={index} className="relative group">
-                    <img
+                    <Image
                       src={url}
                       alt={`Upload ${index + 1}`}
+                      width={200}
+                      height={128}
                       className="w-full h-32 object-cover rounded-lg"
                     />
                     <button
