@@ -1,0 +1,15 @@
+name: GitHub Agent
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  run-agent:
+    if: contains(github.event.label.name, 'agent')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/copilot-agent@v1
+        with:
+          github-token: ${{ secrets.GH_AGENT_TOKEN }}
