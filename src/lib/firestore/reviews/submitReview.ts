@@ -48,7 +48,8 @@ export async function submitReview(review: Review) {
   const reviewData = {
     ...review,
     createdAt: serverTimestamp(),
-    authorId: review.clientId,
+    authorId: review.clientId, // Using consistent field naming
+    targetId: review.providerId, // Using consistent field naming
   };
 
   // Write to contract thread
@@ -65,6 +66,7 @@ export async function submitReview(review: Review) {
       ...reviewData,
       providerId: review.providerId,
       authorId: review.clientId,
+      targetId: review.providerId,
     }),
     updateDoc(doc(db, 'bookings', review.bookingId), { hasReview: true }),
   ]);
