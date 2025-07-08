@@ -12,7 +12,7 @@ async function handler(req: NextRequest & { user: any }) {
 
   await addDoc(collection(db, 'reviews'), {
     bookingId,
-    reviewerId: req.user.uid,
+    reviewerUid: req.user.uid,
     reviewedId,
     text,
     rating,

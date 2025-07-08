@@ -20,7 +20,10 @@
     "cypress": "cypress run --browser chrome --headless",
     "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
     "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
-    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
+    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage",
+    "migrate:fields": "ts-node scripts/migrateFields.ts",
+    "audit:fields": "./scripts/audit-field-names.sh",
+    "test:schema": "jest --testNamePattern=\"migrateFields\" --runInBand --ci"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
@@ -122,6 +125,7 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.3.4",
+    "ts-node": "^10.9.1",
     "typescript": "^5.8.3"
   }
 }
