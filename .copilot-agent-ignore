@@ -1,0 +1,26 @@
+# Dependency folders
+node_modules/
+.next/
+.turborepo/
+dist/
+build/
+out/
+
+# Generated output
+coverage/
+backups/
+*.map
+
+# Static media assets
+public/images/**
+public/icons/**
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+
+# Editor & OS artifacts
+.idea/
+.vscode/
+.DS_Store
