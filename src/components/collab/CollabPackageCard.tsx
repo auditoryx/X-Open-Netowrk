@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { CollabPackage, getPackageMembers, formatPackageDuration, formatPackagePrice } from '@/src/lib/types/CollabPackage';
 import { 
   Music, 
@@ -111,9 +112,11 @@ export function CollabPackageCard({
                     title={`${member.name} (${member.role})`}
                   >
                     {member.profileImage ? (
-                      <img
+                      <Image
                         src={member.profileImage}
                         alt={member.name}
+                        width={32}
+                        height={32}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -249,9 +252,11 @@ export function CollabPackageCard({
                 >
                   <div className="relative">
                     {member.profileImage ? (
-                      <img
+                      <Image
                         src={member.profileImage}
                         alt={member.name}
+                        width={32}
+                        height={32}
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     ) : (

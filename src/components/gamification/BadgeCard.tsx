@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import Image from 'next/image';
 import { Timestamp } from 'firebase/firestore';
 
 interface BadgeCardProps {
@@ -133,9 +134,11 @@ export default function BadgeCard({
         {/* Badge Icon */}
         <div className="flex-shrink-0 mb-2">
           {iconUrl.startsWith('/') ? (
-            <img 
+            <Image 
               src={iconUrl} 
               alt={name}
+              width={48}
+              height={48}
               className={`${sizeStyle.icon} object-contain`}
               onError={(e) => {
                 // Fallback to emoji icon if image fails to load

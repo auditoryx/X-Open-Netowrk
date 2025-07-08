@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { caseStudyService, CaseStudy, CaseStudyTemplate } from '@/lib/services/caseStudyService';
 import { 
@@ -395,9 +396,11 @@ function CaseStudyCard({ caseStudy, onToggleFeatured, onTogglePublish, onDelete 
       {/* Thumbnail */}
       <div className="relative h-48 bg-gradient-to-br from-blue-50 to-purple-50 rounded-t-xl">
         {caseStudy.afterImages?.[0] ? (
-          <img
+          <Image
             src={caseStudy.afterImages[0]}
             alt={caseStudy.title}
+            width={400}
+            height={192}
             className="w-full h-full object-cover rounded-t-xl"
           />
         ) : (

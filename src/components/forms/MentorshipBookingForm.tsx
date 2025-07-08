@@ -156,18 +156,3 @@ export default function MentorshipBookingForm({
     </div>
   );
 }
-
-// Helper function to create mentorship booking
-async function createMentorshipBooking(bookingData: Omit<MentorshipBooking, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
-  const { db } = await import('@/lib/firebase');
-  const { collection, addDoc } = await import('firebase/firestore');
-  
-  const booking = {
-    ...bookingData,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-
-  const docRef = await addDoc(collection(db, 'mentorshipBookings'), booking);
-  return docRef.id;
-}

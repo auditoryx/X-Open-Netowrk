@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { createCollabPackage, CreateCollabPackageData } from '@/src/lib/firestore/createCollabPackage';
 import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -453,9 +454,11 @@ export function CreateCollabPackageForm({
                   {assignedUser ? (
                     <div className="flex items-center space-x-3">
                       {assignedUser.profileImage ? (
-                        <img
+                        <Image
                           src={assignedUser.profileImage}
                           alt={assignedUser.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
@@ -535,9 +538,11 @@ export function CreateCollabPackageForm({
                             className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
                           >
                             {user.profileImage ? (
-                              <img
+                              <Image
                                 src={user.profileImage}
                                 alt={user.name}
+                                width={40}
+                                height={40}
                                 className="w-10 h-10 rounded-full object-cover"
                               />
                             ) : (
