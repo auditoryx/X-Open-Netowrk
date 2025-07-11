@@ -102,12 +102,30 @@ export function AdminVerificationDashboard() {
 
     try {
       setIsReviewing(true);
-      const result = await verificationService.reviewApplication(
-        applicationId,
-        user.uid,
-        decision,
-        reviewNotes
-      );
+      
+      // First try to get the application to find the user ID
+      const application = applications.find(app => app.id === applicationId);
+      if (!application) {
+        throw new Error('Application not found');
+      }
+
+      // Call our new verification API
+      const response = await fetch(`/api/verify/${application.userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          verified: decision === 'approve',
+          reviewNotes: reviewNotes,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to update verification status');
+      }
 
       if (result.success) {
         // Refresh data
@@ -118,12 +136,18 @@ export function AdminVerificationDashboard() {
         // Show success notification
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('verification-review-completed', {
-            detail: { applicationId, decision, success: true }
+            detail: { applicationId, decision, success: true, message: result.message }
           }));
         }
       }
     } catch (error) {
       console.error('Error reviewing application:', error);
+      // Show error notification
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('verification-review-error', {
+          detail: { applicationId, decision, error: error.message }
+        }));
+      }
     } finally {
       setIsReviewing(false);
     }
