@@ -13,6 +13,7 @@ import {
 import { useAuth } from '@/lib/hooks/useAuth'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS'
 
 export default function NotificationsPanel() {
   const { user } = useAuth()

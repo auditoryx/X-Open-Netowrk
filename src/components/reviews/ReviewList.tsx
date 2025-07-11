@@ -14,6 +14,7 @@ import {
   QueryDocumentSnapshot,
   DocumentData
 } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '../../lib/SCHEMA_FIELDS';
 
 export function ReviewList({ providerId }: { providerId: string }) {
   const [reviews, setReviews] = useState<any[]>([]);

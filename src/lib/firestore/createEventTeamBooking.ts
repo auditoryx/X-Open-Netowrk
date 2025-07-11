@@ -1,5 +1,6 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, doc, updateDoc, getDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
 
 export interface EventTeamBooking {
   id: string;

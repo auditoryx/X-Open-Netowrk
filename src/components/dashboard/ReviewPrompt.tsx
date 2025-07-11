@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import ReviewForm from '@/components/booking/ReviewForm';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 interface Booking {
   id: string;
@@ -30,6 +31,8 @@ export default function ReviewPrompt() {
       const snap = await getDocs(q);
       for (const docSnap of snap.docs) {
         const data = docSnap.data() as any;
+        const reviewId = data[SCHEMA_FIELDS.REVIEW_ID];
+        const userId = data[SCHEMA_FIELDS.USER_ID];
         if (!data.hasReview) {
           setBooking({ id: docSnap.id, ...data });
           return;
