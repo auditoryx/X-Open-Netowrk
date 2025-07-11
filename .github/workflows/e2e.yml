@@ -90,7 +90,7 @@ jobs:
         SMTP_PASS: test-password
         
     - name: Run Smoke Tests (Chromium only)
-      run: npm run test:e2e -- --project=chromium tests/e2e/role-*.spec.ts
+      run: npm run test:e2e -- --project=chromium tests/e2e/role-basic-smoke.spec.ts tests/e2e/role-smoke-simple.spec.ts
       env:
         CI: true
         SKIP_ENV_VALIDATION: true

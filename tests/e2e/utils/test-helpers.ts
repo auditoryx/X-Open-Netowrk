@@ -5,8 +5,9 @@ export interface TestUser {
   uid: string;
   email: string;
   displayName: string;
-  role: 'client' | 'provider' | 'admin';
+  role: 'client' | 'provider' | 'admin' | 'producer' | 'artist' | 'engineer' | 'videographer' | 'studio';
   verified?: boolean;
+  approved?: boolean;
 }
 
 export interface TestBooking {
