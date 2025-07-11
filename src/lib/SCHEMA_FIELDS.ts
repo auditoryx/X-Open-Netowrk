@@ -81,4 +81,11 @@ export const SCHEMA_FIELDS = {
   VERIFICATION: 'verification',
   RANK: 'rank',
   CHALLENGES: 'challenges',
+  EVENT_TYPE: 'eventType',
+  XP_TRANSACTION: {
+    EVENT: 'event',
+    XP_AMOUNT: 'xpAmount',
+    USER_ID: 'userId',
+    CREATED_AT: 'createdAt',
+  },
 };

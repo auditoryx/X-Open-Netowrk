@@ -22,6 +22,3 @@ export function listenToMessages(
     callback(messages);
   });
 }
-
-const messageId = doc[SCHEMA_FIELDS.MESSAGE_ID];
-const seen = doc[SCHEMA_FIELDS.SEEN];
