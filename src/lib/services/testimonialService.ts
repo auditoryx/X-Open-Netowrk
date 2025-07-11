@@ -16,6 +16,7 @@ import {
   serverTimestamp,
   increment
 } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export interface Testimonial {
   id: string;

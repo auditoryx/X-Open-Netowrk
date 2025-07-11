@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), {
   ssr: false,

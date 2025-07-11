@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeftIcon, HomeIcon, MagnifyingGlassIcon, PlayIcon } from '@heroicons/react/24/outline';

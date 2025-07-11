@@ -4,7 +4,17 @@ import { getAuth } from 'firebase-admin/auth';
 import { z } from 'zod';
 import { logger } from '@lib/logger';
 
-const db = getFirestore(adminApp);
+let db = null;
+let auth = null;
+
+try {
+  if (adminApp && adminApp.app) {
+    db = getFirestore(adminApp);
+    auth = getAuth(adminApp);
+  }
+} catch (error) {
+  logger.error('Failed to initialize Firebase services:', error);
+}
 
 const AvailabilitySchema = z.object({
   location: z.string().min(1),
@@ -16,6 +26,10 @@ const AvailabilitySchema = z.object({
 
 export async function POST(req) {
   try {
+    if (!db || !auth) {
+      return new Response(JSON.stringify({ error: 'Firebase services not available' }), { status: 503 });
+    }
+
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.split('Bearer ')[1];
 
@@ -23,7 +37,7 @@ export async function POST(req) {
       return new Response(JSON.stringify({ error: 'Unauthorized: Missing token' }), { status: 401 });
     }
 
-    const decoded = await getAuth(adminApp).verifyIdToken(token);
+    const decoded = await auth.verifyIdToken(token);
     const data = await req.json();
     const parsed = AvailabilitySchema.safeParse(data);
 
