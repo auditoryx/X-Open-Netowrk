@@ -1,4 +1,4 @@
-const withTM = require('next-transpile-modules')([]);
+import withTM from 'next-transpile-modules';
 
 const nextConfig = {
   eslint: {
@@ -11,12 +11,12 @@ const nextConfig = {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        assert: require.resolve('assert/'),
-        buffer: require.resolve('buffer/'),
-        process: require.resolve('process/browser'),
-        util: require.resolve('util/'),
-        stream: require.resolve('stream-browserify'),
-        path: require.resolve('path-browserify'),
+        assert: 'assert/',
+        buffer: 'buffer/',
+        process: 'process/browser',
+        util: 'util/',
+        stream: 'stream-browserify',
+        path: 'path-browserify',
         fs: false,
         net: false,
         tls: false,
@@ -33,4 +33,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(nextConfig);
+export default withTM([])(nextConfig);

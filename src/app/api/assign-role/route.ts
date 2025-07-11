@@ -3,16 +3,11 @@ import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import { withAdminCheck } from '@/lib/auth/withAdminCheck';
 import { logger } from '@lib/logger';
-import { z } from 'zod';
-
-const schema = z.object({
-  uid: z.string().min(1),
-  role: z.enum(['user', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'admin', 'moderator']),
-});
+import { AssignRoleSchema, validateAssignRole } from '@/lib/schema';
 
 async function handler(req: NextRequest & { admin: any }) {
   const body = await req.json();
-  const parsed = schema.safeParse(body);
+  const parsed = AssignRoleSchema.safeParse(body);
   
   if (!parsed.success) {
     return NextResponse.json(

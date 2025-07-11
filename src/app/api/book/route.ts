@@ -11,17 +11,9 @@ import {
   getDocs,
   QueryConstraint,
 } from 'firebase/firestore';
-import { z } from 'zod';
+import { BookingRequestSchema, validateBookingRequest } from '@/lib/schema';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { logger } from '@lib/logger';
-
-const BookingSchema = z.object({
-  serviceId: z.string().min(1),
-  date: z.string().min(1),
-  time: z.string().min(1),
-  message: z.string().min(1),
-  quote: z.number().positive().optional(),
-});
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -30,7 +22,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const parsed = BookingSchema.safeParse(body);
+  const parsed = BookingRequestSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Invalid input', issues: parsed.error.format() },
