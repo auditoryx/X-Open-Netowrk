@@ -2,7 +2,7 @@ name: GitHub Agent
 
 on:
   issues:
-    types: [labeled]
+    types: [opened, labeled]   # fire when issue is created *or* label is toggled
 
 jobs:
   run-agent:
@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: github/copilot-agent@v1
+      - uses: github/copilot-coding-agent@v1    # <-- correct slug
         with:
           github-token: ${{ secrets.GH_AGENT_TOKEN }}
