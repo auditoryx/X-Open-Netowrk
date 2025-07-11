@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { Mentorship, isCreatorOfMentorship } from '@/lib/types/Mentorship';
+import { Mentorship } from '@/lib/types/Mentorship';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { toggleMentorshipActive } from '@/lib/firestore/createMentorshipService';
+import { toggleMentorshipActive, isCreatorOfMentorship } from '@/lib/firestore/createMentorshipService';
 import MentorshipBookingForm from '@/components/forms/MentorshipBookingForm';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -17,12 +17,7 @@ export default function MentorshipDetailPage() {
   const [mentorship, setMentorship] = useState<Mentorship | null>(null);
   const [loading, setLoading] = useState(true);
   const [isProcessingToggle, setIsProcessingToggle] = useState(false);
-  
-  useEffect(() => {
-    if (mentorshipId && typeof mentorshipId === 'string') {
-      fetchMentorship(mentorshipId);
-    }
-  }, [mentorshipId]);
+  const [isCreator, setIsCreator] = useState(false);
   
   const fetchMentorship = async (id: string) => {
     try {
@@ -34,10 +29,18 @@ export default function MentorshipDetailPage() {
         return;
       }
       
-      setMentorship({
+      const mentorshipData = {
         id: mentorshipDoc.id,
         ...mentorshipDoc.data()
-      } as Mentorship);
+      } as Mentorship;
+      
+      setMentorship(mentorshipData);
+      
+      // Check if user is the creator
+      if (user?.uid) {
+        const isCreatorResult = await isCreatorOfMentorship(id, user.uid);
+        setIsCreator(isCreatorResult);
+      }
     } catch (error) {
       console.error('Error fetching mentorship:', error);
       toast.error('Failed to load mentorship');
@@ -45,6 +48,12 @@ export default function MentorshipDetailPage() {
       setLoading(false);
     }
   };
+  
+  useEffect(() => {
+    if (mentorshipId && typeof mentorshipId === 'string') {
+      fetchMentorship(mentorshipId);
+    }
+  }, [mentorshipId, user]);
   
   const handleToggleActive = async () => {
     if (!mentorship || !user) return;
@@ -85,7 +94,6 @@ export default function MentorshipDetailPage() {
     );
   }
   
-  const isCreator = user && isCreatorOfMentorship(mentorship, user.uid);
   const canBook = user && !isCreator && mentorship.active;
   
   return (
