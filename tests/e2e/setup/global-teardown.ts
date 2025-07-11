@@ -9,12 +9,16 @@ async function globalTeardown() {
   const browser = (global as any).__BROWSER__;
   const context = (global as any).__CONTEXT__;
 
-  if (context) {
-    await context.close();
-  }
+  try {
+    if (context) {
+      await context.close();
+    }
 
-  if (browser) {
-    await browser.close();
+    if (browser) {
+      await browser.close();
+    }
+  } catch (error) {
+    console.warn('⚠️  Browser teardown failed:', error.message);
   }
 
   // Clean up test environment variables
