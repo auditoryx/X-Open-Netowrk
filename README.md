@@ -1,5 +1,9 @@
 # AuditoryX - Creator Collaboration Platform
 
+![Test Coverage](https://img.shields.io/badge/Coverage-67.85%25-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-59%20passed-brightgreen)
+![Vitest](https://img.shields.io/badge/Vitest-3.2.4-blue)
+
 **AuditoryX** is a comprehensive platform connecting audio creators, engineers, and music professionals for seamless collaboration, booking management, and revenue sharing. Built for the modern creator economy, it enables talent discovery, project management, and secure payment processing.
 
 ## 🎯 Project Overview
