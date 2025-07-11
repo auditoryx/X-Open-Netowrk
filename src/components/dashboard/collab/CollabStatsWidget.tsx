@@ -7,6 +7,7 @@ import { collection, query, where, getCountFromServer } from 'firebase/firestore
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { Users, Package, Calendar, TrendingUp } from 'lucide-react';
+import { SCHEMA_FIELDS } from '../../../lib/SCHEMA_FIELDS';
 
 export default function CollabStatsWidget() {
   const { user } = useAuth();

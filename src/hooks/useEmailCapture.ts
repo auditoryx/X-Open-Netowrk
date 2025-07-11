@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { emailService, EmailCaptureData } from '@/lib/services/emailService';
 import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
 import toast from 'react-hot-toast';
+import { SCHEMA_FIELDS } from '../lib/SCHEMA_FIELDS';
 
 export interface UseEmailCaptureResult {
   captureEmail: (email: string, source: EmailCaptureData['source']) => Promise<boolean>;

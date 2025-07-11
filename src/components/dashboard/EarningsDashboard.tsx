@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getFirestore, collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { app } from '@/lib/firebase';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 type Payout = {
   id: string;
@@ -34,10 +35,10 @@ export default function EarningsDashboard() {
         const d = doc.data();
         return {
           id: doc.id,
-          amount: d.amount || 0,
-          currency: d.currency || 'usd',
-          status: d.status || 'pending',
-          createdAt: new Date(d.createdAt?.seconds * 1000).toLocaleDateString(),
+          amount: d[SCHEMA_FIELDS.EARNINGS.amount] || 0,
+          currency: d[SCHEMA_FIELDS.EARNINGS.currency] || 'usd',
+          status: d[SCHEMA_FIELDS.EARNINGS.status] || 'pending',
+          createdAt: new Date(d[SCHEMA_FIELDS.EARNINGS.createdAt]?.seconds * 1000).toLocaleDateString(),
         };
       });
 

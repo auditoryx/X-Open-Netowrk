@@ -6,6 +6,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { assignRole } from '@/lib/assignRole';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export default function ProfileForm() {
   const [form, setForm] = useState({

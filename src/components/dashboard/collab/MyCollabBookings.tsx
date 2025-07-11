@@ -7,6 +7,7 @@ import { collection, query, where, orderBy, onSnapshot, doc, updateDoc } from 'f
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { Calendar, Users, DollarSign, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { SCHEMA_FIELDS } from '../../../lib/SCHEMA_FIELDS';
 
 interface MyCollabBookingsProps {
   view?: 'creator' | 'client' | 'all';

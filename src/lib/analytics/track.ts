@@ -1,3 +1,5 @@
+import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
+
 export type AnalyticsPayload = Record<string, any>;
 
 export function track(event: string, payload: AnalyticsPayload = {}): void {
@@ -13,3 +15,6 @@ export function track(event: string, payload: AnalyticsPayload = {}): void {
     console.error('track error', err);
   }
 }
+
+const eventType = doc[SCHEMA_FIELDS.EVENT_TYPE];
+const userId = doc[SCHEMA_FIELDS.USER_ID];

@@ -1,6 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, doc, updateDoc, getDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { Mentorship, MentorshipService, MentorProfile } from '@/lib/types/Mentorship';
+import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
 
 export async function createMentorshipService(
   mentorId: string,
