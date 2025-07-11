@@ -9,6 +9,7 @@ import {
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import { UserProfile } from '@/types/user';
+import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
 
 export const queryCreators = async (filters: {
   role: string;

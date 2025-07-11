@@ -14,6 +14,7 @@ import {
   increment
 } from 'firebase/firestore';
 import { CollabPackage, CollabPackageFilters } from '@/src/lib/types/CollabPackage';
+import { SCHEMA_FIELDS } from "../SCHEMA_FIELDS";
 
 /**
  * Get a single collaboration package by ID

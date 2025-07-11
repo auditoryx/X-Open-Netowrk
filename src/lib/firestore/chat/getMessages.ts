@@ -7,6 +7,7 @@ import {
   DocumentData
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { SCHEMA_FIELDS } from '../../SCHEMA_FIELDS';
 
 export function listenToMessages(
   bookingId: string,
@@ -21,3 +22,6 @@ export function listenToMessages(
     callback(messages);
   });
 }
+
+const messageId = doc[SCHEMA_FIELDS.MESSAGE_ID];
+const seen = doc[SCHEMA_FIELDS.SEEN];

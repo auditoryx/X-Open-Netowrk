@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore'
 import { app } from '@/lib/firebase'
 import { sendInAppNotification } from '@/lib/notifications/sendInAppNotification'
+import { SCHEMA_FIELDS } from '../../SCHEMA_FIELDS'
 
 async function notifyRecipient(
   recipientId: string,
