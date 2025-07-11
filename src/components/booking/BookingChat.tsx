@@ -71,7 +71,7 @@ export default function BookingChat({ bookingId }: Props) {
     setLoading(true);
     const q = query(
       collection(db, 'bookings', bookingId, 'messages'),
-      orderBy('createdAt', 'asc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'asc')
     );
     const unsub = onSnapshot(q, snap => {
       const msgs = snap.docs.map(d => ({ id: d.id, ...(d.data() as any) }));

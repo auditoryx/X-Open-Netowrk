@@ -24,7 +24,7 @@ export default function EarningsPage() {
       if (!user) return;
 
       const db = getFirestore(app);
-      const q = query(collection(db, 'orders'), where('providerId', '==', user.uid), where('status', '==', 'completed'));
+      const q = query(collection(db, 'orders'), where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', user.uid), where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'));
       const snap = await getDocs(q);
 
       const tempEarnings = [] as any[];

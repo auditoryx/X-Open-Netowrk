@@ -11,8 +11,8 @@ export function useUserBookings(uid: string) {
     const db = getFirestore(app)
     const q = query(
       collection(db, 'bookings'),
-      where('providerId', '==', uid),
-      where('status', '!=', 'cancelled')
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', uid),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'cancelled')
     )
 
     const unsub = onSnapshot(q, (snap) => {

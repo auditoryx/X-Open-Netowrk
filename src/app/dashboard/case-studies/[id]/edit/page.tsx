@@ -86,7 +86,7 @@ export default function CaseStudyEditor({ params }: CaseStudyEditorProps) {
     // Overview section
     sections.push({
       id: 'overview',
-      type: 'text',
+      type: SCHEMA_FIELDS.REVIEW.TEXT,
       title: 'Project Overview',
       content: { text: cs.description },
       order: order++
@@ -96,7 +96,7 @@ export default function CaseStudyEditor({ params }: CaseStudyEditorProps) {
     if (cs.challenge) {
       sections.push({
         id: 'challenge',
-        type: 'text',
+        type: SCHEMA_FIELDS.REVIEW.TEXT,
         title: 'Challenge',
         content: { text: cs.challenge },
         order: order++
@@ -107,7 +107,7 @@ export default function CaseStudyEditor({ params }: CaseStudyEditorProps) {
     if (cs.solution) {
       sections.push({
         id: 'solution',
-        type: 'text',
+        type: SCHEMA_FIELDS.REVIEW.TEXT,
         title: 'Solution',
         content: { text: cs.solution },
         order: order++
@@ -162,7 +162,7 @@ export default function CaseStudyEditor({ params }: CaseStudyEditorProps) {
     if (cs.results) {
       sections.push({
         id: 'results',
-        type: 'text',
+        type: SCHEMA_FIELDS.REVIEW.TEXT,
         title: 'Results & Impact',
         content: { text: cs.results },
         order: order++

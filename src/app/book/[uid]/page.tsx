@@ -69,9 +69,9 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
     const overlapQ = query(
       collection(db, 'bookingRequests'),
-      where('providerId', '==', params.uid),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', params.uid),
       where('selectedTime', '==', selectedTime),
-      where('status', 'in', ['pending', 'confirmed'])
+      where(SCHEMA_FIELDS.BOOKING.STATUS, 'in', ['pending', 'confirmed'])
     );
     const overlapSnap = await getDocs(overlapQ);
     if (!overlapSnap.empty) {

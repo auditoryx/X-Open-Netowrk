@@ -43,16 +43,16 @@ export async function getEarningsData(
     
     // Build query for paid bookings
     const queryConditions: any[] = [
-      where('status', '==', 'completed'),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     ];
 
     // Add date filters if provided
     if (startDate) {
-      queryConditions.push(where('createdAt', '>=', Timestamp.fromDate(startDate)));
+      queryConditions.push(where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', Timestamp.fromDate(startDate)));
     }
     if (endDate) {
-      queryConditions.push(where('createdAt', '<=', Timestamp.fromDate(endDate)));
+      queryConditions.push(where(SCHEMA_FIELDS.USER.CREATED_AT, '<=', Timestamp.fromDate(endDate)));
     }
 
     const q = query(bookingsCollection, ...queryConditions);

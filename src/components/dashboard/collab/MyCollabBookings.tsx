@@ -22,14 +22,14 @@ export default function MyCollabBookings({ view = 'all' }: MyCollabBookingsProps
   useEffect(() => {
     if (!user) return;
 
-    const constraints = [orderBy('createdAt', 'desc')];
+    const constraints = [orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')];
 
     if (view === 'creator') {
       // Bookings where user is a member of the collab package
       constraints.unshift(where('packageMembers', 'array-contains', user.uid));
     } else if (view === 'client') {
       // Bookings where user is the client
-      constraints.unshift(where('clientId', '==', user.uid));
+      constraints.unshift(where(SCHEMA_FIELDS.BOOKING.CLIENT_ID, '==', user.uid));
     } else {
       // All bookings related to the user
       // Note: Firestore doesn't support OR queries directly, so we'll filter client-side

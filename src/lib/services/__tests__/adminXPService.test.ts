@@ -40,7 +40,7 @@ describe('AdminXPService', () => {
 
   describe('awardXP', () => {
     it('should validate input parameters', async () => {
-      await expect(service.awardXP('user123', 0, 'reason', 'admin123', 'admin@test.com'))
+      await expect(service.awardXP('user123', 0, SCHEMA_FIELDS.DISPUTE.REASON, 'admin123', 'admin@test.com'))
         .rejects.toThrow('Amount must be positive');
 
       await expect(service.awardXP('user123', 100, '', 'admin123', 'admin@test.com'))
@@ -84,7 +84,7 @@ describe('AdminXPService', () => {
 
   describe('deductXP', () => {
     it('should validate input parameters', async () => {
-      await expect(service.deductXP('user123', -10, 'reason', 'admin123', 'admin@test.com'))
+      await expect(service.deductXP('user123', -10, SCHEMA_FIELDS.DISPUTE.REASON, 'admin123', 'admin@test.com'))
         .rejects.toThrow('Amount must be positive');
     });
 
@@ -116,7 +116,7 @@ describe('AdminXPService', () => {
 
   describe('setXP', () => {
     it('should validate input parameters', async () => {
-      await expect(service.setXP('user123', -10, 'reason', 'admin123', 'admin@test.com'))
+      await expect(service.setXP('user123', -10, SCHEMA_FIELDS.DISPUTE.REASON, 'admin123', 'admin@test.com'))
         .rejects.toThrow('Amount cannot be negative');
     });
 

@@ -22,7 +22,7 @@ export default function NotificationsPanel() {
   useEffect(() => {
     if (!user?.uid) return
 
-    const q = query(collection(db, 'users', user.uid, 'notifications'), orderBy('createdAt', 'desc'))
+    const q = query(collection(db, 'users', user.uid, 'notifications'), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'))
     const unsub = onSnapshot(q, (snap) => {
       const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
       setNotifications(items)

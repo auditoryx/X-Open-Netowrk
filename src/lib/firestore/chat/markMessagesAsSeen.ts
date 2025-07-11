@@ -18,7 +18,7 @@ export async function markMessagesAsSeen(
   const db = getFirestore(app);
   const q = query(
     collection(db, 'bookings', bookingId, 'messages'),
-    orderBy('createdAt', 'desc'),
+    orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
     limit(50)
   );
   const snap = await getDocs(q);

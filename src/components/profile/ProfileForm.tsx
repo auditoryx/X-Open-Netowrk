@@ -62,7 +62,7 @@ export default function ProfileForm() {
   };
 
   const getCompletionPercent = () => {
-    const fields = ['name', 'role', 'bio', 'instagram', 'availability', 'location', 'timezone'];
+    const fields = [SCHEMA_FIELDS.USER.NAME, SCHEMA_FIELDS.USER.ROLE, 'bio', 'instagram', 'availability', 'location', 'timezone'];
     const filled = fields.filter((key) => !!form[key as keyof typeof form]);
     return Math.round((filled.length / fields.length) * 100);
   };

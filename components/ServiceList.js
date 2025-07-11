@@ -8,7 +8,7 @@ export default function ServiceList({ userId }) {
 
   useEffect(() => {
     const fetch = async () => {
-      const q = query(collection(db, "services"), where("userId", "==", userId));
+      const q = query(collection(db, "services"), where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, "==", userId));
       const snap = await getDocs(q);
       setServices(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };

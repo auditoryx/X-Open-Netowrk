@@ -12,7 +12,7 @@ import {
   QueryConstraint,
 } from 'firebase/firestore';
 import { BookingRequestSchema } from '@/lib/schema';
-import { SCHEMA_FIELDS } from '@/lib/@schema.d.ts';
+import { SCHEMA_FIELDS } from '@/lib/@schema';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { logger } from '@lib/logger';
 

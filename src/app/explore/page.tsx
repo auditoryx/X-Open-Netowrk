@@ -38,7 +38,7 @@ export default function ExplorePage() {
     searchParams.get('view') === 'map' ? 'map' : 'grid'
   );
   const [filters, setFilters] = useState({
-    role: searchParams.get('role') || '',
+    role: searchParams.get(SCHEMA_FIELDS.USER.ROLE) || '',
     location: searchParams.get('location') || '',
     service: searchParams.get('service') || '',
     genres: searchParams.get('genres')
@@ -50,7 +50,7 @@ export default function ExplorePage() {
     maxBpm: searchParams.get('maxBpm')
       ? parseInt(searchParams.get('maxBpm')!, 10)
       : undefined,
-    tier: searchParams.get('tier') || 'pro', // pre-check pro filter
+    tier: searchParams.get(SCHEMA_FIELDS.USER.TIER) || 'pro', // pre-check pro filter
     availableNow: searchParams.get('availableNow') === '1',
     searchNearMe: searchParams.get('searchNearMe') === 'true',
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
@@ -130,13 +130,13 @@ export default function ExplorePage() {
 
   useEffect(() => {
     const query = new URLSearchParams();
-    if (filters.role) query.set('role', filters.role);
+    if (filters.role) query.set(SCHEMA_FIELDS.USER.ROLE, filters.role);
     if (filters.location) query.set('location', filters.location);
     if (filters.service) query.set('service', filters.service);
     if (filters.genres.length) query.set('genres', filters.genres.join(','));
     if (filters.minBpm !== undefined) query.set('minBpm', String(filters.minBpm));
     if (filters.maxBpm !== undefined) query.set('maxBpm', String(filters.maxBpm));
-    if (filters.tier) query.set('tier', filters.tier);
+    if (filters.tier) query.set(SCHEMA_FIELDS.USER.TIER, filters.tier);
     if (filters.searchNearMe) {
       query.set('searchNearMe', 'true');
     }

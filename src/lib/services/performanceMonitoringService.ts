@@ -382,8 +382,8 @@ export class PerformanceMonitoringService {
     try {
       const slowQuery = query(
         collection(db, 'performanceMetrics'),
-        where('duration', '>', 2000),
-        orderBy('duration', 'desc'),
+        where(SCHEMA_FIELDS.SERVICE.DURATION, '>', 2000),
+        orderBy(SCHEMA_FIELDS.SERVICE.DURATION, 'desc'),
         orderBy('timestamp', 'desc'),
         limit
       );

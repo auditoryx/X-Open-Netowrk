@@ -96,7 +96,7 @@ export const sendBookingConfirmationEmail = async (booking: BookingConfirmationD
 
   try {
     // Load HTML template
-    const templatePath = path.join(process.cwd(), 'templates', 'email', 'BookingConfirmed.html');
+    const templatePath = path.join(process.cwd(), 'templates', SCHEMA_FIELDS.USER.EMAIL, 'BookingConfirmed.html');
     const html = fs.readFileSync(templatePath, 'utf-8');
 
     // Generate calendar data
@@ -235,7 +235,7 @@ export const sendSingleBookingConfirmation = async (
   }
 
   try {
-    const templatePath = path.join(process.cwd(), 'templates', 'email', 'BookingConfirmed.html');
+    const templatePath = path.join(process.cwd(), 'templates', SCHEMA_FIELDS.USER.EMAIL, 'BookingConfirmed.html');
     let html = fs.readFileSync(templatePath, 'utf-8');
 
     const calendarData = generateCalendarData(booking);

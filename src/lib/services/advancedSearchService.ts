@@ -539,7 +539,7 @@ export class AdvancedSearchService {
   private async getCreatorSuggestions(query: string): Promise<SearchSuggestion[]> {
     try {
       const creatorsRef = collection(db, 'creators');
-      const q = query(creatorsRef, where('isActive', '==', true), limit(20));
+      const q = query(creatorsRef, where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true), limit(20));
       const snapshot = await getDocs(q);
 
       const suggestions: SearchSuggestion[] = [];

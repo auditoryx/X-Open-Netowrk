@@ -138,7 +138,7 @@ describe('BadgeGrid Component', () => {
     render(<BadgeGrid badges={mockBadges} showFilters={true} />);
     
     const sortSelect = screen.getByDisplayValue('Sort by Rarity');
-    fireEvent.change(sortSelect, { target: { value: 'name' } });
+    fireEvent.change(sortSelect, { target: { value: SCHEMA_FIELDS.USER.NAME } });
     
     await waitFor(() => {
       const badgeNames = screen.getAllByText(/Session Starter|Certified Mix|Studio Regular/);

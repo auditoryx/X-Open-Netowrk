@@ -22,7 +22,7 @@ function SupportDashboard() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const q = query(collection(db, 'supportMessages'), orderBy('createdAt', 'desc'));
+        const q = query(collection(db, 'supportMessages'), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
         const snapshot = await getDocs(q);
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Ticket[];
         setTickets(data);

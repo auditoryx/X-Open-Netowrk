@@ -114,7 +114,7 @@ describe('ChallengeCard', () => {
     status: 'active',
     startDate: Timestamp.fromDate(new Date('2024-01-01')),
     endDate: Timestamp.fromDate(new Date('2024-01-31')),
-    targetMetric: 'totalXP',
+    targetMetric: SCHEMA_FIELDS.USER_PROGRESS.TOTAL_XP,
     targetValue: 1000,
     minimumParticipants: 5,
     rewards: {
@@ -260,7 +260,7 @@ describe('ChallengeGrid', () => {
       status: 'active',
       startDate: Timestamp.fromDate(new Date('2024-01-01')),
       endDate: Timestamp.fromDate(new Date('2024-01-31')),
-      targetMetric: 'totalXP',
+      targetMetric: SCHEMA_FIELDS.USER_PROGRESS.TOTAL_XP,
       targetValue: 500,
       minimumParticipants: 5,
       rewards: {
@@ -414,7 +414,7 @@ describe('ChallengeLeaderboard', () => {
     status: 'active',
     startDate: Timestamp.fromDate(new Date('2024-01-01')),
     endDate: Timestamp.fromDate(new Date('2024-01-31')),
-    targetMetric: 'totalXP',
+    targetMetric: SCHEMA_FIELDS.USER_PROGRESS.TOTAL_XP,
     targetValue: 1000,
     minimumParticipants: 5,
     rewards: {

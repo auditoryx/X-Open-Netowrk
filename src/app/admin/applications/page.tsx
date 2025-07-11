@@ -19,7 +19,7 @@ function ApplicationsPage() {
 
   useEffect(() => {
     async function fetchApplications() {
-      const q = query(collection(db, 'applications'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'applications'), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
       const snap = await getDocs(q);
       setApps(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     }

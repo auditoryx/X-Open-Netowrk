@@ -28,7 +28,7 @@ export async function getAvailableSlots(
     // Base query - get available slots for the provider
     const queryConstraints = [
       where("providerUid", "==", providerUid),
-      where("status", "==", "available"),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, "==", "available"),
       orderBy("scheduledAt", "asc")
     ];
     

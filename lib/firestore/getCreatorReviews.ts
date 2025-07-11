@@ -4,8 +4,8 @@ import { firestore } from '@lib/firebase/init';
 export const getCreatorReviews = async (creatorId: string) => {
   const q = query(
     collection(firestore, 'bookings'),
-    where('providerId', '==', creatorId),
-    where('status', '==', 'completed')
+    where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+    where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed')
   );
 
   const snapshot = await getDocs(q);
