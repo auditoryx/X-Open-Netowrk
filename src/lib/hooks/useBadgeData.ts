@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuthContext } from '@/providers/AuthProvider';
+import { useAuth } from '@/lib/auth/AuthContext';
 import { badgeService, BadgeProgress } from '@/lib/services/badgeService';
 
 interface BadgeDataState {
@@ -22,7 +22,7 @@ interface BadgeStats {
 }
 
 export function useBadgeData() {
-  const { user } = useAuthContext();
+  const { user } = useAuth();
   const [state, setState] = useState<BadgeDataState>({
     badges: [],
     loading: false,

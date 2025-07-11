@@ -1,6 +1,6 @@
-import Image from 'next/image';
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { enhancedPortfolioService, MediaPortfolioItem, ProjectShowcase } from '@/lib/services/enhancedPortfolioService';

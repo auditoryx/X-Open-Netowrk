@@ -1,5 +1,5 @@
 import { UserRole } from '@/lib/types/user';
-import { checkAdminAccess, checkModeratorAccess, AccessResult } from '@/lib/utils/checkUserAccess';
+import { checkModeratorAccess, AccessResult } from '@/lib/utils/checkUserAccess';
 
 interface AdminCheckOptions {
   allowModerators?: boolean;

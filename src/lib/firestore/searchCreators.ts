@@ -85,7 +85,7 @@ export async function searchCreators(
     const creatorsQuery = query(collection(db, 'creators'), ...constraints);
     const creatorsSnapshot = await getDocs(creatorsQuery);
     
-    let creators: SearchableCreator[] = [];
+    const creators: SearchableCreator[] = [];
     
     // Process creators
     for (const doc of creatorsSnapshot.docs) {

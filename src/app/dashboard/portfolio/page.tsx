@@ -1,6 +1,6 @@
-import Image from 'next/image';
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { portfolioService, PortfolioItem, ProjectCaseStudy } from '@/lib/services/portfolioService';
@@ -14,7 +14,7 @@ import {
   Heart, 
   Share2,
   Star,
-  Image,
+  Image as ImageIcon,
   Video,
   Music,
   FileText,

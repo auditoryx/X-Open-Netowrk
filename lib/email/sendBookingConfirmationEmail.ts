@@ -97,7 +97,7 @@ export const sendBookingConfirmationEmail = async (booking: BookingConfirmationD
   try {
     // Load HTML template
     const templatePath = path.join(process.cwd(), 'templates', 'email', 'BookingConfirmed.html');
-    let html = fs.readFileSync(templatePath, 'utf-8');
+    const html = fs.readFileSync(templatePath, 'utf-8');
 
     // Generate calendar data
     const calendarData = generateCalendarData(booking);

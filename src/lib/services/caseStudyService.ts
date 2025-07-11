@@ -178,7 +178,7 @@ class CaseStudyService {
     }
   ): Promise<CaseStudy[]> {
     try {
-      let queryConstraints = [
+      const queryConstraints = [
         where('creatorId', '==', creatorId),
         orderBy('updatedAt', 'desc')
       ];
@@ -218,7 +218,7 @@ class CaseStudyService {
     limit?: number;
   }): Promise<CaseStudy[]> {
     try {
-      let queryConstraints = [
+      const queryConstraints = [
         where('isPublic', '==', true),
         where('status', '==', 'published'),
         orderBy('publishedAt', 'desc')

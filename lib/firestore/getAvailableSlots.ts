@@ -26,7 +26,7 @@ export async function getAvailableSlots(
 ): Promise<BookingSlot[]> {
   try {
     // Base query - get available slots for the provider
-    let queryConstraints = [
+    const queryConstraints = [
       where("providerUid", "==", providerUid),
       where("status", "==", "available"),
       orderBy("scheduledAt", "asc")

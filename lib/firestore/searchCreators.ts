@@ -96,7 +96,7 @@ export async function getCreatorDetails(uid: string): Promise<CreatorSearchResul
 export async function searchCreators(filters: CreatorSearchFilters): Promise<CreatorSearchResult[]> {
   try {
     const usersCollection = collection(firestore, 'users');
-    let queryConditions: any[] = [
+    const queryConditions: any[] = [
       where('accountStatus', '==', 'active')
     ];
 
@@ -116,7 +116,7 @@ export async function searchCreators(filters: CreatorSearchFilters): Promise<Cre
     }
 
     // Build the query
-    let q = query(
+    const q = query(
       usersCollection,
       ...queryConditions,
       orderBy('rating', 'desc'),
