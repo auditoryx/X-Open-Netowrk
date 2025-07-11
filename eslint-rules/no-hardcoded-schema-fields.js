@@ -34,6 +34,10 @@ export default {
       'totalXP', 'dailyXP', 'lastXPDate', 'streak', 'lastActivityAt',
       // Dispute fields
       'reason', 'description',
+      // Booking Request fields
+      'date', 'time', 'quote', 'buyerId',
+      // Additional common fields
+      'uid',
     ];
 
     return {
@@ -151,6 +155,13 @@ function getSuggestion(fieldName) {
     'streak': 'SCHEMA_FIELDS.USER_PROGRESS.STREAK',
     'lastActivityAt': 'SCHEMA_FIELDS.USER_PROGRESS.LAST_ACTIVITY_AT',
     'reason': 'SCHEMA_FIELDS.DISPUTE.REASON',
+    // Booking request fields
+    'date': 'SCHEMA_FIELDS.BOOKING_REQUEST.DATE',
+    'time': 'SCHEMA_FIELDS.BOOKING_REQUEST.TIME',
+    'quote': 'SCHEMA_FIELDS.BOOKING_REQUEST.QUOTE',
+    'buyerId': 'SCHEMA_FIELDS.BOOKING_REQUEST.BUYER_ID',
+    // Additional common fields
+    'uid': 'SCHEMA_FIELDS.USER.ID', // Common alias for id
   };
   
   return fieldMap[fieldName] || null;

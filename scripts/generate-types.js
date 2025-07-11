@@ -176,3 +176,4 @@ writeFileSync(outputPath, fileContent, 'utf-8');
 
 console.log('✅ TypeScript types generated successfully!');
 console.log(`📄 Output file: ${outputPath}`);
+console.log('📋 Generated schema field constants for type-safe field access');

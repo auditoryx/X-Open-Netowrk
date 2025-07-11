@@ -3,7 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import { withAdminCheck } from '@/lib/auth/withAdminCheck';
 import { logger } from '@lib/logger';
-import { AssignRoleSchema, validateAssignRole } from '@/lib/schema';
+import { AssignRoleSchema } from '@/lib/schema';
 
 async function handler(req: NextRequest & { admin: any }) {
   const body = await req.json();

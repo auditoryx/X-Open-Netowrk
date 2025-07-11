@@ -11,7 +11,8 @@ import {
   getDocs,
   QueryConstraint,
 } from 'firebase/firestore';
-import { BookingRequestSchema, validateBookingRequest } from '@/lib/schema';
+import { BookingRequestSchema } from '@/lib/schema';
+import { SCHEMA_FIELDS } from '@/lib/@schema.d.ts';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { logger } from '@lib/logger';
 
@@ -34,9 +35,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const constraints: QueryConstraint[] = [];
-    if (serviceId) constraints.push(where('serviceId', '==', serviceId));
-    if (date) constraints.push(where('date', '==', date));
-    if (time) constraints.push(where('time', '==', time));
+    if (serviceId) constraints.push(where(SCHEMA_FIELDS.BOOKING_REQUEST.SERVICE_ID, '==', serviceId));
+    if (date) constraints.push(where(SCHEMA_FIELDS.BOOKING_REQUEST.DATE, '==', date));
+    if (time) constraints.push(where(SCHEMA_FIELDS.BOOKING_REQUEST.TIME, '==', time));
 
     if (constraints.length > 0) {
       const q = query(collection(db, 'bookingRequests'), ...constraints);
@@ -50,14 +51,14 @@ export async function POST(req: NextRequest) {
     }
 
     const docRef = await addDoc(collection(db, 'bookingRequests'), {
-      serviceId,
-      date,
-      time,
-      message,
-      quote,
-      buyerId: session.user.id,
-      status: 'pending',
-      createdAt: serverTimestamp(),
+      [SCHEMA_FIELDS.BOOKING_REQUEST.SERVICE_ID]: serviceId,
+      [SCHEMA_FIELDS.BOOKING_REQUEST.DATE]: date,
+      [SCHEMA_FIELDS.BOOKING_REQUEST.TIME]: time,
+      [SCHEMA_FIELDS.BOOKING_REQUEST.MESSAGE]: message,
+      [SCHEMA_FIELDS.BOOKING_REQUEST.QUOTE]: quote,
+      [SCHEMA_FIELDS.BOOKING_REQUEST.BUYER_ID]: session.user.id,
+      [SCHEMA_FIELDS.BOOKING_REQUEST.STATUS]: 'pending',
+      [SCHEMA_FIELDS.BOOKING_REQUEST.CREATED_AT]: serverTimestamp(),
     });
 
     await logActivity(session.user.id, 'booking_request_sent', {
