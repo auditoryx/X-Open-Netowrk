@@ -39,10 +39,10 @@ export class AuthUtils {
 
   async signIn(email: string, password: string = 'testpass123') {
     await this.page.goto('/auth');
-    await this.page.fill('[data-testid="email-input"]', email);
-    await this.page.fill('[data-testid="password-input"]', password);
-    await this.page.click('[data-testid="signin-button"]');
-    await this.page.waitForURL('/dashboard');
+    await this.page.fill('input[type="email"]', email);
+    await this.page.fill('input[type="password"]', password);
+    await this.page.click('button[type="submit"]');
+    await this.page.waitForURL('**/dashboard*', { timeout: 15000 });
   }
 
   async signOut() {
@@ -53,6 +53,14 @@ export class AuthUtils {
 
   async waitForAuth() {
     await this.page.waitForSelector('[data-testid="user-menu"]', { timeout: 10000 });
+  }
+
+  async signUp(email: string, password: string = 'testpass123') {
+    await this.page.goto('/signup');
+    await this.page.fill('input[type="email"]', email);
+    await this.page.fill('input[type="password"]', password);
+    await this.page.click('button[type="submit"]');
+    await this.page.waitForURL('**/dashboard*', { timeout: 15000 });
   }
 }
 

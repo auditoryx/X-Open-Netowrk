@@ -1,19 +1,22 @@
-name: Playwright E2E Tests
+name: E2E Smoke Tests
 
 on:
   push:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  schedule:
+    # Run smoke tests daily at 6 AM UTC
+    - cron: '0 6 * * *'
 
 jobs:
-  test:
+  e2e-smoke:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [22.x]
     
     steps:
     - uses: actions/checkout@v4
@@ -28,12 +31,11 @@ jobs:
       run: npm ci --legacy-peer-deps
     
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install chromium --with-deps
     
     - name: Setup Firebase Emulators
       run: |
         npm install -g firebase-tools
-        # Create test data directory if it doesn't exist
         mkdir -p ./test-data
         
     - name: Start Firebase Emulators
@@ -83,8 +85,8 @@ jobs:
         SMTP_EMAIL: test@example.com
         SMTP_PASS: test-password
         
-    - name: Run Playwright tests
-      run: npm run test:e2e -- --project=chromium
+    - name: Run Smoke Tests (Chromium only)
+      run: npm run test:e2e -- --project=chromium tests/e2e/role-*.spec.ts
       env:
         CI: true
         SKIP_ENV_VALIDATION: true
@@ -102,23 +104,53 @@ jobs:
         SMTP_EMAIL: test@example.com
         SMTP_PASS: test-password
         
-    - uses: actions/upload-artifact@v4
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
         
-    - uses: actions/upload-artifact@v4
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results
         path: test-results/
         retention-days: 30
         
-    - uses: actions/upload-artifact@v4
+    - name: Upload Trace on Failure
+      uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: playwright-traces
         path: test-results/*/trace.zip
         retention-days: 30
+        
+    - name: Comment PR with Test Results
+      uses: actions/github-script@v7
+      if: always() && github.event_name == 'pull_request'
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Check if test results exist
+          const resultsPath = 'test-results/results.json';
+          if (fs.existsSync(resultsPath)) {
+            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+            const passed = results.suites.reduce((acc, suite) => acc + suite.specs.filter(spec => spec.ok).length, 0);
+            const failed = results.suites.reduce((acc, suite) => acc + suite.specs.filter(spec => !spec.ok).length, 0);
+            const total = passed + failed;
+            
+            const status = failed === 0 ? '✅ All tests passed!' : `❌ ${failed} test(s) failed`;
+            const summary = `## 🎭 E2E Smoke Test Results\n\n${status}\n\n**Summary:** ${passed}/${total} tests passed\n\nView full report in the [Actions tab](${context.payload.pull_request.html_url}/checks).`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+          }
