@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { SCHEMA_FIELDS } from "./SCHEMA_FIELDS";
 
 // User schema
 export const UserSchema = z.object({
@@ -186,3 +187,7 @@ export const validateUserProgress = (data: unknown): UserProgress => {
 export const validateDispute = (data: unknown): Dispute => {
   return DisputeSchema.parse(data);
 };
+
+// Example usage:
+// doc[SCHEMA_FIELDS.USER_ID]
+// doc[SCHEMA_FIELDS.EMAIL]
