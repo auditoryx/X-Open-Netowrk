@@ -6,6 +6,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:vitest": "vitest run",
+    "test:vitest:watch": "vitest",
+    "test:vitest:coverage": "vitest run --coverage",
     "test:schema": "scripts/test-schema-migration.sh",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -129,7 +132,7 @@
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
-    "vitest": "^2.1.9",
+    "vitest": "^3.2.4",
     "zod-to-ts": "^1.2.0"
   }
 }

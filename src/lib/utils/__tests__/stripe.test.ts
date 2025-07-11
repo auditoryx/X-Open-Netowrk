@@ -1,16 +1,14 @@
-import { loadStripe } from '@stripe/stripe-js'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getStripe } from '../stripe';
 
-jest.mock('@stripe/stripe-js', () => ({
-  loadStripe: jest.fn(() => Promise.resolve({})),
+// Mock loadStripe
+vi.mock('@stripe/stripe-js', () => ({
+  loadStripe: vi.fn(() => Promise.resolve({})),
 }));
-
-const mockedLoadStripe = loadStripe as jest.MockedFunction<typeof loadStripe>;
 
 describe('getStripe helper', () => {
   beforeEach(() => {
-    jest.resetModules();
-    mockedLoadStripe.mockClear();
+    vi.clearAllMocks();
     delete process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   });
 
