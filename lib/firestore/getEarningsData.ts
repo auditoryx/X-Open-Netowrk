@@ -42,7 +42,7 @@ export async function getEarningsData(
     const bookingsCollection = collection(firestore, 'bookings');
     
     // Build query for paid bookings
-    let queryConditions: any[] = [
+    const queryConditions: any[] = [
       where('status', '==', 'completed'),
       orderBy('createdAt', 'desc')
     ];

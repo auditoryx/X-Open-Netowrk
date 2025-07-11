@@ -290,7 +290,7 @@ class EnhancedPortfolioService {
     }
   ): Promise<MediaPortfolioItem[]> {
     try {
-      let queryConstraints = [
+      const queryConstraints = [
         where('creatorId', '==', creatorId),
         orderBy('updatedAt', 'desc')
       ];

@@ -20,7 +20,7 @@ import {
   Calendar,
   TrendingUp,
   BarChart3,
-  Image,
+  Image as ImageIcon,
   Video,
   FileText,
   Award

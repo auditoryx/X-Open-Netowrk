@@ -466,7 +466,7 @@ class RankingService {
     limit_count: number = 50
   ): Promise<LeaderboardEntry[]> {
     try {
-      let baseQuery = query(
+      const baseQuery = query(
         collection(db, 'userRankings'),
         orderBy('rankingScore', 'desc'),
         limit(limit_count)

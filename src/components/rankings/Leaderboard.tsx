@@ -77,7 +77,7 @@ export default function Leaderboard({
         </div>
       ) : (
         entries.map((entry, index) => (
-          <LeaderboardEntry key={entry.userId} entry={entry} compact={compact} />
+          <LeaderboardEntryComponent key={entry.userId} entry={entry} compact={compact} />
         ))
       )}
     </div>
@@ -196,7 +196,7 @@ export default function Leaderboard({
 /**
  * Individual Leaderboard Entry Component
  */
-function LeaderboardEntry({ entry, compact = false }: { entry: LeaderboardEntry; compact?: boolean }) {
+function LeaderboardEntryComponent({ entry, compact = false }: { entry: LeaderboardEntry; compact?: boolean }) {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
