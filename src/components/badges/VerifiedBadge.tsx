@@ -30,7 +30,6 @@ export default function VerifiedBadge({
 }: VerifiedBadgeProps) {
   const badge = (
     <span
-      data-testid="verified-badge"
       className={`
         inline-flex items-center gap-1 
         rounded-full font-semibold tracking-wide
@@ -41,7 +40,6 @@ export default function VerifiedBadge({
         ${className}
       `}
       title={tooltip}
-      aria-label={tooltip}
     >
       <CheckCircle className={iconSizes[size]} />
       {showText && 'Verified'}
@@ -59,7 +57,6 @@ export function VerifiedIcon({
 }: Omit<VerifiedBadgeProps, 'showText'>) {
   return (
     <span
-      data-testid="verified-icon"
       className={`
         inline-flex items-center justify-center
         rounded-full
@@ -70,7 +67,6 @@ export function VerifiedIcon({
         ${className}
       `}
       title={tooltip}
-      aria-label={tooltip}
     >
       <CheckCircle className={iconSizes[size]} />
     </span>

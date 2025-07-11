@@ -19,6 +19,7 @@ import RatingBarChart from '@/components/profile/RatingBarChart';
 import FloatingCartButton from '@/components/cart/FloatingCartButton';
 import SignatureBadge from '@/components/badges/SignatureBadge';
 import { TierBadge } from '@/components/badges/TierBadge';
+import VerifiedBadge from '@/components/ui/VerifiedBadge';
 import { ReportUserButton } from '@/components/profile/ReportUserButton';
 import ApplyVerificationButton from '@/components/profile/ApplyVerificationButton';
 import ContactModal from '@/components/profile/ContactModal';
@@ -99,8 +100,9 @@ export default function PublicProfilePage() {
   /* ───────────── UI ───────────── */
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-1">
+      <h1 className="text-3xl font-bold mb-1 flex items-center gap-2">
         {profile.name || 'Unnamed User'}
+        {profile.verified && <VerifiedBadge size="md" />}
       </h1>
 
       {/* Signature Badge */}
