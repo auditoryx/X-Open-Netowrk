@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "NODE_OPTIONS='--max-old-space-size=3072' next build",
@@ -94,6 +93,7 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
+    "@lhci/cli": "^0.15.0",
     "@lhci/cli": "^0.15.0",
     "@playwright/test": "^1.53.2",
     "@testing-library/cypress": "^10.0.3",
