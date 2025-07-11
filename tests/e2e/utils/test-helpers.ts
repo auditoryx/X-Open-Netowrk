@@ -74,17 +74,26 @@ export class FirestoreUtils {
   constructor() {
     // Initialize Firestore connection for test data setup
     if (typeof window === 'undefined') {
-      const admin = require('firebase-admin');
-      if (!admin.apps.length) {
-        admin.initializeApp({
-          projectId: 'test-project'
-        });
+      try {
+        const admin = require('firebase-admin');
+        if (!admin.apps.length) {
+          admin.initializeApp({
+            projectId: process.env.FIREBASE_PROJECT_ID || 'test-project'
+          });
+        }
+        this.db = admin.firestore();
+      } catch (error) {
+        console.warn('Firebase admin not available, skipping Firestore setup:', error.message);
+        this.db = null;
       }
-      this.db = admin.firestore();
     }
   }
 
   async createTestUser(user: TestUser): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping user creation');
+      return;
+    }
     await this.db.collection('users').doc(user.uid).set({
       email: user.email,
       displayName: user.displayName,
@@ -96,6 +105,10 @@ export class FirestoreUtils {
   }
 
   async createTestService(service: TestService): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping service creation');
+      return;
+    }
     await this.db.collection('services').doc(service.id).set({
       providerId: service.providerId,
       title: service.title,
@@ -110,6 +123,10 @@ export class FirestoreUtils {
   }
 
   async createTestBooking(booking: TestBooking): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping booking creation');
+      return;
+    }
     await this.db.collection('bookings').doc(booking.id).set({
       clientId: booking.clientId,
       providerId: booking.providerId,
@@ -125,6 +142,10 @@ export class FirestoreUtils {
   }
 
   async cleanupTestData(): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping cleanup');
+      return;
+    }
     try {
       // Clean up test collections
       const collections = ['users', 'bookings', 'services', 'reviews'];
