@@ -78,7 +78,7 @@ export async function getUserMentorshipBookings(
   const bookingsQuery = query(
     collection(firestore, 'mentorshipBookings'),
     where(fieldToQuery, '==', userId),
-    orderBy('createdAt', 'desc')
+    orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
   );
   
   const bookingsSnapshot = await getDocs(bookingsQuery);

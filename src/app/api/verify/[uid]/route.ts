@@ -66,8 +66,8 @@ export async function POST(
     // If there's a verification application, update it too
     try {
       const applicationRef = adminDb.collection('verificationApplications')
-        .where('userId', '==', uid)
-        .where('status', '==', 'pending')
+        .where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', uid)
+        .where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending')
         .limit(1);
       
       const applicationDocs = await applicationRef.get();

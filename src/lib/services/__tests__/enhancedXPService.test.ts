@@ -117,7 +117,7 @@ describe('EnhancedXPService', () => {
     test('should perform health check', async () => {
       const healthCheck = await enhancedXPService.performHealthCheck();
       
-      expect(healthCheck).toHaveProperty('status');
+      expect(healthCheck).toHaveProperty(SCHEMA_FIELDS.BOOKING.STATUS);
       expect(healthCheck).toHaveProperty('timestamp');
       expect(['healthy', 'degraded', 'unhealthy']).toContain(healthCheck.status);
     });

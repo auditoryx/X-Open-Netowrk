@@ -21,7 +21,7 @@ export default function FinancesPage() {
       const user = auth.currentUser;
       if (!user) return;
       const db = getFirestore(app);
-      const q = query(collection(db, 'bookings'), where('providerId', '==', user.uid));
+      const q = query(collection(db, 'bookings'), where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', user.uid));
       const snap = await getDocs(q);
       let earned = 0;
       let escrow = 0;

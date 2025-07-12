@@ -55,7 +55,7 @@ export async function getUserBookings(
       let providerQuery = query(
         bookingsRef,
         where('providerUid', '==', uid),
-        orderBy('createdAt', 'desc'),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
         limit(limitCount)
       );
 
@@ -63,8 +63,8 @@ export async function getUserBookings(
         providerQuery = query(
           bookingsRef,
           where('providerUid', '==', uid),
-          where('status', '==', status),
-          orderBy('createdAt', 'desc'),
+          where(SCHEMA_FIELDS.BOOKING.STATUS, '==', status),
+          orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
           limit(limitCount)
         );
       }
@@ -83,7 +83,7 @@ export async function getUserBookings(
       let clientQuery = query(
         bookingsRef,
         where('clientUid', '==', uid),
-        orderBy('createdAt', 'desc'),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
         limit(limitCount)
       );
 
@@ -91,8 +91,8 @@ export async function getUserBookings(
         clientQuery = query(
           bookingsRef,
           where('clientUid', '==', uid),
-          where('status', '==', status),
-          orderBy('createdAt', 'desc'),
+          where(SCHEMA_FIELDS.BOOKING.STATUS, '==', status),
+          orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
           limit(limitCount)
         );
       }

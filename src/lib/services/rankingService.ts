@@ -309,15 +309,15 @@ class RankingService {
       const [bookingsSnapshot, reviewsSnapshot] = await Promise.all([
         getDocs(query(
           collection(db, 'bookings'),
-          where('creatorId', '==', userId),
-          where('status', '==', 'completed'),
+          where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', userId),
+          where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'),
           orderBy('completedAt', 'desc'),
           limit(50) // Last 50 bookings for performance calculation
         )),
         getDocs(query(
           collection(db, 'reviews'),
-          where('creatorId', '==', userId),
-          orderBy('createdAt', 'desc'),
+          where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', userId),
+          orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
           limit(50) // Last 50 reviews
         ))
       ]);
@@ -347,13 +347,13 @@ class RankingService {
       // Calculate cancellation rate
       const totalBookings = await getDocs(query(
         collection(db, 'bookings'),
-        where('creatorId', '==', userId)
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', userId)
       ));
       
       const cancelledBookings = await getDocs(query(
         collection(db, 'bookings'),
-        where('creatorId', '==', userId),
-        where('status', '==', 'cancelled')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', userId),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'cancelled')
       ));
 
       const cancellationRate = totalBookings.size > 0 
@@ -415,7 +415,7 @@ class RankingService {
       // Get all users with XP
       const usersSnapshot = await getDocs(query(
         collection(db, 'userProgress'),
-        where('totalXP', '>', 0)
+        where(SCHEMA_FIELDS.USER_PROGRESS.TOTAL_XP, '>', 0)
       ));
 
       const batchSize = 20; // Process in batches to avoid timeout

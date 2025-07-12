@@ -38,7 +38,7 @@ export async function searchCreatorsByRole(
       usersCollection,
       where('roles', 'array-contains', role),
       where('accountStatus', '==', 'active'),
-      orderBy('rating', 'desc'),
+      orderBy(SCHEMA_FIELDS.REVIEW.RATING, 'desc'),
       limit(limit)
     );
     
@@ -112,14 +112,14 @@ export async function searchCreators(filters: CreatorSearchFilters): Promise<Cre
 
     // Add tier filter if specified
     if (filters.tier) {
-      queryConditions.push(where('tier', '==', filters.tier));
+      queryConditions.push(where(SCHEMA_FIELDS.USER.TIER, '==', filters.tier));
     }
 
     // Build the query
     const q = query(
       usersCollection,
       ...queryConditions,
-      orderBy('rating', 'desc'),
+      orderBy(SCHEMA_FIELDS.REVIEW.RATING, 'desc'),
       limit(filters.limit || 50)
     );
 

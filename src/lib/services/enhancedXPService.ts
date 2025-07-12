@@ -472,7 +472,7 @@ export class EnhancedXPService {
             userId,
             value
           );
-        } else if (challengeType === 'xp_race' && participation.challengeId.includes('xp')) {
+        } else if (challengeType === 'xp_race' && participation.challengeId.includes(SCHEMA_FIELDS.USER.XP)) {
           await this.challengeService.updateChallengeProgress(
             participation.challengeId,
             userId,

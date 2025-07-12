@@ -179,16 +179,16 @@ class CaseStudyService {
   ): Promise<CaseStudy[]> {
     try {
       const queryConstraints = [
-        where('creatorId', '==', creatorId),
-        orderBy('updatedAt', 'desc')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.UPDATED_AT, 'desc')
       ];
 
       if (filters?.status) {
-        queryConstraints.splice(-1, 0, where('status', '==', filters.status));
+        queryConstraints.splice(-1, 0, where(SCHEMA_FIELDS.BOOKING.STATUS, '==', filters.status));
       }
       
       if (filters?.category) {
-        queryConstraints.splice(-1, 0, where('category', '==', filters.category));
+        queryConstraints.splice(-1, 0, where(SCHEMA_FIELDS.SERVICE.CATEGORY, '==', filters.category));
       }
       
       if (filters?.featured !== undefined) {
@@ -220,12 +220,12 @@ class CaseStudyService {
     try {
       const queryConstraints = [
         where('isPublic', '==', true),
-        where('status', '==', 'published'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'published'),
         orderBy('publishedAt', 'desc')
       ];
 
       if (filters?.category) {
-        queryConstraints.splice(-1, 0, where('category', '==', filters.category));
+        queryConstraints.splice(-1, 0, where(SCHEMA_FIELDS.SERVICE.CATEGORY, '==', filters.category));
       }
       
       if (filters?.featured !== undefined) {
@@ -328,7 +328,7 @@ class CaseStudyService {
   // Template operations
   async getCaseStudyTemplates(): Promise<CaseStudyTemplate[]> {
     try {
-      const q = query(collection(db, this.templatesCollection), orderBy('name'));
+      const q = query(collection(db, this.templatesCollection), orderBy(SCHEMA_FIELDS.USER.NAME));
       const querySnapshot = await getDocs(q);
       
       return querySnapshot.docs.map(doc => ({
@@ -349,13 +349,13 @@ class CaseStudyService {
         description: 'A comprehensive case study template',
         category: 'General',
         sections: [
-          { id: 'overview', type: 'text', label: 'Project Overview', required: true },
-          { id: 'challenge', type: 'text', label: 'Challenge', required: true },
-          { id: 'solution', type: 'text', label: 'Solution', required: true },
+          { id: 'overview', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Project Overview', required: true },
+          { id: 'challenge', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Challenge', required: true },
+          { id: 'solution', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Solution', required: true },
           { id: 'before', type: 'image', label: 'Before Images', required: false },
           { id: 'process', type: 'image', label: 'Process Images', required: false },
           { id: 'after', type: 'image', label: 'After Images', required: false },
-          { id: 'results', type: 'text', label: 'Results', required: true },
+          { id: 'results', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Results', required: true },
           { id: 'metrics', type: 'metrics', label: 'Key Metrics', required: false },
           { id: 'testimonial', type: 'testimonial', label: 'Client Testimonial', required: false },
         ],
@@ -366,7 +366,7 @@ class CaseStudyService {
         description: 'Perfect for design and visual projects',
         category: 'Creative',
         sections: [
-          { id: 'concept', type: 'text', label: 'Creative Concept', required: true },
+          { id: 'concept', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Creative Concept', required: true },
           { id: 'inspiration', type: 'image', label: 'Inspiration Board', required: false },
           { id: 'process', type: 'image', label: 'Design Process', required: true },
           { id: 'final', type: 'image', label: 'Final Results', required: true },
@@ -380,11 +380,11 @@ class CaseStudyService {
         description: 'For development and technical projects',
         category: 'Technical',
         sections: [
-          { id: 'requirements', type: 'text', label: 'Requirements', required: true },
+          { id: 'requirements', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Requirements', required: true },
           { id: 'architecture', type: 'image', label: 'System Architecture', required: false },
-          { id: 'implementation', type: 'text', label: 'Implementation', required: true },
-          { id: 'challenges', type: 'text', label: 'Technical Challenges', required: false },
-          { id: 'results', type: 'text', label: 'Results & Impact', required: true },
+          { id: 'implementation', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Implementation', required: true },
+          { id: 'challenges', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Technical Challenges', required: false },
+          { id: 'results', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Results & Impact', required: true },
           { id: 'metrics', type: 'metrics', label: 'Performance Metrics', required: false },
         ],
       },

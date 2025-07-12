@@ -520,7 +520,7 @@ export class PWAService {
   private trackEvent(eventName: string, properties?: any): void {
     // Analytics tracking
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', eventName, {
+      (window as any).gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, eventName, {
         event_category: 'PWA',
         ...properties
       });

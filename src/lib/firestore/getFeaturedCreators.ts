@@ -1,6 +1,7 @@
 import { getFirestore, collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { featuredCreatorsData } from '@/lib/data/featuredCreators';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export async function getFeaturedCreators() {
   try {
@@ -8,7 +9,7 @@ export async function getFeaturedCreators() {
     const q = query(
       collection(db, 'users'),
       where('verified', '==', true),
-      orderBy('averageRating', 'desc'),
+      orderBy(SCHEMA_FIELDS.USER.AVERAGE_RATING, 'desc'),
       limit(4)
     );
     const snap = await getDocs(q);

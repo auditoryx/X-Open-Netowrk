@@ -89,6 +89,9 @@ export class MonitoringService {
    * Setup global error tracking
    */
   private setupErrorTracking(): void {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Handle JavaScript errors
     window.addEventListener('error', (event) => {
       this.reportError({
@@ -140,6 +143,9 @@ export class MonitoringService {
    * Setup performance monitoring
    */
   private setupPerformanceMonitoring(): void {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Core Web Vitals monitoring
     if ('PerformanceObserver' in window) {
       // Monitor FCP, LCP, FID, CLS
@@ -185,6 +191,9 @@ export class MonitoringService {
    * Setup user interaction tracking
    */
   private setupUserInteractionTracking(): void {
+    // Only run on client side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    
     // Click tracking
     document.addEventListener('click', (event) => {
       const element = event.target as HTMLElement;
@@ -227,6 +236,9 @@ export class MonitoringService {
    * Setup API monitoring
    */
   private setupAPIMonitoring(): void {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Intercept fetch requests
     const originalFetch = window.fetch;
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -591,10 +603,12 @@ export class MonitoringService {
 // Singleton instance
 export const monitoringService = new MonitoringService();
 
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-  monitoringService.cleanup();
-});
+// Cleanup on page unload (only on client side)
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    monitoringService.cleanup();
+  });
+}
 
 // Export for manual initialization if needed
 export default MonitoringService;

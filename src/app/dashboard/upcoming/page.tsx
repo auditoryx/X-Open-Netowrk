@@ -17,8 +17,8 @@ export default function UpcomingBookingsPage() {
       const ref = collection(db, 'bookings');
       const q = query(
         ref,
-        where('providerId', '==', user.uid),
-        where('status', '==', 'pending'),
+        where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', user.uid),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'),
         orderBy('dateTime', 'asc')
       );
       const snap = await getDocs(q);

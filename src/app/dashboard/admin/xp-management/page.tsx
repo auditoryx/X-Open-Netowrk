@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { adminXPService, AdminXPOperation } from '@/lib/services/adminXPService';
-import { XPDisplay } from '@/components/gamification/XPDisplay';
+import XPDisplay from '@/components/gamification/XPDisplay';
 import { XPProgressBar } from '@/components/gamification/XPProgressBar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';

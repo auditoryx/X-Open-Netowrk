@@ -45,14 +45,14 @@ export default function EditServicesForm() {
           <input
             type='text'
             value={service.name}
-            onChange={(e) => handleChange(i, 'name', e.target.value)}
+            onChange={(e) => handleChange(i, SCHEMA_FIELDS.USER.NAME, e.target.value)}
             className='border p-2 mr-2'
             placeholder='Service Name'
           />
           <input
             type='number'
             value={service.price}
-            onChange={(e) => handleChange(i, 'price', e.target.value)}
+            onChange={(e) => handleChange(i, SCHEMA_FIELDS.SERVICE.PRICE, e.target.value)}
             className='border p-2 mr-2'
             placeholder='Price'
           />

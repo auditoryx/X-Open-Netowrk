@@ -248,7 +248,7 @@ export class XPService {
     try {
       const q = query(
         collection(db, 'xpTransactions'),
-        where('userId', '==', userId)
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId)
       )
       
       const querySnapshot = await getDocs(q)
@@ -279,9 +279,9 @@ export class XPService {
     try {
       const q = query(
         collection(db, 'xpTransactions'),
-        where('userId', '==', userId),
-        where('event', '==', event),
-        where('contextId', '==', contextId)
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+        where(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, '==', event),
+        where(SCHEMA_FIELDS.XP_TRANSACTION.CONTEXT_ID, '==', contextId)
       )
       
       const querySnapshot = await getDocs(q)

@@ -29,7 +29,7 @@ export const queryCreators = async (filters: {
   const constraints = [];
 
   if (filters.role) {
-    constraints.push(where('role', '==', filters.role));
+    constraints.push(where(SCHEMA_FIELDS.USER.ROLE, '==', filters.role));
   }
 
   if (filters.verifiedOnly) {

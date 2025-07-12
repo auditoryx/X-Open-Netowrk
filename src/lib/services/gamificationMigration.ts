@@ -145,7 +145,7 @@ export class GamificationMigration {
       const activitiesRef = collection(db, 'users', userId, 'activities')
       const q = query(
         activitiesRef,
-        where('createdAt', '>=', Timestamp.fromDate(today))
+        where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', Timestamp.fromDate(today))
       )
       
       const activitiesSnapshot = await getDocs(q)
@@ -169,7 +169,7 @@ export class GamificationMigration {
   private async migrateUserActivities(userId: string): Promise<void> {
     try {
       const activitiesRef = collection(db, 'users', userId, 'activities')
-      const q = query(activitiesRef, orderBy('createdAt', 'desc'), limit(100))
+      const q = query(activitiesRef, orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'), limit(100))
       
       const activitiesSnapshot = await getDocs(q)
       const batch = writeBatch(db)

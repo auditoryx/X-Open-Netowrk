@@ -28,8 +28,8 @@ export default function BookingsViewer() {
     setLoading(true);
     const base = query(
       collection(getFirestore(app), 'bookings'),
-      where('providerId', '==', uid),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', uid),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(10)
     );
     const q = lastDoc ? query(base, startAfter(lastDoc)) : base;

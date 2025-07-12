@@ -26,8 +26,8 @@ export default function EarningsDashboard() {
       const db = getFirestore(app);
       const payoutsRef = query(
         collection(db, 'payouts'),
-        where('providerId', '==', user.uid),
-        orderBy('createdAt', 'desc')
+        where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', user.uid),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
 
       const snap = await getDocs(payoutsRef);

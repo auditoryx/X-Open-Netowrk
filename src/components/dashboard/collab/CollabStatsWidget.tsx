@@ -38,7 +38,7 @@ export default function CollabStatsWidget() {
         );
         const clientBookingsQuery = query(
           collection(db, 'collabBookings'),
-          where('clientId', '==', user.uid)
+          where(SCHEMA_FIELDS.BOOKING.CLIENT_ID, '==', user.uid)
         );
 
         const [creatorBookingsSnap, clientBookingsSnap] = await Promise.all([

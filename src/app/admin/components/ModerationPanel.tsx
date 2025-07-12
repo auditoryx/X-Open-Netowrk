@@ -29,7 +29,7 @@ export default function ModerationPanel() {
     async function fetchDisputes() {
       const q = query(
         collection(db, 'disputes'),
-        orderBy('createdAt', 'desc')
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
       const snap = await getDocs(q);
       setDisputes(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Dispute)));

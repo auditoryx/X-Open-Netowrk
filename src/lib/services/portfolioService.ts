@@ -181,18 +181,18 @@ export class PortfolioService {
   async getPortfolioItems(creatorId: string, category?: string): Promise<PortfolioItem[]> {
     let portfolioQuery = query(
       collection(this.db, 'portfolio'),
-      where('creatorId', '==', creatorId),
+      where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
       orderBy('isFeatured', 'desc'),
-      orderBy('createdAt', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     if (category) {
       portfolioQuery = query(
         collection(this.db, 'portfolio'),
-        where('creatorId', '==', creatorId),
-        where('category', '==', category),
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        where(SCHEMA_FIELDS.SERVICE.CATEGORY, '==', category),
         orderBy('isFeatured', 'desc'),
-        orderBy('createdAt', 'desc')
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
     }
 
@@ -229,16 +229,16 @@ export class PortfolioService {
   async getCaseStudies(creatorId: string, isPublic?: boolean): Promise<ProjectCaseStudy[]> {
     let caseStudyQuery = query(
       collection(this.db, 'caseStudies'),
-      where('creatorId', '==', creatorId),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     if (isPublic !== undefined) {
       caseStudyQuery = query(
         collection(this.db, 'caseStudies'),
-        where('creatorId', '==', creatorId),
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
         where('isPublic', '==', isPublic),
-        orderBy('createdAt', 'desc')
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
     }
 
@@ -312,14 +312,14 @@ export class PortfolioService {
     // Basic search implementation - in production, you'd use a proper search service
     let portfolioQuery = query(
       collection(this.db, 'portfolio'),
-      orderBy('createdAt', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     if (category) {
       portfolioQuery = query(
         collection(this.db, 'portfolio'),
-        where('category', '==', category),
-        orderBy('createdAt', 'desc')
+        where(SCHEMA_FIELDS.SERVICE.CATEGORY, '==', category),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
     }
 
@@ -349,7 +349,7 @@ export class PortfolioService {
     const featuredQuery = query(
       collection(this.db, 'portfolio'),
       where('isFeatured', '==', true),
-      orderBy('createdAt', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     const snapshot = await getDocs(featuredQuery);

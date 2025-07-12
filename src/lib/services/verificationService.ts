@@ -401,7 +401,7 @@ export class VerificationService {
     try {
       const q = query(
         collection(db, 'verificationApplications'),
-        where('status', '==', 'pending'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'),
         orderBy('appliedAt', 'desc'),
         limit(limitCount)
       );
@@ -468,8 +468,8 @@ export class VerificationService {
     try {
       const q = query(
         collection(db, 'verificationApplications'),
-        where('userId', '==', userId),
-        where('status', '==', 'pending'),
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'),
         limit(1)
       );
 
@@ -483,7 +483,7 @@ export class VerificationService {
 
   private calculateProfileCompleteness(userData: any): number {
     const fields = [
-      'name',
+      SCHEMA_FIELDS.USER.NAME,
       'bio',
       'profilePicture',
       'location',
@@ -524,8 +524,8 @@ export class VerificationService {
 
       const q = query(
         collection(db, 'userViolations'),
-        where('userId', '==', userId),
-        where('createdAt', '>=', Timestamp.fromDate(cutoffDate))
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+        where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', Timestamp.fromDate(cutoffDate))
       );
 
       const snapshot = await getDocs(q);

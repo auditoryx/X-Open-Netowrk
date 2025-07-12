@@ -9,7 +9,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/Button";
 import { CheckCircle, XCircle, Clock, Star, User, Trophy, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
