@@ -48,7 +48,7 @@ async function globalSetup() {
 
   // Launch browser for shared state
   try {
-    const browser = await chromium.launch();
+    const browser = await chromium.launch({ channel: 'chrome' });
     const context = await browser.newContext();
     
     // Store browser instance globally

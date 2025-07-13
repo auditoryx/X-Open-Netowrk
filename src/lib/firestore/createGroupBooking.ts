@@ -1,6 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import { CartItem } from '@/context/CartContext'
+import { CartItem } from '@/context/CartContext';
+import { adminApp } from '@/lib/firebaseAdmin';
 
 export async function createGroupBooking(userId: string, items: CartItem[]) {
   const db = adminApp.firestore()
