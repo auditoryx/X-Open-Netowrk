@@ -110,7 +110,7 @@ describe('ChallengeService', () => {
         type: 'xp_race',
         difficulty: 'bronze',
         status: 'upcoming',
-        targetMetric: 'totalXP',
+        targetMetric: SCHEMA_FIELDS.USER_PROGRESS.TOTAL_XP,
         targetValue: 1000,
         minimumParticipants: 5
       });

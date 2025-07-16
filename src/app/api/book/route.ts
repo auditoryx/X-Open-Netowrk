@@ -14,8 +14,9 @@ import {
 import { BookingRequestSchema } from '@/lib/schema';
 import { SCHEMA_FIELDS } from '@/lib/schema-fields';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
-import { logger } from '@lib/logger';
+import { logger } from '@/lib/logger';
 
+// POST /api/book
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -35,11 +36,20 @@ export async function POST(req: NextRequest) {
 
   try {
     const constraints: QueryConstraint[] = [];
-    if (serviceId) constraints.push(where(SCHEMA_FIELDS.BOOKING_REQUEST.SERVICE_ID, '==', serviceId));
-    if (date) constraints.push(where(SCHEMA_FIELDS.BOOKING_REQUEST.DATE, '==', date));
-    if (time) constraints.push(where(SCHEMA_FIELDS.BOOKING_REQUEST.TIME, '==', time));
+    if (serviceId)
+      constraints.push(
+        where(SCHEMA_FIELDS.BOOKING_REQUEST.SERVICE_ID, '==', serviceId)
+      );
+    if (date)
+      constraints.push(
+        where(SCHEMA_FIELDS.BOOKING_REQUEST.DATE, '==', date)
+      );
+    if (time)
+      constraints.push(
+        where(SCHEMA_FIELDS.BOOKING_REQUEST.TIME, '==', time)
+      );
 
-    if (constraints.length > 0) {
+    if (constraints.length) {
       const q = query(collection(db, 'bookingRequests'), ...constraints);
       const snap = await getDocs(q);
       if (!snap.empty) {

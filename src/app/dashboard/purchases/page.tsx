@@ -23,7 +23,7 @@ export default function PurchasesPage() {
       }
 
       const db = getFirestore(app);
-      const q = query(collection(db, 'orders'), where('buyerId', '==', user.uid));
+      const q = query(collection(db, 'orders'), where(SCHEMA_FIELDS.BOOKING_REQUEST.BUYER_ID, '==', user.uid));
       const snap = await getDocs(q);
 
       const tempPurchases = [];

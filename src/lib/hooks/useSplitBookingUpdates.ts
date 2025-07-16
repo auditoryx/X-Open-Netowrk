@@ -78,7 +78,7 @@ export function useSplitBookingUpdates({
           const notificationsRef = collection(db, 'notifications', user.uid, 'userNotifications');
           const notificationsQuery = query(
             notificationsRef,
-            where('type', 'in', [
+            where(SCHEMA_FIELDS.NOTIFICATION.TYPE, 'in', [
               'split_booking_invite',
               'split_booking_confirmed',
               'split_booking_cancelled',
@@ -87,8 +87,8 @@ export function useSplitBookingUpdates({
               'payment_required',
               'session_reminder'
             ]),
-            ...(bookingId ? [where('bookingId', '==', bookingId)] : []),
-            orderBy('createdAt', 'desc')
+            ...(bookingId ? [where(SCHEMA_FIELDS.REVIEW.BOOKING_ID, '==', bookingId)] : []),
+            orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
           );
 
           unsubscribeNotifications = onSnapshot(
@@ -165,13 +165,13 @@ export function useSplitBookingsForUser() {
     const clientAQuery = query(
       bookingsRef,
       where('clientAUid', '==', user.uid),
-      orderBy('createdAt', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
     
     const clientBQuery = query(
       bookingsRef,
       where('clientBUid', '==', user.uid),
-      orderBy('createdAt', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     let unsubscribeA: Unsubscribe | null = null;

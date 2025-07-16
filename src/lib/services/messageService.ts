@@ -133,7 +133,7 @@ export class MessageService {
   // Listen to messages in a thread
   listenToMessages(threadId: string, callback: (messages: Message[]) => void): () => void {
     const messagesRef = collection(this.db, 'messageThreads', threadId, 'messages');
-    const q = query(messagesRef, orderBy('createdAt', 'asc'));
+    const q = query(messagesRef, orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'asc'));
 
     return onSnapshot(q, (snapshot) => {
       const messages: Message[] = [];
@@ -224,7 +224,7 @@ export class MessageService {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           toUid: receiverId,
-          type: 'message',
+          type: SCHEMA_FIELDS.NOTIFICATION.MESSAGE,
           payload: {
             title: 'New Message',
             message: messageText.substring(0, 100) + (messageText.length > 100 ? '...' : ''),

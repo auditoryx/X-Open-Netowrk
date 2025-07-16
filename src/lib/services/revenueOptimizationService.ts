@@ -304,9 +304,9 @@ class RevenueOptimizationService {
     // Get recent bookings for current metrics
     const bookingsQuery = query(
       collection(db, 'bookings'),
-      where('creatorId', '==', creatorId),
-      where('createdAt', '>=', Timestamp.fromDate(thirtyDaysAgo)),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+      where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', Timestamp.fromDate(thirtyDaysAgo)),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     const bookingsSnapshot = await getDocs(bookingsQuery);
@@ -432,7 +432,7 @@ class RevenueOptimizationService {
     try {
       const servicesQuery = query(
         collection(db, 'services'),
-        where('creatorId', '==', creatorId)
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId)
       );
       const snapshot = await getDocs(servicesQuery);
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -445,8 +445,8 @@ class RevenueOptimizationService {
     try {
       const bookingsQuery = query(
         collection(db, 'bookings'),
-        where('creatorId', '==', creatorId),
-        orderBy('createdAt', 'desc'),
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
         limit(100)
       );
       const snapshot = await getDocs(bookingsQuery);

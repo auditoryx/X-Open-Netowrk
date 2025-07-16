@@ -36,15 +36,15 @@ export async function GET(req) {
   try {
     const db = getFirestore(app);
     const { searchParams } = new URL(req.url);
-    const role = searchParams.get('role');
-    const uid = searchParams.get('uid');
+    const role = searchParams.get(SCHEMA_FIELDS.USER.ROLE);
+    const uid = searchParams.get(SCHEMA_FIELDS.USER.ID);
 
     let q = collection(db, 'availability');
 
     if (role || uid) {
       const filters = [];
-      if (role) filters.push(where('role', '==', role));
-      if (uid) filters.push(where('uid', '==', uid));
+      if (role) filters.push(where(SCHEMA_FIELDS.USER.ROLE, '==', role));
+      if (uid) filters.push(where(SCHEMA_FIELDS.USER.ID, '==', uid));
       filters.forEach(f => q = query(q, f));
     }
 

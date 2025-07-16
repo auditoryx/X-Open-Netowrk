@@ -7,7 +7,7 @@ export function track(event: string, payload: AnalyticsPayload = {}): void {
   try {
     const gtag = (window as any).gtag;
     if (typeof gtag === 'function') {
-      gtag('event', event, payload);
+      gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, event, payload);
     } else {
       console.debug('track', event, payload);
     }
@@ -15,6 +15,3 @@ export function track(event: string, payload: AnalyticsPayload = {}): void {
     console.error('track error', err);
   }
 }
-
-const eventType = doc[SCHEMA_FIELDS.EVENT_TYPE];
-const userId = doc[SCHEMA_FIELDS.USER_ID];

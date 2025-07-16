@@ -124,8 +124,8 @@ export class CreatorAnalyticsService {
       const bookingsRef = collection(this.db, 'bookings');
       const q = query(
         bookingsRef,
-        where('creatorId', '==', creatorId),
-        orderBy('createdAt', 'desc'),
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
         limit(pageSize + 1) // Get one extra to check if there are more
       );
 
@@ -334,10 +334,10 @@ export class CreatorAnalyticsService {
     const bookingsRef = collection(this.db, 'bookings');
     const q = query(
       bookingsRef,
-      where('creatorId', '==', creatorId),
-      where('createdAt', '>=', Timestamp.fromDate(startDate)),
-      where('createdAt', '<=', Timestamp.fromDate(endDate)),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+      where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', Timestamp.fromDate(startDate)),
+      where(SCHEMA_FIELDS.USER.CREATED_AT, '<=', Timestamp.fromDate(endDate)),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     const snapshot = await getDocs(q);

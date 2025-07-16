@@ -101,7 +101,7 @@ export async function getPendingSplitBookings(): Promise<SplitBooking[]> {
     const bookingsRef = collection(db, 'splitBookings');
     const q = query(
       bookingsRef, 
-      where('status', '==', 'pending'), 
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'), 
       orderBy('scheduledAt', 'asc')
     );
     

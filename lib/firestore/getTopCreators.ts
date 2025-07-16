@@ -4,7 +4,7 @@ import { firestore } from '@lib/firebase/init';
 export const getTopCreators = async () => {
   const q = query(
     collection(firestore, 'bookings'),
-    where('status', '==', 'completed')
+    where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed')
   );
 
   const snapshot = await getDocs(q);

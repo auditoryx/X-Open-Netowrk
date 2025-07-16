@@ -29,7 +29,7 @@ export async function GET(req: Request) {
   const cursor = searchParams.get('cursor') || undefined
 
   const filters: any = {
-    role: searchParams.get('role') || undefined,
+    role: searchParams.get(SCHEMA_FIELDS.USER.ROLE) || undefined,
     location: searchParams.get('location') || undefined,
     service: searchParams.get('service') || undefined,
     genres: searchParams.get('genres')

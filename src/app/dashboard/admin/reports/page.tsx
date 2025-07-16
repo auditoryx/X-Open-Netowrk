@@ -32,7 +32,7 @@ function AdminReportsPage() {
     try {
       setLoading(true);
       const reportsRef = collection(db, 'reports');
-      const q = query(reportsRef, orderBy('createdAt', 'desc'));
+      const q = query(reportsRef, orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
       const snapshot = await getDocs(q);
       
       const reportsData = snapshot.docs.map(doc => ({

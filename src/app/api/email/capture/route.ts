@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const email = url.searchParams.get('email');
+    const email = url.searchParams.get(SCHEMA_FIELDS.USER.EMAIL);
 
     if (!email) {
       return NextResponse.json(

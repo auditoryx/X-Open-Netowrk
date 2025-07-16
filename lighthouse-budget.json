@@ -1,4 +1,5 @@
 {
   "first-contentful-paint": 2000,
-  "cumulative-layout-shift": 0.1
+  "cumulative-layout-shift": 0.1,
+  "total-byte-weight": 400000
 }

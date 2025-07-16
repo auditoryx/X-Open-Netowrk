@@ -59,7 +59,7 @@ export function useEmailCapture(): UseEmailCaptureResult {
 
         // Track successful email capture
         if (typeof window !== 'undefined' && (window as any).gtag) {
-          (window as any).gtag('event', 'email_capture', {
+          (window as any).gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, 'email_capture', {
             event_category: 'engagement',
             event_label: source,
             value: 1,

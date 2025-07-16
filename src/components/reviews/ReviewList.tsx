@@ -26,8 +26,8 @@ export function ReviewList({ providerId }: { providerId: string }) {
   const fetchReviews = useCallback((startDoc: QueryDocumentSnapshot<DocumentData> | null = null) => {
     const baseQuery = query(
       collection(db, 'reviews'),
-      where('providerId', '==', providerId),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', providerId),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(10),
       ...(startDoc ? [startAfter(startDoc)] : [])
     );

@@ -46,7 +46,7 @@ const mockBadges = [
     name: 'Verified Pro',
     description: 'Achieve Verified tier status',
     iconUrl: '/badges/verified-pro.svg',
-    category: 'tier',
+    category: SCHEMA_FIELDS.USER.TIER,
     rarity: 'legendary',
     progress: { current: 0, target: 1, percentage: 0 },
     isEarned: false

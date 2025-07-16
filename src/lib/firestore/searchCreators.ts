@@ -55,19 +55,19 @@ export async function searchCreators(
     const constraints: QueryConstraint[] = [];
     
     // Always filter for active creators
-    constraints.push(where('isActive', '==', true));
+    constraints.push(where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true));
     
     // Apply filters
     if (filters.role) {
-      constraints.push(where('role', '==', filters.role));
+      constraints.push(where(SCHEMA_FIELDS.USER.ROLE, '==', filters.role));
     }
     
     if (filters.tier) {
-      constraints.push(where('tier', '==', filters.tier));
+      constraints.push(where(SCHEMA_FIELDS.USER.TIER, '==', filters.tier));
     }
     
     if (filters.minRating) {
-      constraints.push(where('averageRating', '>=', filters.minRating));
+      constraints.push(where(SCHEMA_FIELDS.USER.AVERAGE_RATING, '>=', filters.minRating));
     }
     
     if (filters.isAvailable) {
@@ -78,7 +78,7 @@ export async function searchCreators(
     // since Firestore doesn't support array-contains queries combined with other where clauses efficiently
 
     // Add ordering and limit
-    constraints.push(orderBy('rankScore', 'desc'));
+    constraints.push(orderBy(SCHEMA_FIELDS.USER.RANK_SCORE, 'desc'));
     constraints.push(limit(Math.min(maxResults * 2, 200))); // Fetch more than needed for client-side filtering
 
     // Execute the query
@@ -131,8 +131,8 @@ export async function searchCreators(
         try {
           const servicesQuery = query(
             collection(db, 'services'),
-            where('creatorId', '==', doc.id),
-            where('isActive', '==', true),
+            where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', doc.id),
+            where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true),
             limit(10)
           );
           const servicesSnapshot = await getDocs(servicesQuery);
@@ -219,8 +219,8 @@ export async function getSearchSuggestions(
     // Get popular creators (names)
     const creatorsQuery = query(
       collection(db, 'creators'),
-      where('isActive', '==', true),
-      orderBy('reviewCount', 'desc'),
+      where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true),
+      orderBy(SCHEMA_FIELDS.USER.REVIEW_COUNT, 'desc'),
       limit(20)
     );
     const creatorsSnapshot = await getDocs(creatorsQuery);
@@ -241,7 +241,7 @@ export async function getSearchSuggestions(
     // Get popular services
     const servicesQuery = query(
       collection(db, 'services'),
-      where('isActive', '==', true),
+      where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true),
       limit(30)
     );
     const servicesSnapshot = await getDocs(servicesQuery);

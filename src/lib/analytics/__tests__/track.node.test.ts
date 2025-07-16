@@ -2,5 +2,5 @@
 import { track } from '../track';
 
 test('does not throw on server', () => {
-  expect(() => track('event')).not.toThrow();
+  expect(() => track(SCHEMA_FIELDS.XP_TRANSACTION.EVENT)).not.toThrow();
 });

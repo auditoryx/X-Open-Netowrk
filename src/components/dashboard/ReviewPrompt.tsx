@@ -25,8 +25,8 @@ export default function ReviewPrompt() {
     const fetchBookings = async () => {
       const q = query(
         collection(db, 'bookings'),
-        where('buyerId', '==', user.uid),
-        where('status', '==', 'completed')
+        where(SCHEMA_FIELDS.BOOKING_REQUEST.BUYER_ID, '==', user.uid),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed')
       );
       const snap = await getDocs(q);
       for (const docSnap of snap.docs) {

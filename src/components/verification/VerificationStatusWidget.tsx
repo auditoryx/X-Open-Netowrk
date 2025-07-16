@@ -8,7 +8,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/Button";
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle, Clock, Shield, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -161,3 +161,5 @@ export function VerificationStatusWidget({
     </Card>
   );
 }
+
+export default VerificationStatusWidget;

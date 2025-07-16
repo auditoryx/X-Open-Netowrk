@@ -16,6 +16,7 @@ import {
   serverTimestamp,
   increment
 } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export interface Testimonial {
   id: string;
@@ -169,12 +170,12 @@ class TestimonialService {
     try {
       let q = query(
         this.testimonialsCollection,
-        where('creatorId', '==', creatorId),
-        orderBy('createdAt', 'desc')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
 
       if (options.status) {
-        q = query(q, where('status', '==', options.status));
+        q = query(q, where(SCHEMA_FIELDS.BOOKING.STATUS, '==', options.status));
       }
 
       if (options.isPublic !== undefined) {
@@ -306,7 +307,7 @@ class TestimonialService {
         isPublic: false, // Default to private
         isFeatured: false,
         isVerified: true,
-        verificationMethod: 'email',
+        verificationMethod: SCHEMA_FIELDS.USER.EMAIL,
         verificationDate: new Date(),
         tags: testimonialData.tags || []
       });
@@ -344,8 +345,8 @@ class TestimonialService {
     try {
       const q = query(
         this.templatesCollection,
-        where('creatorId', '==', creatorId),
-        orderBy('createdAt', 'desc')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
 
       const querySnapshot = await getDocs(q);
@@ -465,13 +466,13 @@ class TestimonialService {
     try {
       const sentQuery = query(
         this.requestsCollection,
-        where('creatorId', '==', creatorId),
-        where('status', '==', 'sent')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'sent')
       );
       const completedQuery = query(
         this.requestsCollection,
-        where('creatorId', '==', creatorId),
-        where('status', '==', 'completed')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed')
       );
 
       const [sentSnapshot, completedSnapshot] = await Promise.all([
