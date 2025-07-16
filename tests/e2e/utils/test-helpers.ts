@@ -5,8 +5,9 @@ export interface TestUser {
   uid: string;
   email: string;
   displayName: string;
-  role: 'client' | 'provider' | 'admin';
+  role: 'client' | 'provider' | 'admin' | 'producer' | 'artist' | 'engineer' | 'videographer' | 'studio';
   verified?: boolean;
+  approved?: boolean;
 }
 
 export interface TestBooking {
@@ -39,10 +40,10 @@ export class AuthUtils {
 
   async signIn(email: string, password: string = 'testpass123') {
     await this.page.goto('/auth');
-    await this.page.fill('[data-testid="email-input"]', email);
-    await this.page.fill('[data-testid="password-input"]', password);
-    await this.page.click('[data-testid="signin-button"]');
-    await this.page.waitForURL('/dashboard');
+    await this.page.fill('input[type="email"]', email);
+    await this.page.fill('input[type="password"]', password);
+    await this.page.click('button[type="submit"]');
+    await this.page.waitForURL('**/dashboard*', { timeout: 15000 });
   }
 
   async signOut() {
@@ -53,6 +54,14 @@ export class AuthUtils {
 
   async waitForAuth() {
     await this.page.waitForSelector('[data-testid="user-menu"]', { timeout: 10000 });
+  }
+
+  async signUp(email: string, password: string = 'testpass123') {
+    await this.page.goto('/signup');
+    await this.page.fill('input[type="email"]', email);
+    await this.page.fill('input[type="password"]', password);
+    await this.page.click('button[type="submit"]');
+    await this.page.waitForURL('**/dashboard*', { timeout: 15000 });
   }
 }
 
@@ -65,17 +74,26 @@ export class FirestoreUtils {
   constructor() {
     // Initialize Firestore connection for test data setup
     if (typeof window === 'undefined') {
-      const admin = require('firebase-admin');
-      if (!admin.apps.length) {
-        admin.initializeApp({
-          projectId: 'test-project'
-        });
+      try {
+        const admin = require('firebase-admin');
+        if (!admin.apps.length) {
+          admin.initializeApp({
+            projectId: process.env.FIREBASE_PROJECT_ID || 'test-project'
+          });
+        }
+        this.db = admin.firestore();
+      } catch (error) {
+        console.warn('Firebase admin not available, skipping Firestore setup:', error.message);
+        this.db = null;
       }
-      this.db = admin.firestore();
     }
   }
 
   async createTestUser(user: TestUser): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping user creation');
+      return;
+    }
     await this.db.collection('users').doc(user.uid).set({
       email: user.email,
       displayName: user.displayName,
@@ -87,6 +105,10 @@ export class FirestoreUtils {
   }
 
   async createTestService(service: TestService): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping service creation');
+      return;
+    }
     await this.db.collection('services').doc(service.id).set({
       providerId: service.providerId,
       title: service.title,
@@ -101,6 +123,10 @@ export class FirestoreUtils {
   }
 
   async createTestBooking(booking: TestBooking): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping booking creation');
+      return;
+    }
     await this.db.collection('bookings').doc(booking.id).set({
       clientId: booking.clientId,
       providerId: booking.providerId,
@@ -116,6 +142,10 @@ export class FirestoreUtils {
   }
 
   async cleanupTestData(): Promise<void> {
+    if (!this.db) {
+      console.warn('Firestore not available, skipping cleanup');
+      return;
+    }
     try {
       // Clean up test collections
       const collections = ['users', 'bookings', 'services', 'reviews'];
