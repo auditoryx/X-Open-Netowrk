@@ -56,7 +56,7 @@ export async function GET(req) {
       return new Response(JSON.stringify({ error: 'Unauthorized: Missing token' }), { status: 401 });
     }
     const decoded = await getAuth(adminApp).verifyIdToken(token);
-    const uid = searchParams.get('uid');
+    const uid = searchParams.get(SCHEMA_FIELDS.USER.ID);
 
     if (!uid) {
       return new Response(JSON.stringify({ error: 'Missing uid' }), { status: 400 });

@@ -15,7 +15,7 @@ export function listenToMessages(
 ) {
   const db = getFirestore(app);
   const ref = collection(db, 'bookings', bookingId, 'messages');
-  const q = query(ref, orderBy('createdAt', 'asc'));
+  const q = query(ref, orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'asc'));
 
   return onSnapshot(q, (snapshot) => {
     const messages = snapshot.docs.map(doc => doc.data());

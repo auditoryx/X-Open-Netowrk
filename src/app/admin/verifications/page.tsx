@@ -20,7 +20,7 @@ function VerificationsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const q = query(collection(db, 'verificationRequests'), where('status', '==', 'pending'));
+      const q = query(collection(db, 'verificationRequests'), where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'));
       const snap = await getDocs(q);
       setRequests(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 

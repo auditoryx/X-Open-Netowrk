@@ -6,7 +6,7 @@ import { parseISO, format } from 'date-fns';
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams();
-  const time = searchParams?.get('time') || null;
+  const time = searchParams?.get(SCHEMA_FIELDS.BOOKING_REQUEST.TIME) || null;
   const location = searchParams?.get('location') || null;
   const fee = searchParams?.get('fee') || null;
   const router = useRouter();

@@ -596,7 +596,7 @@ class ChallengeService {
       const snapshot = await getDocs(
         query(
           collection(db, 'challenges'),
-          where('status', '==', 'active'),
+          where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active'),
           orderBy('endDate', 'asc')
         )
       );
@@ -616,7 +616,7 @@ class ChallengeService {
       const snapshot = await getDocs(
         query(
           collection(db, 'challengeParticipations'),
-          where('userId', '==', userId),
+          where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
           orderBy('joinedAt', 'desc')
         )
       );
@@ -688,7 +688,7 @@ class ChallengeService {
       const snapshot = await getDocs(
         query(
           collection(db, 'challenges'),
-          where('status', '==', 'upcoming'),
+          where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'upcoming'),
           where('startDate', '<=', now)
         )
       );
@@ -717,7 +717,7 @@ class ChallengeService {
       const snapshot = await getDocs(
         query(
           collection(db, 'challenges'),
-          where('status', '==', 'active'),
+          where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active'),
           where('endDate', '<=', now)
         )
       );

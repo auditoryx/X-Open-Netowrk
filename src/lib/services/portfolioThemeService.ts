@@ -489,7 +489,7 @@ class PortfolioThemeService {
             description: 'Eye-catching posters for music festival',
             type: 'image',
             category: 'Print',
-            tags: ['poster', 'event', 'music', 'festival']
+            tags: ['poster', SCHEMA_FIELDS.XP_TRANSACTION.EVENT, 'music', 'festival']
           }
         ]
       },
@@ -558,7 +558,7 @@ class PortfolioThemeService {
             description: 'Complete wedding day coverage',
             type: 'image',
             category: 'Events',
-            tags: ['wedding', 'event', 'celebration', 'couples']
+            tags: ['wedding', SCHEMA_FIELDS.XP_TRANSACTION.EVENT, 'celebration', 'couples']
           },
           {
             title: 'Product Photography',

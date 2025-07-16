@@ -85,13 +85,13 @@ export interface SocialProofProfile {
 class SocialProofService {
   private readonly BADGE_DEFINITIONS: Omit<SocialProofBadge, 'id' | 'isEarned' | 'earnedAt' | 'progress'>[] = [
     {
-      type: 'rating',
+      type: SCHEMA_FIELDS.REVIEW.RATING,
       title: 'Top Rated Creator',
       description: 'Maintains a 4.8+ star rating with 20+ reviews',
       icon: 'star',
       color: 'yellow',
       maxProgress: 20,
-      criteria: { metric: 'averageRating', operator: '>=', value: 4.8 }
+      criteria: { metric: SCHEMA_FIELDS.USER.AVERAGE_RATING, operator: '>=', value: 4.8 }
     },
     {
       type: 'milestone',

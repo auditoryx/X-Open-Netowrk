@@ -23,7 +23,7 @@ function ListingReportsPage() {
       const q = query(
         collection(db, 'reports'),
         where('targetType', '==', 'listing'),
-        orderBy('createdAt', 'desc')
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
       const snap = await getDocs(q);
       setReports(snap.docs.map((d) => ({ id: d.id, ...d.data() })));

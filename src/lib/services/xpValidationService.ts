@@ -167,8 +167,8 @@ export class XPValidationService {
 
     const recentTransactions = await getDocs(query(
       collection(db, 'xpTransactions'),
-      where('userId', '==', userId),
-      where('event', '==', event),
+      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+      where(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, '==', event),
       where('timestamp', '>', Timestamp.fromDate(cutoffTime)),
       orderBy('timestamp', 'desc'),
       limit(1)
@@ -213,8 +213,8 @@ export class XPValidationService {
     // Check hourly limit
     const hourlyTransactions = await getDocs(query(
       collection(db, 'xpTransactions'),
-      where('userId', '==', userId),
-      where('event', '==', event),
+      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+      where(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, '==', event),
       where('timestamp', '>', Timestamp.fromDate(oneHourAgo))
     ));
 
@@ -229,8 +229,8 @@ export class XPValidationService {
     // Check daily limit
     const dailyTransactions = await getDocs(query(
       collection(db, 'xpTransactions'),
-      where('userId', '==', userId),
-      where('event', '==', event),
+      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+      where(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, '==', event),
       where('timestamp', '>', Timestamp.fromDate(oneDayAgo))
     ));
 
@@ -265,7 +265,7 @@ export class XPValidationService {
       // Get recent transactions for pattern analysis
       const recentTransactions = await getDocs(query(
         collection(db, 'xpTransactions'),
-        where('userId', '==', userId),
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
         orderBy('timestamp', 'desc'),
         limit(50)
       ));
@@ -437,7 +437,7 @@ export class XPValidationService {
     try {
       const transactions = await getDocs(query(
         collection(db, 'xpTransactions'),
-        where('userId', '==', userId),
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
         orderBy('timestamp', 'desc'),
         limit(100)
       ));

@@ -1,6 +1,7 @@
 import { firestore } from '@/lib/firebase/firebaseAdmin';
 import { MentorshipStatus } from '@/lib/types/Mentorship';
 import { doc, updateDoc, serverTimestamp, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 /**
  * Update a mentorship booking status
@@ -73,12 +74,12 @@ export async function getUserMentorshipBookings(
   userId: string,
   role: 'client' | 'creator'
 ) {
-  const fieldToQuery = role === 'client' ? 'clientUid' : 'creatorUid';
+  const fieldToQuery = role === 'client' ? SCHEMA_FIELDS.MENTORSHIP_BOOKING.CLIENT_UID : SCHEMA_FIELDS.MENTORSHIP_BOOKING.CREATOR_UID;
   
   const bookingsQuery = query(
     collection(firestore, 'mentorshipBookings'),
     where(fieldToQuery, '==', userId),
-    orderBy('createdAt', 'desc')
+    orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
   );
   
   const bookingsSnapshot = await getDocs(bookingsQuery);

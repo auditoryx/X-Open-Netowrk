@@ -8,7 +8,7 @@ export async function getFeaturedCreators() {
     const q = query(
       collection(db, 'users'),
       where('verified', '==', true),
-      orderBy('averageRating', 'desc'),
+      orderBy(SCHEMA_FIELDS.USER.AVERAGE_RATING, 'desc'),
       limit(4)
     );
     const snap = await getDocs(q);

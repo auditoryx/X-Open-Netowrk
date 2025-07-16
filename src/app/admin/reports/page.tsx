@@ -19,7 +19,7 @@ function ReportsPage() {
 
   useEffect(() => {
     async function fetchReports() {
-      const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'reports'), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
       const snap = await getDocs(q);
       setReports(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     }

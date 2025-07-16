@@ -35,7 +35,7 @@ export async function queryCreators(filters: {
   const qConstraints = [];
 
   if (filters.role) {
-    qConstraints.push(where('role', '==', filters.role));
+    qConstraints.push(where(SCHEMA_FIELDS.USER.ROLE, '==', filters.role));
   }
 
   if (filters.verifiedOnly) {
@@ -81,7 +81,7 @@ export async function queryCreators(filters: {
   const base = query(
     collection(db, 'users'),
     ...qConstraints,
-    orderBy('createdAt', 'desc'),
+    orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
     fsLimit(filters.limit || 20)
   );
 

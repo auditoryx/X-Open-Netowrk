@@ -275,10 +275,10 @@ class ContentAnalysisService {
 
     // Required elements check
     if (caseStudy.title) score += 10;
-    else missingElements.push('title');
+    else missingElements.push(SCHEMA_FIELDS.BOOKING.TITLE);
 
     if (caseStudy.description) score += 15;
-    else missingElements.push('description');
+    else missingElements.push(SCHEMA_FIELDS.SERVICE.DESCRIPTION);
 
     if (caseStudy.challenge) score += 20;
     else missingElements.push('challenge');

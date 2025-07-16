@@ -17,7 +17,7 @@ export default function ClientBookings() {
 
       const q = query(
         collection(db, 'bookings'),
-        where('clientId', '==', user.uid)
+        where(SCHEMA_FIELDS.BOOKING.CLIENT_ID, '==', user.uid)
       );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {

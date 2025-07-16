@@ -52,7 +52,7 @@ export async function getNotifications(
     
     let q = query(
       notificationsRef,
-      orderBy('createdAt', 'desc'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(limitCount)
     );
 
@@ -60,8 +60,8 @@ export async function getNotifications(
     if (unreadOnly) {
       q = query(
         notificationsRef,
-        where('read', '==', false),
-        orderBy('createdAt', 'desc'),
+        where(SCHEMA_FIELDS.NOTIFICATION.READ, '==', false),
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
         limit(limitCount)
       );
     }
