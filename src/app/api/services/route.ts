@@ -1,24 +1,57 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, getDoc } from 'firebase/firestore';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import withAuth from '@/app/api/_utils/withAuth';
 
+interface Service {
+  id?: string;
+  title: string;
+  description: string;
+  price: number;
+  creatorId: string;
+  createdAt: number;
+  updatedAt?: number;
+}
+
+interface CreateServiceRequest {
+  title: string;
+  description: string;
+  price: number;
+  [key: string]: any;
+}
+
+interface UpdateServiceRequest {
+  id: string;
+  updates: Partial<Service>;
+}
+
+interface DeleteServiceRequest {
+  id: string;
+}
+
+interface AuthenticatedRequest extends NextRequest {
+  user: {
+    uid: string;
+    email: string;
+  };
+}
+
 // GET all services
-async function getServices() {
+async function getServices(): Promise<NextResponse<Service[]>> {
   const snap = await getDocs(collection(db, 'services'));
-  const services = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const services: Service[] = snap.docs.map(d => ({ id: d.id, ...d.data() } as Service));
   return NextResponse.json(services);
 }
 
 // POST new service
-async function createService(req) {
-  const data = await req.json();
+async function createService(req: AuthenticatedRequest): Promise<NextResponse<{ id: string } | { error: string }>> {
+  const data: CreateServiceRequest = await req.json();
 
   if (!data.title || !data.description || !data.price) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  const newService = {
+  const newService: Omit<Service, 'id'> = {
     ...data,
     creatorId: req.user.uid,
     createdAt: Date.now(),
@@ -29,8 +62,8 @@ async function createService(req) {
 }
 
 // PUT update service
-async function updateService(req) {
-  const { id, updates } = await req.json();
+async function updateService(req: AuthenticatedRequest): Promise<NextResponse<{ success: boolean } | { error: string }>> {
+  const { id, updates }: UpdateServiceRequest = await req.json();
 
   if (!id || !updates) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -48,8 +81,8 @@ async function updateService(req) {
 }
 
 // DELETE service
-async function deleteService(req) {
-  const { id } = await req.json();
+async function deleteService(req: AuthenticatedRequest): Promise<NextResponse<{ success: boolean } | { error: string }>> {
+  const { id }: DeleteServiceRequest = await req.json();
 
   if (!id) {
     return NextResponse.json({ error: 'Missing service ID' }, { status: 400 });

@@ -1,0 +1,457 @@
+# Gitleaks Configuration for X-Open-Network
+
+title = "X-Open-Network Security Scan"
+description = "Gitleaks configuration for detecting secrets in the X-Open-Network codebase"
+
+# Extend the default Gitleaks configuration
+[extend]
+path = "https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml"
+
+# Custom rules for X-Open-Network specific secrets
+[[rules]]
+id = "firebase-api-key"
+description = "Firebase API Key"
+regex = '''AIza[0-9A-Za-z_-]{35}'''
+tags = ["firebase", "api-key"]
+keywords = ["AIza"]
+
+[[rules]]
+id = "firebase-app-id"
+description = "Firebase App ID"
+regex = '''1:[0-9]{12}:web:[0-9a-f]{17}'''
+tags = ["firebase", "app-id"]
+keywords = ["firebase", "app"]
+
+[[rules]]
+id = "stripe-secret-key"
+description = "Stripe Secret Key"
+regex = '''sk_(test|live)_[0-9a-zA-Z]{24}'''
+tags = ["stripe", "secret"]
+keywords = ["stripe"]
+
+[[rules]]
+id = "stripe-publishable-key"
+description = "Stripe Publishable Key"
+regex = '''pk_(test|live)_[0-9a-zA-Z]{24}'''
+tags = ["stripe", "publishable"]
+keywords = ["stripe"]
+
+[[rules]]
+id = "sendgrid-api-key"
+description = "SendGrid API Key"
+regex = '''SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}'''
+tags = ["sendgrid", "api-key"]
+keywords = ["sendgrid"]
+
+[[rules]]
+id = "jwt-secret"
+description = "JWT Secret"
+regex = '''(?i)(jwt[_-]?secret|secret[_-]?key|auth[_-]?secret)['"\s]*[:=]['"\s]*[a-zA-Z0-9_-]{32,}'''
+tags = ["jwt", "secret"]
+keywords = ["jwt", "secret"]
+
+[[rules]]
+id = "upstash-redis-url"
+description = "Upstash Redis URL"
+regex = '''https://[a-zA-Z0-9-]+\.upstash\.io'''
+tags = ["upstash", "redis"]
+keywords = ["upstash"]
+
+[[rules]]
+id = "upstash-redis-token"
+description = "Upstash Redis Token"
+regex = '''[a-zA-Z0-9_-]{40,}'''
+tags = ["upstash", "token"]
+keywords = ["upstash", "token"]
+paths = [".env", ".env.local", ".env.production"]
+
+[[rules]]
+id = "google-service-account"
+description = "Google Service Account Key"
+regex = '''(?i)(private_key|private_key_id|client_email|client_id|auth_uri|token_uri|auth_provider_x509_cert_url|client_x509_cert_url)'''
+tags = ["google", "service-account"]
+keywords = ["private_key", "service_account"]
+
+[[rules]]
+id = "nextauth-secret"
+description = "NextAuth Secret"
+regex = '''(?i)(nextauth[_-]?secret|auth[_-]?secret)['"\s]*[:=]['"\s]*[a-zA-Z0-9_-]{32,}'''
+tags = ["nextauth", "secret"]
+keywords = ["nextauth", "secret"]
+
+# Global allowlist for common false positives
+[allowlist]
+description = "Global allowlist for false positives"
+regexes = [
+    # Example/placeholder values
+    '''your[_-]?api[_-]?key[_-]?here''',
+    '''your[_-]?secret[_-]?here''',
+    '''your[_-]?token[_-]?here''',
+    '''your[_-]?project[_-]?id''',
+    '''your[_-]?app[_-]?id''',
+    '''your[_-]?domain''',
+    '''your[_-]?bucket''',
+    '''your[_-]?sender[_-]?id''',
+    '''your[_-]?measurement[_-]?id''',
+    '''your[_-]?database[_-]?url''',
+    '''your[_-]?redis[_-]?url''',
+    '''your[_-]?redis[_-]?token''',
+    '''your[_-]?stripe[_-]?secret[_-]?key''',
+    '''your[_-]?stripe[_-]?publishable[_-]?key''',
+    '''your[_-]?sendgrid[_-]?api[_-]?key''',
+    '''your[_-]?jwt[_-]?secret''',
+    '''your[_-]?nextauth[_-]?secret''',
+    
+    # CI/CD fallback values
+    '''ci[_-]?fallback''',
+    '''test[_-]?value''',
+    '''development[_-]?only''',
+    '''localhost''',
+    '''127\.0\.0\.1''',
+    
+    # Common test patterns
+    '''sk_test_[0-9a-zA-Z]{24}''',
+    '''pk_test_[0-9a-zA-Z]{24}''',
+    '''test[_-]?secret''',
+    '''demo[_-]?secret''',
+    '''example[_-]?secret''',
+    
+    # Documentation examples
+    '''REPLACE[_-]?WITH[_-]?ACTUAL''',
+    '''CHANGE[_-]?ME''',
+    '''TODO''',
+    '''FIXME''',
+    
+    # Firebase emulator values
+    '''demo[_-]?project''',
+    '''emulator[_-]?project''',
+    '''test[_-]?project''',
+    
+    # Common placeholders in config files
+    '''<YOUR[_-]?[A-Z_]+>''',
+    '''\{[A-Z_]+\}''',
+    '''\$\{[A-Z_]+\}''',
+]
+
+# File-specific allowlists
+[[allowlist]]
+description = "README files"
+paths = [
+    "README.md",
+    "docs/*.md",
+    "*.md"
+]
+regexes = [
+    '''sk_test_[0-9a-zA-Z]{24}''',
+    '''pk_test_[0-9a-zA-Z]{24}''',
+    '''AIza[0-9A-Za-z_-]{35}''',
+    '''SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}''',
+]
+
+[[allowlist]]
+description = "Test files"
+paths = [
+    "**/*test*",
+    "**/*spec*",
+    "**/tests/**",
+    "**/__tests__/**",
+    "cypress/**",
+    "jest.config.*",
+    "*.test.*",
+    "*.spec.*"
+]
+regexes = [
+    '''sk_test_[0-9a-zA-Z]{24}''',
+    '''pk_test_[0-9a-zA-Z]{24}''',
+    '''test[_-]?secret''',
+    '''mock[_-]?secret''',
+    '''fake[_-]?secret''',
+]
+
+[[allowlist]]
+description = "Environment example files"
+paths = [
+    ".env.example",
+    ".env.template",
+    ".env.sample",
+    "env.example",
+    "example.env"
+]
+regexes = [
+    '''.*''' # Allow all patterns in example files
+]
+
+[[allowlist]]
+description = "Configuration files"
+paths = [
+    "next.config.*",
+    "tailwind.config.*",
+    "jest.config.*",
+    "playwright.config.*",
+    "tsconfig.json",
+    "package.json",
+    "firebase.json",
+    "vercel.json",
+    "netlify.toml"
+]
+regexes = [
+    '''localhost''',
+    '''127\.0\.0\.1''',
+    '''0\.0\.0\.0''',
+    '''test[_-]?value''',
+    '''development[_-]?config''',
+]
+
+[[allowlist]]
+description = "Documentation and guides"
+paths = [
+    "docs/**",
+    "SETUP.md",
+    "DEPLOYMENT.md",
+    "CONTRIBUTING.md",
+    "*.md"
+]
+regexes = [
+    '''your[_-]?[a-z_]+[_-]?here''',
+    '''example[_-]?[a-z_]+''',
+    '''sample[_-]?[a-z_]+''',
+    '''test[_-]?[a-z_]+''',
+    '''demo[_-]?[a-z_]+''',
+]
+
+# Entropy-based detection rules
+[[rules]]
+id = "high-entropy-strings"
+description = "High entropy strings that might be secrets"
+regex = '''[a-zA-Z0-9_-]{40,}'''
+entropy = 3.5
+tags = ["entropy", "generic"]
+
+# Exclude certain file types from scanning
+[extend]
+paths = [
+    "**/*.min.js",
+    "**/*.min.css",
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/*.log",
+    "**/*.tmp",
+    "**/*.temp",
+    "**/package-lock.json",
+    "**/yarn.lock",
+    "**/pnpm-lock.yaml",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.jpeg",
+    "**/*.gif",
+    "**/*.svg",
+    "**/*.ico",
+    "**/*.woff",
+    "**/*.woff2",
+    "**/*.ttf",
+    "**/*.otf",
+    "**/*.eot",
+    "**/*.pdf",
+    "**/*.zip",
+    "**/*.tar.gz",
+    "**/*.tgz",
+    "**/*.tar",
+    "**/*.gz",
+    "**/*.bz2",
+    "**/*.7z",
+    "**/*.rar",
+    "**/*.iso",
+    "**/*.dmg",
+    "**/*.exe",
+    "**/*.msi",
+    "**/*.deb",
+    "**/*.rpm",
+    "**/*.pkg",
+    "**/*.app",
+    "**/*.apk",
+    "**/*.ipa",
+    "**/*.dll",
+    "**/*.so",
+    "**/*.dylib",
+    "**/*.bin",
+    "**/*.dat",
+    "**/*.db",
+    "**/*.sqlite",
+    "**/*.sqlite3",
+    "**/*.dump",
+    "**/*.backup",
+    "**/*.bak",
+    "**/*.swp",
+    "**/*.swo",
+    "**/*.tmp",
+    "**/*.temp",
+    "**/*.cache",
+    "**/*.pid",
+    "**/*.lock",
+    "**/*.jar",
+    "**/*.war",
+    "**/*.ear",
+    "**/*.class",
+    "**/*.pyc",
+    "**/*.pyo",
+    "**/*.pyd",
+    "**/*.o",
+    "**/*.obj",
+    "**/*.lib",
+    "**/*.a",
+    "**/*.la",
+    "**/*.lo",
+    "**/*.slo",
+    "**/*.ko",
+    "**/*.elf",
+    "**/*.hex",
+    "**/*.bin",
+    "**/*.firmware",
+    "**/*.rom",
+    "**/*.img",
+    "**/*.toast",
+    "**/*.vcd",
+    "**/*.toc",
+    "**/*.prefs",
+    "**/*.properties",
+    "**/*.ini",
+    "**/*.cfg",
+    "**/*.config",
+    "**/*.conf",
+    "**/*.plist",
+    "**/*.reg",
+    "**/*.xml",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.toml",
+    "**/*.csv",
+    "**/*.tsv",
+    "**/*.json",
+    "**/*.jsonl",
+    "**/*.ndjson",
+    "**/*.geojson",
+    "**/*.topojson",
+    "**/*.avro",
+    "**/*.parquet",
+    "**/*.orc",
+    "**/*.pb",
+    "**/*.protobuf",
+    "**/*.thrift",
+    "**/*.avsc",
+    "**/*.schema",
+    "**/*.xsd",
+    "**/*.dtd",
+    "**/*.rng",
+    "**/*.rnc",
+    "**/*.wsdl",
+    "**/*.wadl",
+    "**/*.raml",
+    "**/*.swagger",
+    "**/*.openapi",
+    "**/*.postman",
+    "**/*.har",
+    "**/*.hbs",
+    "**/*.handlebars",
+    "**/*.mustache",
+    "**/*.ejs",
+    "**/*.erb",
+    "**/*.haml",
+    "**/*.jade",
+    "**/*.pug",
+    "**/*.slim",
+    "**/*.twig",
+    "**/*.liquid",
+    "**/*.dust",
+    "**/*.dot",
+    "**/*.tmpl",
+    "**/*.template",
+    "**/*.tpl",
+    "**/*.stencil",
+    "**/*.smarty",
+    "**/*.volt",
+    "**/*.latte",
+    "**/*.plates",
+    "**/*.dwoo",
+    "**/*.rain",
+    "**/*.phptal",
+    "**/*.tal",
+    "**/*.pt",
+    "**/*.zpt",
+    "**/*.kid",
+    "**/*.genshi",
+    "**/*.mako",
+    "**/*.cheetah",
+    "**/*.velocity",
+    "**/*.freemarker",
+    "**/*.peb",
+    "**/*.jtwig",
+    "**/*.rocker",
+    "**/*.trimou",
+    "**/*.chunk",
+    "**/*.mustache",
+    "**/*.ractive",
+    "**/*.vue",
+    "**/*.svelte",
+    "**/*.riot",
+    "**/*.marko",
+    "**/*.jsx",
+    "**/*.tsx",
+    "**/*.ts",
+    "**/*.js",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.es6",
+    "**/*.es",
+    "**/*.esm",
+    "**/*.umd",
+    "**/*.amd",
+    "**/*.iife",
+    "**/*.system",
+    "**/*.commonjs",
+    "**/*.global",
+    "**/*.browser",
+    "**/*.node",
+    "**/*.web",
+    "**/*.worker",
+    "**/*.webworker",
+    "**/*.serviceworker",
+    "**/*.sw",
+    "**/*.manifest",
+    "**/*.appcache",
+    "**/*.webapp",
+    "**/*.webmanifest",
+    "**/*.json",
+    "**/*.map",
+    "**/*.d.ts",
+    "**/*.d.mts",
+    "**/*.d.cts",
+    "**/*.d.tsx",
+    "**/*.d.jsx",
+    "**/*.d.js",
+    "**/*.d.mjs",
+    "**/*.d.cjs",
+    "**/*.d.es6",
+    "**/*.d.es",
+    "**/*.d.esm",
+    "**/*.d.umd",
+    "**/*.d.amd",
+    "**/*.d.iife",
+    "**/*.d.system",
+    "**/*.d.commonjs",
+    "**/*.d.global",
+    "**/*.d.browser",
+    "**/*.d.node",
+    "**/*.d.web",
+    "**/*.d.worker",
+    "**/*.d.webworker",
+    "**/*.d.serviceworker",
+    "**/*.d.sw",
+    "**/*.d.manifest",
+    "**/*.d.appcache",
+    "**/*.d.webapp",
+    "**/*.d.webmanifest"
+]

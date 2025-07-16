@@ -1,8 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { logger } from '@lib/logger';
 
-export async function GET(req) {
+interface DecodedToken {
+  id: string;
+  email: string;
+  exp: number;
+  iat: number;
+}
+
+interface VerifyResponse {
+  verified: boolean;
+  uid: string;
+  email: string;
+}
+
+export async function GET(req: NextRequest): Promise<NextResponse<VerifyResponse | { error: string }>> {
   try {
     const authHeader = req.headers.get('authorization');
     
@@ -16,7 +29,7 @@ export async function GET(req) {
     const token = authHeader.split(' ')[1];
     
     // Verify our JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
     
     return NextResponse.json({ 
       verified: true,

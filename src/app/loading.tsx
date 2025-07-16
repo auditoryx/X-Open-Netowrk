@@ -1,4 +1,4 @@
-export default function Loading() {
+export default function Loading(): JSX.Element {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-ebony">
       {/* Brand Logo */}
