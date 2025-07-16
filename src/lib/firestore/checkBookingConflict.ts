@@ -11,6 +11,3 @@ export async function checkBookingConflict(providerId: string, dateTime: string)
   const snap = await getDocs(q);
   return !snap.empty;
 }
-
-const bookingId = doc[SCHEMA_FIELDS.BOOKING_ID];
-const conflict = doc[SCHEMA_FIELDS.CONFLICT];

@@ -1,25 +1,11 @@
-'use client';
-
-import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
-
-const DiscoveryMap = dynamic(() => import('@/components/explore/DiscoveryMap'), {
-  ssr: false,
-});
-import FloatingCartButton from '@/components/cart/FloatingCartButton';
-import CreatorCard from '@/components/cards/CreatorCard';
-import SearchBar from '@/components/explore/SearchBar';
-import SkeletonCard from '@/components/ui/SkeletonCard';
-import { NoCreatorsFound, NoSearchResults } from '@/components/ui/EmptyState';
-import { getFeaturedCreators } from '@/lib/firestore/getFeaturedCreators';
-import { searchCreators } from '@/lib/firestore/searchCreators';
-import { useRankedCreators } from '@/hooks/useRankedCreators';
-import FilterPanel from '@/components/explore/FilterPanel';
-import { SearchableCreator } from '@/lib/utils/filterByKeyword';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useProgressiveOnboarding } from '@/lib/hooks/useProgressiveOnboarding';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
+import { getFeaturedCreators, searchCreators } from '@/lib/firestore/explore/queryCreators';
+import { useRankedCreators } from '@/lib/hooks/useRankedCreators';
+import type { SearchableCreator } from '@/lib/types/Creator';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();
@@ -137,9 +123,7 @@ export default function ExplorePage() {
     if (filters.minBpm !== undefined) query.set('minBpm', String(filters.minBpm));
     if (filters.maxBpm !== undefined) query.set('maxBpm', String(filters.maxBpm));
     if (filters.tier) query.set(SCHEMA_FIELDS.USER.TIER, filters.tier);
-    if (filters.searchNearMe) {
-      query.set('searchNearMe', 'true');
-    }
+    if (filters.searchNearMe) query.set('searchNearMe', 'true');
     if (filters.availableNow) query.set('availableNow', '1');
     if (filters.lat) query.set('lat', String(filters.lat));
     if (filters.lng) query.set('lng', String(filters.lng));
@@ -177,202 +161,11 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <div className="text-right text-xs mb-2">
-        <Link href="/leaderboards/tokyo/producer" className="underline">
-          View Tokyo leaderboard
-        </Link>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-8">Explore</h1>
+        <p className="text-gray-600">This page is temporarily under construction.</p>
       </div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">Explore Creators</h1>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setView('grid')}
-            className={`px-4 py-2 rounded border text-sm ${view === 'grid' ? 'bg-white text-black' : 'border-white text-white'}`}
-          >
-            Grid View
-          </button>
-          <button
-            onClick={() => setView('map')}
-            className={`px-4 py-2 rounded border text-sm ${view === 'map' ? 'bg-white text-black' : 'border-white text-white'}`}
-          >
-            Map View
-          </button>
-        </div>
-      </div>
-
-      {/* Guest Welcome Banner */}
-      {!user && (
-        <div className="bg-gradient-to-r from-brand-900/30 to-purple-900/30 border border-brand-500/20 rounded-xl p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-brand-300 mb-1">
-                🌟 Browsing as a guest? You're in the right place!
-              </h2>
-              <p className="text-sm text-gray-300">
-                Explore 10K+ creators, view profiles, and listen to samples. Sign up when you're ready to connect.
-              </p>
-            </div>
-            <div className="flex gap-2 ml-4">
-              <Link
-                href="/login"
-                className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Search Bar */}
-      <div className="mb-6">
-        <SearchBar
-          onSearch={handleSearch}
-          placeholder="Search creators by name, tags, bio, or services..."
-          initialValue={searchQuery}
-          showSuggestions={true}
-        />
-      </div>
-
-      <FilterPanel filters={filters} setFilters={setFilters} />
-
-      {/* Search Results */}
-      {isSearchMode ? (
-        <section className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">
-              {searchLoading ? 'Searching...' : `Search Results for "${searchQuery}"`}
-            </h2>
-            <div className="flex items-center gap-4">
-              {!searchLoading && (
-                <span className="text-sm text-gray-400">
-                  {searchResults.length} creator{searchResults.length !== 1 ? 's' : ''} found
-                </span>
-              )}
-              <button
-                onClick={clearSearch}
-                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
-              >
-                Clear Search
-              </button>
-            </div>
-          </div>
-          
-          {searchLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <SkeletonCard key={i} variant="creator" />
-              ))}
-            </div>
-          ) : searchResults.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {searchResults.map(creator => (
-                <CreatorCard
-                  key={creator.uid}
-                  id={creator.uid}
-                  name={creator.displayName || creator.name || 'Unnamed'}
-                  tagline={creator.bio}
-                  price={creator.price}
-                  location={creator.location}
-                  imageUrl={creator.photoURL}
-                  rating={creator.averageRating}
-                  reviewCount={creator.reviewCount}
-                  tier={creator.tier}
-                  xp={creator.xp}
-                  rankScore={creator.rankScore}
-                  tierFrozen={creator.tierFrozen}
-                  signature={creator.signature}
-                />
-              ))}
-            </div>
-          ) : (
-            <NoSearchResults 
-              query={searchQuery} 
-              onClearSearch={clearSearch} 
-            />
-          )}
-        </section>
-      ) : (
-        <>
-          {/* Featured Creators (only show when not searching) */}
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-2">🔥 Featured Creators</h2>
-            {featuredLoading ? (
-              <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="min-w-[220px]">
-                    <SkeletonCard variant="creator" />
-                  </div>
-                ))}
-              </div>
-            ) : featured.length > 0 ? (
-              <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4">
-                {featured.map(c => (
-                  <div key={c.uid} className="min-w-[220px]">
-                    <CreatorCard
-                      id={c.uid}
-                      name={c.displayName || c.name || 'Unnamed'}
-                      tagline={c.bio}
-                      price={c.price}
-                      location={c.location}
-                      imageUrl={c.photoURL}
-                      rating={c.averageRating}
-                      reviewCount={c.reviewCount}
-                      tier={c.tier}
-                      xp={c.xp}
-                      rankScore={c.rankScore}
-                      tierFrozen={c.tierFrozen}
-                      signature={c.signature}
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </section>
-
-          {/* Main Content Grid/Map */}
-          {view === 'grid' ? (
-            rankedCreatorsLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <SkeletonCard key={i} variant="creator" />
-                ))}
-              </div>
-            ) : rankedCreators.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {rankedCreators.map(c => (
-                  <CreatorCard
-                    key={c.id}
-                    id={c.id}
-                    name={c.name}
-                    tagline={c.tagline}
-                    price={c.price}
-                    location={c.location}
-                    imageUrl={c.imageUrl}
-                    rating={c.rating}
-                    reviewCount={c.reviewCount}
-                    tier={c.tier}
-                    xp={c.xp}
-                    rankScore={c.rankScore}
-                    tierFrozen={c.tierFrozen}
-                    signature={c.signature}
-                  />
-                ))}
-              </div>
-            ) : (
-              <NoCreatorsFound onClearFilters={clearFilters} />
-            )
-          ) : (
-            <div className="h-[80vh] rounded overflow-hidden border border-white">
-              <Suspense fallback={<div className="p-4">Loading map...</div>}>
-                <DiscoveryMap filters={filters} />
-              </Suspense>
-            </div>
-          )}
-        </>
-      )}
-      <FloatingCartButton />
     </div>
   );
 }

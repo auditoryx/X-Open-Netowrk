@@ -222,3 +222,20 @@ export async function isCreatorOfMentorship(mentorshipId: string, userId: string
     return false;
   }
 }
+
+/**
+ * Create a mentorship booking
+ */
+export async function createMentorshipBooking(bookingData: any): Promise<string> {
+  try {
+    const docRef = await addDoc(collection(db, 'mentorshipBookings'), {
+      ...bookingData,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating mentorship booking:', error);
+    throw new Error('Failed to create mentorship booking');
+  }
+}

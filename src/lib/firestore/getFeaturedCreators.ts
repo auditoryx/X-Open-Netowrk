@@ -1,6 +1,7 @@
 import { getFirestore, collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { featuredCreatorsData } from '@/lib/data/featuredCreators';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export async function getFeaturedCreators() {
   try {

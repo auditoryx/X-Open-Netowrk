@@ -1,0 +1,18 @@
+[
+  {
+    "resourceType": "totalByteWeight",
+    "budget": 350000
+  },
+  {
+    "resourceType": "script",
+    "budget": 150000
+  },
+  {
+    "resourceType": "image",
+    "budget": 100000
+  },
+  {
+    "resourceType": "stylesheet",
+    "budget": 50000
+  }
+]

@@ -142,6 +142,17 @@ export const SCHEMA_FIELDS = {
     CREATED_AT: 'createdAt',
     UPDATED_AT: 'updatedAt',
   },
+  // Booking Request fields
+  BOOKING_REQUEST: {
+    SERVICE_ID: 'serviceId',
+    DATE: 'date',
+    TIME: 'time',
+    MESSAGE: 'message',
+    QUOTE: 'quote',
+    BUYER_ID: 'buyerId',
+    STATUS: 'status',
+    CREATED_AT: 'createdAt',
+  },
 } as const;
 
 // Type-safe field name access
@@ -155,3 +166,4 @@ export type NotificationFieldNames = SchemaFieldNames['NOTIFICATION'];
 export type XPTransactionFieldNames = SchemaFieldNames['XP_TRANSACTION'];
 export type UserProgressFieldNames = SchemaFieldNames['USER_PROGRESS'];
 export type DisputeFieldNames = SchemaFieldNames['DISPUTE'];
+export type BookingRequestFieldNames = SchemaFieldNames['BOOKING_REQUEST'];

@@ -15,6 +15,3 @@ export function track(event: string, payload: AnalyticsPayload = {}): void {
     console.error('track error', err);
   }
 }
-
-const eventType = doc[SCHEMA_FIELDS.EVENT_TYPE];
-const userId = doc[SCHEMA_FIELDS.USER_ID];

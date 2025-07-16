@@ -19,7 +19,12 @@ jobs:
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@v13.7.2
         with:
-          args: deploy --only hosting
+          args: deploy --only hosting,functions
         env:
           NODE_ENV: production
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

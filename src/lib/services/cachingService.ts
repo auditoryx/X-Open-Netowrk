@@ -535,6 +535,9 @@ export class CachingService {
   }
 
   private setupBrowserCacheAPI(): void {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Setup cache warming for critical data
     if ('caches' in window) {
       this.warmupCriticalData();
