@@ -1,5 +1,11 @@
 "use client";
-export default function ServiceFilter({ selectedRole, onChange }) {
+
+interface ServiceFilterProps {
+  selectedRole: string;
+  onChange: (role: string) => void;
+}
+
+export default function ServiceFilter({ selectedRole, onChange }: ServiceFilterProps): JSX.Element {
   const roles = ["all", "artist", "engineer", "producer", "studio", "videographer"];
 
   return (

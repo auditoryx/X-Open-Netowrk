@@ -5,22 +5,22 @@ import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-export default function DashboardHeader() {
+export default function DashboardHeader(): JSX.Element {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [role, setRole] = useState<string>("");
 
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
-      setEmail(user.email);
-      getDoc(doc(db, "users", user.email)).then((snap) => {
-        if (snap.exists()) setRole(snap.data().role);
+      setEmail(user.email || "");
+      getDoc(doc(db, "users", user.email || "")).then((snap) => {
+        if (snap.exists()) setRole(snap.data().role || "");
       });
     }
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     await signOut(auth);
     router.push("/login");
   };

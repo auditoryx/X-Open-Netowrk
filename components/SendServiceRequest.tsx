@@ -1,22 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
+
+interface FormData {
+  date: string;
+  time: string;
+  notes: string;
+}
+
+interface SendServiceRequestProps {
+  serviceId?: string;
+  recipientId?: string;
+  recipientRole?: "studio" | "provider" | "creator" | "admin";
+}
 
 export default function SendServiceRequest({
   serviceId = "",
   recipientId = "",
   recipientRole = "studio",
-}) {
-  const [formData, setFormData] = useState({
+}: SendServiceRequestProps): JSX.Element {
+  const [formData, setFormData] = useState<FormData>({
     date: "",
     time: "",
     notes: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
       const res = await fetch('/api/book', {

@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function HeroSection() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+export default function HeroSection(): JSX.Element {
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   return (
     <section className="text-center py-20 bg-neutral-dark text-neutral-light">

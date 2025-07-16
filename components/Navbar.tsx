@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Navbar(): JSX.Element {
   return (
     <header className="w-full px-6 py-4 border-b border-gray-800 flex items-center justify-between">
       <h1 className="text-2xl font-extrabold text-white">

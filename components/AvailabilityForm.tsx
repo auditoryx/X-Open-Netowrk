@@ -1,10 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { auth, db } from "../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
-export default function AvailabilityForm() {
-  const [availability, setAvailability] = useState({
+interface AvailabilityState {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+}
+
+export default function AvailabilityForm(): JSX.Element {
+  const [availability, setAvailability] = useState<AvailabilityState>({
     monday: true,
     tuesday: true,
     wednesday: false,
@@ -12,14 +20,14 @@ export default function AvailabilityForm() {
     friday: true,
   });
 
-  const handleChange = (day) => {
+  const handleChange = (day: keyof AvailabilityState): void => {
     setAvailability((prev) => ({
       ...prev,
       [day]: !prev[day],
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     const user = auth.currentUser;
@@ -48,8 +56,8 @@ export default function AvailabilityForm() {
           <input
             id={`avail-${day}`}
             type="checkbox"
-            checked={availability[day]}
-            onChange={() => handleChange(day)}
+            checked={availability[day as keyof AvailabilityState]}
+            onChange={() => handleChange(day as keyof AvailabilityState)}
             className="scale-125"
           />
         </div>

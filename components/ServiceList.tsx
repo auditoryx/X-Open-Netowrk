@@ -3,14 +3,28 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-export default function ServiceList({ userId }) {
-  const [services, setServices] = useState([]);
+interface ServiceData {
+  id: string;
+  title: string;
+  price: string;
+  desc: string;
+  userId: string;
+  role: string;
+  createdAt: number;
+}
+
+interface ServiceListProps {
+  userId: string;
+}
+
+export default function ServiceList({ userId }: ServiceListProps): JSX.Element {
+  const [services, setServices] = useState<ServiceData[]>([]);
 
   useEffect(() => {
-    const fetch = async () => {
-      const q = query(collection(db, "services"), where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, "==", userId));
+    const fetch = async (): Promise<void> => {
+      const q = query(collection(db, "services"), where("userId", "==", userId));
       const snap = await getDocs(q);
-      setServices(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setServices(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as ServiceData)));
     };
     fetch();
   }, [userId]);

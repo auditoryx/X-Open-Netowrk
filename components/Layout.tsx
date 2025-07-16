@@ -1,7 +1,12 @@
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { ReactNode } from 'react';
 
-export default function Layout({ children }) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Navbar />
