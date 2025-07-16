@@ -2,19 +2,31 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { db } from '../firebase';
-import { collection, query, where, getDocs, orderBy, limit, startAfter } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, startAfter, DocumentSnapshot } from 'firebase/firestore';
 
-export default function BookingHistory({ userId }) {
-  const [bookings, setBookings] = useState([]);
-  const [lastDoc, setLastDoc] = useState(null);
-  const [loading, setLoading] = useState(false);
+interface Booking {
+  id: string;
+  serviceName: string;
+  providerName: string;
+  date: string;
+  userId: string;
+}
 
-  const loadMore = useCallback(async () => {
+interface BookingHistoryProps {
+  userId: string;
+}
+
+export default function BookingHistory({ userId }: BookingHistoryProps): JSX.Element {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const loadMore = useCallback(async (): Promise<void> => {
     setLoading(true);
     const base = query(
       collection(db, 'bookings'),
-      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
-      orderBy(SCHEMA_FIELDS.BOOKING_REQUEST.DATE, 'desc'),
+      where('userId', '==', userId),
+      orderBy('date', 'desc'),
       limit(10)
     );
     const q = lastDoc ? query(base, startAfter(lastDoc)) : base;
@@ -22,7 +34,7 @@ export default function BookingHistory({ userId }) {
     const results = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data()
-    }));
+    })) as Booking[];
     setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1] || lastDoc);
     setBookings((prev) => [...prev, ...results]);
     setLoading(false);

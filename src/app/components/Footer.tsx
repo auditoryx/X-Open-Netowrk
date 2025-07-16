@@ -1,4 +1,4 @@
-export default function Footer() {
+export default function Footer(): JSX.Element {
   return (
     <footer className="bg-gray-900 text-gray-400 text-center p-6 mt-10">
       <p>© 2025 AuditoryX. All Rights Reserved.</p>

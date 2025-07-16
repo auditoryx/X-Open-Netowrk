@@ -1,19 +1,26 @@
 'use client';
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 
-export default function AvailabilityForm({ userRole }) {
-  const [timeSlot, setTimeSlot] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+interface AvailabilityFormProps {
+  userRole: string;
+}
 
-  const handleSubmit = async (e) => {
+export default function AvailabilityForm({ userRole }: AvailabilityFormProps): JSX.Element {
+  const [timeSlot, setTimeSlot] = useState<string>('');
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
       const auth = getAuth(app);
       const user = auth.currentUser;
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
       const token = await user.getIdToken();
 
       const res = await fetch('/api/availability', {
@@ -36,7 +43,7 @@ export default function AvailabilityForm({ userRole }) {
         alert('Error: ' + result.error);
       }
     } catch (err) {
-      alert('Submission failed: ' + err.message);
+      alert('Submission failed: ' + (err as Error).message);
     } finally {
       setSubmitting(false);
     }

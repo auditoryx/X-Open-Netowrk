@@ -1,6 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
 
-const ServiceManager = ({ fetchServices }) => {
+interface ServiceManagerProps {
+  fetchServices: () => void;
+}
+
+const ServiceManager: React.FC<ServiceManagerProps> = ({ fetchServices }) => {
   const stableFetchServices = useCallback(() => {
     fetchServices();
   }, [fetchServices]);

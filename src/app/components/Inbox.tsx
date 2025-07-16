@@ -2,8 +2,13 @@
 
 import { useState, useEffect } from 'react';
 
-export default function Inbox() {
-  const [messages, setMessages] = useState([]);
+interface Message {
+  from: string;
+  message: string;
+}
+
+export default function Inbox(): JSX.Element {
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     // Placeholder for real-time listener to Firestore
