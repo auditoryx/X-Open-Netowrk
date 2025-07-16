@@ -1,5 +1,3 @@
-import withTM from 'next-transpile-modules';
-
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -33,4 +31,4 @@ const nextConfig = {
   },
 };
 
-export default withTM([])(nextConfig);
+export default nextConfig;
