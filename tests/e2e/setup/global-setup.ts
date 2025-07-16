@@ -20,19 +20,23 @@ async function globalSetup() {
     appId: 'test-app-id'
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-
-  // Connect to emulators if not already connected
   try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Connect to emulators if not already connected
     if (process.env.NODE_ENV === 'test' || process.env.CI) {
-      connectFirestoreEmulator(db, 'localhost', 8080);
-      connectAuthEmulator(auth, 'http://localhost:9099');
-      console.log('📡 Connected to Firebase emulators');
+      try {
+        connectFirestoreEmulator(db, 'localhost', 8080);
+        connectAuthEmulator(auth, 'http://localhost:9099');
+        console.log('📡 Connected to Firebase emulators');
+      } catch (error) {
+        console.log('📡 Firebase emulators already connected or not available');
+      }
     }
   } catch (error) {
-    console.log('📡 Firebase emulators already connected or not available');
+    console.warn('⚠️  Firebase setup failed, continuing without Firebase:', error.message);
   }
 
   // Set up test environment variables
@@ -43,12 +47,16 @@ async function globalSetup() {
   process.env.SENDGRID_API_KEY = 'test-sendgrid-key';
 
   // Launch browser for shared state
-  const browser = await chromium.launch();
-  const context = await browser.newContext();
-  
-  // Store browser instance globally
-  (global as any).__BROWSER__ = browser;
-  (global as any).__CONTEXT__ = context;
+  try {
+    const browser = await chromium.launch({ channel: 'chrome' });
+    const context = await browser.newContext();
+    
+    // Store browser instance globally
+    (global as any).__BROWSER__ = browser;
+    (global as any).__CONTEXT__ = context;
+  } catch (error) {
+    console.warn('⚠️  Browser setup failed, continuing without shared browser:', error.message);
+  }
 
   console.log('✅ Global test setup completed');
 }
