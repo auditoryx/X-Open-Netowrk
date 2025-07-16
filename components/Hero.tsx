@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Hero() {
+export default function Hero(): JSX.Element {
   return (
     <section className="text-center text-neutral-light py-24 bg-gradient-to-b from-neutral-dark to-black">
       <h1 className="text-5xl font-bold">

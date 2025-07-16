@@ -1,15 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
 
-export default function ServiceForm({ userId, role }) {
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [desc, setDesc] = useState("");
-  const [status, setStatus] = useState("");
+interface ServiceFormProps {
+  userId: string;
+  role: 'creator' | 'admin' | 'user';
+}
 
-  const handleSubmit = async (e) => {
+export default function ServiceForm({ userId, role }: ServiceFormProps): JSX.Element {
+  const [title, setTitle] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
       await addDoc(collection(db, "services"), {

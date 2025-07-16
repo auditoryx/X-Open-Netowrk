@@ -1,9 +1,14 @@
 "use client";
 import { useState } from "react";
 import SendServiceRequest from "./SendServiceRequest";
+import { Service } from "../src/types/service";
 
-export default function ServiceCard({ service }) {
-  const [showRequest, setShowRequest] = useState(false);
+interface ServiceCardProps {
+  service: Service;
+}
+
+export default function ServiceCard({ service }: ServiceCardProps): JSX.Element {
+  const [showRequest, setShowRequest] = useState<boolean>(false);
 
   return (
     <div className="border border-gray-700 p-4 rounded-lg bg-gray-900 text-white space-y-2">

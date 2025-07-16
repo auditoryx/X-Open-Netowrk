@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
-export default function BookingForm() {
-  const [name, setName] = useState("");
-  const [service, setService] = useState("");
+export default function BookingForm(): JSX.Element {
+  const [name, setName] = useState<string>("");
+  const [service, setService] = useState<string>("");
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     const res = await fetch("/api/bookings", {
       method: "POST",

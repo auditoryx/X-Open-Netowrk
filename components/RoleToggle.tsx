@@ -4,25 +4,27 @@ import { db } from "../firebase/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 
-export default function RoleToggle() {
+type UserRole = "client" | "provider";
+
+export default function RoleToggle(): JSX.Element | null {
   const { data: session } = useSession();
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState<UserRole | null>(null);
 
   useEffect(() => {
-    const fetchRole = async () => {
+    const fetchRole = async (): Promise<void> => {
       if (!session?.user?.email) return;
       const docRef = doc(db, "users", session.user.email);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
-        setRole(snap.data().role);
+        setRole(snap.data().role as UserRole);
       }
     };
     fetchRole();
   }, [session]);
 
-  const toggleRole = async () => {
+  const toggleRole = async (): Promise<void> => {
     if (!session?.user?.email) return;
-    const newRole = role === "client" ? "provider" : "client";
+    const newRole: UserRole = role === "client" ? "provider" : "client";
     await updateDoc(doc(db, "users", session.user.email), { role: newRole });
     setRole(newRole);
   };
