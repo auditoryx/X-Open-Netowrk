@@ -27,7 +27,7 @@ export default function DashboardBookingsPage() {
   }, []);
 
   useEffect(() => {
-    const targetId = searchParams?.get('bookingId');
+    const targetId = searchParams?.get(SCHEMA_FIELDS.REVIEW.BOOKING_ID);
     if (targetId && highlightRef.current[targetId]) {
       setTimeout(() => {
         highlightRef.current[targetId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });

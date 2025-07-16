@@ -48,7 +48,7 @@ export async function createSampleNotifications(userId: string): Promise<void> {
       data: { bookingId: 'booking_001' }
     },
     {
-      type: 'message',
+      type: SCHEMA_FIELDS.NOTIFICATION.MESSAGE,
       title: 'New Message',
       message: 'You have a new message from Alex regarding your upcoming session.',
       isRead: false,

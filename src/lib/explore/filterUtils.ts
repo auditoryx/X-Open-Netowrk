@@ -13,7 +13,7 @@ export type ExploreFilters = {
 
 export function filtersToQueryString(filters: ExploreFilters): string {
   const query = new URLSearchParams();
-  if (filters.role) query.set('role', filters.role);
+  if (filters.role) query.set(SCHEMA_FIELDS.USER.ROLE, filters.role);
   if (filters.location) query.set('location', filters.location);
   if (filters.service) query.set('service', filters.service);
   if (filters.proTier) query.set('proTier', filters.proTier);

@@ -48,8 +48,8 @@ export async function getUserServices(
     
     let q = query(
       servicesRef,
-      where('creatorId', '==', uid),
-      orderBy('updatedAt', 'desc'),
+      where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', uid),
+      orderBy(SCHEMA_FIELDS.USER.UPDATED_AT, 'desc'),
       limit(limitCount)
     );
 
@@ -57,9 +57,9 @@ export async function getUserServices(
     if (status) {
       q = query(
         servicesRef,
-        where('creatorId', '==', uid),
-        where('status', '==', status),
-        orderBy('updatedAt', 'desc'),
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', uid),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', status),
+        orderBy(SCHEMA_FIELDS.USER.UPDATED_AT, 'desc'),
         limit(limitCount)
       );
     }
@@ -94,7 +94,7 @@ export async function getUserServiceStats(uid: string): Promise<{
   try {
     const db = getFirestore(app);
     const servicesRef = collection(db, 'services');
-    const q = query(servicesRef, where('creatorId', '==', uid));
+    const q = query(servicesRef, where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', uid));
 
     const snapshot = await getDocs(q);
     const services = snapshot.docs.map(doc => doc.data());

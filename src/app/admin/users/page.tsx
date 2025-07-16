@@ -21,7 +21,7 @@ function AdminUsersPage() {
 
   useEffect(() => {
     async function fetchUsers() {
-      const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'users'), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
       const snap = await getDocs(q);
       const users = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setAllUsers(users);

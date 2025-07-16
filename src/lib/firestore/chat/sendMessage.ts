@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore'
 import { app } from '@/lib/firebase'
 import { sendInAppNotification } from '@/lib/notifications/sendInAppNotification'
+import { SCHEMA_FIELDS } from '../../SCHEMA_FIELDS'
 
 async function notifyRecipient(
   recipientId: string,
@@ -21,7 +22,7 @@ async function notifyRecipient(
     body: JSON.stringify({
       userId: recipientId,
       email,
-      type: 'message',
+      type: SCHEMA_FIELDS.NOTIFICATION.MESSAGE,
       title: 'New Message',
       message: `You have a new message in your booking with ${senderId}`,
       link: `/dashboard/bookings/${bookingId}`
@@ -67,7 +68,7 @@ export async function sendMessage({
   // Send in-app notification to recipient
   await sendInAppNotification({
     to: recipientId,
-    type: 'message',
+    type: SCHEMA_FIELDS.NOTIFICATION.MESSAGE,
     title: 'New Message',
     message: `You have a new message in your booking with ${senderId}`,
     link: `/dashboard/bookings/${bookingId}`

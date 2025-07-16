@@ -219,7 +219,7 @@ class SeasonalService {
       const now = Timestamp.now();
       const eventsQuery = query(
         collection(db, 'seasonalEvents'),
-        where('status', '==', 'upcoming'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'upcoming'),
         where('startDate', '<=', now)
       );
 
@@ -254,7 +254,7 @@ class SeasonalService {
       const now = Timestamp.now();
       const eventsQuery = query(
         collection(db, 'seasonalEvents'),
-        where('status', '==', 'active'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active'),
         where('endDate', '<', now)
       );
 
@@ -512,7 +512,7 @@ class SeasonalService {
     try {
       const eventsQuery = query(
         collection(db, 'seasonalEvents'),
-        where('status', '==', 'active'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active'),
         orderBy('startDate', 'desc')
       );
 
@@ -532,7 +532,7 @@ class SeasonalService {
     try {
       const progressQuery = query(
         collection(db, 'userSeasonalProgress'),
-        where('userId', '==', userId),
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
         orderBy('joinedAt', 'desc')
       );
 

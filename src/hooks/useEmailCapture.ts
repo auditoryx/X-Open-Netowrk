@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { emailService, EmailCaptureData } from '@/lib/services/emailService';
 import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
 import toast from 'react-hot-toast';
+import { SCHEMA_FIELDS } from '../lib/SCHEMA_FIELDS';
 
 export interface UseEmailCaptureResult {
   captureEmail: (email: string, source: EmailCaptureData['source']) => Promise<boolean>;
@@ -58,7 +59,7 @@ export function useEmailCapture(): UseEmailCaptureResult {
 
         // Track successful email capture
         if (typeof window !== 'undefined' && (window as any).gtag) {
-          (window as any).gtag('event', 'email_capture', {
+          (window as any).gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, 'email_capture', {
             event_category: 'engagement',
             event_label: source,
             value: 1,

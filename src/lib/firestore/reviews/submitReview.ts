@@ -72,7 +72,7 @@ export async function submitReview(review: Review) {
   ]);
 
   const ratingSnap = await getDocs(
-    query(collection(db, 'reviews'), where('providerId', '==', review.providerId))
+    query(collection(db, 'reviews'), where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', review.providerId))
   );
   const ratings = ratingSnap.docs
     .map((d) => d.data().rating)

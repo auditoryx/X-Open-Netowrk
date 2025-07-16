@@ -83,10 +83,10 @@ export class CreatorAnalyticsService {
     const bookingsRef = collection(this.db, 'bookings');
     const bookingsQuery = query(
       bookingsRef,
-      where('providerId', '==', creatorId),
-      where('status', '==', 'completed'),
-      where('createdAt', '>=', Timestamp.fromDate(startDate)),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'),
+      where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', Timestamp.fromDate(startDate)),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     const bookingsSnapshot = await getDocs(bookingsQuery);
@@ -117,9 +117,9 @@ export class CreatorAnalyticsService {
     // Get completed bookings
     const completedBookingsQuery = query(
       collection(this.db, 'bookings'),
-      where('providerId', '==', creatorId),
-      where('status', '==', 'completed'),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(100) // Last 100 bookings for performance calculation
     );
 
@@ -129,8 +129,8 @@ export class CreatorAnalyticsService {
     // Get all bookings (including cancelled)
     const allBookingsQuery = query(
       collection(this.db, 'bookings'),
-      where('providerId', '==', creatorId),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(100)
     );
 
@@ -140,8 +140,8 @@ export class CreatorAnalyticsService {
     // Get reviews
     const reviewsQuery = query(
       collection(this.db, 'reviews'),
-      where('providerId', '==', creatorId),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     const reviewsSnapshot = await getDocs(reviewsQuery);
@@ -169,9 +169,9 @@ export class CreatorAnalyticsService {
   async getClientMetrics(creatorId: string): Promise<ClientMetrics> {
     const bookingsQuery = query(
       collection(this.db, 'bookings'),
-      where('providerId', '==', creatorId),
-      where('status', '==', 'completed'),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
 
     const bookingsSnapshot = await getDocs(bookingsQuery);
@@ -219,7 +219,7 @@ export class CreatorAnalyticsService {
     // Calculate satisfaction score from reviews
     const reviewsQuery = query(
       collection(this.db, 'reviews'),
-      where('providerId', '==', creatorId)
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId)
     );
     const reviewsSnapshot = await getDocs(reviewsQuery);
     const reviews = reviewsSnapshot.docs.map(doc => doc.data());
@@ -240,9 +240,9 @@ export class CreatorAnalyticsService {
     // Get completed bookings with service details
     const bookingsQuery = query(
       collection(this.db, 'bookings'),
-      where('providerId', '==', creatorId),
-      where('status', '==', 'completed'),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', creatorId),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(200) // Analyze recent bookings
     );
 

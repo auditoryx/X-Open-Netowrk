@@ -6,6 +6,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { assignRole } from '@/lib/assignRole';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export default function ProfileForm() {
   const [form, setForm] = useState({
@@ -61,7 +62,7 @@ export default function ProfileForm() {
   };
 
   const getCompletionPercent = () => {
-    const fields = ['name', 'role', 'bio', 'instagram', 'availability', 'location', 'timezone'];
+    const fields = [SCHEMA_FIELDS.USER.NAME, SCHEMA_FIELDS.USER.ROLE, 'bio', 'instagram', 'availability', 'location', 'timezone'];
     const filled = fields.filter((key) => !!form[key as keyof typeof form]);
     return Math.round((filled.length / fields.length) * 100);
   };

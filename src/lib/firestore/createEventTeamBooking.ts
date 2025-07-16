@@ -1,5 +1,6 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, doc, updateDoc, getDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
 
 export interface EventTeamBooking {
   id: string;
@@ -74,8 +75,8 @@ export async function getEventBookingsByUser(userId: string): Promise<EventTeamB
   try {
     const q = query(
       collection(db, 'eventBookings'),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
     
     const querySnapshot = await getDocs(q);
@@ -94,7 +95,7 @@ export async function getEventBookingsByEvent(eventId: string): Promise<EventTea
     const q = query(
       collection(db, 'eventBookings'),
       where('eventId', '==', eventId),
-      orderBy('createdAt', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
     
     const querySnapshot = await getDocs(q);

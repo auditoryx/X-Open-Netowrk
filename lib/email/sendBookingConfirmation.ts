@@ -35,7 +35,7 @@ export const sendBookingConfirmation = async (toEmail: string, booking: BookingD
 
   try {
     // Load HTML template
-    const templatePath = path.join(process.cwd(), 'lib', 'email', 'templates', 'bookingConfirmation.html');
+    const templatePath = path.join(process.cwd(), 'lib', SCHEMA_FIELDS.USER.EMAIL, 'templates', 'bookingConfirmation.html');
     let html = fs.readFileSync(templatePath, 'utf-8');
 
     // Inject dynamic content

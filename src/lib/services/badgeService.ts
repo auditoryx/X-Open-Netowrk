@@ -147,7 +147,7 @@ export class BadgeService {
         name: 'Verified Pro',
         description: 'Achieve Verified tier status',
         iconUrl: '/badges/verified-pro.svg',
-        category: 'tier',
+        category: SCHEMA_FIELDS.USER.TIER,
         rarity: 'legendary',
         criteria: {
           type: 'tier_reached',
@@ -378,7 +378,7 @@ export class BadgeService {
     try {
       const badgesQuery = query(
         collection(db, 'userBadges'),
-        where('userId', '==', userId)
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId)
       );
       
       const badgesSnap = await getDocs(badgesQuery);

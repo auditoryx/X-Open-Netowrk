@@ -3,7 +3,7 @@ import { app } from '@/lib/firebase';
 
 export async function getRatingDistribution(providerId: string): Promise<Record<number, number>> {
   const db = getFirestore(app);
-  const q = query(collection(db, 'reviews'), where('providerId', '==', providerId));
+  const q = query(collection(db, 'reviews'), where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', providerId));
   const snap = await getDocs(q);
   const distribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   for (const doc of snap.docs) {

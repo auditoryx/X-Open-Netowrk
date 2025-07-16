@@ -14,6 +14,7 @@ import {
   increment
 } from 'firebase/firestore';
 import { CollabPackage, CollabPackageFilters } from '@/src/lib/types/CollabPackage';
+import { SCHEMA_FIELDS } from "../SCHEMA_FIELDS";
 
 /**
  * Get a single collaboration package by ID
@@ -71,18 +72,18 @@ export async function getCollabPackagesForUser(
     const creatorQuery = query(
       packagesRef,
       where('createdBy', '==', uid),
-      where('status', '!=', 'archived'),
-      orderBy('status'),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'archived'),
+      orderBy(SCHEMA_FIELDS.BOOKING.STATUS),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(limitCount)
     );
 
     const memberQueries = [
-      query(packagesRef, where('roles.artistUid', '==', uid), where('status', '!=', 'archived'), orderBy('status'), orderBy('createdAt', 'desc'), limit(limitCount)),
-      query(packagesRef, where('roles.producerUid', '==', uid), where('status', '!=', 'archived'), orderBy('status'), orderBy('createdAt', 'desc'), limit(limitCount)),
-      query(packagesRef, where('roles.engineerUid', '==', uid), where('status', '!=', 'archived'), orderBy('status'), orderBy('createdAt', 'desc'), limit(limitCount)),
-      query(packagesRef, where('roles.videographerUid', '==', uid), where('status', '!=', 'archived'), orderBy('status'), orderBy('createdAt', 'desc'), limit(limitCount)),
-      query(packagesRef, where('roles.studioUid', '==', uid), where('status', '!=', 'archived'), orderBy('status'), orderBy('createdAt', 'desc'), limit(limitCount))
+      query(packagesRef, where('roles.artistUid', '==', uid), where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'archived'), orderBy(SCHEMA_FIELDS.BOOKING.STATUS), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'), limit(limitCount)),
+      query(packagesRef, where('roles.producerUid', '==', uid), where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'archived'), orderBy(SCHEMA_FIELDS.BOOKING.STATUS), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'), limit(limitCount)),
+      query(packagesRef, where('roles.engineerUid', '==', uid), where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'archived'), orderBy(SCHEMA_FIELDS.BOOKING.STATUS), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'), limit(limitCount)),
+      query(packagesRef, where('roles.videographerUid', '==', uid), where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'archived'), orderBy(SCHEMA_FIELDS.BOOKING.STATUS), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'), limit(limitCount)),
+      query(packagesRef, where('roles.studioUid', '==', uid), where(SCHEMA_FIELDS.BOOKING.STATUS, '!=', 'archived'), orderBy(SCHEMA_FIELDS.BOOKING.STATUS), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'), limit(limitCount))
     ];
 
     // Execute all queries
@@ -183,7 +184,7 @@ export async function getPublicCollabPackages(
     let q = query(
       packagesRef,
       where('isPublic', '==', true),
-      where('status', '==', 'active')
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active')
     );
 
     // Apply filters
@@ -204,7 +205,7 @@ export async function getPublicCollabPackages(
     }
 
     // Add ordering and pagination
-    q = query(q, orderBy('featured', 'desc'), orderBy('createdAt', 'desc'));
+    q = query(q, orderBy('featured', 'desc'), orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
     
     if (lastDoc) {
       q = query(q, startAfter(lastDoc));
@@ -276,10 +277,10 @@ export async function getFeaturedCollabPackages(limitCount: number = 6): Promise
     const q = query(
       packagesRef,
       where('isPublic', '==', true),
-      where('status', '==', 'active'),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active'),
       where('featured', '==', true),
       orderBy('viewCount', 'desc'),
-      orderBy('createdAt', 'desc'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(limitCount)
     );
 
@@ -316,8 +317,8 @@ export async function searchCollabPackages(
     const q = query(
       packagesRef,
       where('isPublic', '==', true),
-      where('status', '==', 'active'),
-      orderBy('createdAt', 'desc'),
+      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'active'),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
       limit(100) // Get more for client-side filtering
     );
 

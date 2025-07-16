@@ -3,7 +3,7 @@ import { app } from '@/lib/firebase';
 
 export async function getAverageRating(providerId: string): Promise<number | null> {
   const db = getFirestore(app);
-  const q = query(collection(db, 'reviews'), where('providerId', '==', providerId));
+  const q = query(collection(db, 'reviews'), where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', providerId));
   const snap = await getDocs(q);
   const ratings = snap.docs.map(doc => doc.data().rating).filter(r => typeof r === 'number');
   if (ratings.length === 0) return null;

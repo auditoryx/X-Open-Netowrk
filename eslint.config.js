@@ -3,11 +3,12 @@ import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import noHardcodedSchemaFieldsRule from './eslint-rules/no-hardcoded-schema-fields.js';
 
 /** @type {Linter.FlatConfig[]} */
 const config = [
   {
-    ignores: ['node_modules', 'dist', '.next'],
+    ignores: ['node_modules', 'dist', '.next', 'src/lib/@schema.d.ts', 'src/lib/schema.ts'],
   },
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -26,6 +27,11 @@ const config = [
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'jsx-a11y': jsxA11yPlugin,
+      'custom': {
+        rules: {
+          'no-hardcoded-schema-fields': noHardcodedSchemaFieldsRule,
+        },
+      },
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -40,6 +46,8 @@ const config = [
       'react-hooks/rules-of-hooks': 'warn',
       'prefer-const': 'warn',
       'jsx-a11y/alt-text': 'warn',
+      // Custom rule to prevent hardcoded field strings
+      'custom/no-hardcoded-schema-fields': 'error',
     },
   },
 ];

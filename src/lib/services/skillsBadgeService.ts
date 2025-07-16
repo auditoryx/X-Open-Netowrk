@@ -232,7 +232,7 @@ class SkillsBadgeService {
     try {
       const q = query(
         collection(db, this.expertiseCollection),
-        where('creatorId', '==', creatorId),
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
         orderBy('badge.earnedAt', 'desc')
       );
       

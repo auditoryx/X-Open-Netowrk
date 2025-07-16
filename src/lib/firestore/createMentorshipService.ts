@@ -1,6 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, doc, updateDoc, getDoc, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { Mentorship, MentorshipService, MentorProfile } from '@/lib/types/Mentorship';
+import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
 
 export async function createMentorshipService(
   mentorId: string,
@@ -61,8 +62,8 @@ export async function getMentorshipServicesByMentor(mentorId: string): Promise<M
     const q = query(
       collection(db, 'mentorshipServices'),
       where('mentorId', '==', mentorId),
-      where('isActive', '==', true),
-      orderBy('createdAt', 'desc')
+      where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true),
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
     );
     
     const querySnapshot = await getDocs(q);
@@ -80,9 +81,9 @@ export async function getMentorshipServicesByCategory(category: string): Promise
   try {
     const q = query(
       collection(db, 'mentorshipServices'),
-      where('category', '==', category),
-      where('isActive', '==', true),
-      orderBy('rating', 'desc')
+      where(SCHEMA_FIELDS.SERVICE.CATEGORY, '==', category),
+      where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true),
+      orderBy(SCHEMA_FIELDS.REVIEW.RATING, 'desc')
     );
     
     const querySnapshot = await getDocs(q);
@@ -101,8 +102,8 @@ export async function searchMentorshipServices(searchTerm: string): Promise<Ment
     // This is a simplified search - in production, you'd use a proper search service
     const q = query(
       collection(db, 'mentorshipServices'),
-      where('isActive', '==', true),
-      orderBy('rating', 'desc')
+      where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true),
+      orderBy(SCHEMA_FIELDS.REVIEW.RATING, 'desc')
     );
     
     const querySnapshot = await getDocs(q);

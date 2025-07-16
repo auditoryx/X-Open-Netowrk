@@ -23,7 +23,7 @@ function AdminDashboardPage() {
       const bookingsSnap = await getCountFromServer(collection(db, 'bookings'));
       const contractsSnap = await getCountFromServer(collection(db, 'contracts'));
       const disputesSnap = await getCountFromServer(
-        query(collection(db, 'disputes'), where('status', '==', 'open'))
+        query(collection(db, 'disputes'), where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'open'))
       );
       setStats({
         bookings: bookingsSnap.data().count,

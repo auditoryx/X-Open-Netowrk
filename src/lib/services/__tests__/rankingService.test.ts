@@ -416,9 +416,9 @@ describe('RankingService', () => {
     it('should get current ranking weights', () => {
       const weights = rankingService.getRankingWeights();
       
-      expect(weights).toHaveProperty('xp');
+      expect(weights).toHaveProperty(SCHEMA_FIELDS.USER.XP);
       expect(weights).toHaveProperty('verification');
-      expect(weights).toHaveProperty('tier');
+      expect(weights).toHaveProperty(SCHEMA_FIELDS.USER.TIER);
       expect(weights).toHaveProperty('performance');
       expect(weights).toHaveProperty('engagement');
       expect(weights).toHaveProperty('recency');

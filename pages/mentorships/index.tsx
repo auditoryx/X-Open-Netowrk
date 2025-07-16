@@ -45,7 +45,7 @@ export default function MentorshipListingPage() {
       let mentorshipQuery = query(
         collection(firestore, 'mentorships'),
         where('active', '==', true),
-        orderBy('createdAt', 'desc')
+        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
 
       if (filter !== 'all') {

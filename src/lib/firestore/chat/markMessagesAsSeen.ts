@@ -9,6 +9,7 @@ import {
   limit
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { SCHEMA_FIELDS } from '../../SCHEMA_FIELDS';
 
 export async function markMessagesAsSeen(
   bookingId: string,
@@ -17,7 +18,7 @@ export async function markMessagesAsSeen(
   const db = getFirestore(app);
   const q = query(
     collection(db, 'bookings', bookingId, 'messages'),
-    orderBy('createdAt', 'desc'),
+    orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
     limit(50)
   );
   const snap = await getDocs(q);
@@ -28,8 +29,11 @@ export async function markMessagesAsSeen(
   });
 
   for (const docRef of updates) {
+    const messageId = docRef[SCHEMA_FIELDS.MESSAGE_ID];
+    const seen = docRef[SCHEMA_FIELDS.SEEN];
+    
     await updateDoc(doc(db, 'bookings', bookingId, 'messages', docRef.id), {
-      seenBy: [...(docRef.data().seenBy || []), uid]
+      seenBy: [...(seen || []), uid]
     });
   }
 }

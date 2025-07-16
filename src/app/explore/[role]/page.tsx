@@ -23,7 +23,7 @@ export default function ExploreRolePage() {
     const fetchCreators = async () => {
       const db = getFirestore(app);
       const ref = collection(db, 'users');
-      const q = query(ref, where('role', '==', role));
+      const q = query(ref, where(SCHEMA_FIELDS.USER.ROLE, '==', role));
       const snap = await getDocs(q);
 
       const rawCreators = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));

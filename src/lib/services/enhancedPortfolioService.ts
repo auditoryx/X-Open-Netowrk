@@ -290,17 +290,17 @@ class EnhancedPortfolioService {
     }
   ): Promise<MediaPortfolioItem[]> {
     try {
-      let queryConstraints = [
-        where('creatorId', '==', creatorId),
-        orderBy('updatedAt', 'desc')
+      const queryConstraints = [
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.UPDATED_AT, 'desc')
       ];
 
       if (filters?.category) {
-        queryConstraints.splice(-1, 0, where('category', '==', filters.category));
+        queryConstraints.splice(-1, 0, where(SCHEMA_FIELDS.SERVICE.CATEGORY, '==', filters.category));
       }
       
       if (filters?.status) {
-        queryConstraints.splice(-1, 0, where('status', '==', filters.status));
+        queryConstraints.splice(-1, 0, where(SCHEMA_FIELDS.BOOKING.STATUS, '==', filters.status));
       }
       
       if (filters?.featured !== undefined) {
@@ -375,8 +375,8 @@ class EnhancedPortfolioService {
     try {
       const q = query(
         collection(db, this.showcaseCollection),
-        where('creatorId', '==', creatorId),
-        orderBy('updatedAt', 'desc')
+        where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
+        orderBy(SCHEMA_FIELDS.USER.UPDATED_AT, 'desc')
       );
       
       const querySnapshot = await getDocs(q);
@@ -493,7 +493,7 @@ class EnhancedPortfolioService {
   // Template Management
   async getPortfolioTemplates(): Promise<PortfolioTemplate[]> {
     try {
-      const q = query(collection(db, this.templatesCollection), orderBy('name'));
+      const q = query(collection(db, this.templatesCollection), orderBy(SCHEMA_FIELDS.USER.NAME));
       const querySnapshot = await getDocs(q);
       
       return querySnapshot.docs.map(doc => ({
@@ -517,7 +517,7 @@ class EnhancedPortfolioService {
         sections: [
           { id: 'featured', type: 'media', label: 'Featured Track', required: true },
           { id: 'gallery', type: 'gallery', label: 'Music Gallery', required: true },
-          { id: 'story', type: 'text', label: 'Artist Story', required: false },
+          { id: 'story', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Artist Story', required: false },
           { id: 'testimonials', type: 'testimonial', label: 'Reviews', required: false },
         ]
       },
@@ -540,8 +540,8 @@ class EnhancedPortfolioService {
         category: 'Professional',
         mediaTypes: ['image', 'video', 'audio', 'document'],
         sections: [
-          { id: 'overview', type: 'text', label: 'Project Overview', required: true },
-          { id: 'challenge', type: 'text', label: 'Challenge', required: true },
+          { id: 'overview', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Project Overview', required: true },
+          { id: 'challenge', type: SCHEMA_FIELDS.REVIEW.TEXT, label: 'Challenge', required: true },
           { id: 'solution', type: 'media', label: 'Solution', required: true },
           { id: 'results', type: 'metrics', label: 'Results', required: true },
           { id: 'testimonial', type: 'testimonial', label: 'Client Feedback', required: false },

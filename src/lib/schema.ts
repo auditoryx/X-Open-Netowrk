@@ -188,6 +188,118 @@ export const validateDispute = (data: unknown): Dispute => {
   return DisputeSchema.parse(data);
 };
 
-// Example usage:
-// doc[SCHEMA_FIELDS.USER_ID]
-// doc[SCHEMA_FIELDS.EMAIL]
+// =============================================================================
+// API REQUEST/RESPONSE SCHEMAS
+// =============================================================================
+
+// Role management schemas
+export const AssignRoleSchema = z.object({
+  uid: z.string().min(1),
+  role: z.enum(['user', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'admin', 'moderator']),
+});
+
+export const SetRoleSchema = z.object({
+  uid: z.string().min(1),
+  role: z.enum(['user', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'admin', 'moderator']),
+});
+
+// Booking request schema
+export const BookingRequestSchema = z.object({
+  serviceId: z.string().min(1),
+  date: z.string().min(1),
+  time: z.string().min(1),
+  message: z.string().min(1),
+  quote: z.number().positive().optional(),
+});
+
+// Ban user schema
+export const BanUserSchema = z.object({
+  uid: z.string().min(1),
+  reason: z.string().min(1),
+  duration: z.number().positive().optional(), // Duration in days
+});
+
+// Promote user schema
+export const PromoteUserSchema = z.object({
+  uid: z.string().min(1),
+  tier: z.enum(['standard', 'verified', 'signature']),
+});
+
+// Contract agreement schema
+export const ContractAgreementSchema = z.object({
+  contractId: z.string().min(1),
+  agreementType: z.enum(['client', 'provider']),
+});
+
+// Booking confirmation schema
+export const BookingConfirmationSchema = z.object({
+  bookingId: z.string().min(1),
+  recipientEmail: z.string().email(),
+  customMessage: z.string().optional(),
+});
+
+// Checkout session schema
+export const CheckoutSessionSchema = z.object({
+  priceId: z.string().min(1),
+  bookingId: z.string().min(1).optional(),
+  successUrl: z.string().url(),
+  cancelUrl: z.string().url(),
+});
+
+// Cart checkout schema
+export const CartCheckoutSchema = z.object({
+  items: z.array(z.object({
+    serviceId: z.string().min(1),
+    quantity: z.number().positive(),
+    price: z.number().positive(),
+  })),
+  customerId: z.string().min(1),
+});
+
+// Export API schema types
+export type AssignRoleRequest = z.infer<typeof AssignRoleSchema>;
+export type SetRoleRequest = z.infer<typeof SetRoleSchema>;
+export type BookingRequest = z.infer<typeof BookingRequestSchema>;
+export type BanUserRequest = z.infer<typeof BanUserSchema>;
+export type PromoteUserRequest = z.infer<typeof PromoteUserSchema>;
+export type ContractAgreementRequest = z.infer<typeof ContractAgreementSchema>;
+export type BookingConfirmationRequest = z.infer<typeof BookingConfirmationSchema>;
+export type CheckoutSessionRequest = z.infer<typeof CheckoutSessionSchema>;
+export type CartCheckoutRequest = z.infer<typeof CartCheckoutSchema>;
+
+// API validation helper functions
+export const validateAssignRole = (data: unknown): AssignRoleRequest => {
+  return AssignRoleSchema.parse(data);
+};
+
+export const validateSetRole = (data: unknown): SetRoleRequest => {
+  return SetRoleSchema.parse(data);
+};
+
+export const validateBookingRequest = (data: unknown): BookingRequest => {
+  return BookingRequestSchema.parse(data);
+};
+
+export const validateBanUser = (data: unknown): BanUserRequest => {
+  return BanUserSchema.parse(data);
+};
+
+export const validatePromoteUser = (data: unknown): PromoteUserRequest => {
+  return PromoteUserSchema.parse(data);
+};
+
+export const validateContractAgreement = (data: unknown): ContractAgreementRequest => {
+  return ContractAgreementSchema.parse(data);
+};
+
+export const validateBookingConfirmation = (data: unknown): BookingConfirmationRequest => {
+  return BookingConfirmationSchema.parse(data);
+};
+
+export const validateCheckoutSession = (data: unknown): CheckoutSessionRequest => {
+  return CheckoutSessionSchema.parse(data);
+};
+
+export const validateCartCheckout = (data: unknown): CartCheckoutRequest => {
+  return CartCheckoutSchema.parse(data);
+};

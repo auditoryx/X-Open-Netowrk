@@ -7,6 +7,7 @@ import { collection, query, where, orderBy, onSnapshot, doc, updateDoc } from 'f
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { Calendar, Users, DollarSign, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { SCHEMA_FIELDS } from '../../../lib/SCHEMA_FIELDS';
 
 interface MyCollabBookingsProps {
   view?: 'creator' | 'client' | 'all';
@@ -21,14 +22,14 @@ export default function MyCollabBookings({ view = 'all' }: MyCollabBookingsProps
   useEffect(() => {
     if (!user) return;
 
-    const constraints = [orderBy('createdAt', 'desc')];
+    const constraints = [orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')];
 
     if (view === 'creator') {
       // Bookings where user is a member of the collab package
       constraints.unshift(where('packageMembers', 'array-contains', user.uid));
     } else if (view === 'client') {
       // Bookings where user is the client
-      constraints.unshift(where('clientId', '==', user.uid));
+      constraints.unshift(where(SCHEMA_FIELDS.BOOKING.CLIENT_ID, '==', user.uid));
     } else {
       // All bookings related to the user
       // Note: Firestore doesn't support OR queries directly, so we'll filter client-side

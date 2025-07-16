@@ -417,8 +417,8 @@ export class AdminXPService {
       // Search by email (assuming most searches will be by email)
       const emailQuery = query(
         collection(db, 'profiles'),
-        where('email', '>=', searchTerm.toLowerCase()),
-        where('email', '<=', searchTerm.toLowerCase() + '\uf8ff'),
+        where(SCHEMA_FIELDS.USER.EMAIL, '>=', searchTerm.toLowerCase()),
+        where(SCHEMA_FIELDS.USER.EMAIL, '<=', searchTerm.toLowerCase() + '\uf8ff'),
         limit(limitCount)
       );
 
