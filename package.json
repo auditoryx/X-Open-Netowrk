@@ -71,6 +71,7 @@
     "micro": "^10.0.1",
     "mongoose": "^8.3.1",
     "next": "^15.3.1",
+    "next-pwa": "^5.6.0",
     "next-auth": "^4.24.11",
     "next-transpile-modules": "^10.0.1",
     "nodemailer": "^6.10.1",
