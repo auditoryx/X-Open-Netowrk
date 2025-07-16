@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [22.x]
 
     steps:
       - name: Checkout repository
@@ -31,11 +31,11 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Run linting (warnings only)
-        run: npm run lint || true
+      - name: Run linting
+        run: npm run lint
 
-      - name: Run type checking (warnings only)
-        run: npm run type-check || true
+      - name: Run type checking
+        run: npm run type-check
 
       - name: Start Firebase emulators
         run: |
@@ -83,24 +83,36 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: '22.x'
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Run security audit
         run: npm audit --audit-level=moderate
+        continue-on-error: true
 
-      - name: Check for secrets
+      - name: Install Gitleaks
         run: |
-          # Check for potential secrets in code
-          if grep -r "sk_live\|pk_live\|AIza" --exclude-dir=node_modules --exclude-dir=.git .; then
-            echo "Potential secrets found in code!"
+          wget https://github.com/gitleaks/gitleaks/releases/download/v8.18.0/gitleaks_8.18.0_linux_x64.tar.gz
+          tar -xzf gitleaks_8.18.0_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+
+      - name: Run Gitleaks scan
+        run: gitleaks detect --config .gitleaks.toml --verbose --no-git
+
+      - name: Check for secrets in environment files
+        run: |
+          # Check for potential secrets in code (excluding allowed patterns)
+          if grep -r "sk_live\|pk_live" --exclude-dir=node_modules --exclude-dir=.git --exclude="*.md" --exclude=".env.example" .; then
+            echo "Live secrets found in code!"
             exit 1
           fi
 

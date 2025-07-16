@@ -3,9 +3,10 @@ import { getFirestore, doc, setDoc, getDoc } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { z } from 'zod';
 import { logger } from '@lib/logger';
+import { NextRequest, NextResponse } from 'next/server';
 
-let db = null;
-let auth = null;
+let db: any = null;
+let auth: any = null;
 
 try {
   if (adminApp && adminApp.app) {
@@ -24,17 +25,29 @@ const AvailabilitySchema = z.object({
   }))
 });
 
-export async function POST(req) {
+interface AvailabilitySlot {
+  day: string;
+  time: string;
+}
+
+interface UserAvailability {
+  location: string;
+  availability: AvailabilitySlot[];
+  uid: string;
+  updatedAt: number;
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse<{ success: boolean } | { error: string; issues?: any }>> {
   try {
     if (!db || !auth) {
-      return new Response(JSON.stringify({ error: 'Firebase services not available' }), { status: 503 });
+      return NextResponse.json({ error: 'Firebase services not available' }, { status: 503 });
     }
 
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.split('Bearer ')[1];
 
     if (!token) {
-      return new Response(JSON.stringify({ error: 'Unauthorized: Missing token' }), { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized: Missing token' }, { status: 401 });
     }
 
     const decoded = await auth.verifyIdToken(token);
@@ -42,7 +55,7 @@ export async function POST(req) {
     const parsed = AvailabilitySchema.safeParse(data);
 
     if (!parsed.success) {
-      return new Response(JSON.stringify({ error: 'Invalid input', issues: parsed.error.format() }), { status: 400 });
+      return NextResponse.json({ error: 'Invalid input', issues: parsed.error.format() }, { status: 400 });
     }
 
     const { location, availability } = parsed.data;
@@ -54,35 +67,35 @@ export async function POST(req) {
       updatedAt: Date.now()
     });
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
-  } catch (err) {
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
     logger.error('❌ Availability POST failed:', err.message);
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
-export async function GET(req) {
+export async function GET(req: NextRequest): Promise<NextResponse<UserAvailability | {} | { error: string }>> {
   try {
     const { searchParams } = new URL(req.url);
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.split('Bearer ')[1];
     if (!token) {
-      return new Response(JSON.stringify({ error: 'Unauthorized: Missing token' }), { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized: Missing token' }, { status: 401 });
     }
     const decoded = await getAuth(adminApp).verifyIdToken(token);
-    const uid = searchParams.get(SCHEMA_FIELDS.USER.ID);
+    const uid = searchParams.get('uid');
 
     if (!uid) {
-      return new Response(JSON.stringify({ error: 'Missing uid' }), { status: 400 });
+      return NextResponse.json({ error: 'Missing uid' }, { status: 400 });
     }
     if (uid !== decoded.uid) {
-      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const docSnap = await getDoc(doc(db, 'userAvailability', uid));
-    return new Response(JSON.stringify(docSnap.exists ? docSnap.data() : {}), { status: 200 });
-  } catch (err) {
+    return NextResponse.json(docSnap.exists ? docSnap.data() : {});
+  } catch (err: any) {
     logger.error('❌ Availability GET failed:', err.message);
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
