@@ -3,10 +3,10 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useRouter } from 'next/navigation';
 
-export default function LogoutButton() {
+export default function LogoutButton(): JSX.Element {
   const router = useRouter();
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     await signOut(auth);
     router.push('/login');
   };
