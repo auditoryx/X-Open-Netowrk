@@ -1,10 +1,23 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { logger } from '@lib/logger';
 
-export async function POST(req) {
+interface SessionRequest {
+  email: string;
+  uid: string;
+}
+
+interface SessionResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+  };
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse<SessionResponse | { error: string }>> {
   try {
-    const { email, uid } = await req.json();
+    const { email, uid }: SessionRequest = await req.json();
     
     // Since we can't verify with Firebase Admin, we'll trust the token from the client
     // In a production app, you'd want proper verification
@@ -12,7 +25,7 @@ export async function POST(req) {
     // Generate JWT token for backend API authorization
     const backendToken = jwt.sign(
       { id: uid, email },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET!,
       { expiresIn: '30d' }
     );
     
