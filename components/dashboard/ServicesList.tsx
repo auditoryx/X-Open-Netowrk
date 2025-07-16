@@ -6,11 +6,21 @@ import { NoServices } from '@/components/ui/EmptyState';
 import SkeletonCard from '@/components/ui/SkeletonCard';
 import { useRouter } from 'next/navigation';
 
-export default function ServicesList({ isOwnProfile = true }) {
+interface Service {
+  id: number;
+  title: string;
+  price: number;
+}
+
+interface ServicesListProps {
+  isOwnProfile?: boolean;
+}
+
+export default function ServicesList({ isOwnProfile = true }: ServicesListProps): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // Mock data for now - replace with actual Firestore call
