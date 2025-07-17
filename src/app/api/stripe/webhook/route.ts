@@ -7,6 +7,8 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { logger } from '@lib/logger';
 import { Sentry } from '@lib/sentry';
+import { EscrowService } from '@/lib/stripe/escrow';
+import { StripeConnectService } from '@/lib/stripe/connect';
 
 export async function POST(req: Request) {
   const buf = await req.arrayBuffer();
@@ -31,6 +33,40 @@ export async function POST(req: Request) {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+  }
+
+  // Handle escrow payment events
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    
+    if (paymentIntent.metadata.type === 'escrow_payment') {
+      await handleEscrowPaymentSuccess(paymentIntent);
+    }
+  }
+
+  if (event.type === 'payment_intent.payment_failed') {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    
+    if (paymentIntent.metadata.type === 'escrow_payment') {
+      await handleEscrowPaymentFailed(paymentIntent);
+    }
+  }
+
+  // Handle Stripe Connect account events
+  if (event.type === 'account.updated') {
+    const account = event.data.object as Stripe.Account;
+    await handleConnectAccountUpdated(account);
+  }
+
+  // Handle transfer events
+  if (event.type === 'transfer.created') {
+    const transfer = event.data.object as Stripe.Transfer;
+    await handleTransferCreated(transfer);
+  }
+
+  if (event.type === 'payout.paid') {
+    const payout = event.data.object as Stripe.Payout;
+    await handlePayoutPaid(payout);
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -121,6 +157,175 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ received: true });
 }
+
+// Handle escrow payment success
+async function handleEscrowPaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
+  try {
+    const bookingId = paymentIntent.metadata.bookingId;
+    
+    if (!bookingId) return;
+    
+    const firestore = admin.firestore();
+    
+    // Update escrow status
+    await firestore.collection('escrows').doc(bookingId).update({
+      status: 'held',
+      heldAt: admin.firestore.FieldValue.serverTimestamp(),
+      paymentIntentId: paymentIntent.id
+    });
+    
+    // Update booking status
+    await firestore.collection('bookings').doc(bookingId).update({
+      paymentStatus: 'paid',
+      paidAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    logger.info('✅ Escrow payment succeeded:', bookingId);
+    
+    // Send notifications
+    const providerId = paymentIntent.metadata.providerId;
+    const customerId = paymentIntent.metadata.customerId;
+    
+    if (providerId) {
+      await sendInAppNotification({
+        to: providerId,
+        type: "booking",
+        title: "Payment Received",
+        message: "Payment has been received and is held in escrow until service completion.",
+        link: `/dashboard/bookings/${bookingId}`
+      });
+    }
+    
+    if (customerId) {
+      await sendInAppNotification({
+        to: customerId,
+        type: "booking",
+        title: "Payment Confirmed",
+        message: "Your payment has been confirmed. The provider will be notified.",
+        link: `/dashboard/bookings/${bookingId}`
+      });
+    }
+    
+  } catch (error) {
+    logger.error('Failed to handle escrow payment success:', error);
+    Sentry.captureException(error);
+  }
+}
+
+// Handle escrow payment failure
+async function handleEscrowPaymentFailed(paymentIntent: Stripe.PaymentIntent) {
+  try {
+    const bookingId = paymentIntent.metadata.bookingId;
+    
+    if (!bookingId) return;
+    
+    const firestore = admin.firestore();
+    
+    // Update escrow status
+    await firestore.collection('escrows').doc(bookingId).update({
+      status: 'failed',
+      failedAt: admin.firestore.FieldValue.serverTimestamp(),
+      failureReason: paymentIntent.last_payment_error?.message || 'Payment failed'
+    });
+    
+    // Update booking status
+    await firestore.collection('bookings').doc(bookingId).update({
+      paymentStatus: 'failed',
+      failedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    logger.error('❌ Escrow payment failed:', bookingId);
+    
+    // Send notification to customer
+    const customerId = paymentIntent.metadata.customerId;
+    if (customerId) {
+      await sendInAppNotification({
+        to: customerId,
+        type: "booking",
+        title: "Payment Failed",
+        message: "Your payment could not be processed. Please try again or contact support.",
+        link: `/dashboard/bookings/${bookingId}`
+      });
+    }
+    
+  } catch (error) {
+    logger.error('Failed to handle escrow payment failure:', error);
+    Sentry.captureException(error);
+  }
+}
+
+// Handle Connect account updates
+async function handleConnectAccountUpdated(account: Stripe.Account) {
+  try {
+    const firestore = admin.firestore();
+    
+    // Find user by Stripe Connect ID
+    const usersSnapshot = await firestore.collection('users')
+      .where('stripeConnectId', '==', account.id)
+      .limit(1)
+      .get();
+    
+    if (!usersSnapshot.empty) {
+      const userDoc = usersSnapshot.docs[0];
+      const connectService = new StripeConnectService();
+      
+      await connectService.updateAccountStatus(userDoc.id, account.id);
+      
+      logger.info('✅ Connect account updated:', account.id);
+    }
+    
+  } catch (error) {
+    logger.error('Failed to handle Connect account update:', error);
+    Sentry.captureException(error);
+  }
+}
+
+// Handle transfer creation
+async function handleTransferCreated(transfer: Stripe.Transfer) {
+  try {
+    const firestore = admin.firestore();
+    
+    // Log transfer for audit purposes
+    await firestore.collection('transfer_logs').add({
+      transferId: transfer.id,
+      amount: transfer.amount / 100,
+      currency: transfer.currency,
+      destination: transfer.destination,
+      transferGroup: transfer.transfer_group,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    logger.info('✅ Transfer created:', transfer.id);
+    
+  } catch (error) {
+    logger.error('Failed to handle transfer creation:', error);
+    Sentry.captureException(error);
+  }
+}
+
+// Handle payout completion
+async function handlePayoutPaid(payout: Stripe.Payout) {
+  try {
+    const firestore = admin.firestore();
+    
+    // Log payout for audit purposes
+    await firestore.collection('payout_logs').add({
+      payoutId: payout.id,
+      amount: payout.amount / 100,
+      currency: payout.currency,
+      status: payout.status,
+      arrivalDate: new Date(payout.arrival_date * 1000).toISOString(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    logger.info('✅ Payout completed:', payout.id);
+    
+  } catch (error) {
+    logger.error('Failed to handle payout completion:', error);
+    Sentry.captureException(error);
+  }
+}
+
 // Note: This webhook handler is not secured with authentication. Ensure to validate the event source and payload in production.
 // This is a simplified example. In a real-world application, you should implement proper error handling and logging.
 // Also, consider using a library like `stripe-webhook` for easier handling of Stripe webhooks.
