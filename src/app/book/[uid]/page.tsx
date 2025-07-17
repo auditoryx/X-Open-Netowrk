@@ -129,7 +129,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     })
 
     setLoading(false);
-    router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);
+    router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}&providerId=${params.uid}`);
   };
 
   return (

@@ -21,16 +21,12 @@
     "clean": "rm -rf .next",
     "audit:security": "npm audit --audit-level=moderate",
     "audit:accessibility": "./scripts/accessibility-audit.sh",
-    "check:secrets":
-      "grep -r 'sk_live\\|pk_live\\|AIza' --exclude-dir=node_modules --exclude-dir=.git . || echo 'No secrets found'",
+    "check:secrets": "grep -r 'sk_live\\|pk_live\\|AIza' --exclude-dir=node_modules --exclude-dir=.git . || echo 'No secrets found'",
     "seed:services": "ts-node scripts/seedServiceTemplates.ts",
     "cypress": "echo 'Cypress disabled due to firewall restrictions'",
-    "perf":
-      "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
-    "deploy:prod":
-      "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
-    "deploy:dev":
-      "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
+    "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
+    "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
+    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
@@ -71,8 +67,8 @@
     "micro": "^10.0.1",
     "mongoose": "^8.3.1",
     "next": "^15.3.1",
-    "next-pwa": "^5.6.0",
     "next-auth": "^4.24.11",
+    "next-pwa": "^5.6.0",
     "next-transpile-modules": "^10.0.1",
     "nodemailer": "^6.10.1",
     "path-browserify": "^1.0.1",
@@ -85,6 +81,7 @@
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-leaflet": "4.2.1",
+    "react-leaflet-cluster": "^2.1.0",
     "react-loading-skeleton": "^3.5.0",
     "react-tooltip": "^5.29.1",
     "recharts": "^3.0.2",
@@ -105,7 +102,6 @@
     "@babel/preset-typescript": "^7.27.1",
     "@lhci/cli": "^0.15.0",
     "@playwright/test": "^1.53.2",
-
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -118,7 +114,6 @@
     "@typescript-eslint/parser": "^8.34.1",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^30.0.2",
-
     "eslint": "^9.29.0",
     "eslint-config-next": "^15.3.4",
     "eslint-config-prettier": "^10.1.5",

@@ -143,9 +143,17 @@ export default function GlobalMapPage() {
     }
 
     if (filters.availability !== 'all') {
+      const now = new Date();
       filtered = filtered.filter(creator => {
         if (filters.availability === 'available') {
-          return creator.availability === 'available' || creator.nextAvailable;
+          // Check if creator has availability marked or next available slot is within 7 days
+          if (creator.availability === 'available') return true;
+          if (creator.nextAvailable) {
+            const nextDate = new Date(creator.nextAvailable);
+            const diffDays = (nextDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+            return diffDays <= 7;
+          }
+          return false;
         }
         return true;
       });
@@ -162,64 +170,198 @@ export default function GlobalMapPage() {
     setFilteredCreators(filtered);
   }, [creators, filters]);
 
-  // Update map markers
+  // Update map markers with clustering
   useEffect(() => {
     if (!map.current || !mapboxglRef.current) return;
 
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current.clear();
+    // Create GeoJSON data from filtered creators
+    const geojsonData = {
+      type: 'FeatureCollection',
+      features: filteredCreators.map(creator => {
+        let lat = creator.locationLat;
+        let lng = creator.locationLng;
 
-    // Add filtered creators as markers
-    filteredCreators.forEach(creator => {
-      let lat = creator.locationLat;
-      let lng = creator.locationLng;
-
-      if (!lat || !lng) {
-        const fallback = cityToCoords[creator.location?.toLowerCase()?.replace(/\s+/g, '') || ''];
-        if (fallback) {
-          [lng, lat] = fallback;
+        if (!lat || !lng) {
+          const fallback = cityToCoords[creator.location?.toLowerCase()?.replace(/\s+/g, '') || ''];
+          if (fallback) {
+            [lng, lat] = fallback;
+          }
         }
-      }
 
-      if (lat && lng) {
-        // Create custom marker element
-        const markerElement = document.createElement('div');
-        markerElement.className = 'custom-marker';
-        markerElement.innerHTML = `
-          <div class="w-10 h-10 rounded-full border-2 border-white shadow-lg overflow-hidden cursor-pointer transform hover:scale-110 transition-transform ${
-            creator.verified ? 'ring-2 ring-blue-500' : ''
-          }" style="background-color: ${getMarkerColor(creator)}">
-            ${creator.avatar ? 
-              `<img src="${creator.avatar}" class="w-full h-full object-cover" />` :
-              `<div class="w-full h-full flex items-center justify-center text-white font-bold text-sm">
-                ${creator.displayName.charAt(0).toUpperCase()}
-              </div>`
-            }
-          </div>
-        `;
+        return {
+          type: 'Feature',
+          properties: {
+            uid: creator.uid,
+            displayName: creator.displayName,
+            role: creator.role,
+            verified: creator.verified,
+            tier: creator.tier,
+            avatar: creator.avatar,
+            price: creator.price,
+            rating: creator.rating,
+            reviewCount: creator.reviewCount,
+            nextAvailable: creator.nextAvailable,
+            location: creator.location
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [lng, lat]
+          }
+        };
+      }).filter(feature => 
+        feature.geometry.coordinates[0] && feature.geometry.coordinates[1]
+      )
+    };
 
-        // Add click event to marker
-        markerElement.addEventListener('click', () => {
-          setSelectedCreator(creator);
-        });
+    // Remove existing layers and sources
+    if (map.current.getSource('creators')) {
+      map.current.removeLayer('clusters');
+      map.current.removeLayer('cluster-count');
+      map.current.removeLayer('unclustered-point');
+      map.current.removeSource('creators');
+    }
 
-        // Create and add marker
-        const marker = new mapboxglRef.current.Marker({ element: markerElement })
-          .setLngLat([lng, lat])
-          .addTo(map.current);
+    // Add clustered source
+    map.current.addSource('creators', {
+      type: 'geojson',
+      data: geojsonData,
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
+    });
 
-        markersRef.current.set(creator.uid, marker);
+    // Add cluster circles
+    map.current.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'creators',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          '#51bbd6',
+          100,
+          '#f1f075',
+          750,
+          '#f28cb1'
+        ],
+        'circle-radius': [
+          'step',
+          ['get', 'point_count'],
+          20,
+          100,
+          30,
+          750,
+          40
+        ]
       }
     });
+
+    // Add cluster count labels
+    map.current.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'creators',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12
+      }
+    });
+
+    // Add individual creator points
+    map.current.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'creators',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': [
+          'match',
+          ['get', 'tier'],
+          'signature', '#6366f1',
+          'premium', '#f59e0b',
+          '#3b82f6'
+        ],
+        'circle-radius': {
+          'base': 1.75,
+          'stops': [[12, 6], [22, 180]]
+        },
+        'circle-stroke-width': [
+          'case',
+          ['get', 'verified'],
+          3,
+          1
+        ],
+        'circle-stroke-color': [
+          'case',
+          ['get', 'verified'],
+          '#3b82f6',
+          '#ffffff'
+        ]
+      }
+    });
+
+    // Click event for clusters - zoom in
+    map.current.on('click', 'clusters', (e) => {
+      const features = map.current.queryRenderedFeatures(e.point, {
+        layers: ['clusters']
+      });
+      const clusterId = features[0].properties.cluster_id;
+      map.current.getSource('creators').getClusterExpansionZoom(
+        clusterId,
+        (err, zoom) => {
+          if (err) return;
+          map.current.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: zoom
+          });
+        }
+      );
+    });
+
+    // Click event for individual creators
+    map.current.on('click', 'unclustered-point', (e) => {
+      const features = map.current.queryRenderedFeatures(e.point, {
+        layers: ['unclustered-point']
+      });
+      if (features.length > 0) {
+        const creator = {
+          uid: features[0].properties.uid,
+          displayName: features[0].properties.displayName,
+          role: features[0].properties.role,
+          verified: features[0].properties.verified,
+          tier: features[0].properties.tier,
+          avatar: features[0].properties.avatar,
+          price: features[0].properties.price,
+          rating: features[0].properties.rating,
+          reviewCount: features[0].properties.reviewCount,
+          nextAvailable: features[0].properties.nextAvailable,
+          location: features[0].properties.location
+        };
+        setSelectedCreator(creator);
+      }
+    });
+
+    // Change cursor on hover
+    map.current.on('mouseenter', 'clusters', () => {
+      map.current.getCanvas().style.cursor = 'pointer';
+    });
+    map.current.on('mouseleave', 'clusters', () => {
+      map.current.getCanvas().style.cursor = '';
+    });
+    map.current.on('mouseenter', 'unclustered-point', () => {
+      map.current.getCanvas().style.cursor = 'pointer';
+    });
+    map.current.on('mouseleave', 'unclustered-point', () => {
+      map.current.getCanvas().style.cursor = '';
+    });
+
   }, [filteredCreators]);
 
-  const getMarkerColor = (creator: Creator) => {
-    if (creator.tier === 'signature') return '#6366f1'; // Indigo
-    if (creator.tier === 'premium') return '#f59e0b'; // Amber
-    if (creator.verified) return '#3b82f6'; // Blue
-    return '#6b7280'; // Gray
-  };
+
 
   const getRoleOptions = () => {
     const roles = [...new Set(creators.map(c => c.role))];
