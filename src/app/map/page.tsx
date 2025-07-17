@@ -280,7 +280,7 @@ export default function GlobalMapPage() {
       paint: {
         'circle-color': [
           'match',
-          ['get', 'tier'],
+          ['get', SCHEMA_FIELDS.USER.TIER],
           'signature', '#6366f1',
           'premium', '#f59e0b',
           '#3b82f6'
@@ -435,7 +435,7 @@ export default function GlobalMapPage() {
 
       {/* Filters panel */}
       {showFilters && (
-        <div className="absolute top-16 left-4 z-10 bg-white rounded-lg shadow-lg p-4 w-80 max-h-96 overflow-y-auto">
+        <div className="absolute top-16 left-4 right-4 md:right-auto z-10 bg-white rounded-lg shadow-lg p-4 md:w-80 max-h-96 overflow-y-auto">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Filters</h3>
             <button
@@ -458,9 +458,9 @@ export default function GlobalMapPage() {
                       checked={filters.role.includes(role)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          handleFilterChange('role', [...filters.role, role]);
+                          handleFilterChange(SCHEMA_FIELDS.USER.ROLE, [...filters.role, role]);
                         } else {
-                          handleFilterChange('role', filters.role.filter(r => r !== role));
+                          handleFilterChange(SCHEMA_FIELDS.USER.ROLE, filters.role.filter(r => r !== role));
                         }
                       }}
                       className="mr-2"
@@ -528,9 +528,9 @@ export default function GlobalMapPage() {
                       checked={filters.tier.includes(tier)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          handleFilterChange('tier', [...filters.tier, tier]);
+                          handleFilterChange(SCHEMA_FIELDS.USER.TIER, [...filters.tier, tier]);
                         } else {
-                          handleFilterChange('tier', filters.tier.filter(t => t !== tier));
+                          handleFilterChange(SCHEMA_FIELDS.USER.TIER, filters.tier.filter(t => t !== tier));
                         }
                       }}
                       className="mr-2"
@@ -552,7 +552,7 @@ export default function GlobalMapPage() {
                 max="5"
                 step="0.5"
                 value={filters.rating}
-                onChange={(e) => handleFilterChange('rating', parseFloat(e.target.value))}
+                onChange={(e) => handleFilterChange(SCHEMA_FIELDS.REVIEW.RATING, parseFloat(e.target.value))}
                 className="w-full"
               />
             </div>

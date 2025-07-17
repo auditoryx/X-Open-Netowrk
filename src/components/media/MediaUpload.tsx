@@ -101,7 +101,7 @@ export default function MediaUpload({
     const formData = new FormData();
     formData.append('file', mediaFile.file);
     formData.append('folder', folder);
-    formData.append('userId', session?.user?.id || '');
+    formData.append(SCHEMA_FIELDS.NOTIFICATION.USER_ID, session?.user?.id || '');
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();

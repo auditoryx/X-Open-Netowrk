@@ -55,25 +55,25 @@ export default function XpProgressBar({
 
   if (compact) {
     return (
-      <div className="flex items-center gap-3 text-sm">
+      <div className="flex flex-wrap items-center gap-2 md:gap-3 text-sm">
         {/* XP Progress */}
-        <div className="flex items-center gap-2">
-          <Star className="w-4 h-4 text-yellow-500" />
-          <span className="text-gray-300">{currentXp} XP</span>
+        <div className="flex items-center gap-1 md:gap-2">
+          <Star className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+          <span className="text-gray-300 whitespace-nowrap">{currentXp} XP</span>
         </div>
 
         {/* Streak */}
         {currentStreak > 0 && (
           <div className="flex items-center gap-1">
-            <Flame className="w-4 h-4 text-orange-500" />
-            <span className="text-orange-400">{currentStreak}</span>
+            <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
+            <span className="text-orange-400 whitespace-nowrap">{currentStreak}</span>
           </div>
         )}
 
         {/* Tier */}
         <div className="flex items-center gap-1">
-          <span>{getTierBadge(tier)}</span>
-          <span className="text-gray-400 capitalize text-xs">{tier}</span>
+          <span className="flex-shrink-0">{getTierBadge(tier)}</span>
+          <span className="text-gray-400 capitalize text-xs whitespace-nowrap">{tier}</span>
         </div>
       </div>
     );

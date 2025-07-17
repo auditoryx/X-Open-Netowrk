@@ -55,15 +55,15 @@ export default function BookingConfirmation({
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="max-w-xl mx-auto p-8 text-center">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+      <div className="max-w-xl mx-auto p-6 md:p-8 text-center w-full">
         {/* Success Icon */}
         <div className="flex justify-center mb-6">
-          <CheckCircleIcon className="w-20 h-20 text-green-400" />
+          <CheckCircleIcon className="w-16 h-16 md:w-20 md:h-20 text-green-400" />
         </div>
 
         {/* Main Success Message */}
-        <h1 className="text-4xl font-bold mb-4 text-green-400">
+        <h1 className="text-2xl md:text-4xl font-bold mb-4 text-green-400">
           🎉 Booking Request Sent!
         </h1>
 
@@ -102,12 +102,12 @@ export default function BookingConfirmation({
         </div>
 
         {/* Action Buttons */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {/* Primary Actions */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={handleViewBooking}
-              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 md:px-6 rounded-lg font-medium transition-colors w-full sm:w-auto"
             >
               <EyeIcon className="w-4 h-4" />
               View Booking
@@ -116,7 +116,7 @@ export default function BookingConfirmation({
             {providerId && (
               <button
                 onClick={handleMessageProvider}
-                className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 md:px-6 rounded-lg font-medium transition-colors w-full sm:w-auto"
               >
                 <MessageCircleIcon className="w-4 h-4" />
                 Message Provider
@@ -125,16 +125,16 @@ export default function BookingConfirmation({
           </div>
 
           {/* Secondary Actions */}
-          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => router.push('/dashboard')}
-              className="border border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors"
+              className="border border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors w-full sm:w-auto"
             >
               Go to Dashboard
             </button>
             <button
               onClick={() => router.push('/explore')}
-              className="text-sm underline text-gray-300 hover:text-white transition-colors px-4 py-2"
+              className="text-sm underline text-gray-300 hover:text-white transition-colors px-4 py-2 w-full sm:w-auto"
             >
               Explore More Creators
             </button>

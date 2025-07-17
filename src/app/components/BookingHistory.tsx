@@ -25,8 +25,8 @@ export default function BookingHistory({ userId }: BookingHistoryProps): JSX.Ele
     setLoading(true);
     const base = query(
       collection(db, 'bookings'),
-      where('userId', '==', userId),
-      orderBy('date', 'desc'),
+      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId),
+      orderBy(SCHEMA_FIELDS.BOOKING_REQUEST.DATE, 'desc'),
       limit(10)
     );
     const q = lastDoc ? query(base, startAfter(lastDoc)) : base;

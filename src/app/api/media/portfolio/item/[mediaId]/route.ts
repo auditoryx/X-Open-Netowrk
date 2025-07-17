@@ -61,7 +61,7 @@ export async function PUT(
     const updates = await req.json();
     
     // Validate updates
-    const allowedUpdates = ['description', 'tags', 'featured', 'displayOrder'];
+    const allowedUpdates = [SCHEMA_FIELDS.SERVICE.DESCRIPTION, 'tags', 'featured', 'displayOrder'];
     const filteredUpdates = Object.keys(updates)
       .filter(key => allowedUpdates.includes(key))
       .reduce((obj, key) => {
@@ -79,7 +79,7 @@ export async function PUT(
       
       // Remove featured status from other items
       const featuredSnapshot = await adminDb.collection('media')
-        .where('userId', '==', session.user.id)
+        .where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', session.user.id)
         .where('featured', '==', true)
         .get();
 

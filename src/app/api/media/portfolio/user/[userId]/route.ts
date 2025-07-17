@@ -19,16 +19,16 @@ export async function GET(
     const folder = searchParams.get('folder') || 'portfolio';
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
-    const type = searchParams.get('type'); // 'image', 'video', 'audio'
+    const type = searchParams.get(SCHEMA_FIELDS.NOTIFICATION.TYPE); // 'image', 'video', 'audio'
 
     // Build query
     let query = adminDb.collection('media')
-      .where('userId', '==', userId)
+      .where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId)
       .where('folder', '==', folder)
       .orderBy('uploadedAt', 'desc');
 
     if (type) {
-      query = query.where('type', '==', type);
+      query = query.where(SCHEMA_FIELDS.NOTIFICATION.TYPE, '==', type);
     }
 
     // Apply pagination
@@ -41,7 +41,7 @@ export async function GET(
 
     // Get total count
     const totalSnapshot = await adminDb.collection('media')
-      .where('userId', '==', userId)
+      .where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId)
       .where('folder', '==', folder)
       .get();
     
