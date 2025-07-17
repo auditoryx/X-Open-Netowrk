@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 interface ServiceData {
   id: string;
@@ -22,7 +23,7 @@ export default function ServiceList({ userId }: ServiceListProps): JSX.Element {
 
   useEffect(() => {
     const fetch = async (): Promise<void> => {
-      const q = query(collection(db, "services"), where("userId", "==", userId));
+      const q = query(collection(db, "services"), where(SCHEMA_FIELDS.USER.USER_ID, "==", userId));
       const snap = await getDocs(q);
       setServices(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as ServiceData)));
     };
