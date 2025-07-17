@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { adminDb } from '@/lib/firebase-admin';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -266,8 +267,8 @@ export class EscrowService {
   async getEscrowsByProvider(providerId: string): Promise<EscrowPayment[]> {
     try {
       const escrowsSnapshot = await adminDb.collection('escrows')
-        .where('providerId', '==', providerId)
-        .orderBy('createdAt', 'desc')
+        .where(SCHEMA_FIELDS.ESCROW.PROVIDER_ID, '==', providerId)
+        .orderBy(SCHEMA_FIELDS.ESCROW.CREATED_AT, 'desc')
         .limit(50)
         .get();
 
@@ -281,8 +282,8 @@ export class EscrowService {
   async getEscrowsByCustomer(customerId: string): Promise<EscrowPayment[]> {
     try {
       const escrowsSnapshot = await adminDb.collection('escrows')
-        .where('customerId', '==', customerId)
-        .orderBy('createdAt', 'desc')
+        .where(SCHEMA_FIELDS.ESCROW.CUSTOMER_ID, '==', customerId)
+        .orderBy(SCHEMA_FIELDS.ESCROW.CREATED_AT, 'desc')
         .limit(50)
         .get();
 

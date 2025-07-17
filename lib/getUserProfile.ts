@@ -1,6 +1,6 @@
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { app } from "@/firebase/firebaseConfig";
-import { logger } from "./logger";
+import { logger } from "@/lib/logger";
 
 const db = getFirestore(app);
 

@@ -9,7 +9,7 @@ import {
 import { isProfileComplete } from '@/lib/profile/isProfileComplete';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import { UserProfile } from '@/types/user';
-import { SCHEMA_FIELDS } from '../SCHEMA_FIELDS';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 export const queryCreators = async (filters: {
   role: string;
@@ -106,4 +106,78 @@ export const queryCreators = async (filters: {
   }
 
   return results;
+};
+
+export const getFeaturedCreators = async (limit: number = 10) => {
+  try {
+    const ref = collection(db, 'users');
+    const q = query(
+      ref,
+      where('featured', '==', true),
+      orderBy('createdAt', 'desc'),
+      orderBy('tier', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    
+    const results: (UserProfile & { id: string })[] = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...(doc.data() as UserProfile) }))
+      .filter(isProfileComplete)
+      .slice(0, limit);
+    
+    return results;
+  } catch (error) {
+    console.error('Error fetching featured creators:', error);
+    return [];
+  }
+};
+
+export const searchCreators = async (searchQuery: string, filters: {
+  role?: string;
+  verifiedOnly?: boolean;
+  location?: string;
+  limit?: number;
+}) => {
+  try {
+    const ref = collection(db, 'users');
+    const constraints = [];
+
+    if (filters.role) {
+      constraints.push(where(SCHEMA_FIELDS.USER.ROLE, '==', filters.role));
+    }
+
+    if (filters.verifiedOnly) {
+      constraints.push(where('verified', '==', true));
+    }
+
+    if (filters.location) {
+      constraints.push(where('location', '==', filters.location));
+    }
+
+    const q = query(ref, ...constraints);
+    const snapshot = await getDocs(q);
+
+    let results: (UserProfile & { id: string })[] = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...(doc.data() as UserProfile) }))
+      .filter(isProfileComplete);
+
+    // Client-side search filtering
+    if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase();
+      results = results.filter(creator => 
+        creator.displayName?.toLowerCase().includes(searchLower) ||
+        creator.bio?.toLowerCase().includes(searchLower) ||
+        creator.services?.some(service => service.toLowerCase().includes(searchLower)) ||
+        creator.genres?.some(genre => genre.toLowerCase().includes(searchLower))
+      );
+    }
+
+    if (filters.limit) {
+      results = results.slice(0, filters.limit);
+    }
+
+    return results;
+  } catch (error) {
+    console.error('Error searching creators:', error);
+    return [];
+  }
 };

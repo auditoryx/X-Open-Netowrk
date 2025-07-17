@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import { withAdminCheck } from '@/lib/auth/withAdminCheck';
-import { logger } from '@lib/logger';
+import { logger } from '@/lib/logger';
 import { AssignRoleSchema } from '@/lib/schema';
 
 async function handler(req: NextRequest & { admin: any }) {

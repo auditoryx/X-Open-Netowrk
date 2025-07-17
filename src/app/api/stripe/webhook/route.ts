@@ -5,7 +5,7 @@ import { sendBookingConfirmation } from '@/lib/email/sendBookingConfirmation';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { logger } from '@lib/logger';
+import { logger } from '@/lib/logger';
 import { Sentry } from '@lib/sentry';
 import { EscrowService } from '@/lib/stripe/escrow';
 import { StripeConnectService } from '@/lib/stripe/connect';

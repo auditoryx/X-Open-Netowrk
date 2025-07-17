@@ -84,6 +84,16 @@ export const SCHEMA_FIELDS = {
     CREATED_AT: 'createdAt',
   },
 
+  // Escrow fields
+  ESCROW: {
+    PROVIDER_ID: 'providerId',
+    CUSTOMER_ID: 'customerId',
+    CREATED_AT: 'createdAt',
+    UPDATED_AT: 'updatedAt',
+    STATUS: 'status',
+    AMOUNT: 'amount',
+  },
+
   // Mentorship Booking fields
   MENTORSHIP_BOOKING: {
     CLIENT_UID: 'clientUid',

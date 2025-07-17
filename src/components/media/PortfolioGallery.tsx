@@ -50,7 +50,7 @@ export default function PortfolioGallery({
   const loadMediaItems = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/media/portfolio/${currentUserId}`);
+      const response = await fetch(`/api/media/portfolio/user/${currentUserId}`);
       if (response.ok) {
         const data = await response.json();
         setMediaItems(data.items || []);
@@ -67,7 +67,7 @@ export default function PortfolioGallery({
     if (!confirm('Are you sure you want to delete this item?')) return;
 
     try {
-      const response = await fetch(`/api/media/portfolio/${itemId}`, {
+      const response = await fetch(`/api/media/portfolio/item/${itemId}`, {
         method: 'DELETE'
       });
 
@@ -85,7 +85,7 @@ export default function PortfolioGallery({
 
   const handleUpdateItem = async (itemId: string, updates: Partial<MediaItem>) => {
     try {
-      const response = await fetch(`/api/media/portfolio/${itemId}`, {
+      const response = await fetch(`/api/media/portfolio/item/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
