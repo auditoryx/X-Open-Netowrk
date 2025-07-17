@@ -103,6 +103,19 @@ export const SCHEMA_FIELDS = {
     UPDATED_AT: 'updatedAt',
   },
 
+  // User Progress fields
+  USER_PROGRESS: {
+    TOTAL_XP: 'totalXp',
+    WEEKLY_XP: 'weeklyXp',
+    MONTHLY_XP: 'monthlyXp',
+    CURRENT_STREAK: 'currentStreak',
+    LONGEST_STREAK: 'longestStreak',
+    CHALLENGES_COMPLETED: 'challengesCompleted',
+    BADGES_EARNED: 'badgesEarned',
+    LEVEL: 'level',
+    RANK: 'rank',
+  },
+
   // Common fields
   SEASON: 'season',
   AMOUNT: 'amount',

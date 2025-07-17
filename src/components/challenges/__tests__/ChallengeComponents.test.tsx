@@ -11,6 +11,7 @@ import ChallengeCard from '../ChallengeCard';
 import ChallengeGrid from '../ChallengeGrid';
 import ChallengeLeaderboard from '../ChallengeLeaderboard';
 import { Challenge, ChallengeParticipation, ChallengeLeaderboard as ChallengeLeaderboardType } from '@/lib/services/challengeService';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 // Mock UI components
 jest.mock('@/components/ui/card', () => ({
