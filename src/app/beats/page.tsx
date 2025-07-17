@@ -1,6 +1,6 @@
 'use client';
 
-export default function BeatsPage() {
+export default function BeatsPage(): JSX.Element {
   return (
     <div className="min-h-screen bg-black text-white">
             <div className="flex flex-col items-center justify-center text-center p-8">

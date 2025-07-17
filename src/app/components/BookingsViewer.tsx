@@ -1,15 +1,26 @@
 'use client';
 
 import { getAuth } from 'firebase/auth';
-import { getFirestore, collection, query, where, getDocs, orderBy, startAfter, limit } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, orderBy, startAfter, limit, DocumentSnapshot } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import React, { useEffect, useState, useCallback } from 'react';
 
-export default function BookingsViewer() {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [lastDoc, setLastDoc] = useState(null);
-  const [uidState, setUid] = useState(null);
+interface BookingData {
+  id: string;
+  clientId: string;
+  message: string;
+  timeSlot: string;
+  status: string;
+  createdAt?: {
+    seconds: number;
+  };
+}
+
+export default function BookingsViewer(): JSX.Element {
+  const [bookings, setBookings] = useState<BookingData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
+  const [uidState, setUid] = useState<string | null>(null);
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -24,17 +35,17 @@ export default function BookingsViewer() {
     return () => unsubscribe();
   }, []);
 
-  const loadMore = useCallback(async (uid) => {
+  const loadMore = useCallback(async (uid: string) => {
     setLoading(true);
     const base = query(
       collection(getFirestore(app), 'bookings'),
-      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', uid),
-      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
+      where('providerId', '==', uid),
+      orderBy('createdAt', 'desc'),
       limit(10)
     );
     const q = lastDoc ? query(base, startAfter(lastDoc)) : base;
     const snapshot = await getDocs(q);
-    const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as BookingData[];
     setLastDoc(snapshot.docs[snapshot.docs.length - 1] || lastDoc);
     setBookings((prev) => [...prev, ...results]);
     setLoading(false);
@@ -68,7 +79,7 @@ export default function BookingsViewer() {
       )}
       {lastDoc && (
         <button
-          onClick={() => loadMore(uidState)}
+          onClick={() => loadMore(uidState!)}
           disabled={loading}
           className="mt-2 px-4 py-2 bg-gray-800 text-white rounded"
         >

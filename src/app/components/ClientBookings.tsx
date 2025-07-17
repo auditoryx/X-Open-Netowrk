@@ -8,30 +8,39 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 
-export default function ClientBookings() {
-  const [bookings, setBookings] = useState([]);
+interface ClientBooking {
+  id: string;
+  serviceName: string;
+  price: number;
+  status: string;
+  providerId: string;
+  clientId: string;
+}
+
+export default function ClientBookings(): JSX.Element {
+  const [bookings, setBookings] = useState<ClientBooking[]>([]);
 
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
 
-      const q = query(
-        collection(db, 'bookings'),
-        where(SCHEMA_FIELDS.BOOKING.CLIENT_ID, '==', user.uid)
-      );
+    const q = query(
+      collection(db, 'bookings'),
+      where('clientId', '==', user.uid)
+    );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
+      })) as ClientBooking[];
       setBookings(data);
     });
 
     return () => unsubscribe();
   }, []);
 
-  if (!bookings.length) return <p>You haven’t made any bookings yet.</p>;
+  if (!bookings.length) return <p>You haven't made any bookings yet.</p>;
 
   return (
     <div className="mt-8">

@@ -1,7 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Service } from "../src/types/service";
 
-export default function ServiceProfileModal({ isOpen, onClose, service }) {
+interface ServiceProfileModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  service: Service | null;
+}
+
+export default function ServiceProfileModal({ isOpen, onClose, service }: ServiceProfileModalProps): JSX.Element | null {
   if (!isOpen || !service) return null;
 
   return (
@@ -9,7 +16,7 @@ export default function ServiceProfileModal({ isOpen, onClose, service }) {
       <div className="bg-gray-900 p-6 rounded-lg w-full max-w-xl relative">
         <button onClick={onClose} className="absolute top-3 right-3 text-white text-xl">✕</button>
         <h2 className="text-2xl font-bold mb-2">{service.displayName}</h2>
-        <p className="text-gray-400 mb-4">{service.bio}</p>
+        <p className="text-gray-400 mb-4">{service.description}</p>
         <div className="space-y-2 text-white">
           <p><strong>Role:</strong> {service.role}</p>
           <p><strong>Service:</strong> {service.serviceName}</p>

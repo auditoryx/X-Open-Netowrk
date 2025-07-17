@@ -1,8 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function IncomingRequests({ userId }) {
-  const [requests, setRequests] = useState([]);
+interface Request {
+  id: string;
+  senderId: string;
+  date: string;
+  time: string;
+  notes?: string;
+}
+
+interface IncomingRequestsProps {
+  userId: string;
+}
+
+export default function IncomingRequests({ userId }: IncomingRequestsProps): JSX.Element {
+  const [requests, setRequests] = useState<Request[]>([]);
 
   useEffect(() => {
     fetch(`/api/bookings?userId=${userId}`)

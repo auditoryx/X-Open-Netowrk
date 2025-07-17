@@ -1,16 +1,27 @@
 'use client';
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { addBooking } from "../lib/firestoreHelpers";
 
-export default function BookingRequestForm({ userId, serviceId }) {
-  const [form, setForm] = useState({ name: "", contact: "", message: "" });
-  const [success, setSuccess] = useState(false);
+interface BookingForm {
+  name: string;
+  contact: string;
+  message: string;
+}
 
-  const handleChange = (e) => {
+interface BookingRequestFormProps {
+  userId: string;
+  serviceId: string;
+}
+
+export default function BookingRequestForm({ userId, serviceId }: BookingRequestFormProps): JSX.Element {
+  const [form, setForm] = useState<BookingForm>({ name: "", contact: "", message: "" });
+  const [success, setSuccess] = useState<boolean>(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     await addBooking(userId, serviceId, form);
     setSuccess(true);

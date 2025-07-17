@@ -1,13 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { auth, db } from "../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
-export default function EditProfileForm() {
-  const [displayName, setDisplayName] = useState("Zenji");
-  const [bio, setBio] = useState("Music visionary. A&R. Creator of vibes.");
+export default function EditProfileForm(): JSX.Element {
+  const [displayName, setDisplayName] = useState<string>("Zenji");
+  const [bio, setBio] = useState<string>("Music visionary. A&R. Creator of vibes.");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     const user = auth.currentUser;
@@ -29,6 +29,14 @@ export default function EditProfileForm() {
     }
   };
 
+  const handleDisplayNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setDisplayName(e.target.value);
+  };
+
+  const handleBioChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    setBio(e.target.value);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
       <div>
@@ -39,7 +47,7 @@ export default function EditProfileForm() {
           id="display-name"
           className="input-base"
           value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
+          onChange={handleDisplayNameChange}
         />
       </div>
       <div>
@@ -50,7 +58,7 @@ export default function EditProfileForm() {
           id="bio"
           className="textarea-base"
           value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          onChange={handleBioChange}
         />
       </div>
       <button type="submit" className="btn btn-primary">Save Changes</button>

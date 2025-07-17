@@ -1,16 +1,23 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { db, auth } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-export default function ServiceManager() {
-  const [services, setServices] = useState([]);
-  const [newService, setNewService] = useState({ name: '', description: '', price: '', availability: '' });
+interface ServiceItem {
+  name: string;
+  description: string;
+  price: string;
+  availability: string;
+}
+
+export default function ServiceManager(): JSX.Element {
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [newService, setNewService] = useState<ServiceItem>({ name: '', description: '', price: '', availability: '' });
 
   const user = auth.currentUser;
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchServices = async (): Promise<void> => {
       if (!user) return;
       const docRef = doc(db, 'users', user.uid);
       const docSnap = await getDoc(docRef);
@@ -21,11 +28,11 @@ export default function ServiceManager() {
     fetchServices();
   }, [user]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setNewService({ ...newService, [e.target.name]: e.target.value });
   };
 
-  const handleAddService = async () => {
+  const handleAddService = async (): Promise<void> => {
     const updated = [...services, newService];
     setServices(updated);
     setNewService({ name: '', description: '', price: '', availability: '' });
@@ -35,7 +42,7 @@ export default function ServiceManager() {
     await setDoc(docRef, { services: updated }, { merge: true });
   };
 
-  const handleDeleteService = async (index) => {
+  const handleDeleteService = async (index: number): Promise<void> => {
     const updated = services.filter((_, i) => i !== index);
     setServices(updated);
 

@@ -10,8 +10,17 @@ import {
   doc,
 } from 'firebase/firestore';
 
-export default function ProviderBookings() {
-  const [bookings, setBookings] = useState([]);
+interface ProviderBooking {
+  id: string;
+  clientId: string;
+  serviceName: string;
+  price: number;
+  status: 'pending' | 'accepted' | 'declined';
+  providerId: string;
+}
+
+export default function ProviderBookings(): JSX.Element {
+  const [bookings, setBookings] = useState<ProviderBooking[]>([]);
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -19,21 +28,21 @@ export default function ProviderBookings() {
 
     const q = query(
       collection(db, 'bookings'),
-      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', user.uid)
+      where('providerId', '==', user.uid)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
+      })) as ProviderBooking[];
       setBookings(data);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleStatusUpdate = async (id, newStatus) => {
+  const handleStatusUpdate = async (id: string, newStatus: 'accepted' | 'declined'): Promise<void> => {
     await updateDoc(doc(db, 'bookings', id), { status: newStatus });
   };
 

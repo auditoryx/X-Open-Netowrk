@@ -3,9 +3,10 @@ import { useEffect } from 'react';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
+import { ComponentType } from 'react';
 
-export function withRoleProtection(Component, allowedRoles) {
-  return function ProtectedPage(props) {
+export function withRoleProtection<T extends object>(Component: ComponentType<T>, allowedRoles: string[]) {
+  return function ProtectedPage(props: T): JSX.Element {
     const router = useRouter();
 
     useEffect(() => {
@@ -17,7 +18,7 @@ export function withRoleProtection(Component, allowedRoles) {
         }
 
         const token = await user.getIdTokenResult();
-        const userRole = token.claims.role;
+        const userRole = token.claims.role as string;
 
         if (!allowedRoles.includes(userRole)) {
           router.push('/');

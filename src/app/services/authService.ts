@@ -4,11 +4,21 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
   signOut as firebaseSignOut,
-  onAuthStateChanged 
+  onAuthStateChanged,
+  User
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
-export async function loginUser(email, password) {
+interface SessionData {
+  token: string;
+}
+
+interface LoginResponse {
+  user: User;
+  session: SessionData;
+}
+
+export async function loginUser(email: string, password: string): Promise<LoginResponse> {
   try {
     // Firebase authentication
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -47,7 +57,7 @@ export async function loginUser(email, password) {
   }
 }
 
-export async function registerUser(email, password, name, role) {
+export async function registerUser(email: string, password: string, name: string, role: string): Promise<LoginResponse> {
   try {
     // Firebase registration
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -83,7 +93,7 @@ export async function registerUser(email, password, name, role) {
   }
 }
 
-export async function logoutUser() {
+export async function logoutUser(): Promise<void> {
   try {
     // Firebase logout
     await firebaseSignOut(auth);
@@ -101,7 +111,7 @@ export async function logoutUser() {
   }
 }
 
-export function useAuthState(callback) {
+export function useAuthState(callback: (user: User | null) => void): void {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in

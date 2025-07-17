@@ -1,15 +1,21 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { db, auth } from '@/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-export default function EditServicesForm() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+interface ServiceItem {
+  name: string;
+  price: number;
+}
+
+export default function EditServicesForm(): JSX.Element {
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const loadServices = async () => {
+    const loadServices = async (): Promise<void> => {
       const user = auth.currentUser;
+      if (!user) return;
 
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
@@ -22,14 +28,16 @@ export default function EditServicesForm() {
     loadServices();
   }, []);
 
-  const handleChange = (index, field, value) => {
+  const handleChange = (index: number, field: keyof ServiceItem, value: string): void => {
     const updated = [...services];
     updated[index][field] = field === 'price' ? parseFloat(value) : value;
     setServices(updated);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     const user = auth.currentUser;
+    if (!user) return;
+    
     const userRef = doc(db, 'users', user.uid);
     await updateDoc(userRef, { services });
     alert('Services updated!');
@@ -45,14 +53,14 @@ export default function EditServicesForm() {
           <input
             type='text'
             value={service.name}
-            onChange={(e) => handleChange(i, SCHEMA_FIELDS.USER.NAME, e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, 'name', e.target.value)}
             className='border p-2 mr-2'
             placeholder='Service Name'
           />
           <input
             type='number'
             value={service.price}
-            onChange={(e) => handleChange(i, SCHEMA_FIELDS.SERVICE.PRICE, e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, 'price', e.target.value)}
             className='border p-2 mr-2'
             placeholder='Price'
           />

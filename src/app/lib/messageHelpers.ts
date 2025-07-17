@@ -1,7 +1,7 @@
 import { db } from "../firebase";
-import { collection, addDoc, query, where, getDocs, orderBy, limit, startAfter } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, orderBy, limit, startAfter, DocumentSnapshot } from "firebase/firestore";
 
-export const sendMessage = async (senderId, recipientId, content) => {
+export const sendMessage = async (senderId: string, recipientId: string, content: string): Promise<void> => {
   await addDoc(collection(db, "messages"), {
     senderId,
     recipientId,
@@ -10,7 +10,10 @@ export const sendMessage = async (senderId, recipientId, content) => {
   });
 };
 
-export const fetchMessages = async (userId, contactId, last) => {
+export const fetchMessages = async (userId: string, contactId: string, last?: DocumentSnapshot): Promise<{
+  messages: any[];
+  last: DocumentSnapshot | undefined;
+}> => {
   const base = query(
     collection(db, "messages"),
     where("senderId", "in", [userId, contactId]),

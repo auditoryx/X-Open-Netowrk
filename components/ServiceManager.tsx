@@ -1,24 +1,31 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent, ChangeEvent } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
+import { Service } from "../src/types/service";
 
-export default function ServiceManager() {
+interface ServiceFormData {
+  serviceName: string;
+  price: string;
+  description: string;
+}
+
+export default function ServiceManager(): JSX.Element {
   const { data: session } = useSession();
-  const [services, setServices] = useState([]);
-  const [form, setForm] = useState({
+  const [services, setServices] = useState<Service[]>([]);
+  const [form, setForm] = useState<ServiceFormData>({
     serviceName: "",
     price: "",
     description: "",
   });
 
-  const fetchServices = async () => {
+  const fetchServices = async (): Promise<void> => {
     if (!session?.user?.email) return;
     const snap = await getDocs(collection(db, "services"));
     const userServices = snap.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
-      .filter((s) => s.email === session.user.email);
+      .filter((s) => s.email === session.user.email) as Service[];
     setServices(userServices);
   };
 
@@ -26,24 +33,31 @@ export default function ServiceManager() {
     fetchServices();
   }, [session]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleAdd = async (e) => {
+  const handleAdd = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!session?.user?.email) return;
+    
     await addDoc(collection(db, "services"), {
       ...form,
+      price: parseFloat(form.price),
       email: session.user.email,
       displayName: session.user.name || "No Name",
-      role: "provider",
+      role: "user" as const,
+      title: form.serviceName,
+      serviceName: form.serviceName,
+      userId: session.user.email,
+      createdAt: Date.now(),
     });
+    
     setForm({ serviceName: "", price: "", description: "" });
     fetchServices();
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string): Promise<void> => {
     await deleteDoc(doc(db, "services", id));
     fetchServices();
   };

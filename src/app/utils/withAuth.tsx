@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useRouter } from 'next/navigation';
+import { ComponentType } from 'react';
 
-export default function withAuth(Component) {
-  return function AuthWrapped(props) {
-    const [loading, setLoading] = useState(true);
+export default function withAuth<T extends object>(Component: ComponentType<T>) {
+  return function AuthWrapped(props: T): JSX.Element {
+    const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
 
     useEffect(() => {

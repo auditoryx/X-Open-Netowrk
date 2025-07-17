@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { Translate } from "@/i18n/Translate";
 
-export default function ServiceSubmissionForm() {
+export default function ServiceSubmissionForm(): JSX.Element {
   const { data: session } = useSession();
-  const [serviceName, setServiceName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [status, setStatus] = useState("");
+  const [serviceName, setServiceName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!session?.user?.email) return;
 
@@ -20,7 +20,7 @@ export default function ServiceSubmissionForm() {
       await addDoc(collection(db, "services"), {
         serviceName,
         description,
-        price,
+        price: parseFloat(price),
         email: session.user.email,
         displayName: session.user.name || session.user.email,
         createdAt: serverTimestamp()
@@ -36,6 +36,18 @@ export default function ServiceSubmissionForm() {
     }
   };
 
+  const handleServiceNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setServiceName(e.target.value);
+  };
+
+  const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    setDescription(e.target.value);
+  };
+
+  const handlePriceChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setPrice(e.target.value);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="bg-gray-900 p-6 rounded-lg space-y-4 max-w-xl">
       <h2 className="text-2xl font-bold">Offer a New Service</h2>
@@ -43,14 +55,14 @@ export default function ServiceSubmissionForm() {
         type="text"
         placeholder="Service Name"
         value={serviceName}
-        onChange={(e) => setServiceName(e.target.value)}
+        onChange={handleServiceNameChange}
         className="w-full p-3 rounded bg-black border border-gray-700 text-white"
         required
       />
       <textarea
         placeholder="Description"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={handleDescriptionChange}
         className="w-full p-3 rounded bg-black border border-gray-700 text-white"
         required
       />
@@ -58,7 +70,7 @@ export default function ServiceSubmissionForm() {
         type="number"
         placeholder="Price (USD)"
         value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        onChange={handlePriceChange}
         className="w-full p-3 rounded bg-black border border-gray-700 text-white"
         required
       />

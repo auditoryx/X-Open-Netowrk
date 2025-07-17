@@ -4,27 +4,38 @@ import { db } from "../firebase/firebaseConfig";
 import { collection, query, where, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 
-export default function BookingsViewer() {
+interface BookingRequest {
+  id: string;
+  providerEmail: string;
+  datetime: string;
+  notes: string;
+  status: 'pending' | 'accepted' | 'declined';
+}
+
+export default function BookingsViewer(): JSX.Element {
   const { data: session } = useSession();
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState<BookingRequest[]>([]);
 
   useEffect(() => {
     if (!session?.user?.email) return;
+    
     const q = query(
       collection(db, "booking_requests"),
       where("providerEmail", "==", session.user.email)
     );
+    
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const requests = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
+      })) as BookingRequest[];
       setBookings(requests);
     });
+    
     return () => unsubscribe();
   }, [session]);
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (id: string, status: 'accepted' | 'declined'): Promise<void> => {
     try {
       await updateDoc(doc(db, "booking_requests", id), { status });
     } catch (err) {

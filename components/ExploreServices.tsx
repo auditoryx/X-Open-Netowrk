@@ -3,17 +3,20 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import SendServiceRequest from "./SendServiceRequest";
+import { Service } from "../src/types/service";
 
-export default function ExploreServices() {
-  const [services, setServices] = useState([]);
-  const [filter, setFilter] = useState("");
+type RoleFilter = "" | "artist" | "engineer" | "producer" | "studio" | "videographer";
+
+export default function ExploreServices(): JSX.Element {
+  const [services, setServices] = useState<Service[]>([]);
+  const [filter, setFilter] = useState<RoleFilter>("");
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchServices = async (): Promise<void> => {
       const snap = await getDocs(collection(db, "services"));
-      setServices(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setServices(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Service)));
     };
-    fetch();
+    fetchServices();
   }, []);
 
   const filtered = filter
@@ -23,7 +26,7 @@ export default function ExploreServices() {
   return (
     <div className="space-y-6">
       <div className="flex gap-4 mb-6">
-        {["", "artist", "engineer", "producer", "studio", "videographer"].map(r => (
+        {(["", "artist", "engineer", "producer", "studio", "videographer"] as RoleFilter[]).map(r => (
           <button
             key={r}
             onClick={() => setFilter(r)}
@@ -42,11 +45,11 @@ export default function ExploreServices() {
         <div key={service.id} className="border border-gray-700 bg-gray-900 p-6 rounded-lg">
           <h3 className="text-xl font-bold">{service.title}</h3>
           <p className="text-gray-300 mb-1">${service.price}</p>
-          <p className="text-gray-400 mb-3">{service.desc}</p>
+          <p className="text-gray-400 mb-3">{service.description}</p>
           <SendServiceRequest
             serviceId={service.id}
             recipientId={service.userId}
-            recipientRole={service.role || 'provider'}
+            recipientRole={service.role || 'user'}
           />
         </div>
       ))}
