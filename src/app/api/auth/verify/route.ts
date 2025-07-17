@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { logger } from '@lib/logger';
+import { logger } from '@/lib/logger';
 
 interface DecodedToken {
   id: string;

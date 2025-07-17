@@ -1,10 +1,12 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useProgressiveOnboarding } from '@/lib/hooks/useProgressiveOnboarding';
+import { useProgressiveOnboarding } from '@/components/onboarding/ProgressiveOnboarding';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getFeaturedCreators, searchCreators } from '@/lib/firestore/explore/queryCreators';
-import { useRankedCreators } from '@/lib/hooks/useRankedCreators';
+import { useRankedCreators } from '@/hooks/useRankedCreators';
 import type { SearchableCreator } from '@/lib/types/Creator';
 
 export default function ExplorePage() {

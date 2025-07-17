@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendInAppAndEmail } from '@/lib/notifications/sendInAppAndEmail'
-import { logger } from '@lib/logger'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: NextRequest) {
   try {
