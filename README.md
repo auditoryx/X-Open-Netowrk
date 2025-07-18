@@ -381,10 +381,12 @@ All payments are placed in escrow when a booking is made. Funds remain held unti
 - [React Documentation](https://react.dev)
 
 ### Internal Documentation
-- [API Documentation](./docs/api.md)
-- [Component Library](./docs/components.md)
-- [Deployment Guide](./docs/deployment.md)
-- [Architecture Overview](./docs/architecture.md)
+- [MVP Deployment Guide](./MVP_DEPLOYMENT_GUIDE.md) - Complete deployment instructions
+- [Security Model](./SECURITY_MODEL.md) - Security implementation and policies
+- [Tier System](./TIER_SYSTEM.md) - User verification and tier system
+- [Booking Flow](./BOOKING_FLOW.md) - Complete booking system documentation
+- [Contributing Guide](./CONTRIBUTING.md) - Development guidelines and standards
+- [API Documentation](./docs/api.md) - API endpoints and usage
 
 ## 🐛 Troubleshooting
 
