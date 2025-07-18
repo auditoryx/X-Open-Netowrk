@@ -2,14 +2,64 @@
 
 import React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { parseISO, format } from 'date-fns';
+import BookingConfirmation from '@/components/booking/BookingConfirmation';
+import { Booking } from '@/src/types/booking';
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams();
-  const time = searchParams?.get(SCHEMA_FIELDS.BOOKING_REQUEST.TIME) || null;
+  const time = searchParams?.get('time') || null;
   const location = searchParams?.get('location') || null;
   const fee = searchParams?.get('fee') || null;
   const router = useRouter();
+
+  // Create a booking object for the confirmation component
+  const createBookingFromParams = (): Booking => {
+    const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    return {
+      id: bookingId,
+      clientId: 'current-user', // Would be actual user ID in real app
+      providerId: 'provider-id', // Would be actual provider ID
+      serviceId: 'service-id',   // Would be actual service ID
+      serviceName: 'Music Production Session', // Default service name
+      datetime: time || new Date().toISOString(),
+      status: 'pending',
+      title: 'Booking Request',
+      notes: searchParams?.get('message') || undefined,
+      createdAt: new Date().toISOString(),
+      contract: {
+        terms: 'Standard booking terms apply',
+        agreedByClient: true,
+        agreedByProvider: false
+      }
+    };
+  };
+
+  const booking = createBookingFromParams();
+
+  const handleViewBooking = () => {
+    router.push('/dashboard/bookings');
+  };
+
+  const handleMessageProvider = () => {
+    router.push('/dashboard/messages');
+  };
+
+  const handleBackToDashboard = () => {
+    router.push('/dashboard');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <BookingConfirmation
+        booking={booking}
+        onViewBooking={handleViewBooking}
+        onMessageProvider={handleMessageProvider}
+        onBackToDashboard={handleBackToDashboard}
+      />
+    </div>
+  );
+}
 
   let formattedTime = null;
   if (time) {

@@ -36,59 +36,59 @@ export default function BookingConfirmation({
   const { date, time } = formatDateTime(booking.datetime);
 
   return (
-    <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-8 text-center">
+    <div className="w-full max-w-lg mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-8 text-center">
       {/* Success Icon */}
       <div className="mb-6">
-        <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <CheckCircleIcon className="w-12 h-12 sm:w-16 sm:h-16 text-green-500 mx-auto mb-4" />
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
           Booking Confirmed!
         </h1>
-        <p className="text-gray-600">
+        <p className="text-sm sm:text-base text-gray-600 px-2">
           Your booking has been successfully created and the provider has been notified.
         </p>
       </div>
 
       {/* Booking Details */}
       <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
-        <h3 className="font-semibold text-gray-900 mb-3">Booking Details</h3>
+        <h3 className="font-semibold text-gray-900 mb-3 text-center sm:text-left">Booking Details</h3>
         
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Service:</span>
-            <span className="font-medium">{booking.serviceName}</span>
+        <div className="space-y-3 text-sm">
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+            <span className="text-gray-600 font-medium">Service:</span>
+            <span className="font-medium text-gray-900">{booking.serviceName}</span>
           </div>
           
-          <div className="flex justify-between">
-            <span className="text-gray-600">Date:</span>
-            <span className="font-medium">{date}</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+            <span className="text-gray-600 font-medium">Date:</span>
+            <span className="font-medium text-gray-900">{date}</span>
           </div>
           
-          <div className="flex justify-between">
-            <span className="text-gray-600">Time:</span>
-            <span className="font-medium">{time}</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+            <span className="text-gray-600 font-medium">Time:</span>
+            <span className="font-medium text-gray-900">{time}</span>
           </div>
           
-          <div className="flex justify-between">
-            <span className="text-gray-600">Status:</span>
-            <span className={`font-medium capitalize ${
-              booking.status === 'confirmed' ? 'text-green-600' : 
-              booking.status === 'pending' ? 'text-yellow-600' : 
-              'text-gray-600'
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+            <span className="text-gray-600 font-medium">Status:</span>
+            <span className={`font-medium capitalize inline-block px-2 py-1 rounded-full text-xs ${
+              booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
+              booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+              'bg-gray-100 text-gray-800'
             }`}>
               {booking.status}
             </span>
           </div>
           
-          <div className="flex justify-between">
-            <span className="text-gray-600">Booking ID:</span>
-            <span className="font-medium text-xs">{booking.id}</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+            <span className="text-gray-600 font-medium">Booking ID:</span>
+            <span className="font-mono text-xs bg-gray-200 px-2 py-1 rounded truncate">{booking.id}</span>
           </div>
         </div>
 
         {booking.notes && (
-          <div className="mt-3 pt-3 border-t border-gray-200">
-            <span className="text-gray-600 text-sm">Notes:</span>
-            <p className="text-sm text-gray-900 mt-1">{booking.notes}</p>
+          <div className="mt-4 pt-3 border-t border-gray-200">
+            <span className="text-gray-600 text-sm font-medium">Notes:</span>
+            <p className="text-sm text-gray-900 mt-2 bg-white p-3 rounded border">{booking.notes}</p>
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ export default function BookingConfirmation({
         {onViewBooking && (
           <button
             onClick={onViewBooking}
-            className="w-full btn btn-primary flex items-center justify-center gap-2"
+            className="w-full btn btn-primary flex items-center justify-center gap-2 py-3"
           >
             <Eye className="w-4 h-4" />
             View Booking
@@ -108,26 +108,27 @@ export default function BookingConfirmation({
         {onMessageProvider && (
           <button
             onClick={onMessageProvider}
-            className="w-full btn btn-secondary flex items-center justify-center gap-2"
+            className="w-full btn btn-secondary flex items-center justify-center gap-2 py-3"
           >
             <MessageSquare className="w-4 h-4" />
             Message Provider
           </button>
         )}
 
-        <div className="flex gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
             onClick={() => window.open('/calendar', '_blank')}
-            className="flex-1 btn bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center justify-center gap-2"
+            className="btn bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center justify-center gap-2 py-3"
           >
             <Calendar className="w-4 h-4" />
-            Add to Calendar
+            <span className="hidden sm:inline">Add to Calendar</span>
+            <span className="sm:hidden">Calendar</span>
           </button>
 
           {onBackToDashboard && (
             <button
               onClick={onBackToDashboard}
-              className="flex-1 btn bg-gray-100 text-gray-700 hover:bg-gray-200"
+              className="btn bg-gray-100 text-gray-700 hover:bg-gray-200 py-3"
             >
               Dashboard
             </button>
@@ -136,13 +137,25 @@ export default function BookingConfirmation({
       </div>
 
       {/* Next Steps */}
-      <div className="mt-6 text-left">
-        <h4 className="font-semibold text-gray-900 mb-2">What happens next?</h4>
-        <ul className="text-sm text-gray-600 space-y-1">
-          <li>• You'll receive a confirmation email with all details</li>
-          <li>• The provider will review and confirm your booking</li>
-          <li>• You can message the provider directly through our platform</li>
-          <li>• Payment will be processed according to the agreed terms</li>
+      <div className="mt-6 text-left bg-blue-50 rounded-lg p-4">
+        <h4 className="font-semibold text-gray-900 mb-3 text-center sm:text-left">What happens next?</h4>
+        <ul className="text-sm text-gray-700 space-y-2">
+          <li className="flex items-start gap-2">
+            <span className="text-blue-500 mt-0.5">•</span>
+            <span>You'll receive a confirmation email with all details</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-500 mt-0.5">•</span>
+            <span>The provider will review and confirm your booking</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-500 mt-0.5">•</span>
+            <span>You can message the provider directly through our platform</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-blue-500 mt-0.5">•</span>
+            <span>Payment will be processed according to the agreed terms</span>
+          </li>
         </ul>
       </div>
     </div>
