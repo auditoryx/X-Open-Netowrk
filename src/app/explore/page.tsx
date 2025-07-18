@@ -175,14 +175,15 @@ export default function ExplorePage() {
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-6">
+        {/* Enhanced Search Section */}
+        <div className="mb-8 space-y-4">
+          {/* Main Search Bar */}
           <div className="relative max-w-2xl">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search creators, genres, services..."
+              placeholder="Search creators, genres, services, tags..."
               className="w-full px-4 py-3 pl-12 bg-panel border border-neutral-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
             />
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
@@ -200,6 +201,51 @@ export default function ExplorePage() {
                 </svg>
               </button>
             )}
+          </div>
+
+          {/* Genre Tags */}
+          <div>
+            <div className="flex flex-wrap gap-2 mb-3">
+              <span className="text-sm text-gray-400">Popular genres:</span>
+              {['Hip-Hop', 'R&B', 'Electronic', 'Pop', 'Rock', 'Jazz', 'Trap', 'House', 'Reggaeton', 'Country'].map((genre) => (
+                <button
+                  key={genre}
+                  onClick={() => {
+                    const newGenres = filters.genres.includes(genre.toLowerCase())
+                      ? filters.genres.filter(g => g !== genre.toLowerCase())
+                      : [...filters.genres, genre.toLowerCase()];
+                    setFilters(prev => ({ ...prev, genres: newGenres }));
+                  }}
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                    filters.genres.includes(genre.toLowerCase())
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-neutral-800 text-gray-400 hover:bg-neutral-700 hover:text-white'
+                  }`}
+                >
+                  {genre}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Service Type Tags */}
+          <div>
+            <div className="flex flex-wrap gap-2 mb-3">
+              <span className="text-sm text-gray-400">Services:</span>
+              {['Mixing', 'Mastering', 'Production', 'Vocals', 'Songwriting', 'Video', 'Photography', 'Studio'].map((service) => (
+                <button
+                  key={service}
+                  onClick={() => setFilters(prev => ({ ...prev, service: prev.service === service.toLowerCase() ? '' : service.toLowerCase() }))}
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                    filters.service === service.toLowerCase()
+                      ? 'bg-green-600 text-white'
+                      : 'bg-neutral-800 text-gray-400 hover:bg-neutral-700 hover:text-white'
+                  }`}
+                >
+                  {service}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
