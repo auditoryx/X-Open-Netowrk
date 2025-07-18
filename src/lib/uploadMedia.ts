@@ -103,8 +103,8 @@ function getMediaType(mimeType: string): 'image' | 'video' | 'audio' {
     return 'audio';
   }
   
-  // Default to image for unsupported types
-  return 'image';
+  // Return a generic type for unsupported MIME types
+  return 'file';
 }
 
 /**
