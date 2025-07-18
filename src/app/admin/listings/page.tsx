@@ -12,7 +12,7 @@ import {
   where,
   orderBy,
 } from 'firebase/firestore';
-import withAdminProtection from '@/middleware/withAdminProtection';
+import withAdminProtection from '@/src/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
 
 function ListingReportsPage() {

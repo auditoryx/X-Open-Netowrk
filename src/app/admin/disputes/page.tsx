@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import withAdminProtection from '@/middleware/withAdminProtection';
+import withAdminProtection from '@/src/middleware/withAdminProtection';
 
 const ModerationPanel = dynamic(() => import('../components/ModerationPanel'), {
   ssr: false,

@@ -1,14 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
+import { db } from '@/src/lib/firebase';
+import { SCHEMA_FIELDS } from '@/src/lib/SCHEMA_FIELDS';
 import {
   collection,
   getDocs,
   orderBy,
   query,
 } from 'firebase/firestore';
-import withAdminProtection from '@/middleware/withAdminProtection';
+import withAdminProtection from '@/src/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
 import { toggleSignatureTier } from '@/lib/firestore/updateUserTier';
 import SignatureBadge from '@/components/badges/SignatureBadge';
