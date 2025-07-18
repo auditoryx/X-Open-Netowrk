@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
 import { markAsHeld } from '@/lib/firestore/bookings/markAsHeld';
 import { generateContract } from '@/lib/firestore/contracts/generateContract';
+import { calculateProviderPayout } from '@/lib/payments/calculateProviderPayout';
 import { logger } from '@/lib/logger';
 import { Sentry } from '@lib/sentry';
 
@@ -36,8 +37,12 @@ export async function POST(req: NextRequest) {
 
       if (clientId && providerId && serviceName && price) {
         const startDate = new Date().toISOString().split('T')[0];
+        
+        // Calculate provider payout (80% after fees)
+        const providerPayout = await calculateProviderPayout(price);
+        
         await generateContract(
-          { bookingId, clientId, providerId, serviceName, price, startDate },
+          { bookingId, clientId, providerId, serviceName, price, startDate, providerPayout },
           'system'
         );
       }
