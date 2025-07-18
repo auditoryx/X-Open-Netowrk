@@ -89,7 +89,7 @@ export default function PortfolioUploader({
       }
 
       validFiles.push({
-        id: `${Date.now()}-${Math.random()}`,
+        id: crypto.randomUUID(),
         file,
         preview: createPreview(file),
         type: getFileType(file),
