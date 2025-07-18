@@ -162,7 +162,7 @@ export default function GlobalMapPage() {
     setFilteredCreators(filtered);
   }, [creators, filters]);
 
-  // Update map markers
+  // Update map markers with clustering
   useEffect(() => {
     if (!map.current || !mapboxglRef.current) return;
 
@@ -170,7 +170,146 @@ export default function GlobalMapPage() {
     markersRef.current.forEach(marker => marker.remove());
     markersRef.current.clear();
 
-    // Add filtered creators as markers
+    // Prepare data for clustering
+    const points = filteredCreators.map(creator => {
+      let lat = creator.locationLat;
+      let lng = creator.locationLng;
+
+      if (!lat || !lng) {
+        const fallback = cityToCoords[creator.location?.toLowerCase()?.replace(/\s+/g, '') || ''];
+        if (fallback) {
+          [lng, lat] = fallback;
+        }
+      }
+
+      return lat && lng ? {
+        type: 'Feature',
+        properties: {
+          creator,
+          cluster: false
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [lng, lat]
+        }
+      } : null;
+    }).filter(Boolean);
+
+    // Add GeoJSON source for clustering
+    if (map.current.getSource('creators')) {
+      map.current.getSource('creators').setData({
+        type: 'FeatureCollection',
+        features: points
+      });
+    } else {
+      map.current.addSource('creators', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: points
+        },
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50
+      });
+
+      // Add cluster circles
+      map.current.addLayer({
+        id: 'clusters',
+        type: 'circle',
+        source: 'creators',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [
+            'step',
+            ['get', 'point_count'],
+            '#51bbd6',
+            10,
+            '#f1f075',
+            30,
+            '#f28cb1'
+          ],
+          'circle-radius': [
+            'step',
+            ['get', 'point_count'],
+            20,
+            10,
+            30,
+            30,
+            40
+          ]
+        }
+      });
+
+      // Add cluster count
+      map.current.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'creators',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 12
+        }
+      });
+
+      // Add unclustered point layer
+      map.current.addLayer({
+        id: 'unclustered-point',
+        type: 'circle',
+        source: 'creators',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': '#11b4da',
+          'circle-radius': 8,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff'
+        }
+      });
+
+      // Click event for clusters
+      map.current.on('click', 'clusters', (e) => {
+        const features = map.current.queryRenderedFeatures(e.point, {
+          layers: ['clusters']
+        });
+        const clusterId = features[0].properties.cluster_id;
+        map.current.getSource('creators').getClusterExpansionZoom(
+          clusterId,
+          (err, zoom) => {
+            if (err) return;
+            map.current.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom
+            });
+          }
+        );
+      });
+
+      // Click event for individual points
+      map.current.on('click', 'unclustered-point', (e) => {
+        const creator = e.features[0].properties.creator;
+        if (creator) {
+          setSelectedCreator(typeof creator === 'string' ? JSON.parse(creator) : creator);
+        }
+      });
+
+      // Mouse events
+      map.current.on('mouseenter', 'clusters', () => {
+        map.current.getCanvas().style.cursor = 'pointer';
+      });
+      map.current.on('mouseleave', 'clusters', () => {
+        map.current.getCanvas().style.cursor = '';
+      });
+      map.current.on('mouseenter', 'unclustered-point', () => {
+        map.current.getCanvas().style.cursor = 'pointer';
+      });
+      map.current.on('mouseleave', 'unclustered-point', () => {
+        map.current.getCanvas().style.cursor = '';
+      });
+    }
+
+    // Add individual markers as fallback for browsers that don't support clustering well
     filteredCreators.forEach(creator => {
       let lat = creator.locationLat;
       let lng = creator.locationLng;
@@ -183,9 +322,10 @@ export default function GlobalMapPage() {
       }
 
       if (lat && lng) {
-        // Create custom marker element
+        // Create custom marker element for individual markers (as backup)
         const markerElement = document.createElement('div');
         markerElement.className = 'custom-marker';
+        markerElement.style.display = 'none'; // Hidden by default, shown when clustering is disabled
         markerElement.innerHTML = `
           <div class="w-10 h-10 rounded-full border-2 border-white shadow-lg overflow-hidden cursor-pointer transform hover:scale-110 transition-transform ${
             creator.verified ? 'ring-2 ring-blue-500' : ''
@@ -204,7 +344,7 @@ export default function GlobalMapPage() {
           setSelectedCreator(creator);
         });
 
-        // Create and add marker
+        // Create and add marker (hidden by default)
         const marker = new mapboxglRef.current.Marker({ element: markerElement })
           .setLngLat([lng, lat])
           .addTo(map.current);
