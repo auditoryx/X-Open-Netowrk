@@ -95,6 +95,7 @@ export default {
       },
       
       fontSize: {
+        // Enhanced mobile-first typography
         xs: ['0.75rem', { lineHeight: '1rem' }],
         sm: ['0.875rem', { lineHeight: '1.25rem' }],
         base: ['1rem', { lineHeight: '1.5rem' }],
@@ -103,11 +104,29 @@ export default {
         '2xl': ['1.5rem', { lineHeight: '2rem' }],
         '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
         '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-        '5xl': ['3rem', { lineHeight: '1' }],
-        '6xl': ['3.75rem', { lineHeight: '1' }],
-        '7xl': ['4.5rem', { lineHeight: '1' }],
-        '8xl': ['6rem', { lineHeight: '1' }],
-        '9xl': ['8rem', { lineHeight: '1' }],
+        '5xl': ['3rem', { lineHeight: '1.1' }],
+        '6xl': ['3.75rem', { lineHeight: '1.1' }],
+        '7xl': ['4.5rem', { lineHeight: '1.1' }],
+        '8xl': ['6rem', { lineHeight: '1.1' }],
+        '9xl': ['8rem', { lineHeight: '1.1' }],
+        
+        // Semantic heading sizes with better mobile scaling
+        'heading-sm': ['1.125rem', { lineHeight: '1.5rem', fontWeight: '600' }],
+        'heading-base': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }],
+        'heading-lg': ['1.5rem', { lineHeight: '2rem', fontWeight: '700' }],
+        'heading-xl': ['1.875rem', { lineHeight: '2.25rem', fontWeight: '700' }],
+        'heading-2xl': ['2.25rem', { lineHeight: '2.5rem', fontWeight: '800' }],
+        'heading-3xl': ['3rem', { lineHeight: '1.1', fontWeight: '800' }],
+        
+        // Body text variations
+        'body-sm': ['0.875rem', { lineHeight: '1.5rem' }],
+        'body-base': ['1rem', { lineHeight: '1.625rem' }],
+        'body-lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        
+        // UI element text
+        'ui-xs': ['0.75rem', { lineHeight: '1rem', fontWeight: '500' }],
+        'ui-sm': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '500' }],
+        'ui-base': ['1rem', { lineHeight: '1.5rem', fontWeight: '500' }],
       },
       
       boxShadow: {
@@ -147,6 +166,39 @@ export default {
         88: '22rem',
         112: '28rem',
         128: '32rem',
+        
+        // Safe area spacing for mobile
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+        
+        // Mobile-optimized button and tap target sizes
+        'tap-target': '2.75rem', // 44px minimum for accessibility
+        'mobile-nav': '3.5rem',
+        
+        // Common mobile spacing patterns
+        'mobile-padding': '1rem',
+        'mobile-margin': '0.75rem',
+      },
+      
+      // Mobile-first responsive design
+      screens: {
+        'xs': '475px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        
+        // Mobile-specific breakpoints
+        'mobile': { 'max': '767px' },
+        'tablet': { 'min': '768px', 'max': '1023px' },
+        'desktop': { 'min': '1024px' },
+        
+        // Touch device queries
+        'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
+        'mouse': { 'raw': '(hover: hover) and (pointer: fine)' },
       },
       
       animation: {
