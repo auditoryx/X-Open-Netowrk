@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useCallback, useState, useRef } from 'react';
-import { useDropzone } from 'react-dropzone';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { uploadMedia, UploadMediaResult } from '@/lib/uploadMedia';
 
 interface MediaFile {
   id: string;
@@ -16,29 +16,28 @@ interface MediaFile {
   error?: string;
 }
 
-interface MediaUploadProps {
-  onUploadComplete?: (urls: string[]) => void;
+interface PortfolioUploaderProps {
+  onUploadComplete?: (results: UploadMediaResult[]) => void;
   onUploadProgress?: (fileId: string, progress: number) => void;
   maxFiles?: number;
   maxFileSize?: number;
-  acceptedTypes?: string[];
-  folder?: string;
   className?: string;
 }
 
-export default function MediaUpload({
+export default function PortfolioUploader({
   onUploadComplete,
   onUploadProgress,
   maxFiles = 10,
   maxFileSize = 100 * 1024 * 1024, // 100MB
-  acceptedTypes = ['image/*', 'video/*', 'audio/*'],
-  folder = 'portfolio',
   className = ''
-}: MediaUploadProps) {
+}: PortfolioUploaderProps) {
   const { data: session } = useSession();
   const [files, setFiles] = useState<MediaFile[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const acceptedTypes = ['image/*', 'video/*', 'audio/*'];
 
   const getFileType = (file: File): 'image' | 'video' | 'audio' => {
     if (file.type.startsWith('image/')) return 'image';
@@ -54,38 +53,89 @@ export default function MediaUpload({
     return ''; // No preview for audio files
   };
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const newFiles: MediaFile[] = acceptedFiles.map((file) => ({
-      id: `${Date.now()}-${Math.random()}`,
-      file,
-      preview: createPreview(file),
-      type: getFileType(file),
-      uploadStatus: 'pending'
-    }));
-
-    setFiles(prev => [...prev, ...newFiles].slice(0, maxFiles));
-  }, [maxFiles]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: acceptedTypes.reduce((acc, type) => ({ ...acc, [type]: [] }), {}),
-    maxFiles,
-    maxSize: maxFileSize,
-    multiple: true,
-    onDropRejected: (rejectedFiles) => {
-      rejectedFiles.forEach(({ file, errors }) => {
-        errors.forEach(error => {
-          if (error.code === 'file-too-large') {
-            toast.error(`File "${file.name}" is too large. Max size: ${Math.round(maxFileSize / (1024 * 1024))}MB`);
-          } else if (error.code === 'file-invalid-type') {
-            toast.error(`File "${file.name}" is not supported`);
-          } else if (error.code === 'too-many-files') {
-            toast.error(`Too many files. Maximum ${maxFiles} files allowed`);
-          }
-        });
-      });
+  const validateFile = (file: File): { valid: boolean; error?: string } => {
+    if (file.size > maxFileSize) {
+      return {
+        valid: false,
+        error: `File "${file.name}" is too large. Max size: ${Math.round(maxFileSize / (1024 * 1024))}MB`
+      };
     }
-  });
+
+    const allowedMimeTypes = [
+      'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+      'video/mp4', 'video/quicktime', 'video/x-msvideo',
+      'audio/mpeg', 'audio/wav', 'audio/ogg'
+    ];
+
+    if (!allowedMimeTypes.includes(file.type)) {
+      return {
+        valid: false,
+        error: `File "${file.name}" type is not supported`
+      };
+    }
+
+    return { valid: true };
+  };
+
+  const addFiles = useCallback((newFiles: FileList | File[]) => {
+    const fileArray = Array.from(newFiles);
+    const validFiles: MediaFile[] = [];
+    
+    fileArray.forEach((file) => {
+      const validation = validateFile(file);
+      if (!validation.valid) {
+        toast.error(validation.error || 'Invalid file');
+        return;
+      }
+
+      validFiles.push({
+        id: crypto.randomUUID(),
+        file,
+        preview: createPreview(file),
+        type: getFileType(file),
+        uploadStatus: 'pending'
+      });
+    });
+
+    setFiles(prev => {
+      const combined = [...prev, ...validFiles];
+      if (combined.length > maxFiles) {
+        toast.error(`Maximum ${maxFiles} files allowed`);
+        return combined.slice(0, maxFiles);
+      }
+      return combined;
+    });
+  }, [maxFiles, maxFileSize]);
+
+  // Drag and drop handlers
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragActive(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragActive(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragActive(false);
+    
+    const droppedFiles = e.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+      addFiles(droppedFiles);
+    }
+  }, [addFiles]);
+
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files;
+    if (selectedFiles && selectedFiles.length > 0) {
+      addFiles(selectedFiles);
+    }
+    // Reset input value to allow selecting the same file again
+    e.target.value = '';
+  }, [addFiles]);
 
   const removeFile = (fileId: string) => {
     setFiles(prev => {
@@ -94,62 +144,6 @@ export default function MediaUpload({
         URL.revokeObjectURL(fileToRemove.preview);
       }
       return prev.filter(f => f.id !== fileId);
-    });
-  };
-
-  const uploadFile = async (mediaFile: MediaFile): Promise<string> => {
-    const formData = new FormData();
-    formData.append('file', mediaFile.file);
-    formData.append('folder', folder);
-    formData.append(SCHEMA_FIELDS.NOTIFICATION.USER_ID, session?.user?.id || '');
-
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const progress = (event.loaded / event.total) * 100;
-          setFiles(prev => prev.map(f => 
-            f.id === mediaFile.id 
-              ? { ...f, uploadProgress: progress, uploadStatus: 'uploading' }
-              : f
-          ));
-          onUploadProgress?.(mediaFile.id, progress);
-        }
-      };
-
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          setFiles(prev => prev.map(f => 
-            f.id === mediaFile.id 
-              ? { ...f, uploadStatus: 'success', url: response.url }
-              : f
-          ));
-          resolve(response.url);
-        } else {
-          const error = xhr.responseText || 'Upload failed';
-          setFiles(prev => prev.map(f => 
-            f.id === mediaFile.id 
-              ? { ...f, uploadStatus: 'error', error }
-              : f
-          ));
-          reject(new Error(error));
-        }
-      };
-
-      xhr.onerror = () => {
-        const error = 'Network error during upload';
-        setFiles(prev => prev.map(f => 
-          f.id === mediaFile.id 
-            ? { ...f, uploadStatus: 'error', error }
-            : f
-        ));
-        reject(new Error(error));
-      };
-
-      xhr.open('POST', '/api/media/upload');
-      xhr.send(formData);
     });
   };
 
@@ -166,29 +160,61 @@ export default function MediaUpload({
     }
 
     setUploading(true);
-    const uploadPromises = pendingFiles.map(file => uploadFile(file));
+    const results: UploadMediaResult[] = [];
 
     try {
-      const urls = await Promise.all(uploadPromises);
-      toast.success(`Successfully uploaded ${urls.length} file${urls.length !== 1 ? 's' : ''}`);
-      onUploadComplete?.(urls);
+      for (const mediaFile of pendingFiles) {
+        setFiles(prev => prev.map(f => 
+          f.id === mediaFile.id 
+            ? { ...f, uploadStatus: 'uploading', uploadProgress: 0 }
+            : f
+        ));
+
+        try {
+          const result = await uploadMedia(mediaFile.file, session.user.id);
+          
+          setFiles(prev => prev.map(f => 
+            f.id === mediaFile.id 
+              ? { ...f, uploadStatus: 'success', url: result.url, uploadProgress: 100 }
+              : f
+          ));
+
+          results.push(result);
+          onUploadProgress?.(mediaFile.id, 100);
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+          setFiles(prev => prev.map(f => 
+            f.id === mediaFile.id 
+              ? { ...f, uploadStatus: 'error', error: errorMessage }
+              : f
+          ));
+          console.error(`Upload failed for ${mediaFile.file.name}:`, error);
+        }
+      }
+
+      if (results.length > 0) {
+        toast.success(`Successfully uploaded ${results.length} file${results.length !== 1 ? 's' : ''}`);
+        onUploadComplete?.(results);
+      }
+
+      if (results.length < pendingFiles.length) {
+        toast.error(`${pendingFiles.length - results.length} file(s) failed to upload`);
+      }
+
     } catch (error) {
-      console.error('Upload failed:', error);
-      toast.error('Some files failed to upload');
+      console.error('Upload process failed:', error);
+      toast.error('Upload failed');
     } finally {
       setUploading(false);
     }
   };
 
   const handleRetry = (fileId: string) => {
-    const file = files.find(f => f.id === fileId);
-    if (file) {
-      setFiles(prev => prev.map(f => 
-        f.id === fileId 
-          ? { ...f, uploadStatus: 'pending', error: undefined, uploadProgress: 0 }
-          : f
-      ));
-    }
+    setFiles(prev => prev.map(f => 
+      f.id === fileId 
+        ? { ...f, uploadStatus: 'pending', error: undefined, uploadProgress: 0 }
+        : f
+    ));
   };
 
   const clearAll = () => {
@@ -225,14 +251,24 @@ export default function MediaUpload({
     <div className={`w-full ${className}`}>
       {/* Upload area */}
       <div
-        {...getRootProps()}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
           isDragActive 
             ? 'border-blue-500 bg-blue-50' 
             : 'border-gray-300 hover:border-gray-400'
         }`}
       >
-        <input {...getInputProps()} ref={fileInputRef} />
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept={acceptedTypes.join(',')}
+          onChange={handleFileSelect}
+          className="hidden"
+        />
         
         <div className="space-y-4">
           <div className="mx-auto w-12 h-12 text-gray-400">
@@ -265,14 +301,15 @@ export default function MediaUpload({
             <div className="flex gap-2">
               <button
                 onClick={clearAll}
-                className="text-sm text-gray-500 hover:text-gray-700"
+                className="btn btn-secondary"
+                disabled={uploading}
               >
                 Clear all
               </button>
               <button
                 onClick={handleUpload}
                 disabled={uploading || files.every(f => f.uploadStatus !== 'pending')}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-primary"
               >
                 {uploading ? 'Uploading...' : 'Upload Files'}
               </button>
@@ -364,6 +401,7 @@ export default function MediaUpload({
                   <button
                     onClick={() => removeFile(file.id)}
                     className="text-gray-400 hover:text-red-500 transition-colors"
+                    disabled={uploading}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

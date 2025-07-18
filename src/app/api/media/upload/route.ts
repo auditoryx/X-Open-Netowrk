@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get('file') as File;
     const folder = formData.get('folder') as string || 'portfolio';
-    const userId = formData.get('userId') as string;
+    const userId = formData.get(SCHEMA_FIELDS.NOTIFICATION.USER_ID) as string;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
