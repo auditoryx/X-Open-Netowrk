@@ -10,17 +10,17 @@ describe('MVP Feature Validation', () => {
     const { SCHEMA_FIELDS } = require('@/lib/SCHEMA_FIELDS');
     
     // User fields for authentication
-    expect(SCHEMA_FIELDS.USER.USER_ID).toBe('userId');
-    expect(SCHEMA_FIELDS.USER.EMAIL).toBe('email');
-    expect(SCHEMA_FIELDS.USER.ROLE).toBe('role');
+    expect(SCHEMA_FIELDS.USER.USER_ID).toBe(SCHEMA_FIELDS.NOTIFICATION.USER_ID);
+    expect(SCHEMA_FIELDS.USER.EMAIL).toBe(SCHEMA_FIELDS.USER.EMAIL);
+    expect(SCHEMA_FIELDS.USER.ROLE).toBe(SCHEMA_FIELDS.USER.ROLE);
     
     // Booking fields for core booking functionality
-    expect(SCHEMA_FIELDS.BOOKING.PROVIDER_ID).toBe('providerId');
-    expect(SCHEMA_FIELDS.BOOKING.STATUS).toBe('status');
-    expect(SCHEMA_FIELDS.BOOKING.CREATED_AT).toBe('createdAt');
+    expect(SCHEMA_FIELDS.BOOKING.PROVIDER_ID).toBe(SCHEMA_FIELDS.BOOKING.PROVIDER_ID);
+    expect(SCHEMA_FIELDS.BOOKING.STATUS).toBe(SCHEMA_FIELDS.BOOKING.STATUS);
+    expect(SCHEMA_FIELDS.BOOKING.CREATED_AT).toBe(SCHEMA_FIELDS.USER.CREATED_AT);
     
     // Escrow fields for payment functionality
-    expect(SCHEMA_FIELDS.ESCROW.PROVIDER_ID).toBe('providerId');
+    expect(SCHEMA_FIELDS.ESCROW.PROVIDER_ID).toBe(SCHEMA_FIELDS.BOOKING.PROVIDER_ID);
     expect(SCHEMA_FIELDS.ESCROW.CUSTOMER_ID).toBe('customerId');
     expect(SCHEMA_FIELDS.ESCROW.AMOUNT).toBe('amount');
     

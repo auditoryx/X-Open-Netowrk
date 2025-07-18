@@ -53,14 +53,14 @@ export default function EditServicesForm(): JSX.Element {
           <input
             type='text'
             value={service.name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, 'name', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, SCHEMA_FIELDS.USER.NAME, e.target.value)}
             className='border p-2 mr-2'
             placeholder='Service Name'
           />
           <input
             type='number'
             value={service.price}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, 'price', e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, SCHEMA_FIELDS.SERVICE.PRICE, e.target.value)}
             className='border p-2 mr-2'
             placeholder='Price'
           />

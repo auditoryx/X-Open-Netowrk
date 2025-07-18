@@ -83,7 +83,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<UserAvailabili
       return NextResponse.json({ error: 'Unauthorized: Missing token' }, { status: 401 });
     }
     const decoded = await getAuth(adminApp).verifyIdToken(token);
-    const uid = searchParams.get('uid');
+    const uid = searchParams.get(SCHEMA_FIELDS.USER.ID);
 
     if (!uid) {
       return NextResponse.json({ error: 'Missing uid' }, { status: 400 });

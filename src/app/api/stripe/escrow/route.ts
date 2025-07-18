@@ -47,8 +47,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const { searchParams } = new URL(req.url);
-    const bookingId = searchParams.get('bookingId');
-    const providerId = searchParams.get('providerId');
+    const bookingId = searchParams.get(SCHEMA_FIELDS.REVIEW.BOOKING_ID);
+    const providerId = searchParams.get(SCHEMA_FIELDS.BOOKING.PROVIDER_ID);
     const customerId = searchParams.get('customerId');
     
     const escrowService = new EscrowService();

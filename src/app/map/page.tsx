@@ -466,9 +466,9 @@ export default function GlobalMapPage() {
                       checked={filters.role.includes(role)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          handleFilterChange('role', [...filters.role, role]);
+                          handleFilterChange(SCHEMA_FIELDS.USER.ROLE, [...filters.role, role]);
                         } else {
-                          handleFilterChange('role', filters.role.filter(r => r !== role));
+                          handleFilterChange(SCHEMA_FIELDS.USER.ROLE, filters.role.filter(r => r !== role));
                         }
                       }}
                       className="mr-3 w-4 h-4"
@@ -546,9 +546,9 @@ export default function GlobalMapPage() {
                       checked={filters.tier.includes(tier)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          handleFilterChange('tier', [...filters.tier, tier]);
+                          handleFilterChange(SCHEMA_FIELDS.USER.TIER, [...filters.tier, tier]);
                         } else {
-                          handleFilterChange('tier', filters.tier.filter(t => t !== tier));
+                          handleFilterChange(SCHEMA_FIELDS.USER.TIER, filters.tier.filter(t => t !== tier));
                         }
                       }}
                       className="mr-3 w-4 h-4"
@@ -570,7 +570,7 @@ export default function GlobalMapPage() {
                 max="5"
                 step="0.5"
                 value={filters.rating}
-                onChange={(e) => handleFilterChange('rating', parseFloat(e.target.value))}
+                onChange={(e) => handleFilterChange(SCHEMA_FIELDS.REVIEW.RATING, parseFloat(e.target.value))}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">

@@ -50,6 +50,13 @@ service cloud.firestore {
         allow create: if request.auth.uid == userId;
         allow read: if request.auth.uid == userId || request.auth.token.admin == true;
       }
+
+      match /media/{mediaId} {
+        allow read: if request.auth.uid == userId || request.auth.token.admin == true;
+        allow create: if request.auth.uid == userId;
+        allow update: if request.auth.uid == userId;
+        allow delete: if request.auth.uid == userId;
+      }
     }
 
     // ✅ Bookings

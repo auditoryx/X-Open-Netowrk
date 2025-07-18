@@ -114,8 +114,8 @@ export const getFeaturedCreators = async (limit: number = 10) => {
     const q = query(
       ref,
       where('featured', '==', true),
-      orderBy('createdAt', 'desc'),
-      orderBy('tier', 'desc')
+      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
+      orderBy(SCHEMA_FIELDS.USER.TIER, 'desc')
     );
     const snapshot = await getDocs(q);
     
