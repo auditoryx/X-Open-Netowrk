@@ -14,7 +14,7 @@ export interface MediaMetadata {
   type: 'image' | 'video' | 'audio';
   filename: string;
   size: number;
-  createdAt: any; // Firestore timestamp
+  createdAt: FieldValue | Timestamp; // Firestore timestamp
   storagePath: string;
 }
 
