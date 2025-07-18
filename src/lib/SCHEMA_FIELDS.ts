@@ -5,7 +5,7 @@ export const SCHEMA_FIELDS = {
   // User fields
   USER: {
     USER_ID: 'userId',
-    EMAIL: SCHEMA_FIELDS.USER.EMAIL,
+    EMAIL: 'email',
     DISPLAY_NAME: 'displayName',
     CREATED_AT: SCHEMA_FIELDS.USER.CREATED_AT,
     UPDATED_AT: SCHEMA_FIELDS.USER.UPDATED_AT,
