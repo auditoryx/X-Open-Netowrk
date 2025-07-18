@@ -43,7 +43,14 @@ router.put("/:id", protect, isServiceOwner, async (req, res) => {
         const allowedUpdates = ["name", "description", "price"];
         const updates = Object.keys(req.body).filter(key => allowedUpdates.includes(key));
         const sanitizedBody = updates.reduce((obj, key) => {
-            obj[key] = req.body[key];
+            const value = req.body[key];
+            if (
+                (key === "name" && typeof value === "string") ||
+                (key === "description" && typeof value === "string") ||
+                (key === "price" && typeof value === "number")
+            ) {
+                obj[key] = value;
+            }
             return obj;
         }, {});
 
