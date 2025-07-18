@@ -40,9 +40,23 @@ router.post("/", protect, async (req, res) => {
 // ✅ Update a service by ID (Protected & Owner Only)
 router.put("/:id", protect, isServiceOwner, async (req, res) => {
     try {
+        const allowedUpdates = ["name", "description", "price"];
+        const updates = Object.keys(req.body).filter(key => allowedUpdates.includes(key));
+        const sanitizedBody = updates.reduce((obj, key) => {
+            const value = req.body[key];
+            if (
+                (key === "name" && typeof value === "string") ||
+                (key === "description" && typeof value === "string") ||
+                (key === "price" && typeof value === "number")
+            ) {
+                obj[key] = value;
+            }
+            return obj;
+        }, {});
+
         const updatedService = await Service.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            sanitizedBody,
             { new: true, runValidators: true }
         );
         if (!updatedService) return res.status(404).json({ error: "Service not found" });
