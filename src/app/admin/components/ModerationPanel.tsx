@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { db } from '@/src/lib/firebase';
-import { SCHEMA_FIELDS } from '@/src/lib/SCHEMA_FIELDS';
+import { db } from '@/lib/firebase';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import {
   collection,
   getDocs,
