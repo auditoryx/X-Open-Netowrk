@@ -45,8 +45,8 @@ const verificationTiers: VerificationTier[] = [
     color: 'text-blue-600 bg-blue-100',
     requirements: [
       'All Standard requirements',
-      '10+ completed bookings',
-      '4.5+ average rating',
+      '3+ completed bookings',
+      '1000+ XP points',
       'Government ID verification',
       'Business license (if applicable)',
       'Portfolio with 5+ work samples'
@@ -72,8 +72,8 @@ const verificationTiers: VerificationTier[] = [
     color: 'text-purple-600 bg-purple-100',
     requirements: [
       'All Verified requirements',
-      '50+ completed bookings',
-      '4.8+ average rating',
+      '20+ completed bookings',
+      '2000+ XP points',
       'Professional references',
       'Background check completion',
       'Industry credentials verification',
