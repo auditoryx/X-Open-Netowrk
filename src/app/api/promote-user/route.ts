@@ -1,7 +1,8 @@
 import { db } from '@/lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { NextRequest, NextResponse } from 'next/server';
 import { withAdminCheck } from '@/lib/auth/withAdminCheck';
+import { logAdminActivity } from '@/lib/firestore/logging/logAdminActivity';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -23,10 +24,22 @@ async function handler(req: NextRequest & { admin: any }) {
   const { uid, role } = parsed.data;
 
   try {
+    // Get current user data for logging
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    const currentRole = userDoc.exists() ? userDoc.data().role : 'unknown';
+
     await updateDoc(doc(db, 'users', uid), { 
       role,
       roleUpdatedAt: new Date().toISOString(),
       roleUpdatedBy: req.admin.uid
+    });
+    
+    // Log admin activity for audit trail
+    await logAdminActivity(req.admin.uid, 'promote_user', {
+      targetUserId: uid,
+      previousValue: { role: currentRole },
+      newValue: { role },
+      reason: `Role change from ${currentRole} to ${role}`,
     });
     
     return NextResponse.json({ 

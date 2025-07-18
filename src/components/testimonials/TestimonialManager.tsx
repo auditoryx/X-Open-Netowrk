@@ -237,7 +237,7 @@ export default function TestimonialManager({ creatorId }: TestimonialManagerProp
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setShowRequestModal(true)}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
             >
               <Send className="w-4 h-4 mr-2" />
               Request Testimonial
@@ -260,7 +260,7 @@ export default function TestimonialManager({ creatorId }: TestimonialManagerProp
               </p>
               <button
                 onClick={() => setShowRequestModal(true)}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
               >
                 <Send className="w-4 h-4 mr-2" />
                 Request Your First Testimonial

@@ -11,7 +11,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import withAdminProtection from '@/src/middleware/withAdminProtection';
+import withAdminProtection from '@/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
 
 function ReportsPage() {

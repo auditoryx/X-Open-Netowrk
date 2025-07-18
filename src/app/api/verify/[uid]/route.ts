@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/authOptions';
 import { adminDb } from '@/lib/firebase-admin';
 import { checkAdminAccess } from '@/lib/auth/withAdminCheck';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { z } from 'zod';
 
 const verifyUserSchema = z.object({
@@ -62,6 +63,29 @@ export async function POST(
     }
 
     await userRef.update(updateData);
+
+    // Log admin verification activity
+    try {
+      await adminDb.collection('adminActions').add({
+        actionType: `admin_${validatedData.verified ? 'verify_user' : 'unverify_user'}`,
+        adminUid: session.user.id,
+        timestamp: new Date(),
+        details: {
+          targetUserId: uid,
+          verified: validatedData.verified,
+          reviewNotes: validatedData.reviewNotes || null,
+          previousValue: { verified: !validatedData.verified },
+          newValue: { verified: validatedData.verified },
+        },
+        metadata: {
+          source: 'admin_panel',
+          userAgent: request.headers.get('user-agent'),
+        },
+      });
+    } catch (logError) {
+      console.warn('Failed to log admin verification action:', logError);
+      // Don't fail the main request if logging fails
+    }
 
     // If there's a verification application, update it too
     try {

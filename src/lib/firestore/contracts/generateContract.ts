@@ -10,6 +10,11 @@ const contractSchema = z.object({
   serviceName: z.string().min(1),
   price: z.number().positive(),
   startDate: z.string().min(4),
+  providerPayout: z.object({
+    providerAmount: z.number(),
+    platformFee: z.number(),
+    totalAmount: z.number(),
+  }).optional(),
 });
 
 export async function generateContract(
@@ -29,13 +34,18 @@ export async function generateContract(
     serviceName,
     price,
     startDate,
+    providerPayout,
   } = parsed.data;
 
   // 🔐 Authorization check
-  if (![clientId, providerId].includes(sessionUserId)) {
+  if (![clientId, providerId].includes(sessionUserId) && sessionUserId !== 'system') {
     console.warn('⚠️ Unauthorized contract generation attempt by:', sessionUserId);
     return { error: 'Unauthorized' };
   }
+
+  const payoutText = providerPayout 
+    ? `\n\nPayment Breakdown:\n- Total Amount: $${providerPayout.totalAmount}\n- Platform Fee (20%): $${providerPayout.platformFee}\n- Provider Payout (80%): $${providerPayout.providerAmount}`
+    : '';
 
   const contractText = `
     SERVICE AGREEMENT
@@ -43,7 +53,7 @@ export async function generateContract(
     This agreement is between ${clientId} (Client) and ${providerId} (Provider).
 
     The Provider agrees to deliver the service "${serviceName}" starting on ${startDate}, 
-    in exchange for payment of $${price}.
+    in exchange for payment of $${price}.${payoutText}
 
     Booking ID: ${bookingId}
 
@@ -59,6 +69,8 @@ export async function generateContract(
       price,
       startDate,
       contractText,
+      payoutDetails: providerPayout || null,
+      status: 'active',
       createdAt: serverTimestamp(),
     });
 

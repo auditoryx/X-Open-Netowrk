@@ -4,6 +4,8 @@ import React, { useCallback, useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { compressImage } from '@/lib/utils/imageCompression';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 interface MediaFile {
   id: string;
@@ -54,16 +56,35 @@ export default function MediaUpload({
     return ''; // No preview for audio files
   };
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const newFiles: MediaFile[] = acceptedFiles.map((file) => ({
-      id: `${Date.now()}-${Math.random()}`,
-      file,
-      preview: createPreview(file),
-      type: getFileType(file),
-      uploadStatus: 'pending'
-    }));
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const processedFiles: MediaFile[] = [];
+    
+    for (const file of acceptedFiles) {
+      try {
+        // Compress images before creating MediaFile
+        const processedFile = await compressImage(file, {
+          maxWidth: 1920,
+          maxHeight: 1080,
+          quality: 0.85,
+          format: 'jpeg'
+        });
 
-    setFiles(prev => [...prev, ...newFiles].slice(0, maxFiles));
+        const mediaFile: MediaFile = {
+          id: `${Date.now()}-${Math.random()}`,
+          file: processedFile,
+          preview: createPreview(processedFile),
+          type: getFileType(file),
+          uploadStatus: 'pending'
+        };
+        
+        processedFiles.push(mediaFile);
+      } catch (error) {
+        console.error('Error processing file:', error);
+        toast.error(`Failed to process ${file.name}`);
+      }
+    }
+
+    setFiles(prev => [...prev, ...processedFiles].slice(0, maxFiles));
   }, [maxFiles]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

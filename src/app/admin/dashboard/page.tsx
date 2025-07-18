@@ -1,9 +1,9 @@
 'use client';
 
-import withAdminProtection from '@/src/middleware/withAdminProtection';
+import withAdminProtection from '@/middleware/withAdminProtection';
 import { useEffect, useState } from 'react';
-import { db } from '@/src/lib/firebase';
-import { SCHEMA_FIELDS } from '@/src/lib/SCHEMA_FIELDS';
+import { db } from '@/lib/firebase';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import {
   collection,
   getCountFromServer,
