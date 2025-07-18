@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { withAdminCheck } from '@/lib/auth/withAdminCheck';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { logAdminActivity } from '@/lib/firestore/logging/logAdminActivity';
 
 const schema = z.object({
   uid: z.string().min(1),
@@ -42,6 +43,15 @@ async function handler(req: NextRequest & { admin: any }) {
     }
 
     await updateDoc(doc(db, 'users', uid), updateData);
+    
+    // Log admin activity for audit trail
+    await logAdminActivity(req.admin.uid, banned ? 'ban_user' : 'unban_user', {
+      targetUserId: uid,
+      reason: banReason || 'No reason provided',
+      banExpiresAt,
+      previousValue: { banned: !banned },
+      newValue: { banned, banReason, banExpiresAt },
+    });
     
     return NextResponse.json({ 
       success: true,

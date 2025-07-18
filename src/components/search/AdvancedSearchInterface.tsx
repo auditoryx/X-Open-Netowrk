@@ -214,7 +214,7 @@ export const AdvancedSearchInterface: React.FC<AdvancedSearchInterfaceProps> = (
             <button
               onClick={() => handleSearch()}
               disabled={isLoading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
+              className="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50 transition-colors font-medium"
             >
               {isLoading ? 'Searching...' : 'Search'}
             </button>
@@ -498,7 +498,7 @@ const AdvancedFiltersPanel: React.FC<AdvancedFiltersPanelProps> = ({
         </button>
         <button
           onClick={onApply}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          className="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors font-medium"
         >
           Apply Filters
         </button>
