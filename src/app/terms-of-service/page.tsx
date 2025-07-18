@@ -68,7 +68,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibent mb-4 text-white">5. Booking and Payment Terms</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-white">5. Booking and Payment Terms</h2>
               <div className="space-y-4 text-gray-300">
                 <h3 className="text-lg font-semibold text-white">5.1 Booking Process</h3>
                 <ul className="ml-6 space-y-2">
