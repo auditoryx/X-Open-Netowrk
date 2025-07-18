@@ -10,7 +10,7 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore';
-import withAdminProtection from '@/middleware/withAdminProtection';
+import withAdminProtection from '@/src/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
 
 function ApplicationsPage() {
