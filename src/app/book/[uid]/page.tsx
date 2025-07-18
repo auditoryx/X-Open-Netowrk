@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import {
   getFirestore,
   doc,
@@ -133,10 +134,10 @@ export default function BookServicePage({ params }: { params: { uid: string } })
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-            <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
+    <div className="min-h-screen bg-black text-white pb-20 md:pb-6">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-4 md:p-6">
         <div className="md:col-span-2 space-y-4">
-          <h1 className="text-3xl font-bold mb-4">Send Booking Request</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-4">Send Booking Request</h1>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
               <WeeklyCalendarSelector
@@ -146,17 +147,18 @@ export default function BookServicePage({ params }: { params: { uid: string } })
             </Suspense>
 
             <textarea
-              className="bg-black border border-white p-4 rounded focus:outline-none"
-              placeholder="Add a message..."
+              className="bg-black border border-white p-4 rounded focus:outline-none min-h-[100px] resize-none"
+              placeholder="Add a message about your project..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
             />
 
+            {/* Desktop submit button */}
             <button
               type="submit"
-              disabled={loading}
-              className="border border-white p-4 rounded hover:bg-white hover:text-black transition"
+              disabled={loading || !selectedTime}
+              className="hidden md:block border border-white p-4 rounded hover:bg-white hover:text-black transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Sending...' : 'Send Request'}
             </button>
@@ -174,6 +176,17 @@ export default function BookServicePage({ params }: { params: { uid: string } })
           />
           <TrustBadges />
         </div>
+      </div>
+
+      {/* Mobile sticky CTA */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 p-4 md:hidden z-50">
+        <button
+          onClick={handleSubmit}
+          disabled={loading || !selectedTime}
+          className="w-full bg-white text-black p-4 rounded-lg font-semibold disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+        >
+          {loading ? 'Sending...' : selectedTime ? 'Send Booking Request' : 'Select a time first'}
+        </button>
       </div>
     </div>
   );
