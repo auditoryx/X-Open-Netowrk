@@ -24,6 +24,26 @@ Generated on: 2025-01-19
 | LanguageSwitcher | `src/components/ui/LanguageSwitcher.tsx` | React Component | 2025-01-19 |
 | WalkthroughOverlay | `src/components/ui/WalkthroughOverlay.tsx` | React Component | 2025-01-19 |
 | TourTooltip | `src/components/onboarding/TourTooltip.tsx` | React Component | 2025-01-19 |
+| ArtistDashboard | `src/components/roles/ArtistDashboard.tsx` | React Component | 2025-01-19 |
+| EngineerDashboard | `src/components/roles/EngineerDashboard.tsx` | React Component | 2025-01-19 |
+| ProducerDashboard | `src/components/roles/ProducerDashboard.tsx` | React Component | 2025-01-19 |
+| VideographerDashboard | `src/components/roles/VideographerDashboard.tsx` | React Component | 2025-01-19 |
+| DefaultDashboard | `src/components/roles/DefaultDashboard.tsx` | React Component | 2025-01-19 |
+| StudioDashboard | `src/components/roles/StudioDashboard.tsx` | React Component | 2025-01-19 |
+| AdminVerificationRequests | `src/components/admin/AdminVerificationRequests.tsx` | React Component | 2025-01-19 |
+| AssignRoleForm | `src/components/admin/AssignRoleForm.tsx` | React Component | 2025-01-19 |
+| BookingCalendar | `src/components/booking/BookingCalendar.tsx` | React Component | 2025-01-19 |
+| BookingSidebar | `src/components/book/BookingSidebar.tsx` | React Component | 2025-01-19 |
+| BookingsList | `src/components/bookings/BookingsList.tsx` | React Component | 2025-01-19 |
+| BookingStatusCard | `src/components/booking/BookingStatusCard.tsx` | React Component | 2025-01-19 |
+| StudioBookingForm | `src/components/booking/studio/StudioBookingForm.tsx` | React Component | 2025-01-19 |
+| CalendarSync | `src/components/calendar/CalendarSync.tsx` | React Component | 2025-01-19 |
+| RoleOverview | `src/components/dashboard/RoleOverview.tsx` | React Component | 2025-01-19 |
+| RoleSwitcher | `src/components/dashboard/RoleSwitcher.tsx` | React Component | 2025-01-19 |
+| EarningsDashboard | `src/components/dashboard/EarningsDashboard.tsx` | React Component | 2025-01-19 |
+| ProfileForm | `src/components/profile/ProfileForm.tsx` | React Component | 2025-01-19 |
+| ProfileReviewList | `src/components/profile/ProfileReviewList.tsx` | React Component | 2025-01-19 |
+| SubscriptionSettings | `src/components/settings/SubscriptionSettings.tsx` | React Component | 2025-01-19 |
 
 ### 🔴 Unused Hooks Deleted
 
@@ -37,10 +57,10 @@ Generated on: 2025-01-19
 
 ## Summary
 
-- **Files Completely Deleted**: 9
+- **Files Completely Deleted**: 29
 - **Individual Exports Removed**: 0  
-- **Total Lines of Code Removed**: ~500
-- **Estimated Bundle Size Reduction**: ~5KB
+- **Total Lines of Code Removed**: ~1,200
+- **Estimated Bundle Size Reduction**: ~12KB
 
 ## Verification Steps Taken
 
