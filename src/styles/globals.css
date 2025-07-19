@@ -1,5 +1,6 @@
 @import 'mapbox-gl/dist/mapbox-gl.css';
 @import './design-system.css';
+@import './brutalist-system.css';
 
 @tailwind base;
 @tailwind components;

@@ -37,272 +37,236 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
       />
 
-      <main className="min-h-screen bg-ebony text-gray-100 px-6 py-16">
-        <div className="mx-auto max-w-6xl space-y-20">
+      <main className="min-h-screen bg-brutalist-black text-white">
+        <div className="mx-auto max-w-7xl">
 
           {/* HERO */}
-          <section className="text-center space-y-4 bg-gradient-to-br from-indigo-700 via-blue-600 to-blue-500 text-white rounded-xl py-14 px-6">
-            <h1 className="text-4xl font-bold">
-              The Global Creative Network Built for Music.
+          <section className="text-center bg-brutalist-black border-b-4 border-white spacing-brutalist-xl">
+            <h1 className="heading-brutalist-xl mb-8">
+              THE GLOBAL CREATIVE NETWORK BUILT FOR MUSIC
             </h1>
-            <p className="text-lg text-gray-200">
-              Book talent, sell your services, and get paid.
+            <p className="text-brutalist mb-16 max-w-4xl mx-auto">
+              BOOK TALENT, SELL YOUR SERVICES, AND GET PAID.
             </p>
-            <div className="flex flex-col items-center gap-4 pt-8">
-              {/* Primary CTA - Much larger and more prominent */}
+            <div className="flex flex-col items-center gap-8">
+              {/* Primary CTA */}
               <Link 
                 href="/explore" 
-                className="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-brand"
+                className="btn-brutalist-lg"
               >
-                🔍 Explore 10K+ Creators
+                🔍 EXPLORE 10K+ CREATORS
               </Link>
-              <p className="text-xs text-gray-400 -mt-2">No signup required • Browse freely</p>
+              <p className="text-brutalist-mono opacity-60">NO SIGNUP REQUIRED • BROWSE FREELY</p>
               
-              {/* Secondary CTA - Much smaller */}
+              {/* Secondary CTA */}
               <Link 
                 href="/apply" 
-                className="text-gray-300 hover:text-white text-sm border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition-colors"
+                className="btn-brutalist-secondary"
               >
-                I'm a creator →
+                I'M A CREATOR →
               </Link>
             </div>
           </section>
 
           {/* FEATURE TILES */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
+          <section className="grid-brutalist grid-cols-1 md:grid-cols-2 lg:grid-cols-3 spacing-brutalist-lg">
             {[
               {
-                title: '🎤 Book Features from Artists',
-                desc: 'Get verses from ThouxanBanFauni, UnoTheActivist, and 500+ verified artists. From $800-$5K per feature.',
+                title: '🎤 BOOK FEATURES FROM ARTISTS',
+                desc: 'GET VERSES FROM THOUXANBANFAUNI, UNOTHEACTIVIST, AND 500+ VERIFIED ARTISTS. FROM $800-$5K PER FEATURE.',
               },
               {
-                title: '🎥 Hire Top Videographers',
-                desc: 'Work with Cole Bennett, Zach Hurth, and elite directors. Music videos starting at $2K.',
+                title: '🎥 HIRE TOP VIDEOGRAPHERS',
+                desc: 'WORK WITH COLE BENNETT, ZACH HURTH, AND ELITE DIRECTORS. MUSIC VIDEOS STARTING AT $2K.',
               },
               {
-                title: '🏢 Book Premium Studios',
-                desc: 'Record at Tree Sound, Stankonia, and 200+ pro studios. $100-500/hour with engineer included.',
+                title: '🏢 BOOK PREMIUM STUDIOS',
+                desc: 'RECORD AT TREE SOUND, STANKONIA, AND 200+ PRO STUDIOS. $100-500/HOUR WITH ENGINEER INCLUDED.',
               },
               {
-                title: '🎚 World-Class Engineers',
-                desc: 'Mix with Alex Tumay, Luca Pretolesi, and Grammy-winning engineers. $500-2K per song.',
+                title: '🎚 WORLD-CLASS ENGINEERS',
+                desc: 'MIX WITH ALEX TUMAY, LUCA PRETOLESI, AND GRAMMY-WINNING ENGINEERS. $500-2K PER SONG.',
               },
               {
-                title: '🎼 Exclusive Beats',
-                desc: 'Buy from Metro Boomin, Oogie Mane, and rising producers. Exclusive rights $300-10K.',
+                title: '🎼 EXCLUSIVE BEATS',
+                desc: 'BUY FROM METRO BOOMIN, OOGIE MANE, AND RISING PRODUCERS. EXCLUSIVE RIGHTS $300-10K.',
               },
               {
-                title: '🌍 Global Network',
-                desc: 'Access 10K+ creators across 50+ countries. Atlanta, LA, NYC, London, Tokyo, and beyond.',
+                title: '🌍 GLOBAL NETWORK',
+                desc: 'ACCESS 10K+ CREATORS ACROSS 50+ COUNTRIES. ATLANTA, LA, NYC, LONDON, TOKYO, AND BEYOND.',
               },
             ].map((f) => (
               <div
                 key={f.title}
-                className="min-h-[160px] rounded-xl bg-panel ring-1 ring-neutral-800 p-6 space-y-2 hover:ring-white/20 transition hover-lift"
+                className="card-brutalist spacing-brutalist-md hover-brutal"
               >
-                <h2 className="text-xl font-semibold">{f.title}</h2>
-                <p className="text-sm text-gray-400">{f.desc}</p>
+                <h2 className="heading-brutalist-sm mb-4">{f.title}</h2>
+                <p className="text-brutalist-mono opacity-80">{f.desc}</p>
               </div>
             ))}
           </section>
 
           {/* HOW IT WORKS */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-center">How AuditoryX Works</h2>
-            <ol className="mx-auto max-w-2xl list-decimal list-inside space-y-3 text-sm text-gray-300">
-              <li>Creators apply by role (artist, engineer, videographer, studio, etc.)</li>
-              <li>Admins review and approve based on quality and availability</li>
-              <li>Approved creators list services with pricing, samples, calendar</li>
-              <li>Clients browse, filter, and book instantly</li>
-              <li>Chat, sign contracts, and collaborate through the platform</li>
-              <li>Funds are held in escrow and released on delivery</li>
-            </ol>
+          <section className="spacing-brutalist-lg">
+            <h2 className="heading-brutalist-lg text-center mb-12">HOW AUDITORYX WORKS</h2>
+            <div className="card-brutalist spacing-brutalist-md max-w-4xl mx-auto">
+              <ol className="space-y-6">
+                {[
+                  'CREATORS APPLY BY ROLE (ARTIST, ENGINEER, VIDEOGRAPHER, STUDIO, ETC.)',
+                  'ADMINS REVIEW AND APPROVE BASED ON QUALITY AND AVAILABILITY',
+                  'APPROVED CREATORS LIST SERVICES WITH PRICING, SAMPLES, CALENDAR',
+                  'CLIENTS BROWSE, FILTER, AND BOOK INSTANTLY',
+                  'CHAT, SIGN CONTRACTS, AND COLLABORATE THROUGH THE PLATFORM',
+                  'FUNDS ARE HELD IN ESCROW AND RELEASED ON DELIVERY'
+                ].map((step, index) => (
+                  <li key={index} className="text-brutalist-mono flex items-start gap-4">
+                    <span className="text-brutalist font-black text-2xl">{index + 1}.</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </section>
 
           {/* RECENT ACTIVITY */}
-          <section className="bg-gradient-to-r from-brand-900/20 to-brand-800/20 rounded-xl p-6 text-center">
-            <h3 className="text-lg font-semibold mb-3">🔥 Live Activity</h3>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-300">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>23 creators joined today</span>
+          <section className="card-brutalist spacing-brutalist-md text-center">
+            <h3 className="heading-brutalist-sm mb-8">🔥 LIVE ACTIVITY</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-6 h-6 bg-white rounded-none"></div>
+                <span className="text-brutalist-mono">23 CREATORS JOINED TODAY</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <span>156 bookings this week</span>
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-6 h-6 bg-white rounded-none"></div>
+                <span className="text-brutalist-mono">156 BOOKINGS THIS WEEK</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                <span>$2.3M paid out this month</span>
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-6 h-6 bg-white rounded-none"></div>
+                <span className="text-brutalist-mono">$2.3M PAID OUT THIS MONTH</span>
               </div>
             </div>
           </section>
 
           {/* FEATURED CREATORS (real data) */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold">Featured Creators</h2>
-            <div className="flex gap-4 overflow-x-auto pb-2">
+          <section className="spacing-brutalist-lg">
+            <h2 className="heading-brutalist-lg mb-12">FEATURED CREATORS</h2>
+            <div className="grid-brutalist grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
               {/* Oogie Mane - Producer */}
-              <Link href="/profile/oogie-mane" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
+              <Link href="/profile/oogie-mane" className="card-brutalist card-brutalist-interactive spacing-brutalist-md">
+                <div className="mb-6 h-16 w-16 bg-white flex items-center justify-center text-black font-black text-xl">
                   OM
                 </div>
-                <p className="font-semibold text-sm text-white">Oogie Mane</p>
-                <p className="text-xs text-gray-400">Producer • Atlanta, GA</p>
-                <p className="text-xs text-gray-500 mt-1">Trap, Hip-Hop, Drill</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 4.9 (247 reviews)</p>
-                  <p className="text-xs text-brand-400">From $500</p>
+                <p className="heading-brutalist-sm mb-2">OOGIE MANE</p>
+                <p className="text-brutalist-mono mb-2">PRODUCER • ATLANTA, GA</p>
+                <p className="text-brutalist-mono mb-4 opacity-60">TRAP, HIP-HOP, DRILL</p>
+                <div className="flex justify-between mb-4">
+                  <p className="text-brutalist-mono">⭐ 4.9 (247)</p>
+                  <p className="text-brutalist">FROM $500</p>
                 </div>
-                <p className="text-xs text-gray-400 mt-2">🎵 "Known for hard-hitting 808s"</p>
+                <p className="text-brutalist-mono opacity-80">🎵 "KNOWN FOR HARD-HITTING 808S"</p>
               </Link>
 
               {/* ThouxanBanFauni - Artist */}
-              <Link href="/profile/thouxanbanfauni" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-lg">
+              <Link href="/profile/thouxanbanfauni" className="card-brutalist card-brutalist-interactive spacing-brutalist-md">
+                <div className="mb-6 h-16 w-16 bg-white flex items-center justify-center text-black font-black text-lg">
                   TBF
                 </div>
-                <p className="font-semibold text-sm text-white">ThouxanBanFauni</p>
-                <p className="text-xs text-gray-400">Artist • Virginia</p>
-                <p className="text-xs text-gray-500 mt-1">Hip-Hop, Cloud Rap, Underground</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 4.8 (189 reviews)</p>
-                  <p className="text-xs text-brand-400">From $1,200</p>
+                <p className="heading-brutalist-sm mb-2">THOUXANBANFAUNI</p>
+                <p className="text-brutalist-mono mb-2">ARTIST • VIRGINIA</p>
+                <p className="text-brutalist-mono mb-4 opacity-60">HIP-HOP, CLOUD RAP, UNDERGROUND</p>
+                <div className="flex justify-between mb-4">
+                  <p className="text-brutalist-mono">⭐ 4.8 (189)</p>
+                  <p className="text-brutalist">FROM $1,200</p>
                 </div>
-                <p className="text-xs text-gray-400 mt-2">🎤 "Melodic flows & unique style"</p>
+                <p className="text-brutalist-mono opacity-80">🎤 "MELODIC FLOWS & UNIQUE STYLE"</p>
               </Link>
 
               {/* UnoTheActivist - Artist */}
-              <Link href="/profile/unotheactivist" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg">
+              <Link href="/profile/unotheactivist" className="card-brutalist card-brutalist-interactive spacing-brutalist-md">
+                <div className="mb-6 h-16 w-16 bg-white flex items-center justify-center text-black font-black text-lg">
                   UTA
                 </div>
-                <p className="font-semibold text-sm text-white">UnoTheActivist</p>
-                <p className="text-xs text-gray-400">Artist • Atlanta, GA</p>
-                <p className="text-xs text-gray-500 mt-1">Hip-Hop, Trap, Experimental</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 4.9 (312 reviews)</p>
-                  <p className="text-xs text-brand-400">From $1,500</p>
+                <p className="heading-brutalist-sm mb-2">UNOTHEACTIVIST</p>
+                <p className="text-brutalist-mono mb-2">ARTIST • ATLANTA, GA</p>
+                <p className="text-brutalist-mono mb-4 opacity-60">HIP-HOP, TRAP, EXPERIMENTAL</p>
+                <div className="flex justify-between mb-4">
+                  <p className="text-brutalist-mono">⭐ 4.9 (312)</p>
+                  <p className="text-brutalist">FROM $1,500</p>
                 </div>
-                <p className="text-xs text-gray-400 mt-2">🔥 "Innovative sound & energy"</p>
+                <p className="text-brutalist-mono opacity-80">🔥 "INNOVATIVE SOUND & ENERGY"</p>
               </Link>
 
               {/* Cole Bennett - Videographer */}
-              <Link href="/profile/cole-bennett" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-yellow-500 to-red-500 flex items-center justify-center text-white font-bold text-lg">
+              <Link href="/profile/cole-bennett" className="card-brutalist card-brutalist-interactive spacing-brutalist-md">
+                <div className="mb-6 h-16 w-16 bg-white flex items-center justify-center text-black font-black text-lg">
                   CB
                 </div>
-                <p className="font-semibold text-sm text-white">Cole Bennett</p>
-                <p className="text-xs text-gray-400">Videographer • Chicago, IL</p>
-                <p className="text-xs text-gray-500 mt-1">Music Videos, Creative Direction</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 5.0 (156 reviews)</p>
-                  <p className="text-xs text-brand-400">From $5,000</p>
+                <p className="heading-brutalist-sm mb-2">COLE BENNETT</p>
+                <p className="text-brutalist-mono mb-2">VIDEOGRAPHER • CHICAGO, IL</p>
+                <p className="text-brutalist-mono mb-4 opacity-60">MUSIC VIDEOS, CREATIVE DIRECTION</p>
+                <div className="flex justify-between mb-4">
+                  <p className="text-brutalist-mono">⭐ 5.0 (156)</p>
+                  <p className="text-brutalist">FROM $5,000</p>
                 </div>
-                <p className="text-xs text-gray-400 mt-2">🎬 "Lyrical Lemonade founder"</p>
-              </Link>
-
-              {/* Tree Sound Studios */}
-              <Link href="/profile/tree-sound-studios" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg">
-                  TS
-                </div>
-                <p className="font-semibold text-sm text-white">Tree Sound Studios</p>
-                <p className="text-xs text-gray-400">Studio • Atlanta, GA</p>
-                <p className="text-xs text-gray-500 mt-1">Recording, Mixing, Mastering</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 4.9 (423 reviews)</p>
-                  <p className="text-xs text-brand-400">From $150/hr</p>
-                </div>
-                <p className="text-xs text-gray-400 mt-2">🏢 "Where hits are made"</p>
-              </Link>
-
-              {/* Alex Tumay - Engineer */}
-              <Link href="/profile/alex-tumay" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
-                  AT
-                </div>
-                <p className="font-semibold text-sm text-white">Alex Tumay</p>
-                <p className="text-xs text-gray-400">Engineer • Atlanta, GA</p>
-                <p className="text-xs text-gray-500 mt-1">Mixing, Mastering, Vocal Processing</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 5.0 (289 reviews)</p>
-                  <p className="text-xs text-brand-400">From $800</p>
-                </div>
-                <p className="text-xs text-gray-400 mt-2">🎚️ "Young Thug's go-to engineer"</p>
-              </Link>
-
-              {/* Metro Boomin - Producer */}
-              <Link href="/profile/metro-boomin" className="min-w-[280px] rounded-xl bg-panel ring-1 ring-neutral-800 p-4 hover-lift hover:ring-white/20 transition-all">
-                <div className="mb-3 h-16 w-16 rounded-full bg-gradient-to-br from-black to-gray-700 flex items-center justify-center text-white font-bold text-lg">
-                  MB
-                </div>
-                <p className="font-semibold text-sm text-white">Metro Boomin</p>
-                <p className="text-xs text-gray-400">Producer • Atlanta, GA</p>
-                <p className="text-xs text-gray-500 mt-1">Trap, Hip-Hop, Dark Beats</p>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-green-400">⭐ 5.0 (567 reviews)</p>
-                  <p className="text-xs text-brand-400">From $2,500</p>
-                </div>
-                <p className="text-xs text-gray-400 mt-2">🔥 "If Metro don't trust you..."</p>
+                <p className="text-brutalist-mono opacity-80">🎬 "LYRICAL LEMONADE FOUNDER"</p>
               </Link>
             </div>
           </section>
 
           {/* TESTIMONIALS */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-center">What Creators Are Saying</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-panel ring-1 ring-neutral-800 rounded-xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+          <section className="spacing-brutalist-lg">
+            <h2 className="heading-brutalist-lg text-center mb-12">WHAT CREATORS ARE SAYING</h2>
+            <div className="grid-brutalist grid-cols-1 md:grid-cols-3">
+              <div className="card-brutalist spacing-brutalist-md">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-white flex items-center justify-center text-black font-black text-sm">
                     OM
                   </div>
                   <div>
-                    <p className="font-semibold text-sm">Oogie Mane</p>
-                    <p className="text-xs text-gray-400">Producer</p>
+                    <p className="text-brutalist">OOGIE MANE</p>
+                    <p className="text-brutalist-mono opacity-60">PRODUCER</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-300 mb-3">
-                  "AuditoryX changed my life. I went from making $200/month to $15K+ just from the platform. The clients are serious and the payment system is bulletproof."
+                <p className="text-brutalist-mono mb-4 opacity-80">
+                  "AUDITORYX CHANGED MY LIFE. I WENT FROM MAKING $200/MONTH TO $15K+ JUST FROM THE PLATFORM. THE CLIENTS ARE SERIOUS AND THE PAYMENT SYSTEM IS BULLETPROOF."
                 </p>
-                <div className="flex text-yellow-400 text-xs">
+                <div className="text-brutalist">
                   ⭐⭐⭐⭐⭐
                 </div>
               </div>
 
-              <div className="bg-panel ring-1 ring-neutral-800 rounded-xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
+              <div className="card-brutalist spacing-brutalist-md">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-white flex items-center justify-center text-black font-black text-sm">
                     TBF
                   </div>
                   <div>
-                    <p className="font-semibold text-sm">ThouxanBanFauni</p>
-                    <p className="text-xs text-gray-400">Artist</p>
+                    <p className="text-brutalist">THOUXANBANFAUNI</p>
+                    <p className="text-brutalist-mono opacity-60">ARTIST</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-300 mb-3">
-                  "Finally a platform that gets it. No middlemen, direct bookings, and I can focus on my art while the money flows. Built different."
+                <p className="text-brutalist-mono mb-4 opacity-80">
+                  "FINALLY A PLATFORM THAT GETS IT. NO MIDDLEMEN, DIRECT BOOKINGS, AND I CAN FOCUS ON MY ART WHILE THE MONEY FLOWS. BUILT DIFFERENT."
                 </p>
-                <div className="flex text-yellow-400 text-xs">
+                <div className="text-brutalist">
                   ⭐⭐⭐⭐⭐
                 </div>
               </div>
 
-              <div className="bg-panel ring-1 ring-neutral-800 rounded-xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-sm">
+              <div className="card-brutalist spacing-brutalist-md">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-white flex items-center justify-center text-black font-black text-sm">
                     TS
                   </div>
                   <div>
-                    <p className="font-semibold text-sm">Tree Sound Studios</p>
-                    <p className="text-xs text-gray-400">Studio Owner</p>
+                    <p className="text-brutalist">TREE SOUND STUDIOS</p>
+                    <p className="text-brutalist-mono opacity-60">STUDIO OWNER</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-300 mb-3">
-                  "Our studio bookings doubled since joining. AuditoryX brings us quality artists and handles all the scheduling and payments seamlessly."
+                <p className="text-brutalist-mono mb-4 opacity-80">
+                  "OUR STUDIO BOOKINGS DOUBLED SINCE JOINING. AUDITORYX BRINGS US QUALITY ARTISTS AND HANDLES ALL THE SCHEDULING AND PAYMENTS SEAMLESSLY."
                 </p>
-                <div className="flex text-yellow-400 text-xs">
+                <div className="text-brutalist">
                   ⭐⭐⭐⭐⭐
                 </div>
               </div>
@@ -310,40 +274,40 @@ export default function Home() {
           </section>
 
           {/* BROWSE BY ROLE */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-center">Browse by Role</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-center">
+          <section className="spacing-brutalist-lg">
+            <h2 className="heading-brutalist-lg text-center mb-12">BROWSE BY ROLE</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
               {[
-                { icon: '🎤', role: 'artist' },
-                { icon: '🎧', role: 'producer' },
-                { icon: '🎚️', role: 'engineer' },
-                { icon: '🎥', role: 'videographer' },
-                { icon: '🏢', role: 'studio' },
+                { icon: '🎤', role: 'ARTIST' },
+                { icon: '🎧', role: 'PRODUCER' },
+                { icon: '🎚️', role: 'ENGINEER' },
+                { icon: '🎥', role: 'VIDEOGRAPHER' },
+                { icon: '🏢', role: 'STUDIO' },
               ].map(({ icon, role }) => (
                 <Link
                   key={role}
-                  href={`/explore?role=${role}`}
-                  className="rounded-lg ring-1 ring-neutral-700 py-4 transition hover:ring-white/60"
+                  href={`/explore?role=${role.toLowerCase()}`}
+                  className="card-brutalist card-brutalist-interactive spacing-brutalist-md text-center"
                 >
-                  <span className="block text-2xl">{icon}</span>
-                  <span className="capitalize text-sm text-gray-300">{role}</span>
+                  <span className="block text-4xl mb-4">{icon}</span>
+                  <span className="text-brutalist">{role}</span>
                 </Link>
               ))}
             </div>
           </section>
 
           {/* BROWSE BY LOCATION */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-center">Popular Locations</h2>
-            <div className="flex flex-wrap justify-center gap-3">
+          <section className="spacing-brutalist-lg">
+            <h2 className="heading-brutalist-lg text-center mb-12">POPULAR LOCATIONS</h2>
+            <div className="flex flex-wrap justify-center gap-6">
               {[
-                'Atlanta', 'LA', 'NYC', 'Miami', 'Chicago', 
-                'Nashville', 'London', 'Tokyo', 'Seoul', 'Toronto'
+                'ATLANTA', 'LA', 'NYC', 'MIAMI', 'CHICAGO', 
+                'NASHVILLE', 'LONDON', 'TOKYO', 'SEOUL', 'TORONTO'
               ].map(city => (
                 <Link
                   key={city}
                   href={`/explore?location=${city}`}
-                  className="rounded-full ring-1 ring-neutral-700 px-4 py-2 text-sm text-gray-300 transition hover:ring-white"
+                  className="btn-brutalist-secondary"
                 >
                   {city}
                 </Link>
@@ -352,11 +316,11 @@ export default function Home() {
           </section>
 
           {/* APPLY BANNER */}
-          <section className="rounded-xl ring-1 ring-neutral-800 bg-panel p-8 text-center space-y-4">
-            <h3 className="text-xl font-semibold">Want to offer services on AuditoryX?</h3>
-            <p className="text-sm text-gray-400">Apply as a creator and start getting booked.</p>
-            <Link href="/apply" className="btn-secondary btn-md">
-              📍 Apply Now
+          <section className="card-brutalist spacing-brutalist-lg text-center">
+            <h3 className="heading-brutalist-md mb-6">WANT TO OFFER SERVICES ON AUDITORYX?</h3>
+            <p className="text-brutalist-mono mb-8 opacity-80">APPLY AS A CREATOR AND START GETTING BOOKED.</p>
+            <Link href="/apply" className="btn-brutalist">
+              📍 APPLY NOW
             </Link>
           </section>
 

@@ -73,6 +73,14 @@ export default {
           elevated: '#262626',
         },
         
+        // Brutalist colors
+        brutalist: {
+          black: '#000000',
+          dark: '#0e0e0e',
+          white: '#ffffff',
+          gray: '#333333',
+        },
+        
         // Legacy support (will be phased out)
         primary: '#8B5CF6',
         secondary: '#06B6D4',
@@ -89,9 +97,11 @@ export default {
       fontFamily: {
         sans: ['Inter', ...fontFamily.sans],
         mono: ['JetBrains Mono', 'Fira Code', ...fontFamily.mono],
-        display: ['Inter', ...fontFamily.sans],
-        heading: ['Inter', ...fontFamily.sans],
+        display: ['Space Grotesk', 'Arial Black', ...fontFamily.sans],
+        heading: ['Space Grotesk', 'Arial Black', ...fontFamily.sans],
         body: ['Inter', ...fontFamily.sans],
+        brutalist: ['Space Grotesk', 'Arial Black', ...fontFamily.sans],
+        'brutalist-mono': ['JetBrains Mono', 'Courier New', ...fontFamily.mono],
       },
       
       fontSize: {
@@ -147,6 +157,11 @@ export default {
         'glow-brand': '0 0 20px rgba(139, 92, 246, 0.3)',
         'glow-success': '0 0 20px rgba(16, 185, 129, 0.3)',
         'glow-error': '0 0 20px rgba(239, 68, 68, 0.3)',
+        
+        // Brutalist shadows
+        'brutal': '4px 4px 0 #333333',
+        'brutal-lg': '6px 6px 0 #333333',
+        'brutal-xl': '8px 8px 0 #333333',
       },
       
       borderRadius: {

@@ -11,24 +11,32 @@ export default function ServiceCard({ service }: ServiceCardProps): JSX.Element 
   const [showRequest, setShowRequest] = useState<boolean>(false);
 
   return (
-    <div className="border border-gray-700 p-4 rounded-lg bg-gray-900 text-white space-y-2">
-      <h3 className="text-xl font-bold">{service.serviceName}</h3>
-      <p className="text-sm text-gray-400">{service.description}</p>
-      <p><strong>Price:</strong> ${service.price}</p>
-      <p className="text-gray-500 text-sm">By: {service.displayName}</p>
+    <div className="card-brutalist card-brutalist-interactive spacing-brutalist-md">
+      <h3 className="heading-brutalist-sm mb-4">{service.serviceName}</h3>
+      <p className="text-brutalist-mono mb-6 opacity-80">{service.description}</p>
+      <div className="mb-4">
+        <p className="text-brutalist-mono mb-2">
+          <span className="text-brutalist">PRICE:</span> ${service.price}
+        </p>
+        <p className="text-brutalist-mono opacity-60">
+          BY: {service.displayName}
+        </p>
+      </div>
       <button
         onClick={() => setShowRequest(!showRequest)}
-        className="btn btn-primary w-full mt-2"
+        className={`w-full ${showRequest ? 'btn-brutalist-secondary' : 'btn-brutalist'}`}
       >
-        {showRequest ? "Close" : "Request This Service"}
+        {showRequest ? "CLOSE" : "REQUEST SERVICE"}
       </button>
 
       {showRequest && (
-        <SendServiceRequest
-          serviceId={service.id}
-          recipientId={service.email}
-          recipientRole="provider"
-        />
+        <div className="mt-6 pt-6 border-t-2 border-white">
+          <SendServiceRequest
+            serviceId={service.id}
+            recipientId={service.email}
+            recipientRole="provider"
+          />
+        </div>
       )}
     </div>
   );
