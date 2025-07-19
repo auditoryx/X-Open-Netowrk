@@ -28,30 +28,40 @@ export default function DragDropUpload({ onUploadComplete }: Props) {
   };
 
   return (
-    <div className='border p-4 rounded'>
-      <label htmlFor='drag-upload' className='block mb-2 font-semibold'>
-        Upload Media
+    <div className='card-brutalist spacing-brutalist-md'>
+      <label htmlFor='drag-upload' className='text-brutalist block mb-4'>
+        UPLOAD MEDIA
       </label>
-      <input
-        id='drag-upload'
-        type='file'
-        multiple
-        accept='image/*,video/*'
-        onChange={handleFileChange}
-        className='mb-2'
-      />
-      {uploading && <p>Uploading...</p>}
-      <div className='grid grid-cols-3 gap-2'>
-        {urls.map((url, idx) => (
-          <div key={idx}>
-            {url.includes('video') ? (
-              <video src={url} controls className='w-full h-32 object-cover' />
-            ) : (
-              <img src={url} alt='Uploaded' className='w-full h-32 object-cover' />
-            )}
-          </div>
-        ))}
+      <div className='border-2 border-white border-dashed p-8 mb-6 text-center hover:bg-brutalist-dark transition-colors'>
+        <input
+          id='drag-upload'
+          type='file'
+          multiple
+          accept='image/*,video/*'
+          onChange={handleFileChange}
+          className='hidden'
+        />
+        <label 
+          htmlFor='drag-upload' 
+          className='cursor-pointer text-brutalist-mono block'
+        >
+          {uploading ? 'UPLOADING...' : 'CLICK TO SELECT FILES OR DRAG & DROP'}
+        </label>
       </div>
+      
+      {urls.length > 0 && (
+        <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+          {urls.map((url, idx) => (
+            <div key={idx} className='border-2 border-white overflow-hidden'>
+              {url.includes('video') ? (
+                <video src={url} controls className='w-full h-32 object-cover' />
+              ) : (
+                <img src={url} alt='Uploaded' className='w-full h-32 object-cover' />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

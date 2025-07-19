@@ -15,20 +15,12 @@ export default function XpProgressBar({
   currentTier,
   className = ''
 }: XpProgressBarProps) {
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'signature': return 'bg-gradient-to-r from-purple-500 to-indigo-600';
-      case 'verified': return 'bg-gradient-to-r from-blue-500 to-blue-600';
-      default: return 'bg-gradient-to-r from-gray-400 to-gray-500';
-    }
-  };
-
   const getNextTierName = (currentTier: string) => {
     switch (currentTier) {
-      case 'standard': return 'Verified';
-      case 'verified': return 'Signature';
-      case 'signature': return 'Max Level';
-      default: return 'Next Tier';
+      case 'standard': return 'VERIFIED';
+      case 'verified': return 'SIGNATURE';
+      case 'signature': return 'MAX LEVEL';
+      default: return 'NEXT TIER';
     }
   };
 
@@ -48,40 +40,34 @@ export default function XpProgressBar({
 
   return (
     <div className={`${className}`}>
-      <div className="flex items-center justify-between text-sm mb-2">
-        <span className="font-medium text-gray-700">
-          XP Progress
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-brutalist-mono">
+          XP PROGRESS
         </span>
-        <span className="text-gray-600">
+        <span className="text-brutalist-mono opacity-80">
           {isMaxTier ? (
-            <span className="text-purple-600 font-medium">Max Level Reached!</span>
+            <span className="text-white">MAX LEVEL REACHED!</span>
           ) : (
-            `${currentXp}/${requirement} XP to ${nextTier}`
+            `${currentXp}/${requirement} XP TO ${nextTier}`
           )}
         </span>
       </div>
       
-      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+      <div className="progress-brutalist mb-4">
         <div 
-          className={`h-full transition-all duration-500 ease-out ${getTierColor(currentTier)}`}
+          className="progress-brutalist-fill transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}
-        >
-          <div className="h-full bg-white bg-opacity-20 animate-pulse"></div>
-        </div>
+        />
       </div>
       
-      <div className="flex items-center justify-between text-xs mt-1">
-        <span className={`font-medium capitalize ${
-          currentTier === 'signature' ? 'text-purple-600' :
-          currentTier === 'verified' ? 'text-blue-600' :
-          'text-gray-600'
-        }`}>
-          {currentTier} Tier
+      <div className="flex items-center justify-between">
+        <span className="text-brutalist">
+          {currentTier.toUpperCase()} TIER
         </span>
         
         {!isMaxTier && (
-          <span className="text-gray-500">
-            {Math.round(progress)}% complete
+          <span className="text-brutalist-mono opacity-60">
+            {Math.round(progress)}% COMPLETE
           </span>
         )}
       </div>

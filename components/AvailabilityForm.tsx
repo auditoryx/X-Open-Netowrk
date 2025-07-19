@@ -46,23 +46,32 @@ export default function AvailabilityForm(): JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
-      <h2 className="text-xl font-bold mb-2">Set Weekly Availability</h2>
-      {Object.keys(availability).map((day) => (
-        <div key={day} className="flex items-center gap-4">
-          <label htmlFor={`avail-${day}`} className="capitalize">
-            {day}
-          </label>
-          <input
-            id={`avail-${day}`}
-            type="checkbox"
-            checked={availability[day as keyof AvailabilityState]}
-            onChange={() => handleChange(day as keyof AvailabilityState)}
-            className="scale-125"
-          />
+    <div className="card-brutalist spacing-brutalist-md max-w-2xl">
+      <h2 className="heading-brutalist-md mb-8">SET WEEKLY AVAILABILITY</h2>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="grid grid-cols-1 gap-6">
+          {Object.keys(availability).map((day) => (
+            <label key={day} className="flex items-center justify-between cursor-pointer">
+              <span className="text-brutalist">{day.toUpperCase()}</span>
+              <div className="relative">
+                <input
+                  id={`avail-${day}`}
+                  type="checkbox"
+                  checked={availability[day as keyof AvailabilityState]}
+                  onChange={() => handleChange(day as keyof AvailabilityState)}
+                  className="w-6 h-6 appearance-none border-2 border-white bg-black checked:bg-white cursor-pointer"
+                />
+                {availability[day as keyof AvailabilityState] && (
+                  <span className="absolute inset-0 flex items-center justify-center text-black font-black text-sm pointer-events-none">
+                    ✓
+                  </span>
+                )}
+              </div>
+            </label>
+          ))}
         </div>
-      ))}
-      <button type="submit" className="btn btn-primary">Save Availability</button>
-    </form>
+        <button type="submit" className="btn-brutalist w-full">SAVE AVAILABILITY</button>
+      </form>
+    </div>
   );
 }

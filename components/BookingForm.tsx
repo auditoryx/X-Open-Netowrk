@@ -16,20 +16,23 @@ export default function BookingForm(): JSX.Element {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 bg-gray-900 rounded-xl space-y-4">
-      <input
-        className="input-base"
-        placeholder="Your Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        className="input-base"
-        placeholder="Service Name"
-        value={service}
-        onChange={(e) => setService(e.target.value)}
-      />
-      <button className="btn btn-primary w-full">Book</button>
+    <form onSubmit={handleSubmit} className="card-brutalist spacing-brutalist-md">
+      <h3 className="heading-brutalist-sm mb-6">BOOK SERVICE</h3>
+      <div className="space-y-6">
+        <input
+          className="input-brutalist"
+          placeholder="YOUR NAME"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          className="input-brutalist"
+          placeholder="SERVICE NAME"
+          value={service}
+          onChange={(e) => setService(e.target.value)}
+        />
+        <button className="btn-brutalist w-full">BOOK NOW</button>
+      </div>
     </form>
   );
 }
