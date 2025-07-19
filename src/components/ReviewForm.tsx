@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Star, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
+import StarRating from '@/components/ui/StarRating';
 
 interface ReviewFormProps {
   bookingId: string;
@@ -19,21 +20,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   onSubmitted
 }) => {
   const [rating, setRating] = useState<number>(0);
-  const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  const handleStarClick = (starRating: number) => {
-    setRating(starRating);
-  };
-
-  const handleStarHover = (starRating: number) => {
-    setHoveredRating(starRating);
-  };
-
-  const handleStarLeave = () => {
-    setHoveredRating(0);
+  const handleRatingChange = (newRating: number) => {
+    setRating(newRating);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,28 +101,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           <label className="block text-sm font-medium text-gray-700">
             Rating
           </label>
-          <div className="flex items-center space-x-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={() => handleStarClick(star)}
-                onMouseEnter={() => handleStarHover(star)}
-                onMouseLeave={handleStarLeave}
-                className="p-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-                disabled={isSubmitting}
-              >
-                <Star
-                  className={`w-8 h-8 transition-colors ${
-                    (hoveredRating >= star || rating >= star)
-                      ? 'text-yellow-400 fill-current'
-                      : 'text-gray-300'
-                  }`}
-                />
-              </button>
-            ))}
-            <span className="ml-3 text-sm text-gray-600">
-              {getRatingText(hoveredRating || rating)}
+          <div className="flex items-center space-x-3">
+            <StarRating
+              value={rating}
+              onChange={handleRatingChange}
+              disabled={isSubmitting}
+              size="lg"
+            />
+            <span className="text-sm text-gray-600">
+              {getRatingText(rating)}
             </span>
           </div>
         </div>
