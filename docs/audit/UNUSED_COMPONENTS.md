@@ -1,0 +1,1262 @@
+# Unused Components
+
+This document lists components, hooks, and utilities that are not used anywhere in the codebase.
+
+Generated on: 2025-07-19T06:15:00.633Z
+
+## Legend
+- 🔴 **Unused**: No imports or references found
+- ⚠️ **Potentially Unused**: Limited usage that may be test-only or indirect
+- 📋 **Check Required**: Manual verification recommended
+
+---
+
+## Analysis Overview
+
+This analysis identifies potentially unused code that could be candidates for removal to reduce bundle size and improve maintainability.
+
+**Detection Method**:
+- Static analysis of import statements across all files
+- JSX component usage detection
+- Function call pattern matching
+- Cross-reference with exports
+
+---
+
+## Unused Components
+### 🔴 Unused React Components (207)
+
+- **addArrayItem**
+  - Files: src/components/forms/CreateMentorshipForm.tsx
+  - Status: No external references found
+- **addEquipment**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **addGenre**
+  - Files: src/components/explore/FilterPanel.tsx
+  - Status: No external references found
+- **addLink**
+  - Files: src/components/profile/PortfolioEditor.tsx
+  - Status: No external references found
+- **addLinkField**
+  - Files: src/components/profile/VerificationFormModal.tsx
+  - Status: No external references found
+- **addLocation**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **addTag**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **AdminVerificationRequests**
+  - Files: src/components/admin/AdminVerificationRequests.tsx
+  - Status: No external references found
+- **AlertTitle**
+  - Files: src/components/ui/alert.tsx
+  - Status: No external references found
+- **ArtistDashboard**
+  - Files: src/components/roles/ArtistDashboard.tsx
+  - Status: No external references found
+- **AssignRoleForm**
+  - Files: src/components/admin/AssignRoleForm.tsx
+  - Status: No external references found
+- **AvatarRing**
+  - Files: src/components/ui/AvatarRing.tsx
+  - Status: No external references found
+- **badgeVariants**
+  - Files: src/components/ui/badge.tsx
+  - Status: No external references found
+- **BookingCalendar**
+  - Files: src/components/booking/BookingCalendar.tsx
+  - Status: No external references found
+- **BookingSidebar**
+  - Files: src/components/book/BookingSidebar.tsx
+  - Status: No external references found
+- **BookingsList**
+  - Files: src/components/bookings/BookingsList.tsx
+  - Status: No external references found
+- **BookingStatusCard**
+  - Files: src/components/booking/BookingStatusCard.tsx
+  - Status: No external references found
+- **Button **
+  - Files: src/components/ui/Button.tsx
+  - Status: No external references found
+- **CalendarSync**
+  - Files: src/components/calendar/CalendarSync.tsx
+  - Status: No external references found
+- **canProceed**
+  - Files: src/components/onboarding/OnboardingWizard.tsx
+  - Status: No external references found
+- **CardBody**
+  - Files: src/components/ui/Card.tsx
+  - Status: No external references found
+- **CardDescription**
+  - Files: src/components/ui/card.tsx
+  - Status: No external references found
+- **CardFooter**
+  - Files: src/components/ui/Card.tsx, src/components/ui/card.tsx
+  - Status: No external references found
+- **ChallengeLeaderboardComponent**
+  - Files: src/components/challenges/ChallengeLeaderboard.tsx
+  - Status: No external references found
+- **clearAll**
+  - Files: src/components/PortfolioUploader.tsx, src/components/media/MediaUpload.tsx
+  - Status: No external references found
+- **clearAllNotifications**
+  - Files: src/components/gamification/XPNotificationSystem.tsx
+  - Status: No external references found
+- **clearRecentSearches**
+  - Files: src/components/explore/SearchBar.tsx
+  - Status: No external references found
+- **closeFullscreen**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **CollabBookingSummary**
+  - Files: src/components/collab/CollabBookingSummary.tsx
+  - Status: No external references found
+- **default as XPDisplay **
+  - Files: src/components/gamification/index.ts
+  - Status: No external references found
+- **default as XPProgressBar **
+  - Files: src/components/gamification/index.ts
+  - Status: No external references found
+- **default as XPWidget **
+  - Files: src/components/gamification/index.ts
+  - Status: No external references found
+- **DefaultDashboard**
+  - Files: src/components/roles/DefaultDashboard.tsx
+  - Status: No external references found
+- **DiscoveryMap**
+  - Files: src/components/explore/DiscoveryMap.tsx
+  - Status: No external references found
+- **DiscoveryWrapper**
+  - Files: src/components/explore/DiscoveryWrapper.tsx
+  - Status: No external references found
+- **dismissNotification**
+  - Files: src/components/gamification/XPNotificationSystem.tsx
+  - Status: No external references found
+- **EarningsDashboard**
+  - Files: src/components/dashboard/EarningsDashboard.tsx
+  - Status: No external references found
+- **EmptyState **
+  - Files: src/components/ui/EmptyState.tsx
+  - Status: No external references found
+- **EngineerDashboard**
+  - Files: src/components/roles/EngineerDashboard.tsx
+  - Status: No external references found
+- **EnhancedChatThread**
+  - Files: src/components/chat/EnhancedChatThread.tsx
+  - Status: No external references found
+- **EnhancedMediaGallery**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **ErrorBoundary**
+  - Files: src/components/ErrorBoundary.tsx
+  - Status: No external references found
+- **FeaturedSection**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **formatAwardedDate**
+  - Files: src/components/gamification/BadgeCard.tsx, src/components/gamification/BadgeProgress.tsx
+  - Status: No external references found
+- **formatLastSeen**
+  - Files: src/components/chat/PresenceIndicator.tsx
+  - Status: No external references found
+- **formatTime**
+  - Files: src/components/booking/ContractPreview.tsx
+  - Status: No external references found
+- **formatTimeAgo**
+  - Files: src/components/notifications/SplitBookingNotification.tsx
+  - Status: No external references found
+- **formatTimeOnly**
+  - Files: src/components/collab/CollabBookingSummary.tsx
+  - Status: No external references found
+- **formatTimeRemaining**
+  - Files: src/components/challenges/ChallengeCard.tsx
+  - Status: No external references found
+- **formatTimestamp**
+  - Files: src/components/dashboard/MessagesPreview.tsx
+  - Status: No external references found
+- **formatValue**
+  - Files: src/components/challenges/ChallengeLeaderboard.tsx
+  - Status: No external references found
+- **getApplicationStatusBadge**
+  - Files: src/components/verification/VerificationProgress.tsx
+  - Status: No external references found
+- **getBackgroundColor**
+  - Files: src/components/gamification/XPNotificationSystem.tsx
+  - Status: No external references found
+- **getBadgeColor**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **getBadgeIcon**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **getBookingStatusColor**
+  - Files: src/components/dashboard/BookingInbox.tsx
+  - Status: No external references found
+- **getCategoryLabel**
+  - Files: src/components/rankings/LeaderboardWidget.tsx
+  - Status: No external references found
+- **getCompletionPercent**
+  - Files: src/components/profile/ProfileForm.tsx
+  - Status: No external references found
+- **getConfidenceIcon**
+  - Files: src/components/search/SmartSearchResults.tsx
+  - Status: No external references found
+- **getContent**
+  - Files: src/components/onboarding/EmailCaptureModal.tsx
+  - Status: No external references found
+- **getDurationText**
+  - Files: src/components/booking/ContractPreview.tsx
+  - Status: No external references found
+- **getFileIcon**
+  - Files: src/components/PortfolioUploader.tsx, src/components/media/MediaUpload.tsx
+  - Status: No external references found
+- **getGrowthColor**
+  - Files: src/components/admin/TopRolesCard.tsx
+  - Status: No external references found
+- **getIndustryIcon**
+  - Files: src/components/portfolio/themes/PortfolioThemeSelector.tsx
+  - Status: No external references found
+- **getMatchScoreColor**
+  - Files: src/components/search/SmartSearchResults.tsx
+  - Status: No external references found
+- **getNotificationContent**
+  - Files: src/components/notifications/SplitBookingNotification.tsx
+  - Status: No external references found
+- **getPercentile**
+  - Files: src/components/rankings/LeaderboardWidget.tsx
+  - Status: No external references found
+- **getPositionBadge**
+  - Files: src/components/challenges/ChallengeCard.tsx, src/components/challenges/ChallengeLeaderboard.tsx
+  - Status: No external references found
+- **getRankBadgeColor**
+  - Files: src/components/leaderboard/Leaderboard.tsx
+  - Status: No external references found
+- **getRankColor**
+  - Files: src/components/rankings/LeaderboardWidget.tsx
+  - Status: No external references found
+- **getRankIcon**
+  - Files: src/components/leaderboard/Leaderboard.tsx, src/components/rankings/Leaderboard.tsx, src/components/rankings/LeaderboardWidget.tsx
+  - Status: No external references found
+- **getRewardForPosition**
+  - Files: src/components/challenges/ChallengeLeaderboard.tsx
+  - Status: No external references found
+- **getStatusBadge**
+  - Files: src/components/verification/AdminVerificationDashboard.tsx
+  - Status: No external references found
+- **getStatusDescription**
+  - Files: src/components/profile/ApplyVerificationButton.tsx
+  - Status: No external references found
+- **getStatusText**
+  - Files: src/components/chat/PresenceIndicator.tsx, src/components/profile/ApplyVerificationButton.tsx
+  - Status: No external references found
+- **getSuggestionBadgeColor**
+  - Files: src/components/search/AdvancedSearchInterface.tsx
+  - Status: No external references found
+- **getSuggestionIcon**
+  - Files: src/components/search/AdvancedSearchInterface.tsx
+  - Status: No external references found
+- **getTalentStatusIcon**
+  - Files: src/components/dashboard/SplitBookingCard.tsx
+  - Status: No external references found
+- **getThemeIcon**
+  - Files: src/components/portfolio/themes/PortfolioThemeSelector.tsx
+  - Status: No external references found
+- **getTierColor**
+  - Files: src/components/rankings/Leaderboard.tsx
+  - Status: No external references found
+- **handleArrayChange**
+  - Files: src/components/forms/CreateMentorshipForm.tsx
+  - Status: No external references found
+- **handleBookClick**
+  - Files: src/components/collab/CollabPackageCard.tsx
+  - Status: No external references found
+- **handleBookingClick**
+  - Files: src/components/dashboard/BookingInbox.tsx
+  - Status: No external references found
+- **handleCancelBooking**
+  - Files: src/components/dashboard/SplitBookingsList.tsx
+  - Status: No external references found
+- **handleCardClick**
+  - Files: src/components/collab/CollabPackageCard.tsx
+  - Status: No external references found
+- **handleClear**
+  - Files: src/components/explore/SearchBar.tsx
+  - Status: No external references found
+- **handleClick**
+  - Files: src/components/explore/LocationAutocomplete.tsx
+  - Status: No external references found
+- **handleClickOutside**
+  - Files: src/components/search/AdvancedSearchInterface.tsx, src/components/ui/NotificationBell.tsx
+  - Status: No external references found
+- **handleClose**
+  - Files: src/components/gamification/BadgeNotification.tsx, src/components/ui/WalkthroughOverlay.tsx
+  - Status: No external references found
+- **handleDismiss**
+  - Files: src/components/gamification/XPNotificationSystem.tsx, src/components/verification/VerificationNotification.tsx
+  - Status: No external references found
+- **handleDrop**
+  - Files: src/components/profile/MediaUploader.tsx
+  - Status: No external references found
+- **handleEmailCapture**
+  - Files: src/components/onboarding/OnboardingManager.tsx
+  - Status: No external references found
+- **handleFileChange**
+  - Files: src/components/profile/MediaUploader.tsx
+  - Status: No external references found
+- **handleGeoToggle**
+  - Files: src/components/explore/FilterPanel.tsx
+  - Status: No external references found
+- **handleInputChange**
+  - Files: src/components/BookingChatThread.tsx, src/components/chat/EnhancedChatThread.tsx, src/components/event/EventBookingForm.tsx
+  - Status: No external references found
+- **handleKey**
+  - Files: src/components/profile/MediaCarousel.tsx
+  - Status: No external references found
+- **handleKeyDown**
+  - Files: src/components/ui/StarRating.tsx
+  - Status: No external references found
+- **handleKeyPress**
+  - Files: src/components/chat/EnhancedChatThread.tsx
+  - Status: No external references found
+- **handleLogin**
+  - Files: src/components/onboarding/SignupPromptModal.tsx
+  - Status: No external references found
+- **handleMessageClick**
+  - Files: src/components/dashboard/BookingInbox.tsx
+  - Status: No external references found
+- **handleMouseLeave**
+  - Files: src/components/onboarding/OnboardingManager.tsx
+  - Status: No external references found
+- **handleNext**
+  - Files: src/components/ui/WalkthroughOverlay.tsx
+  - Status: No external references found
+- **handleNotificationRequest**
+  - Files: src/components/profile/CreatorNotificationButton.tsx
+  - Status: No external references found
+- **handleOverlayClick**
+  - Files: src/components/BannedModal.tsx, src/components/booking/TalentRequestModal.tsx, src/components/profile/ReportModal.tsx
+  - Status: No external references found
+- **handlePayNow**
+  - Files: src/components/dashboard/SplitBookingsList.tsx
+  - Status: No external references found
+- **handlePrevious**
+  - Files: src/components/onboarding/OnboardingWizard.tsx
+  - Status: No external references found
+- **handleRecentSearch**
+  - Files: src/components/explore/SearchBar.tsx
+  - Status: No external references found
+- **handleReportClick**
+  - Files: src/components/profile/ReportUserButton.tsx
+  - Status: No external references found
+- **handleRetry**
+  - Files: src/components/PortfolioUploader.tsx, src/components/media/MediaUpload.tsx
+  - Status: No external references found
+- **handleSelect**
+  - Files: src/components/booking/WeeklyCalendarSelector.tsx, src/components/explore/LocationAutocomplete.tsx
+  - Status: No external references found
+- **handleSignup**
+  - Files: src/components/onboarding/SignupPromptModal.tsx
+  - Status: No external references found
+- **handleSignupPrompt**
+  - Files: src/components/onboarding/OnboardingManager.tsx
+  - Status: No external references found
+- **handleStarClick**
+  - Files: src/components/ReviewForm.tsx
+  - Status: No external references found
+- **handleStarHover**
+  - Files: src/components/ReviewForm.tsx
+  - Status: No external references found
+- **handleStarLeave**
+  - Files: src/components/ReviewForm.tsx
+  - Status: No external references found
+- **handleSuccess**
+  - Files: src/components/profile/ApplyVerificationButton.tsx
+  - Status: No external references found
+- **handleSuggestionClick**
+  - Files: src/components/search/AdvancedSearchInterface.tsx
+  - Status: No external references found
+- **handleSwitch**
+  - Files: src/components/dashboard/RoleSwitcher.tsx
+  - Status: No external references found
+- **handleTalentRequest**
+  - Files: src/components/dashboard/SplitBookingsList.tsx
+  - Status: No external references found
+- **handleTalentResponse**
+  - Files: src/components/dashboard/SplitBookingsList.tsx
+  - Status: No external references found
+- **handleTemplateSelect**
+  - Files: src/components/portfolio/themes/PortfolioThemeSelector.tsx
+  - Status: No external references found
+- **handleThemeSelect**
+  - Files: src/components/portfolio/themes/PortfolioThemeSelector.tsx
+  - Status: No external references found
+- **handleTierChange**
+  - Files: src/components/explore/FilterPanel.tsx
+  - Status: No external references found
+- **handleTouchEnd**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **handleTouchMove**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **handleTouchStart**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **handleTyping**
+  - Files: src/components/booking/BookingChat.tsx
+  - Status: No external references found
+- **handleUploadComplete**
+  - Files: src/components/media/PortfolioGallery.tsx
+  - Status: No external references found
+- **handleViewDetails**
+  - Files: src/components/dashboard/SplitBookingsList.tsx
+  - Status: No external references found
+- **IDVerificationForm**
+  - Files: src/components/profile/IDVerificationForm/IDVerificationForm.tsx, src/components/profile/IDVerificationForm.tsx
+  - Status: No external references found
+- **isCreatorView**
+  - Files: src/components/dashboard/collab/MyCollabBookings.tsx
+  - Status: No external references found
+- **LanguageSwitcher**
+  - Files: src/components/ui/LanguageSwitcher.tsx
+  - Status: No external references found
+- **LeaderboardContent**
+  - Files: src/components/rankings/Leaderboard.tsx
+  - Status: No external references found
+- **LeaderboardList**
+  - Files: src/components/leaderboard/LeaderboardList.tsx
+  - Status: No external references found
+- **MediaGallery**
+  - Files: src/components/profile/MediaGallery.tsx
+  - Status: No external references found
+- **MediaUpload**
+  - Files: src/components/media/MediaUpload.tsx
+  - Status: No external references found
+- **MediaUploader**
+  - Files: src/components/profile/MediaUploader.tsx
+  - Status: No external references found
+- **MultiUserPresence**
+  - Files: src/components/chat/PresenceIndicator.tsx
+  - Status: No external references found
+- **MyComponent**
+  - Files: src/components/ClientBookings.tsx
+  - Status: No external references found
+- **NewExploreGrid**
+  - Files: src/components/explore/NewExploreGrid.tsx
+  - Status: No external references found
+- **nextItem**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **NoCreatorsFound**
+  - Files: src/components/ui/EmptyState.tsx
+  - Status: No external references found
+- **NoMessages**
+  - Files: src/components/ui/EmptyState.tsx
+  - Status: No external references found
+- **NoSearchResults**
+  - Files: src/components/ui/EmptyState.tsx
+  - Status: No external references found
+- **onScroll**
+  - Files: src/components/explore/DiscoveryGrid.tsx, src/components/explore/DiscoveryMap.tsx, src/components/explore/NewExploreGrid.tsx
+  - Status: No external references found
+- **openFullscreen**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **PortfolioGallery**
+  - Files: src/components/media/PortfolioGallery.tsx
+  - Status: No external references found
+- **prev**
+  - Files: src/components/profile/MediaCarousel.tsx
+  - Status: No external references found
+- **prevItem**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **ProducerDashboard**
+  - Files: src/components/roles/ProducerDashboard.tsx
+  - Status: No external references found
+- **ProfileForm**
+  - Files: src/components/profile/ProfileForm.tsx
+  - Status: No external references found
+- **ProfileReviewList**
+  - Files: src/components/profile/ProfileReviewList.tsx
+  - Status: No external references found
+- **removeArrayItem**
+  - Files: src/components/forms/CreateMentorshipForm.tsx
+  - Status: No external references found
+- **removeEquipment**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **removeLink**
+  - Files: src/components/profile/PortfolioEditor.tsx
+  - Status: No external references found
+- **removeLinkField**
+  - Files: src/components/profile/VerificationFormModal.tsx
+  - Status: No external references found
+- **removeLocation**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **removeRole**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **removeTag**
+  - Files: src/components/collab/CreateCollabPackageForm.tsx
+  - Status: No external references found
+- **renderBadgesWidget**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **renderCertificationsWidget**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **renderChallengeHeader**
+  - Files: src/components/challenges/ChallengeLeaderboard.tsx
+  - Status: No external references found
+- **renderEmptyState**
+  - Files: src/components/challenges/ChallengeGrid.tsx
+  - Status: No external references found
+- **renderFilterControls**
+  - Files: src/components/challenges/ChallengeGrid.tsx
+  - Status: No external references found
+- **renderGridLayout**
+  - Files: src/components/media/PortfolioGallery.tsx
+  - Status: No external references found
+- **renderLeaderboardEntry**
+  - Files: src/components/challenges/ChallengeLeaderboard.tsx
+  - Status: No external references found
+- **renderMediaContent**
+  - Files: src/components/profile/EnhancedMediaGallery.tsx
+  - Status: No external references found
+- **renderMediaItem**
+  - Files: src/components/media/PortfolioGallery.tsx
+  - Status: No external references found
+- **renderMessage**
+  - Files: src/components/chat/EnhancedChatThread.tsx
+  - Status: No external references found
+- **renderMetricsWidget**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **renderRewards**
+  - Files: src/components/challenges/ChallengeCard.tsx
+  - Status: No external references found
+- **renderTabContent**
+  - Files: src/components/dashboard/collab/CollabDashboard.tsx
+  - Status: No external references found
+- **renderTestimonialsWidget**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **renderTrustScoreWidget**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **renderTypingText**
+  - Files: src/components/chat/TypingIndicator.tsx
+  - Status: No external references found
+- **renderWidget**
+  - Files: src/components/social-proof/SocialProofWidgets.tsx
+  - Status: No external references found
+- **RoleOverview**
+  - Files: src/components/dashboard/RoleOverview.tsx
+  - Status: No external references found
+- **RoleSwitcher**
+  - Files: src/components/dashboard/RoleSwitcher.tsx
+  - Status: No external references found
+- **scrollToBooking**
+  - Files: src/components/profile/ProfileActionBar.tsx
+  - Status: No external references found
+- **SearchBar**
+  - Files: src/components/explore/SearchBar.tsx
+  - Status: No external references found
+- **SearchResultsSkeleton**
+  - Files: src/components/search/SmartSearchResults.tsx
+  - Status: No external references found
+- **selectTalent**
+  - Files: src/components/booking/SplitBookingForm.tsx
+  - Status: No external references found
+- **SEOMeta**
+  - Files: src/components/SEOMeta.tsx
+  - Status: No external references found
+- **shouldShowSignupPrompt**
+  - Files: src/components/onboarding/ProgressiveOnboarding.tsx
+  - Status: No external references found
+- **SkeletonCard **
+  - Files: src/components/ui/SkeletonCard.tsx
+  - Status: No external references found
+- **SplitBookingNotification**
+  - Files: src/components/notifications/SplitBookingNotification.tsx
+  - Status: No external references found
+- **StarRating**
+  - Files: src/components/ui/StarRating.tsx
+  - Status: No external references found
+- **StatusBadge**
+  - Files: src/components/ui/Badge.tsx
+  - Status: No external references found
+- **StripeWrapper**
+  - Files: src/components/checkout/StripeWrapper.tsx
+  - Status: No external references found
+- **StudioBookingForm**
+  - Files: src/components/booking/studio/StudioBookingForm.tsx
+  - Status: No external references found
+- **StudioDashboard**
+  - Files: src/components/roles/StudioDashboard.tsx
+  - Status: No external references found
+- **SubscriptionSettings**
+  - Files: src/components/settings/SubscriptionSettings.tsx
+  - Status: No external references found
+- **TierBadge **
+  - Files: src/components/badges/TierBadge.tsx
+  - Status: No external references found
+- **tileDisabled**
+  - Files: src/components/booking/BookingCalendar.tsx
+  - Status: No external references found
+- **toggleDropdown**
+  - Files: src/components/ui/NotificationBell.tsx
+  - Status: No external references found
+- **toggleTag**
+  - Files: src/components/search/SmartSearchResults.tsx
+  - Status: No external references found
+- **TourTooltip**
+  - Files: src/components/onboarding/TourTooltip.tsx
+  - Status: No external references found
+- **triggerSignupPrompt**
+  - Files: src/components/booking/BookingForm.tsx
+  - Status: No external references found
+- **truncateMessage**
+  - Files: src/components/dashboard/MessagesPreview.tsx
+  - Status: No external references found
+- **TypingIndicatorMinimal**
+  - Files: src/components/chat/TypingIndicator.tsx
+  - Status: No external references found
+- **updateFilters**
+  - Files: src/components/explore/FilterPanel.tsx
+  - Status: No external references found
+- **updateLink**
+  - Files: src/components/profile/VerificationFormModal.tsx
+  - Status: No external references found
+- **VerificationRejectedNotification**
+  - Files: src/components/verification/VerificationNotification.tsx
+  - Status: No external references found
+- **VerificationReminderNotification**
+  - Files: src/components/verification/VerificationNotification.tsx
+  - Status: No external references found
+- **VerifiedIcon**
+  - Files: src/components/ui/VerifiedBadge.tsx
+  - Status: No external references found
+- **VideographerDashboard**
+  - Files: src/components/roles/VideographerDashboard.tsx
+  - Status: No external references found
+- **WalkthroughOverlay**
+  - Files: src/components/ui/WalkthroughOverlay.tsx
+  - Status: No external references found
+
+### 🔴 Unused Hooks (8)
+
+- **debouncedFn**
+  - Files: src/hooks/useDebounce.ts
+  - Status: No external references found
+- **handleBeforeUnload**
+  - Files: src/hooks/useEnhancedChat.ts
+  - Status: No external references found
+- **handleVisibilityChange**
+  - Files: src/hooks/useEnhancedChat.ts
+  - Status: No external references found
+- **toggle**
+  - Files: src/hooks/useSidebarToggle.ts
+  - Status: No external references found
+- **useAdvancedDebounce**
+  - Files: src/hooks/useDebounce.ts
+  - Status: No external references found
+- **useDebouncedAPICall**
+  - Files: src/hooks/useDebounce.ts
+  - Status: No external references found
+- **useDebouncedCallback**
+  - Files: src/hooks/useDebounce.ts
+  - Status: No external references found
+- **useEmailCapture**
+  - Files: src/hooks/useEmailCapture.ts
+  - Status: No external references found
+
+### 🔴 Unused Utilities & Services (148)
+
+#### src/lib
+
+- **adminDb** (`src/lib/firebase-admin.ts`)
+- **AssignRoleSchema** (`src/lib/schema.ts`)
+- **authOptions** (`src/lib/authOptions.ts`)
+- **BanUserSchema** (`src/lib/schema.ts`)
+- **BookingConfirmationSchema** (`src/lib/schema.ts`)
+- **BookingRequestSchema** (`src/lib/schema.ts`)
+- **BookingSchema** (`src/lib/schema.ts`)
+- **CartCheckoutSchema** (`src/lib/schema.ts`)
+- **CheckoutSessionSchema** (`src/lib/schema.ts`)
+- **ContractAgreementSchema** (`src/lib/schema.ts`)
+- **ContractSchema** (`src/lib/schema.ts`)
+- **DAILY_XP_CAP** (`src/lib/gamification.ts`)
+- **db** (`src/lib/firebase.ts`)
+- **DisputeSchema** (`src/lib/schema.ts`)
+- **LegacyReviewSchema** (`src/lib/schema.ts`)
+- **logger** (`src/lib/logger.ts`)
+- **NotificationSchema** (`src/lib/schema.ts`)
+- **PromoteUserSchema** (`src/lib/schema.ts`)
+- **ReviewSchema** (`src/lib/schema.ts`)
+- **SCHEMA_FIELDS** (`src/lib/@schema.ts`)
+- **SCHEMA_FIELDS** (`src/lib/SCHEMA_FIELDS.ts`)
+- **SCHEMA_FIELDS** (`src/lib/schema-fields.ts`)
+- **ServiceSchema** (`src/lib/schema.ts`)
+- **SetRoleSchema** (`src/lib/schema.ts`)
+- **storage** (`src/lib/firebase.ts`)
+- **UserProgressSchema** (`src/lib/schema.ts`)
+- **UserSchema** (`src/lib/schema.ts`)
+- **validateAssignRole** (`src/lib/schema.ts`)
+- **validateBanUser** (`src/lib/schema.ts`)
+- **validateBooking** (`src/lib/schema.ts`)
+- **validateBookingConfirmation** (`src/lib/schema.ts`)
+- **validateBookingRequest** (`src/lib/schema.ts`)
+- **validateCartCheckout** (`src/lib/schema.ts`)
+- **validateCheckoutSession** (`src/lib/schema.ts`)
+- **validateContract** (`src/lib/schema.ts`)
+- **validateContractAgreement** (`src/lib/schema.ts`)
+- **validateDispute** (`src/lib/schema.ts`)
+- **validateLegacyReview** (`src/lib/schema.ts`)
+- **validateMediaFile** (`src/lib/uploadMedia.ts`)
+- **validateNotification** (`src/lib/schema.ts`)
+- **validatePromoteUser** (`src/lib/schema.ts`)
+- **validateService** (`src/lib/schema.ts`)
+- **validateSetRole** (`src/lib/schema.ts`)
+- **validateUser** (`src/lib/schema.ts`)
+- **validateUserProgress** (`src/lib/schema.ts`)
+- **validateXPTransaction** (`src/lib/schema.ts`)
+- **XPTransactionSchema** (`src/lib/schema.ts`)
+
+#### src/lib/auth
+
+- **authOptions** (`src/lib/auth/authOptions.ts`)
+- **checkAdminDashboardAccess** (`src/lib/auth/withAdminCheck.ts`)
+- **checkAnalyticsAccess** (`src/lib/auth/withAdminCheck.ts`)
+- **checkPlatformManagementAccess** (`src/lib/auth/withAdminCheck.ts`)
+- **checkUserManagementAccess** (`src/lib/auth/withAdminCheck.ts`)
+
+#### src/lib/data
+
+- **featuredCreatorsData** (`src/lib/data/featuredCreators.ts`)
+- **recentActivity** (`src/lib/data/featuredCreators.ts`)
+
+#### src/lib/explore
+
+- **filtersToQueryString** (`src/lib/explore/filterUtils.ts`)
+
+#### src/lib/firebase
+
+- **db** (`src/lib/firebase/client.ts`)
+- **firebaseAdmin** (`src/lib/firebase/firebaseAdmin.ts`)
+
+#### src/lib/firestore
+
+- **dist** (`src/lib/firestore/queryCreators.ts`)
+- **nextTs** (`src/lib/firestore/updateAvailability.ts`)
+- **toRad** (`src/lib/firestore/queryCreators.ts`)
+- **updateUserTier** (`src/lib/firestore/updateUserTier.ts`)
+
+#### src/lib/firestore/explore
+
+- **dist** (`src/lib/firestore/explore/queryCreators.ts`)
+- **toRad** (`src/lib/firestore/explore/queryCreators.ts`)
+
+#### src/lib/hooks
+
+- **calculateCompletion** (`src/lib/hooks/useProfileCompletion.ts`)
+- **handleApplicationSubmitted** (`src/lib/hooks/useVerificationData.ts`)
+- **handleVerificationApproved** (`src/lib/hooks/useVerificationData.ts`)
+- **handleVerificationEligible** (`src/lib/hooks/useVerificationData.ts`)
+- **handleVerificationRejected** (`src/lib/hooks/useVerificationData.ts`)
+- **handleVerificationUpdate** (`src/lib/hooks/useVerificationData.ts`)
+- **mergeAndSetBookings** (`src/lib/hooks/useSplitBookingUpdates.ts`)
+- **nextTs** (`src/lib/hooks/useAvailability.ts`)
+- **useAdminBadgeStats** (`src/lib/hooks/useBadgeData.ts`)
+- **useChallenge** (`src/lib/hooks/useChallengeData.ts`)
+- **useSplitBookingUpdates** (`src/lib/hooks/useSplitBookingUpdates.ts`)
+- **useUserBookings** (`src/lib/hooks/useUserBookings.ts`)
+
+#### src/lib/media
+
+- **MediaCompressor** (`src/lib/media/compression.ts`)
+
+#### src/lib/reviews
+
+- **getAverageRating ** (`src/lib/reviews/index.ts`)
+- **getReviewCount ** (`src/lib/reviews/index.ts`)
+
+#### src/lib/services
+
+- **adminXPService** (`src/lib/services/adminXPService.ts`)
+- **AdminXPService** (`src/lib/services/adminXPService.ts`)
+- **advancedSearchService** (`src/lib/services/advancedSearchService.ts`)
+- **badgeService** (`src/lib/services/badgeService.ts`)
+- **BadgeService** (`src/lib/services/badgeService.ts`)
+- **cachingService** (`src/lib/services/cachingService.ts`)
+- **CachingService** (`src/lib/services/cachingService.ts`)
+- **caseStudyService** (`src/lib/services/caseStudyService.ts`)
+- **ChallengeService** (`src/lib/services/challengeService.ts`)
+- **contentAnalysisService** (`src/lib/services/contentAnalysisService.ts`)
+- **creatorAnalyticsService** (`src/lib/services/analyticsService.ts`)
+- **creatorAnalyticsService** (`src/lib/services/creatorAnalyticsService.ts`)
+- **CreatorAnalyticsService** (`src/lib/services/analyticsService.ts`)
+- **CreatorAnalyticsService** (`src/lib/services/creatorAnalyticsService.ts`)
+- **DAILY_XP_CAP** (`src/lib/services/xpService.ts`)
+- **emailService** (`src/lib/services/emailService.ts`)
+- **EmailService** (`src/lib/services/emailService.ts`)
+- **enhancedPortfolioService** (`src/lib/services/enhancedPortfolioService.ts`)
+- **enhancedXPService** (`src/lib/services/enhancedXPService.ts`)
+- **EnhancedXPService** (`src/lib/services/enhancedXPService.ts`)
+- **GamificationMigration** (`src/lib/services/gamificationMigration.ts`)
+- **messageService** (`src/lib/services/messageService.ts`)
+- **MessageService** (`src/lib/services/messageService.ts`)
+- **migrationService** (`src/lib/services/gamificationMigration.ts`)
+- **monitoringService** (`src/lib/services/monitoringService.ts`)
+- **MonitoringService** (`src/lib/services/monitoringService.ts`)
+- **performanceMonitoringService** (`src/lib/services/performanceMonitoringService.ts`)
+- **PerformanceMonitoringService** (`src/lib/services/performanceMonitoringService.ts`)
+- **portfolioService** (`src/lib/services/portfolioService.ts`)
+- **PortfolioService** (`src/lib/services/portfolioService.ts`)
+- **portfolioThemeService** (`src/lib/services/portfolioThemeService.ts`)
+- **pwaService** (`src/lib/services/pwaService.ts`)
+- **PWAService** (`src/lib/services/pwaService.ts`)
+- **rankingService** (`src/lib/services/rankingService.ts`)
+- **revenueOptimizationService** (`src/lib/services/revenueOptimizationService.ts`)
+- **seasonalService** (`src/lib/services/seasonalService.ts`)
+- **SeasonalService** (`src/lib/services/seasonalService.ts`)
+- **skillsBadgeService** (`src/lib/services/skillsBadgeService.ts`)
+- **socialProofService** (`src/lib/services/socialProofService.ts`)
+- **testimonialService** (`src/lib/services/testimonialService.ts`)
+- **verificationService** (`src/lib/services/verificationService.ts`)
+- **VerificationService** (`src/lib/services/verificationService.ts`)
+- **XP_VALUES** (`src/lib/services/xpService.ts`)
+- **xpService** (`src/lib/services/xpService.ts`)
+- **XPService** (`src/lib/services/xpService.ts`)
+- **xpServiceWithNotifications** (`src/lib/services/xpServiceWithNotifications.ts`)
+- **xpValidationService** (`src/lib/services/xpValidationService.ts`)
+- **XPValidationService** (`src/lib/services/xpValidationService.ts`)
+
+#### src/lib/stripe
+
+- **calculatePlatformFee** (`src/lib/stripe/splitBookingPayments.ts`)
+- **calculateSplitPayments** (`src/lib/stripe/splitBookingPayments.ts`)
+- **clientNeedsPayment** (`src/lib/stripe/splitBookingPayments.ts`)
+- **createPaymentUrls** (`src/lib/stripe/splitBookingPayments.ts`)
+- **getClientPaymentStatus** (`src/lib/stripe/splitBookingPayments.ts`)
+- **isSplitBookingFullyPaid** (`src/lib/stripe/splitBookingPayments.ts`)
+
+#### src/lib/types
+
+- **getUserRoleInPackage** (`src/lib/types/CollabPackage.ts`)
+- **isUserInBooking** (`src/lib/types/Booking.ts`)
+- **isUserInCollabPackage** (`src/lib/types/CollabPackage.ts`)
+
+#### src/lib/utils
+
+- **calculateSearchScore** (`src/lib/utils/filterByKeyword.ts`)
+- **checkCreatorAccess** (`src/lib/utils/checkUserAccess.ts`)
+- **checkModeratorAccess** (`src/lib/utils/checkUserAccess.ts`)
+- **checkResourceOwnership** (`src/lib/utils/checkUserAccess.ts`)
+- **checkUserAccess** (`src/lib/utils/checkUserAccess.ts`)
+- **checkUserPermission** (`src/lib/utils/checkUserAccess.ts`)
+- **cityToCoords** (`src/lib/utils/cityToCoords.ts`)
+- **createHighlightedCreator** (`src/lib/utils/filterByKeyword.ts`)
+- **formatCurrencyCompact** (`src/lib/utils/formatCurrency.ts`)
+- **formatCurrencyWhole** (`src/lib/utils/formatCurrency.ts`)
+- **formatNumber** (`src/lib/utils/formatCurrency.ts`)
+- **formatPercentage** (`src/lib/utils/formatCurrency.ts`)
+- **formatRelativeTime** (`src/lib/utils/formatCurrency.ts`)
+- **hasMatch** (`src/lib/utils/filterByKeyword.ts`)
+- **highlightMatches** (`src/lib/utils/filterByKeyword.ts`)
+- **parseCurrency** (`src/lib/utils/formatCurrency.ts`)
+- **seedTestData** (`src/lib/utils/rankingDataSeeder.ts`)
+- **withAdminOnly** (`src/lib/utils/withRoleProtection.tsx`)
+- **withModeratorOrAdmin** (`src/lib/utils/withRoleProtection.tsx`)
+- **withSignatureTierOnly** (`src/lib/utils/withRoleProtection.tsx`)
+- **withSignatureTierProtection** (`src/lib/utils/tierProtection.tsx`)
+- **withVerifiedProtection** (`src/lib/utils/tierProtection.tsx`)
+- **withVerifiedUserOnly** (`src/lib/utils/withRoleProtection.tsx`)
+
+---
+
+## Potentially Unused Files
+
+### Component Files Analysis
+
+Below are component files that may contain only unused exports:
+
+#### 🔴 Fully Unused Component Files (5)
+
+- **`src/components/ClientBookings.tsx`**
+  - Exports: MyComponent
+  - Status: All exports unused
+- **`src/components/ErrorBoundary.tsx`**
+  - Exports: ErrorBoundary
+  - Status: All exports unused
+- **`src/components/explore/DiscoveryWrapper.tsx`**
+  - Exports: DiscoveryWrapper
+  - Status: All exports unused
+- **`src/components/notifications/SplitBookingNotification.tsx`**
+  - Exports: SplitBookingNotification, formatTimeAgo, getNotificationContent
+  - Status: All exports unused
+- **`src/components/profile/MediaGallery.tsx`**
+  - Exports: MediaGallery
+  - Status: All exports unused
+
+#### ⚠️ Partially Unused Component Files (102)
+
+- **`src/components/BannedModal.tsx`**
+  - Total exports: BannedModal, function, handleOverlayClick
+  - Unused exports: handleOverlayClick
+- **`src/components/BookingChatThread.tsx`**
+  - Total exports: BookingChatThread, scrollToBottom, handleInputChange, formatMessageTime
+  - Unused exports: handleInputChange
+- **`src/components/PortfolioUploader.tsx`**
+  - Total exports: PortfolioUploader, function, removeFile, handleRetry, clearAll, formatFileSize, getFileIcon
+  - Unused exports: clearAll
+- **`src/components/ReviewForm.tsx`**
+  - Total exports: ReviewForm, handleStarClick, handleStarHover, handleStarLeave
+  - Unused exports: handleStarClick, handleStarHover, handleStarLeave
+- **`src/components/SEOMeta.tsx`**
+  - Total exports: SEOMeta, function
+  - Unused exports: SEOMeta
+- **`src/components/admin/AdminVerificationRequests.tsx`**
+  - Total exports: AdminVerificationRequests, function
+  - Unused exports: AdminVerificationRequests
+- **`src/components/admin/AssignRoleForm.tsx`**
+  - Total exports: AssignRoleForm, function
+  - Unused exports: AssignRoleForm
+- **`src/components/admin/TopRolesCard.tsx`**
+  - Total exports: TopRolesCard, function, formatCurrency, getGrowthColor
+  - Unused exports: getGrowthColor
+- **`src/components/badges/TierBadge.tsx`**
+  - Total exports: TierBadge, TierBadge 
+  - Unused exports: TierBadge 
+- **`src/components/book/BookingSidebar.tsx`**
+  - Total exports: BookingSidebar, function
+  - Unused exports: BookingSidebar
+- **`src/components/booking/BookingCalendar.tsx`**
+  - Total exports: BookingCalendar, function, tileDisabled
+  - Unused exports: BookingCalendar, tileDisabled
+- **`src/components/booking/BookingChat.tsx`**
+  - Total exports: BookingChat, function, update, handleTyping
+  - Unused exports: handleTyping
+- **`src/components/booking/BookingForm.tsx`**
+  - Total exports: BookingForm, function, triggerSignupPrompt
+  - Unused exports: triggerSignupPrompt
+- **`src/components/booking/BookingStatusCard.tsx`**
+  - Total exports: BookingStatusCard, function
+  - Unused exports: BookingStatusCard
+- **`src/components/booking/ContractPreview.tsx`**
+  - Total exports: ContractPreview, handleScroll, formatDate, formatTime, getDurationText
+  - Unused exports: formatTime, getDurationText
+- **`src/components/booking/SplitBookingForm.tsx`**
+  - Total exports: SplitBookingForm, selectTalent
+  - Unused exports: selectTalent
+- **`src/components/booking/TalentRequestModal.tsx`**
+  - Total exports: TalentRequestModal, handleOverlayClick, formatCurrency, formatDateTime
+  - Unused exports: handleOverlayClick
+- **`src/components/booking/studio/StudioBookingForm.tsx`**
+  - Total exports: StudioBookingForm, function
+  - Unused exports: StudioBookingForm
+- **`src/components/bookings/BookingsList.tsx`**
+  - Total exports: BookingsList, function
+  - Unused exports: BookingsList
+- **`src/components/calendar/CalendarSync.tsx`**
+  - Total exports: CalendarSync, function
+  - Unused exports: CalendarSync
+- **`src/components/challenges/ChallengeCard.tsx`**
+  - Total exports: ChallengeCard, formatTimeRemaining, getStatusColor, getPositionBadge, renderRewards
+  - Unused exports: formatTimeRemaining, renderRewards
+- **`src/components/challenges/ChallengeGrid.tsx`**
+  - Total exports: ChallengeGrid, renderEmptyState, renderFilterControls, renderChallengeStats
+  - Unused exports: renderEmptyState, renderFilterControls
+- **`src/components/challenges/ChallengeLeaderboard.tsx`**
+  - Total exports: ChallengeLeaderboardComponent, getPositionIcon, getPositionBadge, getRewardForPosition, formatValue, renderLeaderboardEntry, renderChallengeHeader
+  - Unused exports: ChallengeLeaderboardComponent, getRewardForPosition, formatValue, renderLeaderboardEntry, renderChallengeHeader
+- **`src/components/chat/EnhancedChatThread.tsx`**
+  - Total exports: EnhancedChatThread, function, handleScroll, handleSubmit, handleInputChange, handleKeyPress, formatMessageTime, renderMessage
+  - Unused exports: EnhancedChatThread, handleInputChange, handleKeyPress, renderMessage
+- **`src/components/chat/PresenceIndicator.tsx`**
+  - Total exports: PresenceIndicator, PresenceAvatar, MultiUserPresence, function, getStatusColor, getStatusText, formatLastSeen
+  - Unused exports: MultiUserPresence, formatLastSeen
+- **`src/components/chat/TypingIndicator.tsx`**
+  - Total exports: TypingIndicator, TypingIndicatorMinimal, function, renderTypingText
+  - Unused exports: TypingIndicatorMinimal, renderTypingText
+- **`src/components/checkout/StripeWrapper.tsx`**
+  - Total exports: StripeWrapper, function
+  - Unused exports: StripeWrapper
+- **`src/components/collab/CollabBookingSummary.tsx`**
+  - Total exports: CollabBookingSummary, formatDateTime, formatTimeOnly
+  - Unused exports: CollabBookingSummary, formatTimeOnly
+- **`src/components/collab/CollabPackageCard.tsx`**
+  - Total exports: CollabPackageCard, handleCardClick, handleBookClick
+  - Unused exports: handleCardClick, handleBookClick
+- **`src/components/collab/CreateCollabPackageForm.tsx`**
+  - Total exports: CreateCollabPackageForm, assignRole, removeRole, addTag, removeTag, addLocation, removeLocation, addEquipment, removeEquipment, formatDuration
+  - Unused exports: removeRole, addTag, removeTag, addLocation, removeLocation, addEquipment, removeEquipment
+- **`src/components/dashboard/BookingInbox.tsx`**
+  - Total exports: BookingInbox, getBookingStatusColor, handleBookingClick, handleMessageClick
+  - Unused exports: getBookingStatusColor, handleBookingClick, handleMessageClick
+- **`src/components/dashboard/EarningsDashboard.tsx`**
+  - Total exports: EarningsDashboard, function
+  - Unused exports: EarningsDashboard
+- **`src/components/dashboard/MessagesPreview.tsx`**
+  - Total exports: MessagesPreview, function, formatTimestamp, getOtherParticipant, truncateMessage
+  - Unused exports: formatTimestamp, truncateMessage
+- **`src/components/dashboard/RoleOverview.tsx`**
+  - Total exports: RoleOverview, function
+  - Unused exports: RoleOverview
+- **`src/components/dashboard/RoleSwitcher.tsx`**
+  - Total exports: RoleSwitcher, function, handleSwitch
+  - Unused exports: RoleSwitcher, handleSwitch
+- **`src/components/dashboard/SplitBookingCard.tsx`**
+  - Total exports: SplitBookingCard, formatCurrency, formatDateTime, formatDuration, getTalentStatusIcon, getPaymentStatusColor
+  - Unused exports: getTalentStatusIcon
+- **`src/components/dashboard/SplitBookingsList.tsx`**
+  - Total exports: SplitBookingsList, handleViewDetails, handlePayNow, handleCancelBooking, handleTalentRequest, handleTalentResponse
+  - Unused exports: handleViewDetails, handlePayNow, handleCancelBooking, handleTalentRequest, handleTalentResponse
+- **`src/components/dashboard/collab/CollabDashboard.tsx`**
+  - Total exports: CollabDashboard, function, renderTabContent
+  - Unused exports: renderTabContent
+- **`src/components/dashboard/collab/MyCollabBookings.tsx`**
+  - Total exports: MyCollabBookings, function, getStatusColor, getStatusIcon, isCreatorView
+  - Unused exports: isCreatorView
+- **`src/components/event/EventBookingForm.tsx`**
+  - Total exports: EventBookingForm, function, handleInputChange, handleRoleToggle, handleCreatorSelect
+  - Unused exports: handleInputChange
+- **`src/components/explore/DiscoveryGrid.tsx`**
+  - Total exports: DiscoveryGrid, function, onScroll
+  - Unused exports: onScroll
+- **`src/components/explore/DiscoveryMap.tsx`**
+  - Total exports: DiscoveryMap, function, onScroll
+  - Unused exports: DiscoveryMap, onScroll
+- **`src/components/explore/FilterPanel.tsx`**
+  - Total exports: FilterPanel, function, updateFilters, handleGeoToggle, handleTierChange, addGenre
+  - Unused exports: updateFilters, handleGeoToggle, handleTierChange, addGenre
+- **`src/components/explore/LocationAutocomplete.tsx`**
+  - Total exports: LocationAutocomplete, function, handleClick, handleSelect
+  - Unused exports: handleClick
+- **`src/components/explore/NewExploreGrid.tsx`**
+  - Total exports: NewExploreGrid, function, onScroll
+  - Unused exports: NewExploreGrid, onScroll
+- **`src/components/explore/SearchBar.tsx`**
+  - Total exports: SearchBar, function, handleClear, handleRecentSearch, clearRecentSearches
+  - Unused exports: SearchBar, handleClear, handleRecentSearch, clearRecentSearches
+- **`src/components/forms/CreateMentorshipForm.tsx`**
+  - Total exports: CreateMentorshipForm, function, handleChange, handleArrayChange, addArrayItem, removeArrayItem
+  - Unused exports: handleArrayChange, addArrayItem, removeArrayItem
+- **`src/components/gamification/BadgeNotification.tsx`**
+  - Total exports: BadgeNotification, function, handleClose
+  - Unused exports: handleClose
+- **`src/components/gamification/XPNotificationSystem.tsx`**
+  - Total exports: useXPNotifications, XPNotificationSystem, getIcon, getBackgroundColor, handleDismiss, addNotification, dismissNotification, clearAllNotifications, notifyXPGained, notifyDailyCap, notifyTierUp, notifyBadgeEarned
+  - Unused exports: getBackgroundColor, dismissNotification, clearAllNotifications
+- **`src/components/gamification/index.ts`**
+  - Total exports: default as XPDisplay , default as XPProgressBar , default as XPWidget , default, useXPNotifications
+  - Unused exports: default as XPDisplay , default as XPProgressBar , default as XPWidget 
+- **`src/components/leaderboard/Leaderboard.tsx`**
+  - Total exports: Leaderboard, getRankIcon, getRankBadgeColor
+  - Unused exports: getRankBadgeColor
+- **`src/components/leaderboard/LeaderboardList.tsx`**
+  - Total exports: LeaderboardList, function
+  - Unused exports: LeaderboardList
+- **`src/components/media/MediaUpload.tsx`**
+  - Total exports: MediaUpload, function, removeFile, handleRetry, clearAll, formatFileSize, getFileIcon
+  - Unused exports: MediaUpload, clearAll
+- **`src/components/media/PortfolioGallery.tsx`**
+  - Total exports: PortfolioGallery, function, formatFileSize, renderMediaItem, renderGridLayout, handleSubmit, handleUploadComplete
+  - Unused exports: PortfolioGallery, renderMediaItem, renderGridLayout, handleUploadComplete
+- **`src/components/onboarding/EmailCaptureModal.tsx`**
+  - Total exports: EmailCaptureModal, function, getContent
+  - Unused exports: getContent
+- **`src/components/onboarding/OnboardingManager.tsx`**
+  - Total exports: OnboardingManager, function, handleMouseLeave, handleEmailCapture, handleSignupPrompt
+  - Unused exports: handleMouseLeave, handleEmailCapture, handleSignupPrompt
+- **`src/components/onboarding/OnboardingWizard.tsx`**
+  - Total exports: OnboardingWizard, function, handlePrevious, canProceed
+  - Unused exports: handlePrevious, canProceed
+- **`src/components/onboarding/ProgressiveOnboarding.tsx`**
+  - Total exports: ProgressiveOnboardingProvider, useProgressiveOnboarding, updateState, shouldShowEmailCapture, shouldShowSignupPrompt, shouldShowExitIntent, trackAction
+  - Unused exports: shouldShowSignupPrompt
+- **`src/components/onboarding/SignupPromptModal.tsx`**
+  - Total exports: SignupPromptModal, function, handleSignup, handleLogin
+  - Unused exports: handleSignup, handleLogin
+- **`src/components/onboarding/TourTooltip.tsx`**
+  - Total exports: TourTooltip, function
+  - Unused exports: TourTooltip
+- **`src/components/portfolio/themes/PortfolioThemeSelector.tsx`**
+  - Total exports: PortfolioThemeSelector, function, handleThemeSelect, handleTemplateSelect, applyPreset, getThemeIcon, getIndustryIcon
+  - Unused exports: handleThemeSelect, handleTemplateSelect, getThemeIcon, getIndustryIcon
+- **`src/components/profile/ApplyVerificationButton.tsx`**
+  - Total exports: ApplyVerificationButton, handleSuccess, getStatusIcon, getStatusText, getStatusDescription
+  - Unused exports: handleSuccess, getStatusDescription
+- **`src/components/profile/CreatorNotificationButton.tsx`**
+  - Total exports: CreatorNotificationButton, function, handleNotificationRequest
+  - Unused exports: handleNotificationRequest
+- **`src/components/profile/EnhancedMediaGallery.tsx`**
+  - Total exports: EnhancedMediaGallery, function, handleTouchStart, handleTouchMove, handleTouchEnd, nextItem, prevItem, openFullscreen, closeFullscreen, renderMediaContent, FeaturedSection
+  - Unused exports: EnhancedMediaGallery, handleTouchStart, handleTouchMove, handleTouchEnd, nextItem, prevItem, openFullscreen, closeFullscreen, renderMediaContent, FeaturedSection
+- **`src/components/profile/MediaCarousel.tsx`**
+  - Total exports: MediaCarousel, function, prev, next, handleKey
+  - Unused exports: prev, handleKey
+- **`src/components/profile/MediaUploader.tsx`**
+  - Total exports: MediaUploader, addFiles, handleFileChange, handleDrop
+  - Unused exports: MediaUploader, handleFileChange, handleDrop
+- **`src/components/profile/PortfolioEditor.tsx`**
+  - Total exports: PortfolioEditor, addLink, removeLink
+  - Unused exports: addLink, removeLink
+- **`src/components/profile/ProfileActionBar.tsx`**
+  - Total exports: ProfileActionBar, function, scrollToBooking
+  - Unused exports: scrollToBooking
+- **`src/components/profile/ProfileForm.tsx`**
+  - Total exports: ProfileForm, function, handleChange, getCompletionPercent
+  - Unused exports: ProfileForm, getCompletionPercent
+- **`src/components/profile/ProfileReviewList.tsx`**
+  - Total exports: ProfileReviewList, function
+  - Unused exports: ProfileReviewList
+- **`src/components/profile/ReportModal.tsx`**
+  - Total exports: ReportModal, handleOverlayClick
+  - Unused exports: handleOverlayClick
+- **`src/components/profile/ReportUserButton.tsx`**
+  - Total exports: ReportUserButton, handleReportClick
+  - Unused exports: handleReportClick
+- **`src/components/profile/VerificationFormModal.tsx`**
+  - Total exports: VerificationFormModal, addLinkField, removeLinkField, updateLink
+  - Unused exports: addLinkField, removeLinkField, updateLink
+- **`src/components/rankings/Leaderboard.tsx`**
+  - Total exports: Leaderboard, function, LeaderboardContent, getRankIcon, getTierColor
+  - Unused exports: LeaderboardContent, getTierColor
+- **`src/components/rankings/LeaderboardWidget.tsx`**
+  - Total exports: LeaderboardWidget, UserRankingWidget, function, getRankIcon, getCategoryLabel, getCategoryIcon, getPercentile, getRankColor
+  - Unused exports: getCategoryLabel, getPercentile, getRankColor
+- **`src/components/roles/ArtistDashboard.tsx`**
+  - Total exports: ArtistDashboard, function
+  - Unused exports: ArtistDashboard
+- **`src/components/roles/DefaultDashboard.tsx`**
+  - Total exports: DefaultDashboard, function
+  - Unused exports: DefaultDashboard
+- **`src/components/roles/EngineerDashboard.tsx`**
+  - Total exports: EngineerDashboard, function
+  - Unused exports: EngineerDashboard
+- **`src/components/roles/ProducerDashboard.tsx`**
+  - Total exports: ProducerDashboard, function
+  - Unused exports: ProducerDashboard
+- **`src/components/roles/StudioDashboard.tsx`**
+  - Total exports: StudioDashboard, function
+  - Unused exports: StudioDashboard
+- **`src/components/roles/VideographerDashboard.tsx`**
+  - Total exports: VideographerDashboard, function
+  - Unused exports: VideographerDashboard
+- **`src/components/search/AdvancedSearchInterface.tsx`**
+  - Total exports: AdvancedSearchInterface, handleClickOutside, handleSuggestionClick, getSuggestionIcon, getSuggestionBadgeColor, handleFilterChange
+  - Unused exports: handleClickOutside, handleSuggestionClick, getSuggestionIcon, getSuggestionBadgeColor
+- **`src/components/search/SmartSearchResults.tsx`**
+  - Total exports: SmartSearchResults, toggleTag, getMatchScoreColor, getConfidenceIcon, SearchResultsSkeleton
+  - Unused exports: toggleTag, getMatchScoreColor, getConfidenceIcon, SearchResultsSkeleton
+- **`src/components/settings/SubscriptionSettings.tsx`**
+  - Total exports: SubscriptionSettings, function
+  - Unused exports: SubscriptionSettings
+- **`src/components/social-proof/SocialProofWidgets.tsx`**
+  - Total exports: SocialProofWidgets, function, getBadgeIcon, getBadgeColor, renderTestimonialsWidget, renderMetricsWidget, renderBadgesWidget, renderCertificationsWidget, renderTrustScoreWidget, renderWidget
+  - Unused exports: getBadgeIcon, getBadgeColor, renderTestimonialsWidget, renderMetricsWidget, renderBadgesWidget, renderCertificationsWidget, renderTrustScoreWidget, renderWidget
+- **`src/components/ui/AvatarRing.tsx`**
+  - Total exports: AvatarRing, function
+  - Unused exports: AvatarRing
+- **`src/components/ui/Badge.tsx`**
+  - Total exports: Badge, StatusBadge
+  - Unused exports: StatusBadge
+- **`src/components/ui/Button.tsx`**
+  - Total exports: Button, Button 
+  - Unused exports: Button 
+- **`src/components/ui/Card.tsx`**
+  - Total exports: Card, CardHeader, CardBody, CardFooter
+  - Unused exports: CardBody, CardFooter
+- **`src/components/ui/EmptyState.tsx`**
+  - Total exports: NoCreatorsFound, NoSearchResults, NoBookings, NoServices, NoReviews, NoMessages, EmptyState, EmptyState 
+  - Unused exports: NoCreatorsFound, NoSearchResults, NoMessages, EmptyState 
+- **`src/components/ui/LanguageSwitcher.tsx`**
+  - Total exports: LanguageSwitcher, function
+  - Unused exports: LanguageSwitcher
+- **`src/components/ui/NotificationBell.tsx`**
+  - Total exports: NotificationBell, handleClickOutside, getNotificationIcon, toggleDropdown
+  - Unused exports: handleClickOutside, toggleDropdown
+- **`src/components/ui/SkeletonCard.tsx`**
+  - Total exports: SkeletonCard, SkeletonCard 
+  - Unused exports: SkeletonCard 
+- **`src/components/ui/StarRating.tsx`**
+  - Total exports: StarRating, function, update, handleKeyDown
+  - Unused exports: StarRating, handleKeyDown
+- **`src/components/ui/VerifiedBadge.tsx`**
+  - Total exports: VerifiedBadge, VerifiedIcon, function
+  - Unused exports: VerifiedIcon
+- **`src/components/ui/WalkthroughOverlay.tsx`**
+  - Total exports: WalkthroughOverlay, function, handleNext, handleClose
+  - Unused exports: WalkthroughOverlay, handleNext
+- **`src/components/ui/alert.tsx`**
+  - Total exports: Alert, AlertDescription, AlertTitle
+  - Unused exports: AlertTitle
+- **`src/components/ui/badge.tsx`**
+  - Total exports: Badge, badgeVariants
+  - Unused exports: badgeVariants
+- **`src/components/ui/card.tsx`**
+  - Total exports: Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent
+  - Unused exports: CardFooter, CardDescription
+- **`src/components/verification/AdminVerificationDashboard.tsx`**
+  - Total exports: AdminVerificationDashboard, formatDate, getStatusBadge
+  - Unused exports: getStatusBadge
+- **`src/components/verification/VerificationNotification.tsx`**
+  - Total exports: VerificationNotification, VerificationEligibleNotification, VerificationAppliedNotification, VerificationApprovedNotification, VerificationRejectedNotification, VerificationReminderNotification, handleDismiss
+  - Unused exports: VerificationRejectedNotification, VerificationReminderNotification
+- **`src/components/verification/VerificationProgress.tsx`**
+  - Total exports: VerificationProgress, getApplicationStatusBadge
+  - Unused exports: getApplicationStatusBadge
+
+---
+
+## Cleanup Recommendations
+
+### High Priority
+1. **Remove fully unused component files** - These files can be safely deleted
+2. **Remove unused hooks** - Clean up state management logic
+3. **Review utility functions** - Remove or consolidate unused utilities
+
+### Medium Priority
+1. **Clean up partially unused files** - Remove unused exports from files that have both used and unused exports
+2. **Review component architecture** - Consider if similar components can be consolidated
+
+### Low Priority
+1. **Documentation cleanup** - Update documentation to reflect removed components
+2. **Type cleanup** - Remove unused type definitions
+
+---
+
+## Analysis Limitations
+
+**False Positives Possible**:
+- Dynamic imports not detected by static analysis
+- String-based component references
+- Components used only in tests (if tests not included in analysis)
+- Runtime component resolution
+
+**Verification Steps**:
+1. Search codebase for string references to component names
+2. Check if components are used in configuration files
+3. Verify components are not used in dynamic imports
+4. Check for indirect usage through HOCs or renders props
+
+---
+
+## Summary Statistics
+
+- **Total Components Analyzed**: 401
+- **Unused Components**: 207
+- **Total Hooks Analyzed**: 14  
+- **Unused Hooks**: 8
+- **Total Utils Analyzed**: 221
+- **Unused Utils**: 148
+- **Fully Unused Files**: 5
+
+**Potential Bundle Size Reduction**: Review the unused files to estimate potential reduction in bundle size.
+
+Generated by: AuditoryX System Integration Audit
