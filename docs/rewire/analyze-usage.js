@@ -2,6 +2,25 @@
 
 const fs = require('fs');
 const path = require('path');
+const babel = require('@babel/parser');
+
+function findImports(content) {
+  const imports = [];
+  try {
+    const ast = babel.parse(content, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
+    for (const node of ast.program.body) {
+      if (node.type === 'ImportDeclaration') {
+        if (node.source?.value.startsWith('.') || node.source?.value.startsWith('@/')) {
+          imports.push(node.source.value);
+        }
+      }
+    }
+  } catch (error) {
+    // If parsing fails, return empty imports array
+    console.warn(`Failed to parse imports in file: ${error.message}`);
+  }
+  return imports;
+}
 
 function findTsxTsFiles(dir, files = []) {
   const items = fs.readdirSync(dir);
@@ -25,14 +44,8 @@ function analyzeFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
     const relativePath = path.relative(process.cwd(), filePath);
     
-    // Find imports
-    const imports = [];
-    const importRegex = /import\s+(?:{[^}]*}|[^,\s]+|\*\s+as\s+\w+)(?:,\s*(?:{[^}]*}|[^,\s]+|\*\s+as\s+\w+))*\s+from\s+['"]([^'"]+)['"]/g;
-    let match;
-    while ((match = importRegex.exec(content)) !== null) {
-      if (!match[1].startsWith('.') && !match[1].startsWith('@/')) continue; // Skip external packages
-      imports.push(match[1]);
-    }
+    // Find imports using Babel parser
+    const imports = findImports(content);
     
     // Find exports (simple heuristic)
     const exports = [];

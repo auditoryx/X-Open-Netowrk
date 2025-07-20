@@ -1,5 +1,5 @@
 {
-  "totalFiles": 787,
+  "totalFiles": 782,
   "analysisResults": [
     {
       "path": "src/__tests__/filterPanel.test.tsx",
@@ -1562,21 +1562,6 @@
       ]
     },
     {
-      "path": "src/app/dashboard/bookings/page.bak.tsx",
-      "imports": [
-        "@/components/contract/ContractViewer",
-        "@/components/booking/ReleaseFundsButton",
-        "@/components/booking/ReviewForm",
-        "@/components/disputes/DisputeForm"
-      ],
-      "exports": [
-        {
-          "name": "DashboardBookingsPage",
-          "type": "default"
-        }
-      ]
-    },
-    {
       "path": "src/app/dashboard/bookings/page.tsx",
       "imports": [
         "@/components/booking/BookingChat",
@@ -2086,7 +2071,8 @@
         "@/lib/hooks/useAuth",
         "@/lib/SCHEMA_FIELDS",
         "@/lib/firestore/explore/queryCreators",
-        "@/hooks/useRankedCreators"
+        "@/hooks/useRankedCreators",
+        "@/lib/types/Creator"
       ],
       "exports": [
         {
@@ -2103,6 +2089,7 @@
     {
       "path": "src/app/layout.tsx",
       "imports": [
+        "@/styles/globals.css",
         "@/components/Navbar",
         "@/components/gamification/StreakToast",
         "@/components/verification/VerificationNotificationManager",
@@ -3004,7 +2991,7 @@
     {
       "path": "src/components/book/BookingSidebar.tsx",
       "imports": [
-        "@/components/ui/TierBadge"
+        "@/components/badges/TierBadge"
       ],
       "exports": [
         {
@@ -3085,7 +3072,7 @@
     {
       "path": "src/components/booking/BookingSummarySidebar.tsx",
       "imports": [
-        "@/components/ui/TierBadge"
+        "@/components/badges/TierBadge"
       ],
       "exports": [
         {
@@ -3181,6 +3168,7 @@
     {
       "path": "src/components/booking/studio/QuoteCalculator.tsx",
       "imports": [
+        "@/types/user",
         "./calcQuote"
       ],
       "exports": [
@@ -3198,7 +3186,8 @@
         "./QuoteCalculator",
         "@/lib/firestore/checkBookingConflict",
         "@/lib/hooks/useProviderAvailability",
-        "@/lib/google/utils"
+        "@/lib/google/utils",
+        "@/types/user"
       ],
       "exports": [
         {
@@ -3209,7 +3198,9 @@
     },
     {
       "path": "src/components/booking/studio/calcQuote.ts",
-      "imports": [],
+      "imports": [
+        "@/types/user"
+      ],
       "exports": [
         {
           "name": "calcQuote",
@@ -3601,7 +3592,7 @@
       "path": "src/components/dashboard/RoleOverview.tsx",
       "imports": [
         "@/types/user",
-        "@/components/ui/TierBadge"
+        "@/components/badges/TierBadge"
       ],
       "exports": [
         {
@@ -3908,16 +3899,6 @@
       "exports": [
         {
           "name": "SavedFilters",
-          "type": "default"
-        }
-      ]
-    },
-    {
-      "path": "src/components/explore/SearchBar.tsx",
-      "imports": [],
-      "exports": [
-        {
-          "name": "SearchBar",
           "type": "default"
         }
       ]
@@ -4936,16 +4917,6 @@
       ]
     },
     {
-      "path": "src/components/ui/TierBadge.tsx",
-      "imports": [],
-      "exports": [
-        {
-          "name": "TierBadge",
-          "type": "default"
-        }
-      ]
-    },
-    {
       "path": "src/components/ui/VerifiedBadge.tsx",
       "imports": [],
       "exports": [
@@ -4961,9 +4932,7 @@
     },
     {
       "path": "src/components/ui/WalkthroughOverlay.tsx",
-      "imports": [
-        "./WalkthroughOverlay"
-      ],
+      "imports": [],
       "exports": [
         {
           "name": "WalkthroughOverlay",
@@ -5163,13 +5132,6 @@
       "path": "src/components/ui/tests/ProgressRing.test.tsx",
       "imports": [
         "../ProgressRing"
-      ],
-      "exports": []
-    },
-    {
-      "path": "src/components/ui/tests/TierBadge.test.tsx",
-      "imports": [
-        "../TierBadge"
       ],
       "exports": []
     },
@@ -6198,7 +6160,6 @@
     {
       "path": "src/lib/firestore/contracts/agreeToContract.ts",
       "imports": [
-        "@/lib/firebase",
         "@/lib/firebase"
       ],
       "exports": []
@@ -7109,7 +7070,8 @@
     {
       "path": "src/lib/rank.ts",
       "imports": [
-        "@/constants/gamification"
+        "@/constants/gamification",
+        "@/lib/gamification"
       ],
       "exports": [
         {
@@ -9286,22 +9248,6 @@
       ]
     },
     {
-      "path": "components/Explore/SearchBar.tsx",
-      "imports": [
-        "@/lib/firestore/searchCreators"
-      ],
-      "exports": [
-        {
-          "name": "SearchBar",
-          "type": "default"
-        },
-        {
-          "name": "SearchFilters",
-          "type": "named"
-        }
-      ]
-    },
-    {
       "path": "components/Explore/WorldMapView.tsx",
       "imports": [
         "@/lib/utils/getCoordsFromCity",
@@ -11197,10 +11143,6 @@
     ],
     "DashboardBookingsPage": [
       {
-        "path": "src/app/dashboard/bookings/page.bak.tsx",
-        "type": "default"
-      },
-      {
         "path": "src/app/dashboard/bookings/page.tsx",
         "type": "default"
       }
@@ -11853,10 +11795,6 @@
       {
         "path": "src/components/badges/TierBadge.tsx",
         "type": "default"
-      },
-      {
-        "path": "src/components/ui/TierBadge.tsx",
-        "type": "default"
       }
     ],
     "TierType": [
@@ -12288,16 +12226,6 @@
     "SavedFilters": [
       {
         "path": "src/components/explore/SavedFilters.tsx",
-        "type": "default"
-      }
-    ],
-    "SearchBar": [
-      {
-        "path": "src/components/explore/SearchBar.tsx",
-        "type": "default"
-      },
-      {
-        "path": "components/Explore/SearchBar.tsx",
         "type": "default"
       }
     ],
@@ -16019,12 +15947,6 @@
         "type": "default"
       }
     ],
-    "SearchFilters": [
-      {
-        "path": "components/Explore/SearchBar.tsx",
-        "type": "named"
-      }
-    ],
     "WorldMapView": [
       {
         "path": "components/Explore/WorldMapView.tsx",
@@ -16863,16 +16785,6 @@
         "type": "default"
       }
     ],
-    "DashboardBookingsPage": [
-      {
-        "path": "src/app/dashboard/bookings/page.bak.tsx",
-        "type": "default"
-      },
-      {
-        "path": "src/app/dashboard/bookings/page.tsx",
-        "type": "default"
-      }
-    ],
     "LeaderboardPage": [
       {
         "path": "src/app/dashboard/leaderboard/page.tsx",
@@ -16977,16 +16889,6 @@
         "type": "default"
       }
     ],
-    "TierBadge": [
-      {
-        "path": "src/components/badges/TierBadge.tsx",
-        "type": "default"
-      },
-      {
-        "path": "src/components/ui/TierBadge.tsx",
-        "type": "default"
-      }
-    ],
     "BookingChat": [
       {
         "path": "src/components/booking/BookingChat.tsx",
@@ -17039,16 +16941,6 @@
       {
         "path": "src/components/profile/SaveButton.tsx",
         "type": "named"
-      }
-    ],
-    "SearchBar": [
-      {
-        "path": "src/components/explore/SearchBar.tsx",
-        "type": "default"
-      },
-      {
-        "path": "components/Explore/SearchBar.tsx",
-        "type": "default"
       }
     ],
     "CreateMentorshipForm": [
@@ -17796,5 +17688,5 @@
       }
     ]
   },
-  "generatedAt": "2025-07-20T18:39:12.178Z"
+  "generatedAt": "2025-07-20T19:29:52.903Z"
 }
