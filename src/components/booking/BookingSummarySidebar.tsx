@@ -1,6 +1,6 @@
 'use client';
 
-import TierBadge from '@/components/ui/TierBadge';
+import TierBadge from '@/components/badges/TierBadge';
 import { useState } from 'react';
 
 export default function BookingSummarySidebar({

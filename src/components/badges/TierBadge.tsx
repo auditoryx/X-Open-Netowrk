@@ -15,6 +15,7 @@ interface TierBadgeProps {
   tier: TierType;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   showText?: boolean;
+  frozen?: boolean;
   className?: string;
 }
 
@@ -104,6 +105,7 @@ const TierBadge: React.FC<TierBadgeProps> = ({
   tier,
   size = 'sm',
   showText = true,
+  frozen = false,
   className = ''
 }) => {
   const config = tierConfig[tier];
@@ -119,16 +121,29 @@ const TierBadge: React.FC<TierBadgeProps> = ({
   return (
     <div
       className={`
-        inline-flex items-center ${sizeStyles.gap} ${sizeStyles.container}
+        relative inline-flex items-center ${sizeStyles.gap} ${sizeStyles.container}
         ${config.color} ${config.borderColor}
         border rounded-full font-medium
         shadow-sm backdrop-blur-sm
         ${className}
       `}
+      style={{ opacity: frozen ? 0.7 : 1 }}
       title={config.label}
     >
       {Icon && <Icon className={sizeStyles.icon} />}
       {showText && <span>{config.label}</span>}
+      {frozen && (
+        <span
+          className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full pointer-events-none"
+          style={{ zIndex: 1 }}
+        >
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="#fff" strokeWidth="2" />
+            <rect x="7" y="9" width="6" height="5" rx="1" fill="#fff" />
+            <rect x="8.5" y="6" width="3" height="5" rx="1.5" fill="#fff" />
+          </svg>
+        </span>
+      )}
     </div>
   );
 };

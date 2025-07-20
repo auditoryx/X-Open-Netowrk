@@ -1,7 +1,7 @@
 'use client';
 
 import { UserProfile } from '@/types/user';
-import TierBadge from '@/components/ui/TierBadge';
+import TierBadge from '@/components/badges/TierBadge';
 
 export default function RoleOverview({ profile }: { profile: UserProfile }) {
   return (
