@@ -27,7 +27,7 @@ function analyzeFile(filePath) {
     
     // Find imports
     const imports = [];
-    const importRegex = /import\s+(?:{[^}]*}|[^,\s]+|\*\s+as\s+\w+)(?:\s*,\s*(?:{[^}]*}|[^,\s]+|\*\s+as\s+\w+))*\s+from\s+['"]([^'"]+)['"]/g;
+    const importRegex = /import\s+(?:{[^}]*}|[^,\s]+|\*\s+as\s+\w+)(?:,\s*(?:{[^}]*}|[^,\s]+|\*\s+as\s+\w+))*\s+from\s+['"]([^'"]+)['"]/g;
     let match;
     while ((match = importRegex.exec(content)) !== null) {
       if (!match[1].startsWith('.') && !match[1].startsWith('@/')) continue; // Skip external packages
