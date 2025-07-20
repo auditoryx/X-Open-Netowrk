@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import TierBadge from '@/components/badges/TierBadge';
+import TierBadge, { TierType } from '@/components/badges/TierBadge';
 import SignatureBadge from '@/components/badges/SignatureBadge';
 import ProgressRing from '@/components/ui/ProgressRing';
 import Image from 'next/image';
@@ -28,7 +28,7 @@ export default function CreatorCard({
   imageUrl?: string;
   rating?: number;
   reviewCount?: number;
-  tier?: string;
+  tier?: TierType;
   xp?: number;
   tierFrozen?: boolean;
   signature?: boolean;

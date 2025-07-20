@@ -1,0 +1,1013 @@
+middleware.ts:11 - middleware
+middleware.ts:15 - config
+playwright.config.ts:6 - default
+setUserClaims.ts:150 - setUserClaims (used in module)
+setUserClaims.ts:150 - ClaimOptions (used in module)
+vitest.config.ts:4 - default
+components/AvailabilityForm.tsx:14 - default
+components/BannedModal.tsx:15 - default
+components/BookingChatThread.tsx:193 - default
+components/BookingForm.tsx:4 - default
+components/BookingsViewer.tsx:15 - default
+components/ClientBookings.tsx:18 - default
+components/DashboardHeader.tsx:20 - default
+components/EditProfileForm.tsx:6 - default
+components/ExploreServices.tsx:10 - default
+components/Hero.tsx:3 - default
+components/HeroSection.tsx:5 - default
+components/IncomingRequests.tsx:16 - default
+components/Layout.tsx:9 - default
+components/ProviderBookings.tsx:17 - default
+components/RoleToggle.tsx:9 - default
+components/ServiceCard.tsx:10 - default
+components/ServiceFilter.tsx:8 - default
+components/ServiceForm.tsx:11 - default
+components/ServiceList.tsx:21 - default
+components/ServiceManager.tsx:14 - default
+components/ServiceProfileModal.tsx:11 - default
+components/Services.tsx:3 - default
+components/ServiceSubmissionForm.tsx:8 - default
+firebase/firestoreHelpers.ts:4 - submitApplication
+hooks/useContractPdf.ts:12 - useContractPdf
+hooks/useEarningsData.ts:13 - useEarningsData
+hooks/useEarningsData.ts:63 - useEarningsComparison
+hooks/useEarningsData.ts:4 - TimePeriod (used in module)
+lib/createBooking.ts:8 - createBooking
+lib/submitApplication.ts:7 - submitApplication
+pages/admin-validation.tsx:3 - default
+pages/banned.tsx:11 - default
+pages/portfolio-uploader-demo.tsx:68 - default
+providers/QueryProvider.tsx:6 - default
+scripts/sentry-ping.ts:125 - sendTestEvent (used in module)
+backend/middleware/authMiddleware.js:6 - protect
+backend/middleware/authMiddleware.js:45 - authorize
+components/admin/EarningsChart.tsx:138 - default
+components/admin/TopRolesCard.tsx:135 - default
+components/booking/BookingCard.tsx:14 - default
+components/booking/BookingConfirmation.tsx:14 - default
+components/booking/RevenueSplitViewer.tsx:10 - default
+components/chat/BookingChat.tsx:186 - default
+components/dashboard/BookingCard.tsx:9 - default
+components/dashboard/Bookings.tsx:1 - default
+components/dashboard/EventTeamPanel.tsx:8 - default
+components/dashboard/MentorshipPanel.tsx:8 - default
+components/dashboard/Messages.tsx:1 - default
+components/dashboard/Notifications.tsx:1 - default
+components/dashboard/ProfileCard.tsx:1 - default
+components/dashboard/ServicesList.tsx:19 - default
+components/event/EventBookingForm.tsx:19 - default
+components/Explore/MapToggle.tsx:56 - default
+components/Explore/SearchBar.tsx:11 - SearchFilters (used in module)
+components/Explore/SearchBar.tsx:297 - default
+components/Explore/WorldMapView.tsx:213 - default
+components/forms/BookingForm.tsx:18 - default
+components/forms/BookingSlotForm.tsx:11 - default
+components/forms/CreateMentorshipForm.tsx:37 - default
+components/forms/MentorshipBookingForm.tsx:13 - default
+components/ui/Button.tsx:9 - default
+components/ui/DragDropUpload.tsx:9 - default
+components/ui/XpProgressBar.tsx:12 - default
+lib/auth/withAdminCheck.ts:35 - verifyAdminToken (used in module)
+lib/auth/withAdminCheck.ts:83 - withAdminCheck (used in module)
+lib/auth/withAdminCheck.ts:142 - isUserAdmin (used in module)
+lib/auth/withAdminCheck.ts:163 - isUserModerator (used in module)
+lib/auth/withAdminCheck.ts:179 - checkAdminAccess
+lib/auth/withAdminCheck.ts:203 - getAdminRoutes (used in module)
+lib/auth/withAdminCheck.ts:230 - isAdminRoute
+lib/auth/withAdminCheck.ts:16 - AdminUser (used in module)
+lib/auth/withAdminCheck.ts:24 - AdminCheckResult (used in module)
+lib/auth/withAdminCheck.ts:242 - default
+lib/chat/TESTING_GUIDE.ts:97 - CHAT_TEST_INSTRUCTIONS (used in module)
+lib/chat/TESTING_GUIDE.ts:103 - default
+lib/email/sendBookingConfirmationEmail.ts:220 - sendSingleBookingConfirmation
+lib/firebase/index.ts:23 - app
+lib/firebase/index.ts:23 - firestore
+lib/firebase/index.ts:23 - auth
+lib/firebase/index.ts:23 - storage
+lib/firebase/index.ts:24 - db
+lib/firestore/createBookingSlot.ts:25 - createBookingSlot
+lib/firestore/createBookingWithContract.ts:12 - createBookingWithContract
+lib/firestore/createEventTeamBooking.ts:17 - createEventTeamBooking
+lib/firestore/createMentorshipBooking.ts:13 - createMentorshipBooking
+lib/firestore/createMentorshipBooking.ts:57 - updateMentorshipBookingStatus
+lib/firestore/createMentorshipBooking.ts:84 - confirmMentorshipPayment
+lib/firestore/createMentorshipService.ts:19 - createMentorshipService
+lib/firestore/createMentorshipService.ts:55 - updateMentorshipService
+lib/firestore/createMentorshipService.ts:63 - toggleMentorshipActive
+lib/firestore/getAvailableSlots.ts:21 - getAvailableSlots
+lib/firestore/getAvailableSlots.ts:82 - getAllProviderSlots
+lib/firestore/getCreatorReviews.ts:4 - getCreatorReviews
+lib/firestore/getEarningsData.ts:37 - getEarningsData (used in module)
+lib/firestore/getEarningsData.ts:170 - getEarningsForPeriod
+lib/firestore/getEarningsData.ts:4 - BookingEarning (used in module)
+lib/firestore/getEarningsData.ts:18 - EarningsData (used in module)
+lib/firestore/getEventTeamBookings.ts:5 - getEventTeamBookings
+lib/firestore/getEventTeamBookings.ts:49 - getEventBookingById
+lib/firestore/getTopCreators.ts:4 - getTopCreators
+lib/firestore/getUserBookings.ts:4 - getUserBookings
+lib/firestore/mentorshipBookings.ts:14 - updateMentorshipBookingStatus (used in module)
+lib/firestore/mentorshipBookings.ts:51 - provideMentorshipFeedback
+lib/firestore/mentorshipBookings.ts:73 - getUserMentorshipBookings
+lib/firestore/saveUserProfile.ts:4 - saveUserProfile
+lib/firestore/searchCreators.ts:29 - searchCreatorsByRole
+lib/firestore/searchCreators.ts:70 - getCreatorDetails
+lib/firestore/searchCreators.ts:96 - searchCreators
+lib/firestore/searchCreators.ts:184 - getAvailableRoles
+lib/firestore/searchCreators.ts:211 - getAvailableGenres
+lib/firestore/searchCreators.ts:241 - getAvailableLocations
+lib/firestore/searchCreators.ts:4 - CreatorSearchResult (used in module)
+lib/firestore/searchCreators.ts:18 - CreatorSearchFilters (used in module)
+lib/firestore/updateAvailability.ts:5 - updateAvailability
+lib/firestore/updateBookingStatus.ts:4 - updateBookingStatus
+lib/firestore/updateSeenStatus.ts:15 - updateMessageSeenStatus (used in module)
+lib/pdf/generateRevSplitContract.ts:4 - generateRevSplitContract
+lib/reviews/postReview.ts:18 - postReview (used in module)
+lib/reviews/postReview.ts:69 - default
+lib/storage/uploadContract.ts:3 - uploadContract
+lib/storage/uploadFiles.ts:11 - uploadFile (used in module)
+lib/storage/uploadFiles.ts:48 - uploadMultipleFiles
+lib/types/EventBooking.ts:30 - isUserInEvent
+lib/types/EventBooking.ts:35 - getUserRoleInEvent
+lib/types/EventBooking.ts:3 - EventBooking (used in module)
+lib/types/EventBooking.ts:20 - EventTeamMember
+lib/types/Mentorship.ts:51 - isCreatorOfMentorship
+lib/types/Mentorship.ts:55 - isClientOfMentorshipBooking
+lib/types/Mentorship.ts:59 - isCreatorOfMentorshipBooking
+lib/types/Mentorship.ts:3 - MentorshipFormat (used in module)
+lib/types/Mentorship.ts:4 - MentorshipStatus (used in module)
+lib/types/Mentorship.ts:6 - Mentorship (used in module)
+lib/types/Mentorship.ts:26 - MentorshipBooking (used in module)
+lib/utils/checkUserAccess.ts:26 - canAccessSignatureTier
+lib/utils/checkUserAccess.ts:51 - canAccessVerifiedServices
+lib/utils/checkUserAccess.ts:66 - isUserVerified (used in module)
+lib/utils/checkUserAccess.ts:81 - hasSignatureTier (used in module)
+lib/utils/checkUserAccess.ts:93 - isUserBanned (used in module)
+lib/utils/checkUserAccess.ts:100 - getUserTierLevel (used in module)
+lib/utils/checkUserAccess.ts:110 - meetsMinimumTier (used in module)
+lib/utils/checkUserAccess.ts:141 - canBookService
+lib/utils/checkUserAccess.ts:17 - AccessCheckResult (used in module)
+lib/utils/formatCurrency.ts:6 - formatCurrency
+lib/utils/getCoordsFromCity.ts:46 - getCoordsFromCity
+lib/utils/getCoordsFromCity.ts:93 - getCityFromCoords
+pages/events/[eventId].tsx:9 - default
+pages/mentorships/create.tsx:3 - default
+pages/mentorships/index.tsx:9 - default
+src/app/layout.tsx:35 - default
+src/app/layout.tsx:25 - metadata
+src/app/loading.tsx:1 - default
+src/app/not-found.tsx:8 - default
+src/components/ClientBookings.tsx:15 - default
+src/components/ErrorBoundary.tsx:94 - default
+src/components/ProviderBookings.tsx:15 - default
+src/components/RoleToggle.tsx:10 - default
+src/components/SEOMeta.tsx:24 - default
+src/components/ServiceManager.tsx:19 - default
+src/context/AuthContext.tsx:48 - useAuth
+src/context/TourContext.tsx:14 - TourProvider
+src/firebase/index.ts:1 - app
+src/firebase/index.ts:1 - storage
+src/functions/checkDisputeAndRelease.ts:4 - checkDisputeAndRelease
+src/functions/sendDisputeEmail.ts:3 - sendDisputeEmail
+src/functions/sendPayoutConfirmation.ts:3 - sendPayoutConfirmation
+src/hooks/useDebounce.ts:32 - useAdvancedDebounce
+src/hooks/useDebounce.ts:85 - useDebouncedCallback
+src/hooks/useDebounce.ts:115 - useDebouncedAPICall
+src/hooks/useEmailCapture.ts:16 - useEmailCapture
+src/hooks/useEmailCapture.ts:9 - UseEmailCaptureResult (used in module)
+src/lib/@schema.ts:9 - User
+src/lib/@schema.ts:10 - Review
+src/lib/@schema.ts:11 - LegacyReview
+src/lib/@schema.ts:12 - Booking
+src/lib/@schema.ts:13 - Service
+src/lib/@schema.ts:14 - Contract
+src/lib/@schema.ts:15 - Notification
+src/lib/@schema.ts:16 - XPTransaction
+src/lib/@schema.ts:17 - UserProgress
+src/lib/@schema.ts:18 - Dispute
+src/lib/@schema.ts:19 - AssignRoleRequest
+src/lib/@schema.ts:20 - SetRoleRequest
+src/lib/@schema.ts:21 - BookingRequest
+src/lib/@schema.ts:22 - BanUserRequest
+src/lib/@schema.ts:23 - PromoteUserRequest
+src/lib/@schema.ts:24 - ContractAgreementRequest
+src/lib/@schema.ts:25 - BookingConfirmationRequest
+src/lib/@schema.ts:26 - CheckoutSessionRequest
+src/lib/@schema.ts:27 - CartCheckoutRequest
+src/lib/@schema.ts:31 - SCHEMA_FIELDS (used in module)
+src/lib/@schema.ts:159 - SchemaFieldNames (used in module)
+src/lib/@schema.ts:160 - UserFieldNames
+src/lib/@schema.ts:161 - ReviewFieldNames
+src/lib/@schema.ts:162 - BookingFieldNames
+src/lib/@schema.ts:163 - ServiceFieldNames
+src/lib/@schema.ts:164 - ContractFieldNames
+src/lib/@schema.ts:165 - NotificationFieldNames
+src/lib/@schema.ts:166 - XPTransactionFieldNames
+src/lib/@schema.ts:167 - UserProgressFieldNames
+src/lib/@schema.ts:168 - DisputeFieldNames
+src/lib/@schema.ts:169 - BookingRequestFieldNames
+src/lib/gamification.ts:21 - DAILY_XP_CAP
+src/lib/gamification.ts:31 - LogOptions (used in module)
+src/lib/getServerUser.ts:4 - getServerUser
+src/lib/getStripe.ts:5 - default
+src/lib/rank.ts:4 - RankInputs (used in module)
+src/lib/schema.ts:5 - UserSchema (used in module)
+src/lib/schema.ts:20 - ReviewSchema (used in module)
+src/lib/schema.ts:34 - LegacyReviewSchema (used in module)
+src/lib/schema.ts:46 - BookingSchema (used in module)
+src/lib/schema.ts:63 - ServiceSchema (used in module)
+src/lib/schema.ts:77 - ContractSchema (used in module)
+src/lib/schema.ts:90 - NotificationSchema (used in module)
+src/lib/schema.ts:102 - XPTransactionSchema (used in module)
+src/lib/schema.ts:113 - UserProgressSchema (used in module)
+src/lib/schema.ts:126 - DisputeSchema (used in module)
+src/lib/schema.ts:155 - validateLegacyReview
+src/lib/schema.ts:159 - validateBooking
+src/lib/schema.ts:163 - validateUser
+src/lib/schema.ts:167 - validateService
+src/lib/schema.ts:171 - validateContract
+src/lib/schema.ts:175 - validateNotification
+src/lib/schema.ts:179 - validateXPTransaction
+src/lib/schema.ts:183 - validateUserProgress
+src/lib/schema.ts:187 - validateDispute
+src/lib/schema.ts:201 - SetRoleSchema (used in module)
+src/lib/schema.ts:216 - BanUserSchema (used in module)
+src/lib/schema.ts:223 - PromoteUserSchema (used in module)
+src/lib/schema.ts:229 - ContractAgreementSchema (used in module)
+src/lib/schema.ts:235 - BookingConfirmationSchema (used in module)
+src/lib/schema.ts:242 - CheckoutSessionSchema (used in module)
+src/lib/schema.ts:250 - CartCheckoutSchema (used in module)
+src/lib/schema.ts:271 - validateAssignRole
+src/lib/schema.ts:275 - validateSetRole
+src/lib/schema.ts:279 - validateBookingRequest
+src/lib/schema.ts:283 - validateBanUser
+src/lib/schema.ts:287 - validatePromoteUser
+src/lib/schema.ts:291 - validateContractAgreement
+src/lib/schema.ts:295 - validateBookingConfirmation
+src/lib/schema.ts:299 - validateCheckoutSession
+src/lib/schema.ts:303 - validateCartCheckout
+src/lib/uploadMedia.ts:113 - validateMediaFile
+src/lib/uploadMedia.ts:150 - uploadMultipleMedia
+src/lib/uploadMedia.ts:11 - MediaMetadata (used in module)
+src/pages/split-booking-demo.tsx:32 - default
+src/providers/BadgeProvider.tsx:41 - BadgeProvider
+src/providers/BadgeProvider.tsx:182 - useBadgeContext
+src/providers/BadgeProvider.tsx:203 - triggerBadgeCheck
+src/providers/VerificationProvider.tsx:180 - useVerification (used in module)
+src/providers/VerificationProvider.tsx:189 - withVerificationRequired
+src/providers/VerificationProvider.tsx:215 - useVerificationFeatures
+src/providers/XPNotificationProvider.tsx:18 - XPNotificationProvider
+src/types/api.ts:2 - ApiResponse
+src/types/api.ts:10 - User
+src/types/api.ts:21 - UserRole (used in module)
+src/types/api.ts:24 - Service (used in module)
+src/types/api.ts:42 - CreateServiceRequest
+src/types/api.ts:53 - UpdateServiceRequest
+src/types/api.ts:59 - Booking
+src/types/api.ts:73 - BookingStatus (used in module)
+src/types/api.ts:74 - PaymentStatus (used in module)
+src/types/api.ts:77 - Availability
+src/types/api.ts:90 - Message
+src/types/api.ts:101 - PaginatedRequest
+src/types/api.ts:109 - PaginatedResponse
+src/types/booking.ts:1 - BookingStatus (used in module)
+src/types/booking.ts:3 - BookingContract (used in module)
+src/types/booking.ts:9 - Booking
+src/types/service.ts:17 - ServiceRequest
+src/types/service.ts:29 - ServiceFormData
+src/types/user.ts:42 - User (used in module)
+src/types/user.ts:65 - UserWithProfile
+.next/types/app/page.ts:54 - PageProps (used in module)
+.next/types/app/page.ts:58 - LayoutProps
+functions/src/cron/buildLeaderboards.ts:8 - LeaderboardEntry (used in module)
+functions/src/cron/buildLeaderboards.ts:14 - LeaderboardMap (used in module)
+functions/src/cron/buildLeaderboards.ts:36 - buildLeaderboards
+pages/api/booking/confirm.ts:35 - default
+pages/api/events/confirm.ts:6 - default
+pages/api/stripe/create-checkout-session.ts:14 - default
+src/app/components/AuthModal.tsx:6 - default
+src/app/components/BackgroundAnimation.tsx:5 - default
+src/app/components/BookingHistory.tsx:19 - default
+src/app/components/BookingRequestForm.tsx:16 - default
+src/app/components/BookingsViewer.tsx:19 - default
+src/app/components/ClientBookings.tsx:20 - default
+src/app/components/CreativeDropdown.tsx:7 - default
+src/app/components/DarkModeToggle.tsx:6 - default
+src/app/components/EditServicesForm.tsx:11 - default
+src/app/components/FloatingCTA.tsx:6 - default
+src/app/components/Footer.tsx:1 - default
+src/app/components/Inbox.tsx:10 - default
+src/app/components/LogoutButton.tsx:6 - default
+src/app/components/MessageCenter.tsx:31 - default
+src/app/components/Notifications.tsx:3 - default
+src/app/components/PayButton.tsx:17 - default
+src/app/components/ProviderBookings.tsx:22 - default
+src/app/firebase/index.ts:29 - app (used in module)
+src/app/lib/messageHelpers.ts:4 - sendMessage
+src/app/lib/messageHelpers.ts:13 - fetchMessages
+src/app/lib/profileHelpers.ts:4 - saveUserProfile
+src/app/services/authService.ts:96 - logoutUser
+src/app/services/authService.ts:114 - useAuthState
+src/app/utils/sendWelcomeMessage.ts:8 - default
+src/app/utils/withAuth.tsx:8 - default
+src/app/utils/withRoleProtection.tsx:8 - withRoleProtection
+src/client/components/client-page.tsx:6 - default
+src/components/admin/AdminVerificationRequests.tsx:14 - default
+src/components/admin/AssignRoleForm.tsx:7 - default
+src/components/badges/TierBadge.tsx:4 - TierType (used in module)
+src/components/book/BookingSidebar.tsx:6 - default
+src/components/booking/BookingCalendar.tsx:6 - default
+src/components/booking/BookingStatusCard.tsx:5 - default
+src/components/booking/SplitBookingForm.tsx:29 - SplitBookingForm
+src/components/bookings/BookingsList.tsx:11 - default
+src/components/calendar/CalendarSync.tsx:16 - default
+src/components/cards/CreatorCard.tsx:9 - default
+src/components/chat/EnhancedChatThread.tsx:30 - default
+src/components/chat/PresenceIndicator.tsx:213 - MultiUserPresence
+src/components/chat/TypingIndicator.tsx:66 - TypingIndicatorMinimal
+src/components/checkout/StripeWrapper.tsx:13 - default
+src/components/collab/CollabBookingSummary.tsx:90 - CollabBookingSummary
+src/components/collab/CollabPackageCard.tsx:42 - CollabPackageCard
+src/components/collab/CreateCollabPackageForm.tsx:65 - CreateCollabPackageForm
+src/components/dashboard/EarningsDashboard.tsx:17 - default
+src/components/dashboard/RoleOverview.tsx:6 - default
+src/components/dashboard/RoleSwitcher.tsx:9 - default
+src/components/dashboard/SplitBookingsList.tsx:25 - SplitBookingsList
+src/components/disputes/DisputeButton.tsx:5 - default
+src/components/event/EventBookingForm.tsx:19 - default
+src/components/explore/DiscoveryMap.tsx:23 - default
+src/components/explore/DiscoveryWrapper.tsx:42 - default
+src/components/explore/NewExploreGrid.tsx:15 - default
+src/components/explore/SaveButton.tsx:51 - default
+src/components/explore/SearchBar.tsx:15 - default
+src/components/forms/CreateMentorshipForm.tsx:13 - default
+src/components/forms/MentorshipBookingForm.tsx:17 - default
+src/components/gamification/index.ts:2 - XPDisplay
+src/components/gamification/index.ts:3 - XPProgressBar
+src/components/gamification/index.ts:4 - XPWidget
+src/components/gamification/index.ts:5 - XPNotificationSystem
+src/components/gamification/index.ts:5 - useXPNotifications
+src/components/gamification/index.ts:9 - XPNotification
+src/components/gamification/StreakToast.tsx:10 - StreakToastProps (used in module)
+src/components/leaderboard/LeaderboardList.tsx:7 - default
+src/components/media/MediaUpload.tsx:31 - default
+src/components/media/PortfolioGallery.tsx:27 - default
+src/components/notifications/SplitBookingNotification.tsx:29 - SplitBookingNotification
+src/components/onboarding/TourTooltip.tsx:14 - default
+src/components/pay/PayButton.tsx:8 - default
+src/components/profile/EnhancedMediaGallery.tsx:25 - default
+src/components/profile/IDVerificationForm.tsx:10 - default
+src/components/profile/MediaGallery.tsx:67 - default
+src/components/profile/MediaUploader.tsx:90 - default
+src/components/profile/PortfolioGrid.tsx:5 - PortfolioGrid
+src/components/profile/ProfileForm.tsx:11 - default
+src/components/profile/ProfileReviewList.tsx:15 - default
+src/components/profile/ReportUserButton.tsx:73 - default
+src/components/roles/ArtistDashboard.tsx:1 - default
+src/components/roles/DefaultDashboard.tsx:1 - default
+src/components/roles/EngineerDashboard.tsx:1 - default
+src/components/roles/ProducerDashboard.tsx:1 - default
+src/components/roles/StudioDashboard.tsx:1 - default
+src/components/roles/VideographerDashboard.tsx:1 - default
+src/components/search/AdvancedSearchInterface.tsx:16 - AdvancedSearchInterface (used in module)
+src/components/search/SmartSearchResults.tsx:27 - SmartSearchResults (used in module)
+src/components/settings/SubscriptionSettings.tsx:5 - default
+src/components/ui/alert.tsx:4 - AlertProps (used in module)
+src/components/ui/alert.tsx:41 - AlertTitle (used in module)
+src/components/ui/avatar.tsx:4 - AvatarProps (used in module)
+src/components/ui/AvatarRing.tsx:4 - default
+src/components/ui/Badge.tsx:102 - Badge (used in module)
+src/components/ui/Badge.tsx:102 - StatusBadge (used in module)
+src/components/ui/Badge.tsx:103 - default
+src/components/ui/badge.tsx:25 - BadgeProps (used in module)
+src/components/ui/badge.tsx:35 - badgeVariants (used in module)
+src/components/ui/Card.tsx:151 - Card (used in module)
+src/components/ui/Card.tsx:151 - CardHeader (used in module)
+src/components/ui/Card.tsx:151 - CardBody (used in module)
+src/components/ui/Card.tsx:151 - CardFooter (used in module)
+src/components/ui/Card.tsx:152 - default
+src/components/ui/card.tsx:78 - CardFooter (used in module)
+src/components/ui/card.tsx:78 - CardDescription (used in module)
+src/components/ui/EmptyState.tsx:118 - NoCreatorsFound
+src/components/ui/EmptyState.tsx:131 - NoSearchResults
+src/components/ui/EmptyState.tsx:217 - NoMessages
+src/components/ui/EmptyState.tsx:230 - default
+src/components/ui/input.tsx:4 - InputProps (used in module)
+src/components/ui/label.tsx:4 - LabelProps (used in module)
+src/components/ui/LanguageSwitcher.tsx:5 - default
+src/components/ui/progress.tsx:4 - ProgressProps (used in module)
+src/components/ui/StarRating.tsx:6 - StarRatingProps (used in module)
+src/components/ui/textarea.tsx:4 - TextareaProps (used in module)
+src/components/ui/VerifiedBadge.tsx:55 - VerifiedIcon
+src/components/ui/WalkthroughOverlay.tsx:20 - default
+src/components/verification/AdminVerificationDashboard.tsx:68 - AdminVerificationDashboard (used in module)
+src/components/verification/VerificationNotification.tsx:23 - VerificationNotificationProps (used in module)
+src/components/verification/VerificationProgress.tsx:16 - VerificationCriteria (used in module)
+src/components/verification/VerificationProgress.tsx:24 - VerificationProgressProps (used in module)
+src/components/verification/VerificationStatusWidget.tsx:16 - VerificationStatusWidgetProps (used in module)
+src/lib/analytics/track.ts:3 - AnalyticsPayload (used in module)
+src/lib/auth/AuthContext.tsx:4 - AuthUser (used in module)
+src/lib/auth/AuthContext.tsx:18 - AuthContext (used in module)
+src/lib/auth/AuthContext.tsx:24 - AuthProvider
+src/lib/auth/withAdminCheck.ts:95 - checkAdminDashboardAccess
+src/lib/auth/withAdminCheck.ts:102 - checkUserManagementAccess
+src/lib/auth/withAdminCheck.ts:112 - checkAnalyticsAccess
+src/lib/auth/withAdminCheck.ts:122 - checkPlatformManagementAccess
+src/lib/auth/withAdminCheck.ts:132 - validateAdminSession
+src/lib/availability/getNextAvailable.ts:6 - getNextAvailable
+src/lib/calendar/exportToICal.ts:3 - CalendarEvent (used in module)
+src/lib/calendar/importICal.ts:1 - Slot (used in module)
+src/lib/csv/parseAvailability.ts:1 - CsvSlot (used in module)
+src/lib/data/featuredCreators.ts:184 - recentActivity
+src/lib/data/featuredCreators.ts:192 - testimonials
+src/lib/dev/sampleData.ts:39 - createSampleNotifications (used in module)
+src/lib/dev/sampleData.ts:96 - createSampleBookings (used in module)
+src/lib/dev/sampleData.ts:158 - createSampleMessageThreads (used in module)
+src/lib/dev/sampleData.ts:9 - SampleNotification (used in module)
+src/lib/dev/sampleData.ts:23 - SampleBooking (used in module)
+src/lib/explore/filterUtils.ts:1 - ExploreFilters (used in module)
+src/lib/firebase/client.ts:17 - app (used in module)
+src/lib/firebase/firebaseAdmin.ts:32 - auth (used in module)
+src/lib/firebase/firebaseAdmin.ts:34 - default
+src/lib/firebase/realtime.ts:19 - auth
+src/lib/firebase/realtime.ts:20 - default
+src/lib/firestore/createCollabBooking.ts:30 - createCollabBooking
+src/lib/firestore/createCollabBooking.ts:139 - updateCollabBookingStatus (used in module)
+src/lib/firestore/createCollabBooking.ts:194 - cancelCollabBooking
+src/lib/firestore/createCollabBooking.ts:16 - CreateCollabBookingData (used in module)
+src/lib/firestore/createCollabPackage.ts:37 - createCollabPackage
+src/lib/firestore/createCollabPackage.ts:137 - updateCollabPackage
+src/lib/firestore/createCollabPackage.ts:6 - CreateCollabPackageData (used in module)
+src/lib/firestore/createEventTeamBooking.ts:43 - getEventTeamBooking
+src/lib/firestore/createEventTeamBooking.ts:58 - updateEventTeamBooking (used in module)
+src/lib/firestore/createEventTeamBooking.ts:74 - getEventBookingsByUser
+src/lib/firestore/createEventTeamBooking.ts:93 - getEventBookingsByEvent
+src/lib/firestore/createEventTeamBooking.ts:112 - cancelEventTeamBooking
+src/lib/firestore/createEventTeamBooking.ts:124 - confirmEventTeamBooking
+src/lib/firestore/createEventTeamBooking.ts:5 - EventTeamBooking (used in module)
+src/lib/firestore/createMentorshipService.ts:29 - getMentorshipService
+src/lib/firestore/createMentorshipService.ts:44 - updateMentorshipService
+src/lib/firestore/createMentorshipService.ts:60 - getMentorshipServicesByMentor
+src/lib/firestore/createMentorshipService.ts:80 - getMentorshipServicesByCategory
+src/lib/firestore/createMentorshipService.ts:100 - searchMentorshipServices
+src/lib/firestore/createMentorshipService.ts:128 - createMentorship
+src/lib/firestore/createMentorshipService.ts:153 - getMentorship
+src/lib/firestore/createMentorshipService.ts:168 - updateMentorship
+src/lib/firestore/createMentorshipService.ts:190 - toggleMentorshipActive
+src/lib/firestore/createMentorshipService.ts:209 - isCreatorOfMentorship
+src/lib/firestore/createMentorshipService.ts:185 - getDoc (used in module)
+src/lib/firestore/createMentorshipService.ts:185 - doc (used in module)
+src/lib/firestore/createSplitBooking.ts:26 - createSplitBooking
+src/lib/firestore/createSplitBooking.ts:6 - CreateSplitBookingData (used in module)
+src/lib/firestore/getAvailabilityTemplate.ts:4 - getAvailabilityTemplate
+src/lib/firestore/getCollabPackages.ts:60 - getCollabPackagesForUser (used in module)
+src/lib/firestore/getCollabPackages.ts:177 - getPublicCollabPackages (used in module)
+src/lib/firestore/getCollabPackages.ts:274 - getFeaturedCollabPackages
+src/lib/firestore/getCollabPackages.ts:304 - searchCollabPackages
+src/lib/firestore/getCollabPackages.ts:386 - getCollabPackageStats
+src/lib/firestore/getFeaturedCreators.ts:6 - getFeaturedCreators
+src/lib/firestore/getLeaderboard.ts:14 - LeaderboardData (used in module)
+src/lib/firestore/getSplitBookings.ts:8 - getSplitBookingsForUser (used in module)
+src/lib/firestore/getSplitBookings.ts:99 - getPendingSplitBookings
+src/lib/firestore/getSplitBookings.ts:130 - getSplitBookingsForStudio
+src/lib/firestore/getSplitBookings.ts:165 - getUpcomingSplitBookings
+src/lib/firestore/getTrustStats.ts:4 - getTrustStats
+src/lib/firestore/getUserBookings.ts:156 - default
+src/lib/firestore/getUserMessages.ts:65 - getUnreadMessageCount
+src/lib/firestore/getUserMessages.ts:90 - default
+src/lib/firestore/getUserServices.ts:116 - default
+src/lib/firestore/getUserTier.ts:77 - getMultipleUserTiers
+src/lib/firestore/markNotificationRead.ts:42 - markNotificationsRead (used in module)
+src/lib/firestore/markNotificationRead.ts:93 - default
+src/lib/firestore/requestTalentForBooking.ts:10 - updateTalentResponse
+src/lib/firestore/requestTalentForBooking.ts:114 - requestTalentForBooking
+src/lib/firestore/requestTalentForBooking.ts:200 - removeTalentFromBooking
+src/lib/firestore/saveAvailabilityTemplate.ts:4 - saveAvailabilityTemplate
+src/lib/firestore/saveBookingToFirestore.ts:20 - saveBookingToFirestore
+src/lib/firestore/savedFilters.ts:36 - deleteFilterPreset
+src/lib/firestore/saveUserProfile.ts:4 - saveUserProfile
+src/lib/firestore/searchCreators.ts:42 - searchCreators
+src/lib/firestore/searchCreators.ts:207 - getSearchSuggestions
+src/lib/firestore/searchCreators.ts:19 - SearchCreatorsOptions (used in module)
+src/lib/firestore/searchCreators.ts:33 - SearchSuggestion (used in module)
+src/lib/firestore/submitUserReport.ts:4 - UserReport
+src/lib/firestore/updateUserTier.ts:17 - updateUserTier (used in module)
+src/lib/firestore/updateUserTier.ts:54 - default
+src/lib/firestore/updateVerificationStatus.ts:23 - updateVerificationStatus (used in module)
+src/lib/firestore/updateVerificationStatus.ts:58 - getAllPendingVerifications
+src/lib/google/calendarSync.ts:14 - CalendarEvent (used in module)
+src/lib/hooks/useBadgeData.ts:183 - useAdminBadgeStats
+src/lib/hooks/useChallengeData.ts:223 - useChallenge
+src/lib/hooks/useChallengeData.ts:278 - default
+src/lib/hooks/useProviderAvailability.ts:6 - Slot (used in module)
+src/lib/hooks/useSplitBookingUpdates.ts:22 - useSplitBookingUpdates
+src/lib/hooks/useSplitBookingUpdates.ts:150 - useSplitBookingsForUser
+src/lib/hooks/useUserBookings.ts:5 - useUserBookings
+src/lib/hooks/useVerificationData.ts:12 - UseVerificationDataOptions (used in module)
+src/lib/hooks/useVerificationData.ts:17 - VerificationData (used in module)
+src/lib/media/compression.ts:1 - CompressionOptions (used in module)
+src/lib/media/compression.ts:8 - MediaCompressor
+src/lib/notifications/sendInAppAndEmail.ts:5 - NotificationPayload (used in module)
+src/lib/services/adminXPService.ts:34 - UserXPHistory (used in module)
+src/lib/services/adminXPService.ts:46 - BulkXPOperation (used in module)
+src/lib/services/advancedSearchService.ts:33 - UserPreferences (used in module)
+src/lib/services/advancedSearchService.ts:42 - SearchInteraction (used in module)
+src/lib/services/advancedSearchService.ts:57 - TrendingSearch (used in module)
+src/lib/services/advancedSearchService.ts:64 - SearchIntent (used in module)
+src/lib/services/advancedSearchService.ts:73 - SearchAnalytics (used in module)
+src/lib/services/advancedSearchService.ts:786 - advancedSearchService
+src/lib/services/analyticsService.ts:19 - EarningsData (used in module)
+src/lib/services/analyticsService.ts:28 - PerformanceMetrics (used in module)
+src/lib/services/analyticsService.ts:37 - ClientMetrics (used in module)
+src/lib/services/analyticsService.ts:49 - RevenueInsights (used in module)
+src/lib/services/analyticsService.ts:74 - CreatorAnalyticsService (used in module)
+src/lib/services/analyticsService.ts:459 - creatorAnalyticsService
+src/lib/services/badgeService.ts:21 - BadgeDefinition (used in module)
+src/lib/services/badgeService.ts:41 - UserBadge (used in module)
+src/lib/services/badgeService.ts:69 - BadgeService (used in module)
+src/lib/services/cachingService.ts:33 - CachingService (used in module)
+src/lib/services/cachingService.ts:597 - default
+src/lib/services/challengeService.ts:44 - ChallengeStatus (used in module)
+src/lib/services/challengeService.ts:86 - ChallengeReward (used in module)
+src/lib/services/contentAnalysisService.ts:3 - ContentAnalysis (used in module)
+src/lib/services/contentAnalysisService.ts:29 - PortfolioOptimization (used in module)
+src/lib/services/contentAnalysisService.ts:669 - contentAnalysisService
+src/lib/services/creatorAnalyticsService.ts:44 - BookingAnalytics (used in module)
+src/lib/services/creatorAnalyticsService.ts:71 - CreatorAnalyticsService (used in module)
+src/lib/services/emailService.ts:16 - EmailProvider (used in module)
+src/lib/services/emailService.ts:177 - EmailService (used in module)
+src/lib/services/enhancedPortfolioService.ts:641 - uploadPortfolioMedia
+src/lib/services/enhancedPortfolioService.ts:99 - Comment (used in module)
+src/lib/services/enhancedPortfolioService.ts:179 - PortfolioTemplate (used in module)
+src/lib/services/gamificationMigration.ts:246 - runMigration
+src/lib/services/gamificationMigration.ts:38 - GamificationMigration (used in module)
+src/lib/services/gamificationMigration.ts:243 - migrationService
+src/lib/services/messageService.ts:44 - MessageService (used in module)
+src/lib/services/monitoringService.ts:55 - MonitoringService (used in module)
+src/lib/services/monitoringService.ts:614 - default
+src/lib/services/performanceMonitoringService.ts:49 - PerformanceMonitoringService (used in module)
+src/lib/services/portfolioService.ts:72 - CreatorShowcase (used in module)
+src/lib/services/portfolioService.ts:101 - PortfolioService (used in module)
+src/lib/services/pwaService.ts:6 - PWAInstallPrompt (used in module)
+src/lib/services/pwaService.ts:11 - NotificationPayload (used in module)
+src/lib/services/pwaService.ts:24 - OfflineData (used in module)
+src/lib/services/pwaService.ts:32 - PWAService (used in module)
+src/lib/services/rankingService.ts:563 - UserRankingData (used in module)
+src/lib/services/revenueOptimizationService.ts:87 - CompetitorInsight (used in module)
+src/lib/services/seasonalService.ts:103 - SeasonalAnalytics (used in module)
+src/lib/services/seasonalService.ts:653 - seasonalService
+src/lib/services/skillsBadgeService.ts:18 - SkillBadge (used in module)
+src/lib/services/socialProofService.ts:15 - SocialProofMetrics (used in module)
+src/lib/services/socialProofService.ts:28 - SocialProofBadge (used in module)
+src/lib/services/socialProofService.ts:46 - TrustSignal (used in module)
+src/lib/services/testimonialService.ts:59 - TestimonialRequest (used in module)
+src/lib/services/testimonialService.ts:77 - TestimonialTemplate (used in module)
+src/lib/services/verificationService.ts:25 - VerificationStatus (used in module)
+src/lib/services/verificationService.ts:28 - VerificationApplication (used in module)
+src/lib/services/verificationService.ts:48 - VerificationCriteria (used in module)
+src/lib/services/verificationService.ts:68 - EligibilityResult (used in module)
+src/lib/services/xpService.ts:67 - XPService (used in module)
+src/lib/services/xpServiceWithNotifications.ts:126 - xpServiceWithNotifications (used in module)
+src/lib/services/xpValidationService.ts:45 - XPValidationService (used in module)
+src/lib/stripe/connect.ts:6 - ConnectAccount (used in module)
+src/lib/stripe/escrow.ts:7 - EscrowPayment (used in module)
+src/lib/stripe/initiateBookingWithStripe.ts:13 - initiateBookingWithStripe
+src/lib/stripe/splitBookingPayments.ts:22 - createSplitBookingCheckout
+src/lib/stripe/splitBookingPayments.ts:68 - processSplitBookingPayment
+src/lib/stripe/splitBookingPayments.ts:103 - refundSplitBookingPayment
+src/lib/stripe/splitBookingPayments.ts:136 - calculateSplitPayments
+src/lib/stripe/splitBookingPayments.ts:157 - createPaymentUrls
+src/lib/stripe/splitBookingPayments.ts:168 - isSplitBookingFullyPaid
+src/lib/stripe/splitBookingPayments.ts:175 - clientNeedsPayment
+src/lib/stripe/splitBookingPayments.ts:191 - getClientPaymentStatus
+src/lib/stripe/splitBookingPayments.ts:215 - formatCurrency
+src/lib/stripe/splitBookingPayments.ts:225 - calculatePlatformFee
+src/lib/stripe/splitBookingPayments.ts:3 - StripeCheckoutOptions (used in module)
+src/lib/stripe/splitBookingPayments.ts:13 - StripeSessionResponse (used in module)
+src/lib/stripe/updatePayoutStatus.ts:11 - updatePayoutStatus
+src/lib/types/Booking.ts:84 - isUserInBooking
+src/lib/types/Booking.ts:91 - getUserRoleInBooking
+src/lib/types/Booking.ts:53 - TalentRequest
+src/lib/types/Booking.ts:64 - BookingNotification
+src/lib/types/CollabPackage.ts:116 - getPackageMembers
+src/lib/types/CollabPackage.ts:137 - calculateRevenueSplit
+src/lib/types/CollabPackage.ts:164 - isUserInCollabPackage
+src/lib/types/CollabPackage.ts:168 - getUserRoleInPackage
+src/lib/types/CollabPackage.ts:177 - formatPackageDuration
+src/lib/types/CollabPackage.ts:187 - formatPackagePrice
+src/lib/types/CollabPackage.ts:93 - CollabPackageCreator (used in module)
+src/lib/types/CollabPackage.ts:104 - CollabPackageFilters
+src/lib/types/EventBooking.ts:30 - isUserInEvent
+src/lib/types/EventBooking.ts:20 - EventTeamMember
+src/lib/types/Mentorship.ts:131 - isCreatorOfMentorship
+src/lib/types/Mentorship.ts:31 - MentorshipSession (used in module)
+src/lib/types/Mentorship.ts:122 - SessionStatus
+src/lib/types/Mentorship.ts:123 - PaymentStatus
+src/lib/types/Mentorship.ts:124 - SessionType
+src/lib/types/Mentorship.ts:125 - Frequency
+src/lib/types/Mentorship.ts:126 - Difficulty
+src/lib/utils/checkUserAccess.ts:19 - checkUserAccess (used in module)
+src/lib/utils/checkUserAccess.ts:116 - checkAdminAccess
+src/lib/utils/checkUserAccess.ts:130 - checkCreatorAccess
+src/lib/utils/checkUserAccess.ts:137 - checkUserPermission
+src/lib/utils/checkUserAccess.ts:157 - checkResourceOwnership
+src/lib/utils/filterByKeyword.ts:51 - extractKeywords (used in module)
+src/lib/utils/filterByKeyword.ts:62 - calculateSearchScore (used in module)
+src/lib/utils/filterByKeyword.ts:176 - highlightMatches (used in module)
+src/lib/utils/filterByKeyword.ts:199 - createHighlightedCreator
+src/lib/utils/filterByKeyword.ts:25 - SearchableService (used in module)
+src/lib/utils/formatCurrency.ts:20 - formatCurrencyCompact
+src/lib/utils/formatCurrency.ts:36 - formatCurrencyWhole
+src/lib/utils/formatCurrency.ts:52 - parseCurrency
+src/lib/utils/formatCurrency.ts:59 - formatPercentage
+src/lib/utils/formatCurrency.ts:74 - formatNumber
+src/lib/utils/formatCurrency.ts:84 - formatFileSize
+src/lib/utils/formatCurrency.ts:99 - formatDuration
+src/lib/utils/formatCurrency.ts:116 - formatRelativeTime
+src/lib/utils/imageCompression.ts:5 - CompressionOptions (used in module)
+src/lib/utils/rankingDataSeeder.ts:30 - seedRankingData (used in module)
+src/lib/utils/rankingDataSeeder.ts:218 - cleanupRankingData (used in module)
+src/lib/utils/tierProtection.tsx:7 - withSignatureTierProtection
+src/lib/utils/tierProtection.tsx:33 - withVerifiedProtection
+src/lib/utils/withRoleProtection.tsx:202 - withVerifiedUserOnly
+src/lib/utils/withRoleProtection.tsx:207 - withSignatureTierOnly
+src/lib/utils/withRoleProtection.tsx:212 - withAdminOnly
+src/lib/utils/withRoleProtection.tsx:215 - withModeratorOrAdmin
+src/pages/collabs/[packageId].tsx:48 - default
+src/pages/collabs/create.tsx:8 - default
+src/pages/collabs/explore.tsx:27 - default
+src/pages/collabs/index.tsx:18 - default
+tests/e2e/setup/global-setup.ts:64 - default
+tests/e2e/setup/global-teardown.ts:34 - default
+.next/types/app/about/page.ts:54 - PageProps (used in module)
+.next/types/app/about/page.ts:58 - LayoutProps
+.next/types/app/admin/layout.ts:54 - PageProps
+.next/types/app/admin/layout.ts:58 - LayoutProps (used in module)
+.next/types/app/apply/page.ts:54 - PageProps (used in module)
+.next/types/app/apply/page.ts:58 - LayoutProps
+.next/types/app/artists/page.ts:54 - PageProps (used in module)
+.next/types/app/artists/page.ts:58 - LayoutProps
+.next/types/app/auth/page.ts:54 - PageProps (used in module)
+.next/types/app/auth/page.ts:58 - LayoutProps
+.next/types/app/availability/page.ts:54 - PageProps (used in module)
+.next/types/app/availability/page.ts:58 - LayoutProps
+.next/types/app/beats/page.ts:54 - PageProps (used in module)
+.next/types/app/beats/page.ts:58 - LayoutProps
+.next/types/app/booking/page.ts:54 - PageProps (used in module)
+.next/types/app/booking/page.ts:58 - LayoutProps
+.next/types/app/cancel/page.ts:54 - PageProps (used in module)
+.next/types/app/cancel/page.ts:58 - LayoutProps
+.next/types/app/cart/page.ts:54 - PageProps (used in module)
+.next/types/app/cart/page.ts:58 - LayoutProps
+.next/types/app/contact/page.ts:54 - PageProps (used in module)
+.next/types/app/contact/page.ts:58 - LayoutProps
+.next/types/app/create-profile/page.ts:54 - PageProps (used in module)
+.next/types/app/create-profile/page.ts:58 - LayoutProps
+.next/types/app/creator-guidelines/page.ts:54 - PageProps (used in module)
+.next/types/app/creator-guidelines/page.ts:58 - LayoutProps
+.next/types/app/creators/page.ts:54 - PageProps (used in module)
+.next/types/app/creators/page.ts:58 - LayoutProps
+.next/types/app/dashboard/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/page.ts:58 - LayoutProps
+.next/types/app/engineers/page.ts:54 - PageProps (used in module)
+.next/types/app/engineers/page.ts:58 - LayoutProps
+.next/types/app/explore/page.ts:54 - PageProps (used in module)
+.next/types/app/explore/page.ts:58 - LayoutProps
+.next/types/app/leaderboard/page.ts:54 - PageProps (used in module)
+.next/types/app/leaderboard/page.ts:58 - LayoutProps
+.next/types/app/login/page.ts:54 - PageProps (used in module)
+.next/types/app/login/page.ts:58 - LayoutProps
+.next/types/app/map/page.ts:54 - PageProps (used in module)
+.next/types/app/map/page.ts:58 - LayoutProps
+.next/types/app/not-found/page.ts:54 - PageProps (used in module)
+.next/types/app/not-found/page.ts:58 - LayoutProps
+.next/types/app/offline/page.ts:54 - PageProps (used in module)
+.next/types/app/offline/page.ts:58 - LayoutProps
+.next/types/app/onboarding/page.ts:54 - PageProps (used in module)
+.next/types/app/onboarding/page.ts:58 - LayoutProps
+.next/types/app/privacy-policy/page.ts:54 - PageProps (used in module)
+.next/types/app/privacy-policy/page.ts:58 - LayoutProps
+.next/types/app/producers/page.ts:54 - PageProps (used in module)
+.next/types/app/producers/page.ts:58 - LayoutProps
+.next/types/app/saved/page.ts:54 - PageProps (used in module)
+.next/types/app/saved/page.ts:58 - LayoutProps
+.next/types/app/search/page.ts:54 - PageProps (used in module)
+.next/types/app/search/page.ts:58 - LayoutProps
+.next/types/app/services/page.ts:54 - PageProps (used in module)
+.next/types/app/services/page.ts:58 - LayoutProps
+.next/types/app/set-role/page.ts:54 - PageProps (used in module)
+.next/types/app/set-role/page.ts:58 - LayoutProps
+.next/types/app/signup/page.ts:54 - PageProps (used in module)
+.next/types/app/signup/page.ts:58 - LayoutProps
+.next/types/app/start/page.ts:54 - PageProps (used in module)
+.next/types/app/start/page.ts:58 - LayoutProps
+.next/types/app/studios/page.ts:54 - PageProps (used in module)
+.next/types/app/studios/page.ts:58 - LayoutProps
+.next/types/app/success/page.ts:54 - PageProps (used in module)
+.next/types/app/success/page.ts:58 - LayoutProps
+.next/types/app/terms-of-service/page.ts:54 - PageProps (used in module)
+.next/types/app/terms-of-service/page.ts:58 - LayoutProps
+.next/types/app/test-admin-verification/page.ts:54 - PageProps (used in module)
+.next/types/app/test-admin-verification/page.ts:58 - LayoutProps
+.next/types/app/test-booking/page.ts:54 - PageProps (used in module)
+.next/types/app/test-booking/page.ts:58 - LayoutProps
+.next/types/app/test-components/page.ts:54 - PageProps (used in module)
+.next/types/app/test-components/page.ts:58 - LayoutProps
+.next/types/app/test-verification/page.ts:54 - PageProps (used in module)
+.next/types/app/test-verification/page.ts:58 - LayoutProps
+.next/types/app/top-creators/page.ts:54 - PageProps (used in module)
+.next/types/app/top-creators/page.ts:58 - LayoutProps
+.next/types/app/verify-info/page.ts:54 - PageProps (used in module)
+.next/types/app/verify-info/page.ts:58 - LayoutProps
+.next/types/app/videographers/page.ts:54 - PageProps (used in module)
+.next/types/app/videographers/page.ts:58 - LayoutProps
+src/app/(dashboard)/layout/layout.tsx:13 - default
+src/app/dashboard/bookings/DisputeButton.tsx:5 - default
+src/app/dashboard/bookings/page.bak.tsx:10 - default
+src/components/booking/studio/StudioBookingForm.tsx:19 - default
+src/components/profile/IDVerificationForm/IDVerificationForm.tsx:13 - default
+src/lib/firestore/__tests__/createBooking.test.ts:1 - someFunction
+src/lib/firestore/chat/getMessages.ts:12 - listenToMessages
+src/lib/firestore/explore/queryCreators.ts:14 - queryCreators
+src/pages/api/auth/[...nextauth].ts:25 - authOptions (used in module)
+src/pages/api/auth/[...nextauth].ts:79 - GET
+src/pages/api/auth/[...nextauth].ts:79 - POST
+src/pages/api/calendar/push.ts:16 - default
+src/pages/api/calendar/sync.ts:6 - default
+.next/types/app/admin/applications/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/applications/page.ts:58 - LayoutProps
+.next/types/app/admin/dashboard/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/dashboard/page.ts:58 - LayoutProps
+.next/types/app/admin/disputes/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/disputes/page.ts:58 - LayoutProps
+.next/types/app/admin/listings/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/listings/page.ts:58 - LayoutProps
+.next/types/app/admin/logout/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/logout/page.ts:58 - LayoutProps
+.next/types/app/admin/reports/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/reports/page.ts:58 - LayoutProps
+.next/types/app/admin/users/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/users/page.ts:58 - LayoutProps
+.next/types/app/admin/verifications/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/verifications/page.ts:58 - LayoutProps
+.next/types/app/api/agree-contract/route.ts:313 - PageProps
+.next/types/app/api/agree-contract/route.ts:317 - LayoutProps
+.next/types/app/api/artist-services/route.ts:313 - PageProps
+.next/types/app/api/artist-services/route.ts:317 - LayoutProps
+.next/types/app/api/assign-role/route.ts:313 - PageProps
+.next/types/app/api/assign-role/route.ts:317 - LayoutProps
+.next/types/app/api/availability/route.ts:313 - PageProps
+.next/types/app/api/availability/route.ts:317 - LayoutProps
+.next/types/app/api/ban-user/route.ts:313 - PageProps
+.next/types/app/api/ban-user/route.ts:317 - LayoutProps
+.next/types/app/api/book/route.ts:313 - PageProps
+.next/types/app/api/book/route.ts:317 - LayoutProps
+.next/types/app/api/bookings/route.ts:313 - PageProps
+.next/types/app/api/bookings/route.ts:317 - LayoutProps
+.next/types/app/api/checkout/route.ts:313 - PageProps
+.next/types/app/api/checkout/route.ts:317 - LayoutProps
+.next/types/app/api/create-checkout-session/route.ts:313 - PageProps
+.next/types/app/api/create-checkout-session/route.ts:317 - LayoutProps
+.next/types/app/api/engineer-services/route.ts:313 - PageProps
+.next/types/app/api/engineer-services/route.ts:317 - LayoutProps
+.next/types/app/api/healthz/route.ts:313 - PageProps
+.next/types/app/api/healthz/route.ts:317 - LayoutProps
+.next/types/app/api/logout/route.ts:313 - PageProps
+.next/types/app/api/logout/route.ts:317 - LayoutProps
+.next/types/app/api/notifications/route.ts:313 - PageProps
+.next/types/app/api/notifications/route.ts:317 - LayoutProps
+.next/types/app/api/producer-services/route.ts:313 - PageProps
+.next/types/app/api/producer-services/route.ts:317 - LayoutProps
+.next/types/app/api/promote-user/route.ts:313 - PageProps
+.next/types/app/api/promote-user/route.ts:317 - LayoutProps
+.next/types/app/api/referrals/route.ts:313 - PageProps
+.next/types/app/api/referrals/route.ts:317 - LayoutProps
+.next/types/app/api/reviews/route.ts:313 - PageProps
+.next/types/app/api/reviews/route.ts:317 - LayoutProps
+.next/types/app/api/search/route.ts:313 - PageProps
+.next/types/app/api/search/route.ts:317 - LayoutProps
+.next/types/app/api/send-booking-confirmation/route.ts:313 - PageProps
+.next/types/app/api/send-booking-confirmation/route.ts:317 - LayoutProps
+.next/types/app/api/services/route.ts:313 - PageProps
+.next/types/app/api/services/route.ts:317 - LayoutProps
+.next/types/app/api/set-role/route.ts:313 - PageProps
+.next/types/app/api/set-role/route.ts:317 - LayoutProps
+.next/types/app/api/studio-availability/route.ts:313 - PageProps
+.next/types/app/api/studio-availability/route.ts:317 - LayoutProps
+.next/types/app/api/studio-services/route.ts:313 - PageProps
+.next/types/app/api/studio-services/route.ts:317 - LayoutProps
+.next/types/app/api/videographer-services/route.ts:313 - PageProps
+.next/types/app/api/videographer-services/route.ts:317 - LayoutProps
+.next/types/app/apply/[role]/page.ts:54 - PageProps (used in module)
+.next/types/app/apply/[role]/page.ts:58 - LayoutProps
+.next/types/app/book/[uid]/page.ts:54 - PageProps (used in module)
+.next/types/app/book/[uid]/page.ts:58 - LayoutProps
+.next/types/app/booking/[bookingId]/page.ts:54 - PageProps (used in module)
+.next/types/app/booking/[bookingId]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/[role]/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/[role]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/page.ts:58 - LayoutProps
+.next/types/app/dashboard/analytics/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/analytics/page.ts:58 - LayoutProps
+.next/types/app/dashboard/availability/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/availability/page.ts:58 - LayoutProps
+.next/types/app/dashboard/bookings/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/bookings/page.ts:58 - LayoutProps
+.next/types/app/dashboard/business-intelligence/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/business-intelligence/page.ts:58 - LayoutProps
+.next/types/app/dashboard/case-studies/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/case-studies/page.ts:58 - LayoutProps
+.next/types/app/dashboard/challenges/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/challenges/page.ts:58 - LayoutProps
+.next/types/app/dashboard/collabs/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/collabs/page.ts:58 - LayoutProps
+.next/types/app/dashboard/creator-showcase/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/creator-showcase/page.ts:58 - LayoutProps
+.next/types/app/dashboard/creator-tools/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/creator-tools/page.ts:58 - LayoutProps
+.next/types/app/dashboard/earnings/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/earnings/page.ts:58 - LayoutProps
+.next/types/app/dashboard/edit/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/edit/page.ts:58 - LayoutProps
+.next/types/app/dashboard/enhanced-portfolio/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/enhanced-portfolio/page.ts:58 - LayoutProps
+.next/types/app/dashboard/enhanced-profile/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/enhanced-profile/page.ts:58 - LayoutProps
+.next/types/app/dashboard/favorites/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/favorites/page.ts:58 - LayoutProps
+.next/types/app/dashboard/finances/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/finances/page.ts:58 - LayoutProps
+.next/types/app/dashboard/home/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/home/page.ts:58 - LayoutProps
+.next/types/app/dashboard/inbox/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/inbox/page.ts:58 - LayoutProps
+.next/types/app/dashboard/leaderboard/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/leaderboard/page.ts:58 - LayoutProps
+.next/types/app/dashboard/messages/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/messages/page.ts:58 - LayoutProps
+.next/types/app/dashboard/notifications/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/notifications/page.ts:58 - LayoutProps
+.next/types/app/dashboard/orders/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/orders/page.ts:58 - LayoutProps
+.next/types/app/dashboard/portfolio/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/portfolio/page.ts:58 - LayoutProps
+.next/types/app/dashboard/profile/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/profile/page.ts:58 - LayoutProps
+.next/types/app/dashboard/purchases/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/purchases/page.ts:58 - LayoutProps
+.next/types/app/dashboard/reviews/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/reviews/page.ts:58 - LayoutProps
+.next/types/app/dashboard/services/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/services/page.ts:58 - LayoutProps
+.next/types/app/dashboard/settings/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/settings/page.ts:58 - LayoutProps
+.next/types/app/dashboard/testimonials/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/testimonials/page.ts:58 - LayoutProps
+.next/types/app/dashboard/upcoming/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/upcoming/page.ts:58 - LayoutProps
+.next/types/app/dashboard/verification/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/verification/page.ts:58 - LayoutProps
+.next/types/app/explore/[role]/page.ts:54 - PageProps (used in module)
+.next/types/app/explore/[role]/page.ts:58 - LayoutProps
+.next/types/app/legal/escrow/page.ts:54 - PageProps (used in module)
+.next/types/app/legal/escrow/page.ts:58 - LayoutProps
+.next/types/app/profile/[uid]/page.ts:54 - PageProps (used in module)
+.next/types/app/profile/[uid]/page.ts:58 - LayoutProps
+.next/types/app/profile/edit/page.ts:54 - PageProps (used in module)
+.next/types/app/profile/edit/page.ts:58 - LayoutProps
+.next/types/app/services/[id]/page.ts:54 - PageProps (used in module)
+.next/types/app/services/[id]/page.ts:58 - LayoutProps
+.next/types/app/services/add/page.ts:54 - PageProps (used in module)
+.next/types/app/services/add/page.ts:58 - LayoutProps
+.next/types/app/services/manage/page.ts:54 - PageProps (used in module)
+.next/types/app/services/manage/page.ts:58 - LayoutProps
+.next/types/app/test/badge-display/page.ts:54 - PageProps (used in module)
+.next/types/app/test/badge-display/page.ts:58 - LayoutProps
+.next/types/app/test/ranking-components/page.ts:54 - PageProps (used in module)
+.next/types/app/test/ranking-components/page.ts:58 - LayoutProps
+.next/types/app/test/verification-components/page.ts:54 - PageProps (used in module)
+.next/types/app/test/verification-components/page.ts:58 - LayoutProps
+.next/types/app/test/xp-display/page.ts:54 - PageProps (used in module)
+.next/types/app/test/xp-display/page.ts:58 - LayoutProps
+.next/types/app/(dashboard)/dashboard/artist/page.ts:54 - PageProps (used in module)
+.next/types/app/(dashboard)/dashboard/artist/page.ts:58 - LayoutProps
+.next/types/app/(dashboard)/dashboard/engineer/page.ts:54 - PageProps (used in module)
+.next/types/app/(dashboard)/dashboard/engineer/page.ts:58 - LayoutProps
+.next/types/app/(dashboard)/dashboard/producer/page.ts:54 - PageProps (used in module)
+.next/types/app/(dashboard)/dashboard/producer/page.ts:58 - LayoutProps
+.next/types/app/(dashboard)/dashboard/studio/page.ts:54 - PageProps (used in module)
+.next/types/app/(dashboard)/dashboard/studio/page.ts:58 - LayoutProps
+.next/types/app/(dashboard)/dashboard/videographer/page.ts:54 - PageProps (used in module)
+.next/types/app/(dashboard)/dashboard/videographer/page.ts:58 - LayoutProps
+.next/types/app/admin/users/[uid]/page.ts:54 - PageProps (used in module)
+.next/types/app/admin/users/[uid]/page.ts:58 - LayoutProps
+.next/types/app/api/admin/disputes/route.ts:313 - PageProps
+.next/types/app/api/admin/disputes/route.ts:317 - LayoutProps
+.next/types/app/api/admin/earnings/route.ts:313 - PageProps
+.next/types/app/api/admin/earnings/route.ts:317 - LayoutProps
+.next/types/app/api/auth/logout/route.ts:313 - PageProps
+.next/types/app/api/auth/logout/route.ts:317 - LayoutProps
+.next/types/app/api/auth/register/route.ts:313 - PageProps
+.next/types/app/api/auth/register/route.ts:317 - LayoutProps
+.next/types/app/api/auth/session/route.ts:313 - PageProps
+.next/types/app/api/auth/session/route.ts:317 - LayoutProps
+.next/types/app/api/auth/verify/route.ts:313 - PageProps
+.next/types/app/api/auth/verify/route.ts:317 - LayoutProps
+.next/types/app/api/availability/import/route.ts:313 - PageProps
+.next/types/app/api/availability/import/route.ts:317 - LayoutProps
+.next/types/app/api/bookings/release/route.ts:313 - PageProps
+.next/types/app/api/bookings/release/route.ts:317 - LayoutProps
+.next/types/app/api/bookings/request-revision/route.ts:313 - PageProps
+.next/types/app/api/bookings/request-revision/route.ts:317 - LayoutProps
+.next/types/app/api/cache/get/route.ts:313 - PageProps
+.next/types/app/api/cache/get/route.ts:317 - LayoutProps
+.next/types/app/api/cache/set/route.ts:313 - PageProps
+.next/types/app/api/cache/set/route.ts:317 - LayoutProps
+.next/types/app/api/calendar/push/route.ts:313 - PageProps
+.next/types/app/api/calendar/push/route.ts:317 - LayoutProps
+.next/types/app/api/calendar/sync/route.ts:313 - PageProps
+.next/types/app/api/calendar/sync/route.ts:317 - LayoutProps
+.next/types/app/api/cart/checkout/route.ts:313 - PageProps
+.next/types/app/api/cart/checkout/route.ts:317 - LayoutProps
+.next/types/app/api/disputes/open/route.ts:313 - PageProps
+.next/types/app/api/disputes/open/route.ts:317 - LayoutProps
+.next/types/app/api/disputes/resolve/route.ts:313 - PageProps
+.next/types/app/api/disputes/resolve/route.ts:317 - LayoutProps
+.next/types/app/api/email/capture/route.ts:313 - PageProps
+.next/types/app/api/email/capture/route.ts:317 - LayoutProps
+.next/types/app/api/email/welcome/route.ts:313 - PageProps
+.next/types/app/api/email/welcome/route.ts:317 - LayoutProps
+.next/types/app/api/media/upload/route.ts:313 - PageProps
+.next/types/app/api/media/upload/route.ts:317 - LayoutProps
+.next/types/app/api/monitoring/api-performance/route.ts:313 - PageProps
+.next/types/app/api/monitoring/api-performance/route.ts:317 - LayoutProps
+.next/types/app/api/monitoring/errors/route.ts:313 - PageProps
+.next/types/app/api/monitoring/errors/route.ts:317 - LayoutProps
+.next/types/app/api/monitoring/interactions/route.ts:313 - PageProps
+.next/types/app/api/monitoring/interactions/route.ts:317 - LayoutProps
+.next/types/app/api/monitoring/metrics/route.ts:313 - PageProps
+.next/types/app/api/monitoring/metrics/route.ts:317 - LayoutProps
+.next/types/app/api/payments/create-checkout-session/route.ts:313 - PageProps
+.next/types/app/api/payments/create-checkout-session/route.ts:317 - LayoutProps
+.next/types/app/api/profile/availability/route.ts:313 - PageProps
+.next/types/app/api/profile/availability/route.ts:317 - LayoutProps
+.next/types/app/api/stripe/connect/route.ts:313 - PageProps
+.next/types/app/api/stripe/connect/route.ts:317 - LayoutProps
+.next/types/app/api/stripe/escrow/route.ts:313 - PageProps
+.next/types/app/api/stripe/escrow/route.ts:317 - LayoutProps
+.next/types/app/api/stripe/subscribe/route.ts:313 - PageProps
+.next/types/app/api/stripe/subscribe/route.ts:317 - LayoutProps
+.next/types/app/api/stripe/webhook/route.ts:313 - PageProps
+.next/types/app/api/stripe/webhook/route.ts:317 - LayoutProps
+.next/types/app/api/users/[uid]/route.ts:313 - PageProps
+.next/types/app/api/users/[uid]/route.ts:317 - LayoutProps
+.next/types/app/api/verify/[uid]/route.ts:313 - PageProps
+.next/types/app/api/verify/[uid]/route.ts:317 - LayoutProps
+.next/types/app/api/webhooks/stripe/route.ts:313 - PageProps
+.next/types/app/api/webhooks/stripe/route.ts:317 - LayoutProps
+.next/types/app/booking/[bookingId]/chat/page.ts:54 - PageProps (used in module)
+.next/types/app/booking/[bookingId]/chat/page.ts:58 - LayoutProps
+.next/types/app/booking/preview/[bookingId]/page.ts:54 - PageProps (used in module)
+.next/types/app/booking/preview/[bookingId]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/challenge-management/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/challenge-management/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/earnings/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/earnings/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/reports/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/reports/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/signature-invite/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/signature-invite/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/support/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/support/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/verification-management/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/verification-management/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/verification-requests/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/verification-requests/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/verifications/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/verifications/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/xp-management/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/xp-management/page.ts:58 - LayoutProps
+.next/types/app/dashboard/bookings/[bookingId]/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/bookings/[bookingId]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/collabs/[bookingId]/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/collabs/[bookingId]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/enterprise/label-dashboard/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/enterprise/label-dashboard/page.ts:58 - LayoutProps
+.next/types/app/dashboard/messages/[threadId]/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/messages/[threadId]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/purchases/[bookingId]/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/purchases/[bookingId]/page.ts:58 - LayoutProps
+.next/types/app/leaderboards/[city]/[role]/page.ts:54 - PageProps (used in module)
+.next/types/app/leaderboards/[city]/[role]/page.ts:58 - LayoutProps
+.next/types/app/services/edit/[id]/page.ts:54 - PageProps (used in module)
+.next/types/app/services/edit/[id]/page.ts:58 - LayoutProps
+.next/types/app/(dashboard)/dashboard/studio/availability/page.ts:54 - PageProps (used in module)
+.next/types/app/(dashboard)/dashboard/studio/availability/page.ts:58 - LayoutProps
+.next/types/app/dashboard/admin/support/[id]/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/admin/support/[id]/page.ts:58 - LayoutProps
+.next/types/app/dashboard/case-studies/[id]/edit/page.ts:54 - PageProps (used in module)
+.next/types/app/dashboard/case-studies/[id]/edit/page.ts:58 - LayoutProps
+.next/types/app/api/media/portfolio/item/[mediaId]/route.ts:313 - PageProps
+.next/types/app/api/media/portfolio/item/[mediaId]/route.ts:317 - LayoutProps
+.next/types/app/api/media/portfolio/user/[userId]/route.ts:313 - PageProps
+.next/types/app/api/media/portfolio/user/[userId]/route.ts:317 - LayoutProps

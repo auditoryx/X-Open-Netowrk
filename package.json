@@ -21,16 +21,12 @@
     "clean": "rm -rf .next",
     "audit:security": "npm audit --audit-level=moderate",
     "audit:accessibility": "./scripts/accessibility-audit.sh",
-    "check:secrets":
-      "grep -r 'sk_live\\|pk_live\\|AIza' --exclude-dir=node_modules --exclude-dir=.git . || echo 'No secrets found'",
+    "check:secrets": "grep -r 'sk_live\\|pk_live\\|AIza' --exclude-dir=node_modules --exclude-dir=.git . || echo 'No secrets found'",
     "seed:services": "ts-node scripts/seedServiceTemplates.ts",
     "cypress": "echo 'Cypress disabled due to firewall restrictions'",
-    "perf":
-      "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
-    "deploy:prod":
-      "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
-    "deploy:dev":
-      "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
+    "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
+    "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
+    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
@@ -71,8 +67,8 @@
     "micro": "^10.0.1",
     "mongoose": "^8.3.1",
     "next": "^15.3.1",
-    "next-pwa": "^5.6.0",
     "next-auth": "^4.24.11",
+    "next-pwa": "^5.6.0",
     "next-transpile-modules": "^10.0.1",
     "nodemailer": "^6.10.1",
     "path-browserify": "^1.0.1",
@@ -99,13 +95,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
+    "@babel/parser": "^7.28.0",
     "@babel/plugin-syntax-import-attributes": "^7.27.1",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@lhci/cli": "^0.15.0",
     "@playwright/test": "^1.53.2",
-
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -118,10 +114,11 @@
     "@typescript-eslint/parser": "^8.34.1",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^30.0.2",
-
+    "depcheck": "^1.4.7",
     "eslint": "^9.29.0",
     "eslint-config-next": "^15.3.4",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-next": "^0.0.0",
     "eslint-plugin-zod": "^1.4.0",
@@ -129,6 +126,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-transform-stub": "^2.0.0",
+    "madge": "^8.0.0",
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
     "postcss-nested": "^7.0.2",
@@ -136,6 +134,8 @@
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2",
+    "ts-prune": "^0.10.3",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",
     "zod-to-ts": "^1.2.0"
