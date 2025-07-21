@@ -74,7 +74,7 @@ function parseFeatureFlags(): Record<string, boolean> {
  */
 function isRouteAccessible(pathname: string, flags: Record<string, boolean>): boolean {
   for (const [route, requiredFlags] of Object.entries(ROUTE_FEATURE_MAP)) {
-    const routePattern = new RegExp(`^${route.replace(/\*/, '.*')}$`);
+    const routePattern = new RegExp(`^${route.replace(/\*/g, '.*')}$`);
     
     if (routePattern.test(pathname)) {
       // Check if all required flags are enabled
