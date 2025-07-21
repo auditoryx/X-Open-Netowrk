@@ -5,6 +5,8 @@
  * Reads from NEXT_PUBLIC_BETA_FLAGS environment variable
  */
 
+import * as React from 'react';
+
 // Feature flag types
 export type FeatureFlag = 
   // Gamification features
@@ -317,4 +319,4 @@ export function getInaccessibleRoutes(): string[] {
 
 // Export types and configuration
 export { DEFAULT_FLAGS, FEATURE_FLAGS };
-export type { FeatureFlag };
+export type { FeatureFlag as FeatureFlagType };
