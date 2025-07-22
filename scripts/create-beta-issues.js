@@ -403,7 +403,7 @@ function createGitHubIssue(issue) {
   let command = `gh issue create \\
     --repo "${REPO}" \\
     --title "${issue.title}" \\
-    --body "${issue.body.replace(/"/g, '\\"')}" \\
+    --body "${issue.body.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}" \\
     --label "${labelString}" \\
     --milestone "${issue.milestone}"`;
   
