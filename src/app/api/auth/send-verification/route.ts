@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
+import { sendEmailVerificationEmail } from '@/lib/email/sendEmailVerificationEmail';
 import { z } from 'zod';
 
 const sendVerificationSchema = z.object({
@@ -46,15 +47,20 @@ export async function POST(req: NextRequest) {
       handleCodeInApp: false
     });
 
-    logger.info('Email verification link generated', { 
-      email: email.replace(/@.*/, '@***'),
-      uid: userRecord.uid 
-    });
+    // Send verification email
+    try {
+      await sendEmailVerificationEmail(email, verificationLink, userRecord.displayName || 'User');
+      logger.info('Email verification sent successfully', { 
+        email: email.replace(/@.*/, '@***'),
+        uid: userRecord.uid 
+      });
+    } catch (emailError) {
+      logger.error('Failed to send verification email:', emailError);
+      // Don't fail the request if email sending fails
+    }
 
     return NextResponse.json({ 
-      message: 'If an account exists with that email, a verification link has been sent.',
-      // TODO: Remove in production and send via email service
-      verificationLink: verificationLink
+      message: 'If an account exists with that email, a verification link has been sent.'
     });
 
   } catch (error) {

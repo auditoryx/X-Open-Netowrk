@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { admin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
+import { sendPasswordResetEmail } from '@/lib/email/sendPasswordResetEmail';
 import { z } from 'zod';
 
 const forgotPasswordSchema = z.object({
@@ -38,14 +39,17 @@ export async function POST(req: NextRequest) {
       handleCodeInApp: false
     });
 
-    // For now, we'll return the link directly
-    // In production, you'd want to send this via email
-    logger.info('Password reset link generated', { email: email.replace(/@.*/, '@***') });
+    // Send password reset email
+    try {
+      await sendPasswordResetEmail(email, resetLink, userRecord.displayName || 'User');
+      logger.info('Password reset email sent successfully', { email: email.replace(/@.*/, '@***') });
+    } catch (emailError) {
+      logger.error('Failed to send password reset email:', emailError);
+      // Don't fail the request if email sending fails
+    }
 
     return NextResponse.json({ 
-      message: 'If an account with that email exists, you will receive a password reset link.',
-      // TODO: Remove this in production and send via email instead
-      resetLink: resetLink
+      message: 'If an account with that email exists, you will receive a password reset link within a few minutes.'
     });
 
   } catch (error) {
