@@ -1,0 +1,12 @@
+{
+  "title": "Beta Launch",
+  "description": "Beta Launch project board for tracking all beta-gap and post-MVP issues",
+  "columns": [
+    "Backlog",
+    "Ready",
+    "In Progress",
+    "Review",
+    "Testing",
+    "Done"
+  ]
+}
