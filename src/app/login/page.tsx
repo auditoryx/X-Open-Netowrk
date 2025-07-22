@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { app } from '@/lib/firebase'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -63,10 +64,17 @@ export default function LoginPage() {
       {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
       <button
         onClick={handleLogin}
-        className="bg-white text-black px-6 py-2 rounded hover:bg-gray-300"
+        className="bg-white text-black px-6 py-2 rounded hover:bg-gray-300 mb-4"
       >
         Log In
       </button>
+      
+      <Link 
+        href="/forgot-password" 
+        className="text-blue-400 hover:text-blue-300 text-sm underline"
+      >
+        Forgot your password?
+      </Link>
     </div>
   )
 }
