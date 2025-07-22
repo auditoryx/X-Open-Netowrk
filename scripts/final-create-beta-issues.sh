@@ -7,14 +7,19 @@ set -e
 
 echo "🚀 Starting Comprehensive Beta Issue Creation..."
 echo "Repository: auditoryx/X-Open-Netowrk"
-echo "Total issues to create: 181"
+echo "Total issues to create: 178 (3 skipped as completed)"
 echo ""
 echo "📊 Issue Breakdown:"
-echo "   🚨 Critical (priority:critical): 18"
+echo "   🚨 Critical (priority:critical): 15 (3 skipped)"
 echo "   🔶 High Priority (priority:high): 36"
 echo "   🔹 Medium Priority (priority:medium): 53"
 echo "   🔸 Low Priority (priority:low): 31"
 echo "   🔄 Post-MVP: 43"
+echo ""
+echo "⏭️  Skipping completed tasks from copilot/fix-275:"
+echo "   • Password Reset Flow"
+echo "   • Email Verification"
+echo "   • Two-Factor Authentication (2FA)"
 echo ""
 
 # Check prerequisites
@@ -62,90 +67,21 @@ echo "🎯 Creating issues..."
 CREATED_COUNT=0
 FAILED_COUNT=0
 CRITICAL_ASSIGNED=0
+SKIPPED_COUNT=0
 
-
-echo "Creating issue 1/181: [CRITICAL] Implement Complete Password Reset Flow"
-ISSUE_RESULT=$(gh issue create \
-    --repo "auditoryx/X-Open-Netowrk" \
-    --title "[CRITICAL] Implement Complete Password Reset Flow" \
-    --body "Password reset functionality is completely missing, blocking user recovery.\n\n**Tasks:**\n- [ ] Create forgot password UI component\n- [ ] Implement password reset API endpoint\n- [ ] Set up email template system\n- [ ] Add password reset form validation\n- [ ] Test email delivery and reset flow\n\n**Acceptance Criteria:**\n- Users can request password reset via email\n- Password reset emails are delivered within 2 minutes\n- Reset links expire after 24 hours\n- New passwords meet security requirements" \
-    --label "beta-gap,authentication,security,priority:critical" \
-    --milestone "Beta Launch" \
-    --assignee "auditoryx" 2>&1)
-
-if [ $? -eq 0 ]; then
-    echo "✅ Created: [CRITICAL] Implement Complete Password Reset Flow"
-    CREATED_COUNT=$((CREATED_COUNT + 1))
-    CRITICAL_ASSIGNED=$((CRITICAL_ASSIGNED + 1))
-    
-    # Add to project board if PROJECT_ID is available
-    if [ -n "$PROJECT_ID" ]; then
-        ISSUE_URL=$(echo "$ISSUE_RESULT" | grep -o "https://github.com/[^[:space:]]*")
-        if [ -n "$ISSUE_URL" ]; then
-            gh project item-add --project-id $PROJECT_ID --url "$ISSUE_URL" || echo "Could not add to project board"
-        fi
-    fi
-else
-    echo "❌ Failed: [CRITICAL] Implement Complete Password Reset Flow"
-    echo "   Error: $ISSUE_RESULT"
-    FAILED_COUNT=$((FAILED_COUNT + 1))
-fi
+echo "⏭️  Skipping issue 1/181: [CRITICAL] Implement Complete Password Reset Flow (Already completed via copilot/fix-275)"
+SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
 echo ""
 
-echo "Creating issue 2/181: [CRITICAL] Add Email Verification System"
-ISSUE_RESULT=$(gh issue create \
-    --repo "auditoryx/X-Open-Netowrk" \
-    --title "[CRITICAL] Add Email Verification System" \
-    --body "User registration lacks email verification, creating security risk.\n\n**Tasks:**\n- [ ] Add email verification step to signup flow\n- [ ] Create email verification API endpoint\n- [ ] Design verification email template\n- [ ] Add verification status to user profiles\n- [ ] Block unverified users from sensitive actions\n\n**Acceptance Criteria:**\n- New users must verify email before full access\n- Verification emails sent immediately upon registration\n- Clear UI indicates verification status\n- Resend verification option available" \
-    --label "beta-gap,authentication,email,priority:critical" \
-    --milestone "Beta Launch" \
-    --assignee "auditoryx" 2>&1)
-
-if [ $? -eq 0 ]; then
-    echo "✅ Created: [CRITICAL] Add Email Verification System"
-    CREATED_COUNT=$((CREATED_COUNT + 1))
-    CRITICAL_ASSIGNED=$((CRITICAL_ASSIGNED + 1))
-    
-    # Add to project board if PROJECT_ID is available
-    if [ -n "$PROJECT_ID" ]; then
-        ISSUE_URL=$(echo "$ISSUE_RESULT" | grep -o "https://github.com/[^[:space:]]*")
-        if [ -n "$ISSUE_URL" ]; then
-            gh project item-add --project-id $PROJECT_ID --url "$ISSUE_URL" || echo "Could not add to project board"
-        fi
-    fi
-else
-    echo "❌ Failed: [CRITICAL] Add Email Verification System"
-    echo "   Error: $ISSUE_RESULT"
-    FAILED_COUNT=$((FAILED_COUNT + 1))
-fi
+echo "⏭️  Skipping issue 2/181: [CRITICAL] Add Email Verification System (Already completed via copilot/fix-275)"
+SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
 echo ""
 
-echo "Creating issue 3/181: [CRITICAL] Two-Factor Authentication Implementation"
-ISSUE_RESULT=$(gh issue create \
-    --repo "auditoryx/X-Open-Netowrk" \
-    --title "[CRITICAL] Two-Factor Authentication Implementation" \
-    --body "Missing two-factor authentication poses security risk for user accounts.\n\n**Tasks:**\n- [ ] Implement TOTP-based 2FA\n- [ ] Create 2FA setup flow in user settings\n- [ ] Add 2FA verification to login process\n- [ ] Create backup code system\n- [ ] Add 2FA recovery options\n\n**Acceptance Criteria:**\n- Users can enable/disable 2FA\n- 2FA required for sensitive operations\n- Backup codes available for account recovery\n- Clear setup instructions and UI" \
-    --label "beta-gap,authentication,security,priority:critical" \
-    --milestone "Beta Launch" \
-    --assignee "auditoryx" 2>&1)
+echo "⏭️  Skipping issue 3/181: [CRITICAL] Two-Factor Authentication Implementation (Already completed via copilot/fix-275)"
+SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
+echo ""
 
-if [ $? -eq 0 ]; then
-    echo "✅ Created: [CRITICAL] Two-Factor Authentication Implementation"
-    CREATED_COUNT=$((CREATED_COUNT + 1))
-    CRITICAL_ASSIGNED=$((CRITICAL_ASSIGNED + 1))
-    
-    # Add to project board if PROJECT_ID is available
-    if [ -n "$PROJECT_ID" ]; then
-        ISSUE_URL=$(echo "$ISSUE_RESULT" | grep -o "https://github.com/[^[:space:]]*")
-        if [ -n "$ISSUE_URL" ]; then
-            gh project item-add --project-id $PROJECT_ID --url "$ISSUE_URL" || echo "Could not add to project board"
-        fi
-    fi
-else
-    echo "❌ Failed: [CRITICAL] Two-Factor Authentication Implementation"
-    echo "   Error: $ISSUE_RESULT"
-    FAILED_COUNT=$((FAILED_COUNT + 1))
-fi
+echo "🎯 Continuing with remaining issues..."
 echo ""
 
 echo "Creating issue 4/181: [CRITICAL] Robust Payment Error Handling"
@@ -4972,9 +4908,15 @@ echo ""
 echo "🎉 Issue Creation Complete!"
 echo "📊 Final Summary:"
 echo "   ✅ Successfully created: $CREATED_COUNT issues"
+echo "   ⏭️  Skipped (already completed): $SKIPPED_COUNT issues"
 echo "   ❌ Failed to create: $FAILED_COUNT issues"
 echo "   🚨 Critical issues assigned to @auditoryx: $CRITICAL_ASSIGNED"
 echo "   📋 Total processed: 181 issues"
+echo ""
+echo "⏭️  Skipped Issues (Already completed via copilot/fix-275):"
+echo "   1. [CRITICAL] Implement Complete Password Reset Flow"
+echo "   2. [CRITICAL] Add Email Verification System"
+echo "   3. [CRITICAL] Two-Factor Authentication Implementation"
 echo ""
 
 if [ $FAILED_COUNT -eq 0 ]; then
