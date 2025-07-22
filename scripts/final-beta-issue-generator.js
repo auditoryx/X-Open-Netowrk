@@ -890,7 +890,7 @@ CRITICAL_ASSIGNED=0
   allIssues.forEach((issue, index) => {
     const labelString = issue.labels.join(',');
     const assigneeString = issue.assignees && issue.assignees.length > 0 ? issue.assignees.join(',') : '';
-    const body = issue.body.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+    const body = issue.body.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
     
     script += `
 echo "Creating issue ${index + 1}/${allIssues.length}: ${issue.title}"
