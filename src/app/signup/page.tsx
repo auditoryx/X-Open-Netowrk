@@ -17,6 +17,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showVerificationPrompt, setShowVerificationPrompt] = useState(false);
 
   const handleOAuthSignup = async (provider: string) => {
     try {
@@ -30,14 +31,69 @@ export default function SignupPage() {
     e.preventDefault();
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const snap = await getDoc(doc(db, 'users', cred.user.uid));
-      const role = snap.exists() ? (snap.data() as any).role : null;
-      const path = getRedirectAfterSignup(role, redirectPath);
-      router.push(path);
+      
+      // Send verification email automatically
+      try {
+        await fetch('/api/auth/send-verification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+      } catch (verificationError) {
+        console.warn('Failed to send verification email:', verificationError);
+        // Don't block signup if verification email fails
+      }
+      
+      // Show verification prompt instead of redirecting immediately
+      setShowVerificationPrompt(true);
     } catch (err: any) {
       setError(err.message || 'Signup failed');
     }
   };
+
+  // Show verification prompt after successful signup
+  if (showVerificationPrompt) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
+        <div className="max-w-md mx-auto bg-neutral-900 p-8 rounded-lg border border-neutral-700">
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 bg-green-900 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            
+            <h2 className="text-xl font-semibold mb-2">
+              Account Created Successfully!
+            </h2>
+            
+            <p className="text-gray-400 mb-6">
+              We've sent a verification email to <strong>{email}</strong>. 
+              Please check your inbox and click the verification link to activate your account.
+            </p>
+            
+            <div className="space-y-3">
+              <button
+                onClick={() => router.push('/verify-email')}
+                className="block w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
+              >
+                Manage Email Verification
+              </button>
+              
+              <button
+                onClick={() => router.push('/dashboard')}
+                className="w-full text-blue-400 hover:text-blue-300 text-sm"
+              >
+                Continue to Dashboard →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">

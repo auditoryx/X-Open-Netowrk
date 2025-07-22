@@ -1,0 +1,48 @@
+{
+  "title": "Beta Launch",
+  "description": "Beta Launch project board for tracking all beta-gap and post-MVP issues",
+  "columns": [
+    {
+      "name": "Backlog",
+      "description": "All created issues waiting to be triaged"
+    },
+    {
+      "name": "Ready",
+      "description": "Issues with clear requirements ready for development"
+    },
+    {
+      "name": "In Progress",
+      "description": "Issues currently being worked on"
+    },
+    {
+      "name": "Review",
+      "description": "Completed work awaiting code review"
+    },
+    {
+      "name": "Testing",
+      "description": "Features in QA testing phase"
+    },
+    {
+      "name": "Done",
+      "description": "Completed and verified features"
+    }
+  ],
+  "views": [
+    {
+      "name": "By Priority",
+      "groupBy": "priority"
+    },
+    {
+      "name": "By Milestone",
+      "groupBy": "milestone"
+    },
+    {
+      "name": "By Assignee",
+      "groupBy": "assignee"
+    },
+    {
+      "name": "By Label",
+      "groupBy": "labels"
+    }
+  ]
+}
