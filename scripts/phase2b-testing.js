@@ -120,7 +120,7 @@ async function runTestSuite(suite, options = {}) {
       if (file.includes('*')) {
         const dir = path.dirname(testPath);
         const pattern = path.basename(file);
-        const regex = new RegExp(pattern.replace('*', '.*'));
+        const regex = new RegExp(pattern.replace(/\*/g, '.*'));
         
         const files = fs.readdirSync(path.join(process.cwd(), dir));
         testFiles = files.filter(f => regex.test(f) && f.endsWith('.spec.ts'));
