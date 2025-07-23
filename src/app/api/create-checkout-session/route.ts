@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCheckoutSession } from '@/lib/stripe/createCheckoutSession';
+import { handleStripeError } from '@/lib/stripe/errorHandler';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { z } from 'zod';
@@ -47,10 +48,16 @@ async function handler(req: NextRequest & { user: any }) {
   } catch (err: any) {
     logger.error('❌ Stripe session failed:', err?.message || err);
 
+    // Use enhanced error handling
+    const errorResult = handleStripeError(err);
+
     try {
       await addDoc(collection(db, 'stripe_logs'), {
         type: 'checkout_session_error',
-        message: err?.message || 'Unknown error',
+        message: errorResult.originalError || 'Unknown error',
+        userMessage: errorResult.userMessage,
+        category: errorResult.category,
+        retryable: errorResult.retryable,
         bookingId: parsed?.data?.bookingId || 'unknown',
         providerId: parsed?.data?.providerId || 'unknown',
         userId: req.user.uid || 'unknown',
@@ -62,7 +69,13 @@ async function handler(req: NextRequest & { user: any }) {
       logger.error('🔥 Failed to log error to Firestore:', logErr);
     }
 
-    return NextResponse.json({ error: 'Stripe session failed' }, { status: 500 });
+    return NextResponse.json({ 
+      error: errorResult.userMessage,
+      retryable: errorResult.retryable,
+      category: errorResult.category
+    }, { 
+      status: errorResult.retryable ? 422 : 500 
+    });
   }
 }
 
