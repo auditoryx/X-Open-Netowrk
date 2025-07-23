@@ -291,7 +291,7 @@ class SessionManager {
     try {
       const sessionsQuery = query(
         collection(db, 'userSessions'),
-        where('userId', '==', userId)
+        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId)
       );
       
       const snapshot = await getDocs(sessionsQuery);

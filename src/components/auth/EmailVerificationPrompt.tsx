@@ -46,18 +46,18 @@ export default function EmailVerificationPrompt({ defaultEmail = '' }: EmailVeri
       const result = await response.json();
 
       if (!response.ok) {
-        setError('email', { message: result.error || 'Failed to send verification email' });
+        setError(SCHEMA_FIELDS.USER.EMAIL, { message: result.error || 'Failed to send verification email' });
         return;
       }
 
       if (result.alreadyVerified) {
-        setError('email', { message: 'This email address is already verified' });
+        setError(SCHEMA_FIELDS.USER.EMAIL, { message: 'This email address is already verified' });
         return;
       }
 
       setEmailSent(true);
     } catch (error) {
-      setError('email', { message: 'Network error. Please try again.' });
+      setError(SCHEMA_FIELDS.USER.EMAIL, { message: 'Network error. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -117,7 +117,7 @@ export default function EmailVerificationPrompt({ defaultEmail = '' }: EmailVeri
             Email Address
           </label>
           <input
-            {...register('email')}
+            {...register(SCHEMA_FIELDS.USER.EMAIL)}
             type="email"
             id="email"
             className={`input w-full ${errors.email ? 'border-red-500' : ''}`}

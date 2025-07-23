@@ -127,7 +127,7 @@ const caseStudies = [
 export default function SuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const isBookingSuccess = searchParams.get('time');
+  const isBookingSuccess = searchParams.get(SCHEMA_FIELDS.BOOKING_REQUEST.TIME);
 
   if (isBookingSuccess) {
     return (

@@ -36,7 +36,7 @@ export default function OnboardingWizard() {
 
   const steps: OnboardingStep[] = [
     {
-      id: 'role',
+      id: SCHEMA_FIELDS.USER.ROLE,
       title: 'What describes you best?',
       description: 'Select your primary role on the platform',
       component: (

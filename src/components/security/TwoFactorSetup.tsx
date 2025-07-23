@@ -8,7 +8,7 @@ import { app } from '@/lib/firebase';
 export default function TwoFactorSetup() {
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
-  const [setupStep, setSetupStep] = useState<'status' | 'setup' | 'verify' | 'complete'>('status');
+  const [setupStep, setSetupStep] = useState<'status' | 'setup' | 'verify' | 'complete'>(SCHEMA_FIELDS.BOOKING.STATUS);
   const [qrCode, setQrCode] = useState('');
   const [secret, setSecret] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -140,7 +140,7 @@ export default function TwoFactorSetup() {
 
       if (response.ok) {
         setTwoFAStatus({ ...twoFAStatus, enabled: false });
-        setSetupStep('status');
+        setSetupStep(SCHEMA_FIELDS.BOOKING.STATUS);
       } else {
         setError(result.error || 'Failed to disable 2FA');
       }
@@ -275,7 +275,7 @@ export default function TwoFactorSetup() {
               </button>
               
               <button
-                onClick={() => setSetupStep('status')}
+                onClick={() => setSetupStep(SCHEMA_FIELDS.BOOKING.STATUS)}
                 className="w-full btn btn-secondary"
               >
                 Cancel
@@ -310,7 +310,7 @@ export default function TwoFactorSetup() {
             </div>
 
             <button
-              onClick={() => setSetupStep('status')}
+              onClick={() => setSetupStep(SCHEMA_FIELDS.BOOKING.STATUS)}
               className="w-full btn btn-primary"
             >
               Complete Setup
