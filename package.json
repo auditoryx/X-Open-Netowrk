@@ -26,7 +26,13 @@
     "cypress": "echo 'Cypress disabled due to firewall restrictions'",
     "perf": "lhci autorun --upload.target=temporary-public-storage --budgetPath=lighthouse-budget.json",
     "deploy:prod": "firebase use prod && firebase deploy --only firestore:rules,firestore:indexes,storage,functions",
-    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage"
+    "deploy:dev": "firebase use default && firebase deploy --only firestore:rules,firestore:indexes,storage",
+    "analyze": "ANALYZE=true npm run build",
+    "analyze:bundle": "npm run analyze && echo 'Bundle analysis complete. Check .next/analyze/ for reports.'",
+    "perf:audit": "npm run build && npm run perf",
+    "phase2b:performance": "npm run analyze:bundle && npm run perf:audit",
+    "phase2b:test": "npm run test -- --runInBand --ci && npm run test:e2e",
+    "phase2b:validate": "npm run phase2b:performance && npm run phase2b:test"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
@@ -107,6 +113,7 @@
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@lhci/cli": "^0.15.0",
+    "@next/bundle-analyzer": "^15.4.3",
     "@playwright/test": "^1.53.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
