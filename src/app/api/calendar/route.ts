@@ -330,7 +330,7 @@ function generateAvailableSlots(
 
           // Generate time slots with buffer time
           const slotDuration = 60; // 1 hour slots by default
-          let currentSlotTime = new Date(slotStart);
+          const currentSlotTime = new Date(slotStart);
 
           while (currentSlotTime < slotEnd) {
             const nextSlotTime = new Date(currentSlotTime);

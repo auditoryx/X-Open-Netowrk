@@ -1,5 +1,6 @@
 /** @jest-environment jsdom */
 import { track } from '../track';
+import { SCHEMA_FIELDS } from '../../@schema';
 
 test('calls gtag when present', () => {
   const gtag = jest.fn();

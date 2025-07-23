@@ -43,7 +43,7 @@ export default function ModerationPanel() {
     async function fetchDisputes() {
       const q = query(
         collection(db, 'disputes'),
-        where('status', '==', 'open'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'open'),
         orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
       const snap = await getDocs(q);
@@ -53,7 +53,7 @@ export default function ModerationPanel() {
     async function fetchVerificationRequests() {
       const q = query(
         collection(db, 'verificationRequests'),
-        where('status', '==', 'pending'),
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'),
         orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
       );
       const snap = await getDocs(q);

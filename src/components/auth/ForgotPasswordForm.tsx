@@ -40,13 +40,13 @@ export default function ForgotPasswordForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        setError('email', { message: result.error || 'Failed to send reset email' });
+        setError(SCHEMA_FIELDS.USER.EMAIL, { message: result.error || 'Failed to send reset email' });
         return;
       }
 
       setSubmitted(true);
     } catch (error) {
-      setError('email', { message: 'Network error. Please try again.' });
+      setError(SCHEMA_FIELDS.USER.EMAIL, { message: 'Network error. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -107,7 +107,7 @@ export default function ForgotPasswordForm() {
             Email Address
           </label>
           <input
-            {...register('email')}
+            {...register(SCHEMA_FIELDS.USER.EMAIL)}
             type="email"
             id="email"
             className={`input w-full ${errors.email ? 'border-red-500' : ''}`}

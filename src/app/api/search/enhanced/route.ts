@@ -31,7 +31,7 @@ const searchParamsSchema = z.object({
   available: z.enum(['true', 'false']).optional(),
   minPrice: z.string().regex(/^\d+$/).optional(),
   maxPrice: z.string().regex(/^\d+$/).optional(),
-  sort: z.enum(['relevance', 'rating', 'price_low', 'price_high', 'distance', 'newest']).optional(),
+  sort: z.enum(['relevance', SCHEMA_FIELDS.REVIEW.RATING, 'price_low', 'price_high', 'distance', 'newest']).optional(),
   limit: z.string().regex(/^\d+$/).optional(),
   cursor: z.string().optional(),
   lat: z.string().regex(/^-?\d+\.?\d*$/).optional(),
@@ -221,14 +221,14 @@ function parseOptions(params: any): SearchOptions {
  * Perform the actual search
  */
 async function performSearch(searchQuery: string | undefined, filters: SearchFilters, options: SearchOptions): Promise<any[]> {
-  let searchRef = collection(db, 'users');
+  const searchRef = collection(db, 'users');
   
   // Apply filters
   const constraints = [];
   
   // Role filter
   if (filters.role) {
-    constraints.push(where('role', '==', filters.role));
+    constraints.push(where(SCHEMA_FIELDS.USER.ROLE, '==', filters.role));
   }
   
   // Verification filter
@@ -251,13 +251,13 @@ async function performSearch(searchQuery: string | undefined, filters: SearchFil
   
   // Apply sorting
   if (options.sort === 'rating') {
-    constraints.push(orderBy('averageRating', 'desc'));
+    constraints.push(orderBy(SCHEMA_FIELDS.USER.AVERAGE_RATING, 'desc'));
   } else if (options.sort === 'price_low') {
     constraints.push(orderBy('minPrice', 'asc'));
   } else if (options.sort === 'price_high') {
     constraints.push(orderBy('minPrice', 'desc'));
   } else if (options.sort === 'newest') {
-    constraints.push(orderBy('createdAt', 'desc'));
+    constraints.push(orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
   } else {
     // Default sort by relevance (based on rating and activity)
     constraints.push(orderBy('lastActive', 'desc'));
