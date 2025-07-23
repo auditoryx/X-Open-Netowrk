@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,6 +18,13 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       xl: 'h-12 w-12 text-lg',
     };
 
+    const sizeNumbers = {
+      sm: 24,
+      md: 32,
+      lg: 40,
+      xl: 48,
+    };
+
     return (
       <div
         ref={ref}
@@ -28,10 +36,15 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
         {...props}
       >
         {src ? (
-          <img
+          <Image
             src={src}
-            alt={alt}
+            alt={alt || 'Avatar'}
+            width={sizeNumbers[size]}
+            height={sizeNumbers[size]}
             className="aspect-square h-full w-full object-cover"
+            priority={size === 'xl'} // Prioritize larger avatars
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
@@ -48,11 +61,17 @@ Avatar.displayName = "Avatar";
 
 export const AvatarImage = React.forwardRef<
   HTMLImageElement,
-  React.ImgHTMLAttributes<HTMLImageElement>
->(({ className, ...props }, ref) => (
-  <img
-    ref={ref}
+  React.ImgHTMLAttributes<HTMLImageElement> & { width?: number; height?: number; priority?: boolean }
+>(({ className, src, alt, width = 32, height = 32, priority = false, ...props }, ref) => (
+  <Image
+    src={src || ''}
+    alt={alt || 'Avatar image'}
+    width={width}
+    height={height}
     className={cn("aspect-square h-full w-full object-cover", className)}
+    priority={priority}
+    placeholder="blur"
+    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
     {...props}
   />
 ));

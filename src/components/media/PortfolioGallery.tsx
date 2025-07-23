@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 
@@ -130,11 +131,15 @@ export default function PortfolioGallery({
     switch (item.type) {
       case 'image':
         return (
-          <img
+          <Image
             src={item.url}
             alt={item.filename}
+            width={300}
+            height={192}
             className={commonClasses}
             loading="lazy"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
           />
         );
       case 'video':
@@ -316,7 +321,14 @@ export default function PortfolioGallery({
               
               <div className="mb-4">
                 {selectedItem.type === 'image' && (
-                  <img src={selectedItem.url} alt={selectedItem.filename} className="max-w-full h-auto" />
+                  <Image 
+                    src={selectedItem.url} 
+                    alt={selectedItem.filename} 
+                    width={800}
+                    height={600}
+                    className="max-w-full h-auto"
+                    priority
+                  />
                 )}
                 {selectedItem.type === 'video' && (
                   <video src={selectedItem.url} controls className="max-w-full h-auto" />

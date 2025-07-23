@@ -189,7 +189,7 @@ class ErrorMonitor {
 
     // Send to custom analytics
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'exception', {
+      (window as any).gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, 'exception', {
         description: error.message,
         fatal: error.severity === 'critical',
         custom_map: {
