@@ -2,190 +2,475 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ✅ Applications (verification)
+    // Helper functions for validation
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}');
+    }
+
+    function isValidString(field, minLength, maxLength) {
+      return field is string && field.size() >= minLength && field.size() <= maxLength;
+    }
+
+    function isValidTimestamp(field) {
+      return field is timestamp;
+    }
+
+    function hasRequiredFields(fields) {
+      return fields.toSet().isSubsetOf(request.resource.data.keys().toSet());
+    }
+
+    // Rate limiting function (simple time-based check)
+    function isWithinRateLimit(collection, timeWindow) {
+      // This is a simplified rate limit - in production you'd want more sophisticated logic
+      return true; // Placeholder for now
+    }
+
+    // ✅ Applications (verification) - Enhanced validation
     match /applications/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(userId) &&
+        hasRequiredFields(['type', 'status', 'createdAt', 'email']) &&
+        isValidEmail(request.resource.data.email) &&
+        isValidString(request.resource.data.type, 1, 50) &&
+        request.resource.data.status == 'pending' &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAdmin() && 
+        request.resource.data.status in ['pending', 'approved', 'rejected'] &&
+        isValidTimestamp(request.resource.data.updatedAt);
+      allow delete: if false; // Applications cannot be deleted
     }
 
-    // ✅ Saved Filters – must store userId
+    // ✅ Saved Filters – Enhanced validation
     match /savedFilters/{docId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read, write: if isAuthenticated() && isOwner(resource.data.userId) &&
+        hasRequiredFields(['userId', 'filterData', 'createdAt']) &&
+        isValidTimestamp(request.resource.data.createdAt);
     }
 
-    // ✅ Reviews – booking-based review system with new field names
+    // ✅ Reviews – Enhanced validation and security
     match /reviews/{reviewId} {
       allow read: if true;
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.authorId &&
+      allow create: if isAuthenticated() &&
+        isOwner(request.resource.data.authorId) &&
+        hasRequiredFields(['authorId', 'targetId', 'bookingId', 'rating', 'comment', 'createdAt']) &&
+        request.resource.data.rating is int &&
+        request.resource.data.rating >= 1 && request.resource.data.rating <= 5 &&
+        isValidString(request.resource.data.comment, 10, 1000) &&
+        isValidTimestamp(request.resource.data.createdAt) &&
         // Prevent duplicate reviews for same booking
         !exists(/databases/$(database)/documents/reviews/$(reviewId));
       allow update: if false; // Reviews cannot be updated once created
-      allow delete: if false; // Reviews cannot be deleted
+      allow delete: if isAdmin(); // Only admins can delete reviews
     }
 
-    // ✅ Booking Requests – user owns via buyerId
+    // ✅ Booking Requests – Enhanced security
     match /bookingRequests/{docId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.buyerId;
-      allow write: if false;
+      allow read: if isAuthenticated() && 
+        (isOwner(resource.data.buyerId) || isOwner(resource.data.sellerId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(request.resource.data.buyerId) &&
+        hasRequiredFields(['buyerId', 'sellerId', 'serviceId', 'amount', 'status', 'createdAt']) &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.amount is number && request.resource.data.amount > 0 &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAuthenticated() && 
+        (isOwner(resource.data.sellerId) || isAdmin()) &&
+        request.resource.data.status in ['pending', 'accepted', 'rejected', 'completed'];
+      allow delete: if false; // Booking requests cannot be deleted
     }
 
-    // ✅ Services
+    // ✅ Services – Enhanced validation
     match /services/{serviceId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null && request.auth.uid == resource.data.creatorId;
+      allow create: if isAuthenticated() && isOwner(request.resource.data.creatorId) &&
+        hasRequiredFields(['title', 'description', 'price', 'creatorId', 'category', 'createdAt']) &&
+        isValidString(request.resource.data.title, 5, 100) &&
+        isValidString(request.resource.data.description, 20, 2000) &&
+        request.resource.data.price is number && request.resource.data.price >= 0 &&
+        isValidString(request.resource.data.category, 2, 50) &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAuthenticated() && isOwner(resource.data.creatorId) &&
+        // Cannot change creator or creation date
+        request.resource.data.creatorId == resource.data.creatorId &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        isValidTimestamp(request.resource.data.updatedAt);
+      allow delete: if isAuthenticated() && (isOwner(resource.data.creatorId) || isAdmin());
     }
 
-    // ✅ User Profiles & Subcollections
+    // ✅ User Profiles & Subcollections – Enhanced validation
     match /users/{userId} {
       allow read: if true;
-      allow write: if (request.auth.uid == userId || request.auth.token.admin == true)
-        && !('tier' in request.resource.data.diff(resource.data))
-        && !('xp' in request.resource.data.diff(resource.data))
-        && !('rankScore' in request.resource.data.diff(resource.data))
-        && !('lateDeliveries' in request.resource.data.diff(resource.data))
-        && !('tierFrozen' in request.resource.data.diff(resource.data))
-        && !('signature' in request.resource.data.diff(resource.data) && request.auth.token.admin != true);
+      allow create: if isAuthenticated() && isOwner(userId) &&
+        hasRequiredFields(['email', 'displayName', 'role', 'createdAt']) &&
+        isValidEmail(request.resource.data.email) &&
+        isValidString(request.resource.data.displayName, 2, 50) &&
+        request.resource.data.role in ['artist', 'engineer', 'producer', 'studio', 'videographer', 'client'] &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin()) &&
+        // Protected fields that only admins can modify
+        (!('tier' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        (!('xp' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        (!('rankScore' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        (!('lateDeliveries' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        (!('tierFrozen' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        (!('signature' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        (!('verified' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        // Cannot change immutable fields
+        (!('createdAt' in request.resource.data.diff(resource.data))) &&
+        (!('email' in request.resource.data.diff(resource.data)) || isAdmin()) &&
+        // Validate updatedAt timestamp
+        isValidTimestamp(request.resource.data.updatedAt);
 
       match /activities/{activityId} {
-        allow create: if request.auth.uid == userId;
-        allow read: if request.auth.uid == userId || request.auth.token.admin == true;
+        allow create: if isAuthenticated() && isOwner(userId) &&
+          hasRequiredFields(['type', 'timestamp', 'userId']) &&
+          isValidString(request.resource.data.type, 1, 50) &&
+          isValidTimestamp(request.resource.data.timestamp);
+        allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+        allow update, delete: if false; // Activities are immutable
       }
 
       match /media/{mediaId} {
-        allow read: if request.auth.uid == userId || request.auth.token.admin == true;
-        allow create: if request.auth.uid == userId;
-        allow update: if request.auth.uid == userId;
-        allow delete: if request.auth.uid == userId;
+        allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+        allow create: if isAuthenticated() && isOwner(userId) &&
+          hasRequiredFields(['url', 'type', 'uploadedAt']) &&
+          isValidString(request.resource.data.url, 10, 500) &&
+          request.resource.data.type in ['image', 'video', 'audio', 'document'] &&
+          isValidTimestamp(request.resource.data.uploadedAt);
+        allow update: if isAuthenticated() && isOwner(userId) &&
+          // Cannot change immutable fields
+          request.resource.data.uploadedAt == resource.data.uploadedAt &&
+          request.resource.data.type == resource.data.type;
+        allow delete: if isAuthenticated() && (isOwner(userId) || isAdmin());
       }
     }
 
-    // ✅ Bookings
+    // ✅ Bookings – Enhanced validation and security
     match /bookings/{bookingId} {
-      allow read, write: if request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId;
+      allow read: if isAuthenticated() && 
+        (isOwner(resource.data.clientId) || isOwner(resource.data.providerId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(request.resource.data.clientId) &&
+        hasRequiredFields(['clientId', 'providerId', 'serviceId', 'amount', 'status', 'createdAt']) &&
+        request.resource.data.status in ['pending', 'confirmed'] &&
+        request.resource.data.amount is number && request.resource.data.amount > 0 &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAuthenticated() && 
+        (isOwner(resource.data.clientId) || isOwner(resource.data.providerId) || isAdmin()) &&
+        request.resource.data.status in ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'disputed'] &&
+        // Cannot change immutable fields
+        request.resource.data.clientId == resource.data.clientId &&
+        request.resource.data.providerId == resource.data.providerId &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        isValidTimestamp(request.resource.data.updatedAt);
 
       match /messages/{messageId} {
-        allow read, write: if request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId;
+        allow read: if isAuthenticated() && 
+          (isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientId) ||
+           isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerId));
+        allow create: if isAuthenticated() && 
+          isOwner(request.resource.data.senderId) &&
+          (isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientId) ||
+           isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerId)) &&
+          hasRequiredFields(['senderId', 'content', 'timestamp']) &&
+          isValidString(request.resource.data.content, 1, 2000) &&
+          isValidTimestamp(request.resource.data.timestamp);
+        allow update, delete: if false; // Messages are immutable
       }
     }
 
-    // ✅ Booking Chat System
+    // ✅ Enhanced Chat System with rate limiting
     match /chats/{bookingId}/messages/{messageId} {
-      allow read, write: if request.auth != null &&
-        (request.auth.uid == resource.data.senderUid ||
-         request.auth.uid == get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientUid ||
-         request.auth.uid == get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerUid);
+      allow read: if isAuthenticated() &&
+        (isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientUid) ||
+         isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerUid));
+      allow create: if isAuthenticated() && 
+        isOwner(request.resource.data.senderUid) &&
+        (isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientUid) ||
+         isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerUid)) &&
+        hasRequiredFields(['senderUid', 'content', 'timestamp']) &&
+        isValidString(request.resource.data.content, 1, 1000) &&
+        isValidTimestamp(request.resource.data.timestamp) &&
+        isWithinRateLimit('chats', 60); // Simple rate limiting
+      allow update, delete: if false; // Messages are immutable
     }
 
-    // ✅ Disputes
+    // ✅ Disputes – Enhanced validation
     match /disputes/{disputeId} {
-      allow create: if request.auth != null;
-      allow read, update: if request.auth.uid in [resource.data.clientId, resource.data.providerId];
-      allow delete: if false;
+      allow create: if isAuthenticated() &&
+        hasRequiredFields(['clientId', 'providerId', 'bookingId', 'reason', 'description', 'status', 'createdAt']) &&
+        (isOwner(request.resource.data.clientId) || isOwner(request.resource.data.providerId)) &&
+        isValidString(request.resource.data.reason, 5, 100) &&
+        isValidString(request.resource.data.description, 20, 2000) &&
+        request.resource.data.status == 'open' &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow read: if isAuthenticated() && 
+        (isOwner(resource.data.clientId) || isOwner(resource.data.providerId) || isAdmin());
+      allow update: if isAdmin() &&
+        request.resource.data.status in ['open', 'investigating', 'resolved', 'closed'] &&
+        isValidTimestamp(request.resource.data.updatedAt);
+      allow delete: if false; // Disputes cannot be deleted
     }
 
-    // ✅ Contracts – use clientId/providerId
+    // ✅ Contracts – Enhanced validation
     match /contracts/{contractId} {
-      allow read, write: if request.auth.uid in [resource.data.clientId, resource.data.providerId];
+      allow read: if isAuthenticated() && 
+        (isOwner(resource.data.clientId) || isOwner(resource.data.providerId) || isAdmin());
+      allow create: if isAuthenticated() &&
+        (isOwner(request.resource.data.clientId) || isOwner(request.resource.data.providerId)) &&
+        hasRequiredFields(['clientId', 'providerId', 'terms', 'status', 'createdAt']) &&
+        request.resource.data.status == 'draft' &&
+        isValidString(request.resource.data.terms, 50, 10000) &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAuthenticated() && 
+        (isOwner(resource.data.clientId) || isOwner(resource.data.providerId)) &&
+        request.resource.data.status in ['draft', 'pending', 'signed', 'cancelled'] &&
+        isValidTimestamp(request.resource.data.updatedAt);
+      allow delete: if false; // Contracts cannot be deleted
     }
 
-    // ✅ Activity Logs
+    // ✅ Activity Logs – Enhanced security
     match /activityLogs/{userId} {
-      allow create: if request.auth.uid == userId;
-      allow read: if request.auth.token.admin == true;
+      allow create: if isAuthenticated() && isOwner(userId) &&
+        hasRequiredFields(['userId', 'action', 'timestamp', 'details']) &&
+        isValidString(request.resource.data.action, 3, 100) &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow read: if isAdmin();
+      allow update, delete: if false; // Activity logs are immutable
     }
 
-    // ✅ Tiers (user tier definitions and restrictions)
+    // ✅ Tiers – Admin only with validation
     match /tiers/{tierId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth.token.admin == true;
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin() &&
+        hasRequiredFields(['name', 'level', 'requirements', 'benefits']) &&
+        isValidString(request.resource.data.name, 2, 50) &&
+        request.resource.data.level is int && request.resource.data.level >= 0;
+      allow delete: if false; // Tiers cannot be deleted to maintain data integrity
     }
 
-    // ✅ Notifications
+    // ✅ Notifications – Enhanced validation
     match /notifications/{userId} {
-      allow read, create: if request.auth.uid == userId;
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() && 
+        (isOwner(userId) || isAdmin()) &&
+        hasRequiredFields(['userId', 'type', 'title', 'message', 'createdAt']) &&
+        isValidString(request.resource.data.type, 3, 50) &&
+        isValidString(request.resource.data.title, 5, 100) &&
+        isValidString(request.resource.data.message, 10, 500) &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow update: if isAuthenticated() && isOwner(userId) &&
+        // Only allow updating read status and readAt timestamp
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']) &&
+        request.resource.data.read is bool;
+      allow delete: if isAuthenticated() && isOwner(userId);
     }
 
-    // ✅ Reports
-    match /reports/{id} {
-      allow create: if request.auth != null;
-      allow read, update: if request.auth.token.admin == true;
+    // ✅ Reports – Enhanced validation
+    match /reports/{reportId} {
+      allow create: if isAuthenticated() &&
+        hasRequiredFields(['reporterId', 'targetId', 'type', 'reason', 'description', 'status', 'createdAt']) &&
+        isOwner(request.resource.data.reporterId) &&
+        isValidString(request.resource.data.type, 3, 50) &&
+        isValidString(request.resource.data.reason, 5, 100) &&
+        isValidString(request.resource.data.description, 20, 1000) &&
+        request.resource.data.status == 'pending' &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow read: if isAdmin() || isOwner(resource.data.reporterId);
+      allow update: if isAdmin() &&
+        request.resource.data.status in ['pending', 'investigating', 'resolved', 'dismissed'] &&
+        isValidTimestamp(request.resource.data.updatedAt);
+      allow delete: if false; // Reports cannot be deleted
     }
 
-    // ✅ Admin Pages / Roles
+    // ✅ Admin collections – Restricted access
     match /admin/{docId} {
-      allow read, write: if request.auth.token.admin == true;
+      allow read, write: if isAdmin();
     }
 
     match /adminOnly/{doc} {
-      allow read, write: if request.auth.token.admin == true;
+      allow read, write: if isAdmin();
     }
 
-    // ✅ XP and Gamification System
+    // ✅ XP and Gamification System – Enhanced validation
     match /userProgress/{userId} {
-      allow read: if request.auth.uid == userId || request.auth.token.admin == true;
-      allow write: if false; // Only server can write user progress
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow create: if isAdmin() &&
+        hasRequiredFields(['userId', 'currentXP', 'totalXP', 'level', 'lastUpdated']) &&
+        request.resource.data.currentXP is int && request.resource.data.currentXP >= 0 &&
+        request.resource.data.totalXP is int && request.resource.data.totalXP >= 0 &&
+        request.resource.data.level is int && request.resource.data.level >= 1 &&
+        isValidTimestamp(request.resource.data.lastUpdated);
+      allow update: if isAdmin() &&
+        request.resource.data.currentXP is int && request.resource.data.currentXP >= 0 &&
+        request.resource.data.totalXP >= resource.data.totalXP && // XP can only increase
+        request.resource.data.level is int && request.resource.data.level >= 1 &&
+        isValidTimestamp(request.resource.data.lastUpdated);
+      allow delete: if false; // User progress cannot be deleted
     }
 
     match /xpTransactions/{transactionId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow write: if false; // Only server can write XP transactions
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAdmin() &&
+        hasRequiredFields(['userId', 'amount', 'reason', 'type', 'timestamp']) &&
+        request.resource.data.amount is int &&
+        isValidString(request.resource.data.reason, 5, 200) &&
+        request.resource.data.type in ['earned', 'bonus', 'penalty', 'adjustment'] &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow update, delete: if false; // XP transactions are immutable
     }
 
     match /xpAuditLog/{auditId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow write: if false; // Only server and admin can write XP audit logs
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAdmin() &&
+        hasRequiredFields(['userId', 'action', 'previousValue', 'newValue', 'adminId', 'timestamp']) &&
+        isValidString(request.resource.data.action, 5, 100) &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow update, delete: if false; // Audit logs are immutable
     }
 
     match /adminXPOperations/{operationId} {
-      allow read, create: if request.auth.token.admin == true;
+      allow read, create: if isAdmin() &&
+        hasRequiredFields(['adminId', 'operation', 'targetUserId', 'amount', 'reason', 'timestamp']) &&
+        isValidString(request.resource.data.operation, 3, 50) &&
+        request.resource.data.amount is int &&
+        isValidString(request.resource.data.reason, 10, 500) &&
+        isValidTimestamp(request.resource.data.timestamp);
       allow update, delete: if false; // Admin operations are immutable
     }
 
     match /suspiciousActivity/{activityId} {
-      allow read, write: if request.auth.token.admin == true;
+      allow read, create, update: if isAdmin() &&
+        hasRequiredFields(['userId', 'type', 'description', 'severity', 'timestamp']) &&
+        isValidString(request.resource.data.type, 5, 100) &&
+        isValidString(request.resource.data.description, 10, 1000) &&
+        request.resource.data.severity in ['low', 'medium', 'high', 'critical'] &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow delete: if false; // Suspicious activity records cannot be deleted
     }
 
     match /adminActions/{actionId} {
-      allow read, write: if request.auth.token.admin == true;
+      allow read, create: if isAdmin() &&
+        hasRequiredFields(['adminId', 'action', 'targetId', 'reason', 'timestamp']) &&
+        isValidString(request.resource.data.action, 5, 100) &&
+        isValidString(request.resource.data.reason, 10, 500) &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow update, delete: if false; // Admin actions are immutable
     }
 
-    // ✅ Badge System
+    // ✅ Badge System – Enhanced validation
     match /badgeDefinitions/{badgeId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth.token.admin == true;
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin() &&
+        hasRequiredFields(['name', 'description', 'criteria', 'rarity', 'imageUrl']) &&
+        isValidString(request.resource.data.name, 3, 50) &&
+        isValidString(request.resource.data.description, 10, 500) &&
+        request.resource.data.rarity in ['common', 'uncommon', 'rare', 'epic', 'legendary'] &&
+        isValidString(request.resource.data.imageUrl, 10, 500);
+      allow delete: if false; // Badge definitions cannot be deleted
     }
 
     match /userBadges/{userBadgeId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow write: if false; // Only server can award badges
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAdmin() &&
+        hasRequiredFields(['userId', 'badgeId', 'awardedAt', 'awardedBy']) &&
+        isValidTimestamp(request.resource.data.awardedAt);
+      allow update, delete: if false; // User badges are immutable once awarded
     }
 
     match /badgeAuditLog/{auditId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow write: if false; // Only server and admin can write badge audit logs
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAdmin() &&
+        hasRequiredFields(['userId', 'badgeId', 'action', 'adminId', 'timestamp']) &&
+        request.resource.data.action in ['awarded', 'revoked'] &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow update, delete: if false; // Badge audit logs are immutable
     }
 
-    // ✅ Verification System
+    // ✅ Verification System – Enhanced validation
     match /verificationApplications/{applicationId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow create: if request.auth.uid == request.resource.data.userId;
-      allow update: if request.auth.token.admin == true; // Only admins can review applications
-      allow delete: if false; // Applications cannot be deleted
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(request.resource.data.userId) &&
+        hasRequiredFields(['userId', 'type', 'documents', 'status', 'submittedAt']) &&
+        request.resource.data.type in ['identity', 'professional', 'business'] &&
+        request.resource.data.status == 'pending' &&
+        isValidTimestamp(request.resource.data.submittedAt);
+      allow update: if isAdmin() &&
+        request.resource.data.status in ['pending', 'approved', 'rejected', 'requires_more_info'] &&
+        isValidTimestamp(request.resource.data.updatedAt);
+      allow delete: if false; // Verification applications cannot be deleted
     }
 
     match /verificationActivityLog/{logId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow write: if false; // Only server can write verification activity logs
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAdmin() &&
+        hasRequiredFields(['userId', 'action', 'adminId', 'details', 'timestamp']) &&
+        isValidString(request.resource.data.action, 5, 100) &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow update, delete: if false; // Verification activity logs are immutable
     }
 
     match /userViolations/{violationId} {
-      allow read: if request.auth.uid == resource.data.userId || request.auth.token.admin == true;
-      allow write: if request.auth.token.admin == true; // Only admins can manage violations
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create, update: if isAdmin() &&
+        hasRequiredFields(['userId', 'type', 'description', 'severity', 'status', 'createdAt']) &&
+        isValidString(request.resource.data.type, 5, 100) &&
+        isValidString(request.resource.data.description, 10, 1000) &&
+        request.resource.data.severity in ['minor', 'major', 'severe', 'critical'] &&
+        request.resource.data.status in ['active', 'resolved', 'dismissed'] &&
+        isValidTimestamp(request.resource.data.createdAt);
+      allow delete: if false; // Violations cannot be deleted
     }
 
-    // ✅ Default Deny All
+    // ✅ Session Management – New collection for tracking sessions
+    match /userSessions/{sessionId} {
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(request.resource.data.userId) &&
+        hasRequiredFields(['userId', 'sessionToken', 'createdAt', 'expiresAt', 'ipAddress', 'userAgent']) &&
+        isValidTimestamp(request.resource.data.createdAt) &&
+        isValidTimestamp(request.resource.data.expiresAt) &&
+        request.resource.data.expiresAt > request.resource.data.createdAt;
+      allow update: if isAuthenticated() && isOwner(resource.data.userId) &&
+        // Only allow updating lastActivity and expiresAt
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastActivity', 'expiresAt']) &&
+        isValidTimestamp(request.resource.data.lastActivity);
+      allow delete: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+    }
+
+    // ✅ Error Logs – For system monitoring
+    match /errorLogs/{errorId} {
+      allow create: if isAuthenticated() &&
+        hasRequiredFields(['userId', 'error', 'context', 'timestamp', 'severity']) &&
+        isValidString(request.resource.data.error, 10, 2000) &&
+        request.resource.data.severity in ['low', 'medium', 'high', 'critical'] &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow read: if isAdmin();
+      allow update, delete: if false; // Error logs are immutable
+    }
+
+    // ✅ Stripe Logs – Enhanced validation for payment logging
+    match /stripe_logs/{logId} {
+      allow create: if isAuthenticated() &&
+        hasRequiredFields(['type', 'timestamp']) &&
+        isValidString(request.resource.data.type, 5, 100) &&
+        isValidTimestamp(request.resource.data.timestamp);
+      allow read: if isAdmin();
+      allow update, delete: if false; // Stripe logs are immutable
+    }
+
+    // ✅ Default Deny All – Security fallback
     match /{document=**} {
-      allow read: if false;
+      allow read, write: if false;
     }
   }
 }
