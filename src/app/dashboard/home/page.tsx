@@ -38,7 +38,7 @@ export default function DashboardHomePage() {
         return;
       }
       const db = getFirestore(app);
-      const q = query(collection(db, 'bookingRequests'), where(SCHEMA_FIELDS.BOOKING_REQUEST.BUYER_ID, '==', current.uid));
+      const q = query(collection(db, 'bookingRequests'), where('clientId', '==', current.uid));
       const snap = await getDocs(q);
       const upcoming = snap.docs
         .map(d => ({ id: d.id, ...d.data() }))
