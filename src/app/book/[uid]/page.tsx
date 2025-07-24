@@ -17,6 +17,7 @@ import {
 import { app } from '@/lib/firebase';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { SCHEMA_FIELDS } from '@/lib/schema-fields';
 
 const WeeklyCalendarSelector = dynamic(
   () => import('@/components/booking/WeeklyCalendarSelector').then(mod => mod.WeeklyCalendarSelector),
@@ -135,7 +136,7 @@ export default function BookServicePage({ params }: { params: Promise<{ uid: str
         message: `You received a new booking request from ${user?.displayName || 'a user'}`,
         link: '/dashboard/bookings'
       })
-    })
+    });
 
     setLoading(false);
     router.push(`/success?time=${selectedTime}&location=${encodeURIComponent(providerLocation)}&fee=${platformFee}`);

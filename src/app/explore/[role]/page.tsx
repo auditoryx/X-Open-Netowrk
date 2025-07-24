@@ -9,6 +9,7 @@ import { getAverageRating } from '@/lib/reviews/getAverageRating';
 import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useFeatureFlag } from '@/lib/hooks/useFeatureFlag';
+import { SCHEMA_FIELDS } from '@/lib/schema-fields';
 
 export default function ExploreRolePage() {
   const { role: rawRole } = useParams();

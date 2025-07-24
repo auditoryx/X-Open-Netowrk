@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import withAdminProtection from '@/middleware/withAdminProtection';
 import toast from 'react-hot-toast';
+import { SCHEMA_FIELDS } from '@/lib/schema-fields';
 
 function ApplicationsPage() {
   const [apps, setApps] = useState<any[]>([]);
