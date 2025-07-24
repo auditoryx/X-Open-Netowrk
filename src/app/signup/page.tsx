@@ -83,15 +83,12 @@ export default function SignupPage() {
                 onClick={() => router.push('/verify-email')}
                 className="block w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
               >
-                Manage Email Verification
+                Verify Email to Continue
               </button>
               
-              <button
-                onClick={() => router.push('/select-intent')}
-                className="w-full text-blue-400 hover:text-blue-300 text-sm"
-              >
-                Continue →
-              </button>
+              <p className="text-xs text-gray-500 text-center">
+                You must verify your email before proceeding
+              </p>
             </div>
           </div>
         </div>
@@ -103,9 +100,6 @@ export default function SignupPage() {
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-bold mb-4">Create an Account</h1>
       <p className="text-xs text-gray-400 mb-2">No spam — we respect your data.</p>
-      <button onClick={() => signIn('google')} className="btn btn-primary w-full mb-4">
-        Sign up with Google
-      </button>
       <div className="flex flex-col gap-2 w-full max-w-sm mb-6">
         <button
           onClick={() => handleOAuthSignup('google')}
