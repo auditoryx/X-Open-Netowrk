@@ -17,6 +17,7 @@
     "phase2:qa": "node scripts/role-system-qa.js",
     "phase2:qa:e2e": "playwright test tests/role-system-integration.spec.ts",
     "phase2:qa:full": "npm run phase2:qa && npm run phase2:qa:e2e",
+    "phase2:qa:validate": "node scripts/validate-qa-infrastructure.js",
     "phase2b:test": "node scripts/phase2b-testing.js",
     "phase2b:test:critical": "node scripts/phase2b-testing.js --suite=\"Critical User Journeys\"",
     "phase2b:test:payment": "node scripts/phase2b-testing.js --suite=\"Payment Processing\"",
