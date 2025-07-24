@@ -11,6 +11,7 @@
  */
 
 const { initializeApp } = require('firebase/app');
+const crypto = require('crypto');
 const { 
   getFirestore, 
   collection, 
@@ -73,7 +74,8 @@ function info(message) {
 
 // Generate test user data
 function generateTestUser(role) {
-  const userId = `test_${role}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const randomString = crypto.randomBytes(6).toString('base64url'); // Generate a secure random string
+  const userId = `test_${role}_${Date.now()}_${randomString}`;
   return {
     uid: userId,
     email: `${userId}@test.com`,
