@@ -38,7 +38,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // Phase 2B: Webpack optimizations for bundle size
+  // Phase 2B: Enhanced Webpack optimizations for bundle size
   webpack: (config, { isServer, dev }) => {
     // Client-side polyfills
     if (!isServer) {
@@ -60,40 +60,152 @@ const nextConfig = {
       };
     }
 
-    // Phase 2B: Bundle optimization
+    // Phase 2B: Aggressive bundle optimization
     if (!dev && !isServer) {
       // Tree shaking optimization
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        innerGraph: true,
+        mangleExports: true,
       };
       
-      // Split chunks for better caching
+      // Enhanced chunk splitting for <500KB target
       config.optimization.splitChunks = {
-        ...config.optimization.splitChunks,
         chunks: 'all',
+        minSize: 20000,
+        maxSize: 400000, // 400KB max per chunk
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        enforceSizeThreshold: 50000,
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
+          // Framework chunk (React, Next.js core)
+          framework: {
+            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
+            name: 'framework',
             chunks: 'all',
-            priority: 10,
+            priority: 40,
+            enforce: true,
           },
+          
+          // Firebase and related
           firebase: {
             test: /[\\/]node_modules[\\/](@firebase|firebase)[\\/]/,
             name: 'firebase',
             chunks: 'all',
-            priority: 20,
+            priority: 35,
+            maxSize: 300000,
           },
+          
+          // UI libraries (icons, components)
           ui: {
-            test: /[\\/]node_modules[\\/](lucide-react|@radix-ui)[\\/]/,
+            test: /[\\/]node_modules[\\/](lucide-react|@heroicons|@radix-ui|framer-motion)[\\/]/,
             name: 'ui',
             chunks: 'all',
+            priority: 30,
+            maxSize: 200000,
+          },
+          
+          // Charts and visualization (heavy libraries)
+          charts: {
+            test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|recharts)[\\/]/,
+            name: 'charts',
+            chunks: 'async',
+            priority: 25,
+            maxSize: 250000,
+          },
+          
+          // Maps (Mapbox, Leaflet)
+          maps: {
+            test: /[\\/]node_modules[\\/](mapbox-gl|leaflet|react-leaflet)[\\/]/,
+            name: 'maps',
+            chunks: 'async',
+            priority: 25,
+            maxSize: 300000,
+          },
+          
+          // Payment processing
+          payments: {
+            test: /[\\/]node_modules[\\/](@stripe)[\\/]/,
+            name: 'payments',
+            chunks: 'all',
+            priority: 28,
+            maxSize: 150000,
+          },
+          
+          // Validation and forms
+          forms: {
+            test: /[\\/]node_modules[\\/](zod|react-hook-form|@hookform)[\\/]/,
+            name: 'forms',
+            chunks: 'all',
+            priority: 20,
+            maxSize: 100000,
+          },
+          
+          // Utilities and date handling
+          utils: {
+            test: /[\\/]node_modules[\\/](date-fns|luxon|uuid|lodash)[\\/]/,
+            name: 'utils',
+            chunks: 'all',
             priority: 15,
+            maxSize: 100000,
+          },
+          
+          // Google APIs (heavy)
+          google: {
+            test: /[\\/]node_modules[\\/](googleapis)[\\/]/,
+            name: 'google',
+            chunks: 'async',
+            priority: 20,
+            maxSize: 200000,
+          },
+          
+          // Default vendor chunk for remaining packages
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            chunks: 'all',
+            priority: 10,
+            maxSize: 200000,
+          },
+          
+          // Common code chunks
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 5,
+            maxSize: 150000,
           },
         },
       };
+      
+      // Further optimizations for bundle size
+      config.optimization.moduleIds = 'deterministic';
+      config.optimization.chunkIds = 'deterministic';
+      
+      // Exclude heavy dependencies from client bundle if possible
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push({
+          'googleapis': 'googleapis',
+          'mapbox-gl': 'mapbox-gl',
+        });
+      }
+    }
+
+    // Add webpack plugins for analysis
+    if (process.env.ANALYZE === 'true') {
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          reportFilename: '../analyze/client.html',
+          openAnalyzer: false,
+        })
+      );
     }
 
     return config;

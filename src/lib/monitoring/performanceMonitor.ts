@@ -157,7 +157,7 @@ class PerformanceMonitor {
 
     // Send to Google Analytics if available
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'performance_metric', {
+      (window as any).gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, 'performance_metric', {
         metric_name: name,
         metric_value: Math.round(value),
         ...additionalData
