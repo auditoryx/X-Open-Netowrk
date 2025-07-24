@@ -18,6 +18,11 @@ export interface VerificationRequest {
   updatedAt?: Timestamp;
   reviewedBy?: string;
   reviewNotes?: string;
+  // New fields from enhanced flow
+  externalLinks?: string[];
+  verificationReason?: string;
+  submittedOn?: Timestamp;
+  uid?: string;
 }
 
 export interface VerificationFormData {

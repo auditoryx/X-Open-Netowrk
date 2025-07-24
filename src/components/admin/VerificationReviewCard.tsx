@@ -113,37 +113,78 @@ const VerificationReviewCard: React.FC<VerificationReviewCardProps> = ({
         {/* Application Details */}
         <div className="space-y-4">
           {/* Statement */}
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Statement</span>
+          {verification.statement && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <MessageSquare className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Statement</span>
+              </div>
+              <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded border">
+                {verification.statement}
+              </p>
             </div>
-            <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded border">
-              {verification.statement}
-            </p>
-          </div>
+          )}
 
-          {/* Supporting Links */}
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <ExternalLink className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Supporting Links</span>
+          {/* Verification Reason (New Field) */}
+          {verification.verificationReason && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <MessageSquare className="h-4 w-4 text-blue-500" />
+                <span className="text-sm font-medium text-gray-700">Verification Reason</span>
+              </div>
+              <p className="text-sm text-gray-600 bg-blue-50 p-3 rounded border border-blue-200">
+                {verification.verificationReason}
+              </p>
             </div>
-            <div className="space-y-2">
-              {verification.links.map((link, index) => (
-                <a
-                  key={index}
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
-                >
-                  <ExternalLink className="h-3 w-3" />
-                  {link}
-                </a>
-              ))}
+          )}
+
+          {/* External Links (New Field) */}
+          {verification.externalLinks && verification.externalLinks.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <ExternalLink className="h-4 w-4 text-green-500" />
+                <span className="text-sm font-medium text-gray-700">External Links</span>
+              </div>
+              <div className="space-y-2">
+                {verification.externalLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-green-600 hover:text-green-800 hover:underline bg-green-50 p-2 rounded border border-green-200"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    {link}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Supporting Links (Legacy) */}
+          {verification.links && verification.links.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <ExternalLink className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Supporting Links</span>
+              </div>
+              <div className="space-y-2">
+                {verification.links.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    {link}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Metadata */}
           <div className="pt-4 border-t border-gray-200">
@@ -151,7 +192,10 @@ const VerificationReviewCard: React.FC<VerificationReviewCardProps> = ({
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  Applied {formatDistanceToNow(verification.createdAt.toDate(), { addSuffix: true })}
+                  {verification.submittedOn 
+                    ? `Submitted ${formatDistanceToNow(verification.submittedOn.toDate(), { addSuffix: true })}`
+                    : `Applied ${formatDistanceToNow(verification.createdAt.toDate(), { addSuffix: true })}`
+                  }
                 </span>
                 <span>User ID: {verification.userId}</span>
               </div>

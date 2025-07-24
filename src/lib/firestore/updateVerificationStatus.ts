@@ -7,10 +7,13 @@ import {
   query,
   where,
   getDocs,
-  orderBy
+  orderBy,
+  increment
 } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { VerificationRequest } from './submitVerificationRequest';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
+import { awardVerificationXP } from './setVerification';
 
 /**
  * Update verification request status
@@ -61,8 +64,8 @@ export async function getAllPendingVerifications(): Promise<VerificationRequest[
     const verificationsRef = collection(db, 'verifications');
     const q = query(
       verificationsRef,
-      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'),
-      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
+      where('status', '==', 'pending'),
+      orderBy('createdAt', 'desc')
     );
 
     const snapshot = await getDocs(q);
@@ -93,13 +96,13 @@ export async function getAllVerifications(
     if (status) {
       q = query(
         verificationsRef,
-        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', status),
-        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
+        where('status', '==', status),
+        orderBy('createdAt', 'desc')
       );
     } else {
       q = query(
         verificationsRef,
-        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
+        orderBy('createdAt', 'desc')
       );
     }
 
@@ -145,7 +148,7 @@ export async function updateUserVerificationStatus(
 }
 
 /**
- * Approve verification request (updates both verification and user profile)
+ * Approve verification request (updates both verification and user profile with XP bonus)
  * @param userId - User ID
  * @param reviewedBy - Admin who approved the request
  * @param reviewNotes - Optional review notes
@@ -157,9 +160,11 @@ export async function approveVerification(
   reviewNotes?: string
 ): Promise<void> {
   try {
-    // Update verification status and user profile in sequence
+    // Update verification status
     await updateVerificationStatus(userId, 'approved', reviewedBy, reviewNotes);
-    await updateUserVerificationStatus(userId, true);
+    
+    // Award XP bonus and set verified status
+    await awardVerificationXP(userId, 500);
   } catch (error) {
     console.error('Error approving verification:', error);
     throw new Error('Failed to approve verification');

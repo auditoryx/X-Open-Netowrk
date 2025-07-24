@@ -23,6 +23,7 @@ const WeeklyCalendarSelector = dynamic(
 );
 import { addDays, startOfWeek, format } from 'date-fns';
 import { onboardingByRole } from '@/constants/onboardingByRole';
+import { setVerification } from '@/lib/firestore/setVerification';
 
 export default function ApplyRolePage() {
   const router = useRouter();
@@ -47,6 +48,8 @@ export default function ApplyRolePage() {
   const [error, setError] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [externalLinks, setExternalLinks] = useState<string[]>(['']);
+  const [verificationReason, setVerificationReason] = useState('');
 
   useEffect(() => {
     const saved = localStorage.getItem(`applyDraft-${role}`);
@@ -62,6 +65,8 @@ export default function ApplyRolePage() {
         setMaxBpm(data.maxBpm);
         setAvailabilitySlots(data.availabilitySlots || []);
         setAgreedToVerify(!!data.agreedToVerify);
+        setExternalLinks(data.externalLinks || ['']);
+        setVerificationReason(data.verificationReason || '');
       } catch (e) {
         console.error(e);
       }
@@ -79,6 +84,8 @@ export default function ApplyRolePage() {
       maxBpm,
       availabilitySlots,
       agreedToVerify,
+      externalLinks,
+      verificationReason,
     };
     localStorage.setItem(`applyDraft-${role}`, JSON.stringify(data));
   }, [stepIndex, bio, links, location, genres, minBpm, maxBpm, availabilitySlots, agreedToVerify, role]);
@@ -96,6 +103,22 @@ export default function ApplyRolePage() {
       router.push(`/login?redirect=/apply/${role}`);
     }
   }, [user, loading, role, router]);
+
+  const addExternalLink = () => {
+    setExternalLinks([...externalLinks, '']);
+  };
+
+  const updateExternalLink = (index: number, value: string) => {
+    const updated = [...externalLinks];
+    updated[index] = value;
+    setExternalLinks(updated);
+  };
+
+  const removeExternalLink = (index: number) => {
+    if (externalLinks.length > 1) {
+      setExternalLinks(externalLinks.filter((_, i) => i !== index));
+    }
+  };
 
   function handleSubmitApplication() {
     if (!agreedToVerify) {
@@ -124,21 +147,28 @@ export default function ApplyRolePage() {
 
     setError('');
     setIsSubmitting(true);
-    setDoc(applicationRef, applicationData)
-      .then(() => {
-        toast.success('Application submitted!');
-        setSubmitted(true);
-        // Clear draft from localStorage
-        localStorage.removeItem(`applyDraft-${role}`);
-      })
-      .catch((err) => {
-        console.error('❌ Application error:', err);
-        setError('Failed to submit. Please try again.');
-        toast.error('Failed to submit. Please try again.');
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+    
+    try {
+      // Submit the application
+      await setDoc(applicationRef, applicationData);
+      
+      // Create verification document if verification fields are provided
+      const validExternalLinks = externalLinks.filter(link => link.trim());
+      if (validExternalLinks.length > 0 && verificationReason.trim()) {
+        await setVerification(user.uid, validExternalLinks, verificationReason);
+      }
+      
+      toast.success('Application submitted!');
+      setSubmitted(true);
+      // Clear draft from localStorage
+      localStorage.removeItem(`applyDraft-${role}`);
+    } catch (err) {
+      console.error('❌ Application error:', err);
+      setError('Failed to submit. Please try again.');
+      toast.error('Failed to submit. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (loading) return <div className="text-white p-8">Loading...</div>;
@@ -351,6 +381,55 @@ export default function ApplyRolePage() {
         </Suspense>
       </div>
     ),
+    verification: (
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="verification-reason" className="text-sm mb-1 block">
+            Why should you be verified? <span className="text-gray-500">(Optional)</span>
+          </label>
+          <textarea
+            id="verification-reason"
+            value={verificationReason}
+            onChange={(e) => setVerificationReason(e.target.value)}
+            placeholder="Briefly explain your professional background and why you should be verified..."
+            rows={3}
+            className="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+          />
+        </div>
+        <div>
+          <label className="text-sm mb-1 block">
+            External Links <span className="text-gray-500">(Optional - Spotify, Instagram, SoundCloud, etc.)</span>
+          </label>
+          {externalLinks.map((link, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                type="url"
+                value={link}
+                onChange={(e) => updateExternalLink(index, e.target.value)}
+                placeholder="https://open.spotify.com/artist/..."
+                className="flex-1 bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white"
+              />
+              {externalLinks.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeExternalLink(index)}
+                  className="px-3 py-2 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addExternalLink}
+            className="text-blue-400 text-sm hover:text-blue-300"
+          >
+            + Add another link
+          </button>
+        </div>
+      </div>
+    ),
     verify: (
       <div className="flex items-center gap-2">
         <input
@@ -383,6 +462,11 @@ export default function ApplyRolePage() {
             <h2 className="text-2xl font-bold">Application Submitted</h2>
             <p className="text-gray-400">
               Thanks for applying as a <strong>{role}</strong>. Our team will review your request and follow up shortly.
+              {(externalLinks.some(link => link.trim()) && verificationReason.trim()) && (
+                <span className="block mt-2 p-3 bg-blue-900/30 border border-blue-700 rounded text-blue-200 text-sm">
+                  ✅ You've successfully submitted a verification request. Reviews typically take 2–3 days.
+                </span>
+              )}
             </p>
           </div>
         ) : (
