@@ -15,6 +15,7 @@ import OnboardingStepHeader from '@/components/onboarding/OnboardingStepHeader';
 import LocationAutocomplete from '@/components/explore/LocationAutocomplete';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import toast from 'react-hot-toast';
 
 const WeeklyCalendarSelector = dynamic(
   () => import('@/components/booking/WeeklyCalendarSelector').then(mod => mod.WeeklyCalendarSelector),
@@ -44,6 +45,8 @@ export default function ApplyRolePage() {
   const [agreedToVerify, setAgreedToVerify] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(`applyDraft-${role}`);
@@ -115,6 +118,8 @@ export default function ApplyRolePage() {
       portfolio: links,
       agreedToVerify,
       createdAt: serverTimestamp(),
+      approved: false,
+      status: 'pending'
     };
 
     setError('');
@@ -122,7 +127,9 @@ export default function ApplyRolePage() {
     setDoc(applicationRef, applicationData)
       .then(() => {
         toast.success('Application submitted!');
-        router.push('/dashboard');
+        setSubmitted(true);
+        // Clear draft from localStorage
+        localStorage.removeItem(`applyDraft-${role}`);
       })
       .catch((err) => {
         console.error('❌ Application error:', err);
