@@ -1,38 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { getAuth } from 'firebase/auth'
-import { doc, setDoc } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { setUserIntent } from '@/lib/firestore/setUserIntent'
 
-const roles = ['artist', 'producer', 'studio', 'videographer', 'engineer']
+const roles = ['client', 'provider', 'both']
 
 export default function RoleToggle() {
   const [selectedRole, setSelectedRole] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
-
-  useEffect(() => {
-    const auth = getAuth()
-    const user = auth.currentUser
-    if (user && user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      setIsAdmin(true)
-    }
-  }, [])
 
   const handleSetRole = async () => {
     const auth = getAuth()
     const user = auth.currentUser
-    if (!user) return alert("No user logged in.")
-    if (!isAdmin) return alert("Unauthorized.")
+    if (!user) return
 
-    await setDoc(doc(db, 'users', user.uid), {
-      role: selectedRole
-    }, { merge: true })
-
-    alert(`Role updated to ${selectedRole}`)
+    await setUserIntent(user.uid, selectedRole as any)
   }
-
-  if (!isAdmin) return null
 
   return (
     <div className="p-4 space-y-2 border rounded">

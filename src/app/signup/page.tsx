@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { app, db } from '@/lib/firebase';
 import { getRedirectAfterSignup } from './getRedirectAfterSignup';
 
@@ -31,6 +31,10 @@ export default function SignupPage() {
     e.preventDefault();
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        email,
+        createdAt: new Date()
+      }, { merge: true });
       
       // Send verification email automatically
       try {
@@ -83,10 +87,10 @@ export default function SignupPage() {
               </button>
               
               <button
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push('/select-intent')}
                 className="w-full text-blue-400 hover:text-blue-300 text-sm"
               >
-                Continue to Dashboard →
+                Continue →
               </button>
             </div>
           </div>
