@@ -295,7 +295,9 @@ export class Analytics {
   
   // Generate session ID
   private static generateSessionId(): string {
-    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const crypto = require('crypto');
+    const randomString = crypto.randomBytes(12).toString('hex');
+    return `${Date.now()}_${randomString}`;
   }
   
   // Initialize external providers
