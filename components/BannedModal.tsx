@@ -41,7 +41,7 @@ export default function BannedModal({ isOpen, onClose, user, banReason }: Banned
         email: user.email || '',
         message: message.trim(),
         category: category,
-        type: 'ban_appeal',
+        type: 'bannedAppeal' as const,
         metadata: {
           banReason: banReason || 'Not specified',
           userAgent: navigator.userAgent,

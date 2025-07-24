@@ -6,10 +6,10 @@ import { getStorage, ref, deleteObject } from 'firebase/storage';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { mediaId: string } }
+  { params }: { params: Promise<{ mediaId: string }> }
 ) {
   try {
-    const { mediaId } = params;
+    const { mediaId } = await params;
 
     const mediaDoc = await adminDb.collection('media').doc(mediaId).get();
     
@@ -35,11 +35,11 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { mediaId: string } }
+  { params }: { params: Promise<{ mediaId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    const { mediaId } = params;
+    const { mediaId } = await params;
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -111,11 +111,11 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { mediaId: string } }
+  { params }: { params: Promise<{ mediaId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    const { mediaId } = params;
+    const { mediaId } = await params;
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

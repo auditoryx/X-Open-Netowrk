@@ -27,7 +27,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface CaseStudyEditorProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 type SectionType = 'text' | 'image' | 'video' | 'metrics' | 'testimonial';
@@ -50,18 +50,24 @@ export default function CaseStudyEditor({ params }: CaseStudyEditorProps) {
   const [uploading, setUploading] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
   const [showAddSection, setShowAddSection] = useState(false);
+  const [id, setId] = useState<string | null>(null);
+
+  // Resolve params promise
+  useEffect(() => {
+    params.then(({ id }) => setId(id));
+  }, [params]);
 
   useEffect(() => {
-    if (!user?.uid || !params.id) return;
+    if (!user?.uid || !id) return;
     loadCaseStudy();
-  }, [user, params.id]);
+  }, [user, id]);
 
   const loadCaseStudy = async () => {
-    if (!params.id) return;
+    if (!id) return;
     
     setLoading(true);
     try {
-      const data = await caseStudyService.getCaseStudy(params.id);
+      const data = await caseStudyService.getCaseStudy(id);
       if (data) {
         setCaseStudy(data);
         // Convert case study data to sections

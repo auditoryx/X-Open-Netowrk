@@ -12,6 +12,27 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    const { searchParams } = new URL(req.url);
+    const action = searchParams.get('action');
+
+    // Handle conflict check action
+    if (action === 'check-conflicts') {
+      const { slot } = body;
+
+      if (!slot) {
+        return NextResponse.json({ error: 'Slot data required' }, { status: 400 });
+      }
+
+      const syncService = new CalendarSyncService(session.accessToken);
+      const hasConflict = await syncService.detectConflicts(session.user.id, slot);
+      
+      return NextResponse.json({ 
+        hasConflict,
+        message: hasConflict ? 'Conflict detected' : 'No conflicts found'
+      });
+    }
+
+    // Default push availability action
     const { slots } = body;
 
     if (!slots || !Array.isArray(slots)) {
@@ -29,37 +50,6 @@ export async function POST(req: NextRequest) {
     console.error('Calendar push error:', error);
     return NextResponse.json({ 
       error: 'Push failed', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 });
-  }
-}
-
-export async function POST_CONFLICT_CHECK(req: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.id || !session.accessToken) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const { slot } = body;
-
-    if (!slot) {
-      return NextResponse.json({ error: 'Slot data required' }, { status: 400 });
-    }
-
-    const syncService = new CalendarSyncService(session.accessToken);
-    const hasConflict = await syncService.detectConflicts(session.user.id, slot);
-    
-    return NextResponse.json({ 
-      hasConflict,
-      message: hasConflict ? 'Conflict detected' : 'No conflicts found'
-    });
-  } catch (error) {
-    console.error('Conflict check error:', error);
-    return NextResponse.json({ 
-      error: 'Conflict check failed', 
       details: error instanceof Error ? error.message : 'Unknown error' 
     }, { status: 500 });
   }

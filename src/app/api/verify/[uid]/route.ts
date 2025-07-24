@@ -13,10 +13,11 @@ const verifyUserSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { uid: string } }
+  { params }: { params: Promise<{ uid: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const { uid } = await params;
     
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -30,7 +31,6 @@ export async function POST(
       }, { status: 403 });
     }
 
-    const { uid } = params;
     if (!uid) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
@@ -143,10 +143,11 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { uid: string } }
+  { params }: { params: Promise<{ uid: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const { uid } = await params;
     
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -160,7 +161,6 @@ export async function GET(
       }, { status: 403 });
     }
 
-    const { uid } = params;
     if (!uid) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
