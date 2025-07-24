@@ -1,5 +1,5 @@
 "use client";
-import { useState, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import { auth, db } from "../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -11,7 +11,7 @@ interface AvailabilityState {
   friday: boolean;
 }
 
-export default function AvailabilityForm(): JSX.Element {
+export default function AvailabilityForm() {
   const [availability, setAvailability] = useState<AvailabilityState>({
     monday: true,
     tuesday: true,

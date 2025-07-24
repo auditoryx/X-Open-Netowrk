@@ -5,11 +5,11 @@ import { adminDb } from '@/lib/firebase-admin';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    const { userId } = params;
+    const { userId } = await params;
 
     if (!userId) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
@@ -64,11 +64,11 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    const { userId } = params;
+    const { userId } = await params;
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

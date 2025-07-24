@@ -26,7 +26,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import BookingSummarySidebar from '@/components/booking/BookingSummarySidebar';
 import TrustBadges from '@/components/booking/TrustBadges';
 
-export default function BookServicePage({ params }: { params: { uid: string } }) {
+export default function BookServicePage({ params }: { params: Promise<{ uid: string }> }) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [availability, setAvailability] = useState<string[]>([]);
@@ -35,13 +35,21 @@ export default function BookServicePage({ params }: { params: { uid: string } })
   const [providerLocation, setProviderLocation] = useState<string>('');
   const [providerTier, setProviderTier] = useState<'standard' | 'verified' | 'signature'>('standard');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [uid, setUid] = useState<string | null>(null);
   const router = useRouter();
   const { user } = useAuth();
 
+  // Resolve params promise
   useEffect(() => {
+    params.then(({ uid }) => setUid(uid));
+  }, [params]);
+
+  useEffect(() => {
+    if (!uid) return;
+    
     const fetchAvailability = async () => {
       const db = getFirestore(app);
-      const ref = doc(db, 'users', params.uid);
+      const ref = doc(db, 'users', uid);
       const snap = await getDoc(ref);
       if (snap.exists()) {
         const data = snap.data();
@@ -53,7 +61,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       }
     };
     fetchAvailability();
-  }, [params.uid]);
+  }, [uid]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +78,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
 
     const overlapQ = query(
       collection(db, 'bookingRequests'),
-      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', params.uid),
+      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', uid),
       where('selectedTime', '==', selectedTime),
       where(SCHEMA_FIELDS.BOOKING.STATUS, 'in', ['pending', 'confirmed'])
     );
@@ -86,7 +94,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     const totalAmount = baseAmount + platformFee;
 
     await addDoc(collection(db, 'bookingRequests'), {
-      providerId: params.uid,
+      providerId: uid,
       clientId: user?.uid || 'anon',
       message,
       selectedTime,
@@ -99,7 +107,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
     });
 
     const updated = availability.filter((a) => a !== selectedTime);
-    await updateDoc(doc(db, 'users', params.uid), {
+    await updateDoc(doc(db, 'users', uid), {
       availability: updated
     });
 
@@ -120,7 +128,7 @@ export default function BookServicePage({ params }: { params: { uid: string } })
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        userId: params.uid,
+        userId: uid,
         email: providerEmail,
         type: 'booking',
         title: 'New Booking Request',
