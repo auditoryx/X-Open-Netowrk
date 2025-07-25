@@ -1,52 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSearchService, SearchFilters } from '@/lib/search';
 import { getAuthContext } from '@/lib/unified-models/auth';
+import { toPublicUser } from '@/lib/unified-models/user';
 
 /**
- * Enhanced Search API
+ * Creators Search API
  * 
- * Provides real search functionality using Algolia
- * Replaces the previous mock implementation
+ * Dedicated endpoint for searching creators/users
  */
-
-// Rate limiting
-const windowMs = 60_000; // 1 minute
-const maxRequests = 30;
-const buckets: Map<string, { count: number; ts: number }> =
-  (globalThis as any).__searchLimiter ||
-  ((globalThis as any).__searchLimiter = new Map());
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = buckets.get(ip) || { count: 0, ts: now };
-  if (now - entry.ts > windowMs) {
-    entry.count = 0;
-    entry.ts = now;
-  }
-  entry.count++;
-  buckets.set(ip, entry);
-  return entry.count > maxRequests;
-}
 
 export async function GET(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    if (isRateLimited(ip)) {
-      return NextResponse.json(
-        { error: 'Too Many Requests' },
-        { status: 429 }
-      );
-    }
-
-    // Get search parameters
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q') || '';
-    const type = searchParams.get('type') || 'users'; // 'users' or 'services'
     const page = parseInt(searchParams.get('page') || '0');
     const limit = parseInt(searchParams.get('limit') || '20');
 
-    // Build filters from query parameters
+    // Creator-specific filters
     const filters: SearchFilters = {};
     
     if (searchParams.get('role')) {
@@ -73,14 +43,6 @@ export async function GET(request: NextRequest) {
       filters.minRating = parseFloat(searchParams.get('minRating')!);
     }
     
-    if (searchParams.get('minPrice')) {
-      filters.minPrice = parseFloat(searchParams.get('minPrice')!);
-    }
-    
-    if (searchParams.get('maxPrice')) {
-      filters.maxPrice = parseFloat(searchParams.get('maxPrice')!);
-    }
-    
     if (searchParams.get('verifiedOnly') === 'true') {
       filters.verifiedOnly = true;
     }
@@ -89,40 +51,32 @@ export async function GET(request: NextRequest) {
       filters.availableNow = true;
     }
 
-    // Geographic filters
+    // Geographic search
     if (searchParams.get('lat') && searchParams.get('lng')) {
       filters.lat = parseFloat(searchParams.get('lat')!);
       filters.lng = parseFloat(searchParams.get('lng')!);
       
-      if (searchParams.get('radiusKm')) {
-        filters.radiusKm = parseInt(searchParams.get('radiusKm')!);
+      if (searchParams.get('radius')) {
+        filters.radiusKm = parseInt(searchParams.get('radius')!);
       }
     }
 
-    // Search options
-    const sortBy = searchParams.get('sort') as 'relevance' | 'rating' | 'price' | 'distance' | 'created_at' || 'relevance';
-    
+    const sortBy = searchParams.get('sort') as 'relevance' | 'rating' | 'distance' | 'created_at' || 'relevance';
+
     const options = {
-      hitsPerPage: Math.min(limit, 100), // Max 100 results per page
+      hitsPerPage: Math.min(limit, 50),
       page,
       sortBy,
     };
 
-    // Get search service and perform search
     const searchService = getSearchService();
-    
-    let results;
-    if (type === 'services') {
-      results = await searchService.searchServices(query, filters, options);
-    } else {
-      results = await searchService.searchUsers(query, filters, options);
-    }
+    const results = await searchService.searchUsers(query, filters, options);
 
-    // Filter results based on user permissions
+    // Filter results based on authentication
     const authContext = await getAuthContext(request);
     
-    // For non-authenticated users, only return public data
     if (!authContext.isAuthenticated) {
+      // Return only public data for unauthenticated users
       results.hits = results.hits.map(hit => ({
         objectID: hit.objectID,
         displayName: hit.displayName,
@@ -134,34 +88,98 @@ export async function GET(request: NextRequest) {
         bio: hit.bio,
         location: hit.location,
         profilePicture: hit.profilePicture,
+        xp: hit.xp,
         _highlightResult: hit._highlightResult,
         _snippetResult: hit._snippetResult,
       }));
+    } else if (!authContext.isAdmin) {
+      // Remove sensitive data for non-admin users
+      results.hits = results.hits.map(hit => {
+        const { email, walletId, paymentMethodsSetup, ...publicData } = hit;
+        return publicData;
+      });
     }
 
-    // Add metadata
+    // Add creator-specific metadata and facets
     const response = {
       ...results,
       metadata: {
+        type: 'creators',
         query,
-        type,
         filters: Object.keys(filters).length > 0 ? filters : undefined,
         authenticated: authContext.isAuthenticated,
         timestamp: new Date().toISOString(),
+      },
+      facets: {
+        roles: results.facets?.role || {},
+        tiers: results.facets?.tier || {},
+        verificationStatus: results.facets?.verificationStatus || {},
+        locations: this.buildLocationFacets(results.hits),
+        ratingRanges: this.buildRatingRanges(results.hits),
       },
     };
 
     return NextResponse.json(response);
 
   } catch (error) {
-    console.error('Search API error:', error);
+    console.error('Creators search error:', error);
     
     return NextResponse.json(
       {
-        error: 'Search service temporarily unavailable',
+        error: 'Creators search temporarily unavailable',
         details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : error : undefined,
       },
       { status: 500 }
     );
   }
+}
+
+/**
+ * Build location facets from search results
+ */
+function buildLocationFacets(hits: any[]): Record<string, number> {
+  const locations: Record<string, number> = {};
+  
+  hits.forEach(hit => {
+    if (hit.location) {
+      // Extract city from location string
+      const city = hit.location.split(',')[0]?.trim();
+      if (city) {
+        locations[city] = (locations[city] || 0) + 1;
+      }
+    }
+  });
+
+  // Return top 10 locations
+  return Object.entries(locations)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 10)
+    .reduce((acc, [location, count]) => {
+      acc[location] = count;
+      return acc;
+    }, {} as Record<string, number>);
+}
+
+/**
+ * Build rating range facets from search results
+ */
+function buildRatingRanges(hits: any[]): Record<string, number> {
+  const ranges = {
+    '4.5-plus': 0,
+    '4.0-4.5': 0,
+    '3.5-4.0': 0,
+    '3.0-3.5': 0,
+    'under-3.0': 0,
+  };
+
+  hits.forEach(hit => {
+    const rating = hit.averageRating || 0;
+    if (rating >= 4.5) ranges['4.5-plus']++;
+    else if (rating >= 4.0) ranges['4.0-4.5']++;
+    else if (rating >= 3.5) ranges['3.5-4.0']++;
+    else if (rating >= 3.0) ranges['3.0-3.5']++;
+    else if (rating > 0) ranges['under-3.0']++;
+  });
+
+  return ranges;
 }
