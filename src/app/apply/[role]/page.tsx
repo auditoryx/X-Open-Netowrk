@@ -120,7 +120,7 @@ export default function ApplyRolePage() {
     }
   };
 
-  function handleSubmitApplication() {
+  async function handleSubmitApplication() {
     if (!agreedToVerify) {
       toast.error('You must agree to complete ID verification.');
       setError('You must agree to complete ID verification.');
