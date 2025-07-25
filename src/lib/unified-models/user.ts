@@ -27,7 +27,7 @@ export const UnifiedUserSchema = z.object({
   lastSignIn: z.date().optional(),
   
   // Role and Permissions
-  role: z.enum(['client', 'creator', 'admin', 'buyer', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'moderator']).default('client'),
+  role: z.enum(['client', 'creator', 'admin', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'moderator']).default('client'),
   
   // Tier System (audit requirement)
   tier: z.enum(['standard', 'verified', 'signature']).default('standard'),
