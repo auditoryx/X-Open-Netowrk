@@ -37,6 +37,66 @@ service cloud.firestore {
       return true; // Placeholder for now
     }
 
+    // 🆕 UNIFIED USERS COLLECTION - Enhanced validation
+    match /users/{userId} {
+      // Read permissions
+      allow read: if isAuthenticated() && (
+        isOwner(userId) || 
+        isAdmin() || 
+        // Allow reading public profile data for authenticated users
+        (resource.data.profileVisibility == 'public' && resource.data.isActive == true) ||
+        (resource.data.profileVisibility == 'registered' && resource.data.isActive == true)
+      );
+
+      // Create permissions - users can create their own profile, admins can create any
+      allow create: if isAuthenticated() && (
+        isOwner(userId) || isAdmin()
+      ) && 
+      // Validate required fields
+      hasRequiredFields(['email', 'role', 'tier', 'verificationStatus']) &&
+      isValidEmail(request.resource.data.email) &&
+      request.resource.data.role in ['client', 'creator', 'admin', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'moderator'] &&
+      request.resource.data.tier in ['standard', 'verified', 'signature'] &&
+      request.resource.data.verificationStatus in ['unverified', 'pending', 'verified', 'rejected'] &&
+      request.resource.data.xp is number && request.resource.data.xp >= 0 &&
+      request.resource.data.isActive == true &&
+      isValidTimestamp(request.resource.data.createdAt) &&
+      isValidTimestamp(request.resource.data.updatedAt);
+
+      // Update permissions
+      allow update: if isAuthenticated() && (
+        // Users can update their own profile (except sensitive fields)
+        (isOwner(userId) && 
+         !('role' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('verificationStatus' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('tier' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('xp' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('walletId' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('isActive' in request.resource.data.diff(resource.data).affectedKeys())
+        ) ||
+        // Admins can update any field
+        isAdmin()
+      ) &&
+      // Validate timestamps
+      isValidTimestamp(request.resource.data.updatedAt) &&
+      // Prevent changing uid
+      request.resource.data.uid == resource.data.uid;
+
+      // Delete permissions (soft delete by setting isActive = false)
+      allow delete: if isAuthenticated() && (isOwner(userId) || isAdmin());
+
+      // Sub-collections for verification documents (KYC)
+      match /verification/{docId} {
+        allow read, write: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      }
+
+      // Sub-collections for user progress/XP tracking
+      match /progress/{progressId} {
+        allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+        allow write: if isAuthenticated() && isAdmin(); // Only system/admin can update XP
+      }
+    }
+
     // ✅ Applications (verification) - Enhanced validation
     match /applications/{userId} {
       allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
@@ -104,20 +164,7 @@ service cloud.firestore {
         // Cannot change creator or creation date
         request.resource.data.creatorId == resource.data.creatorId &&
         request.resource.data.createdAt == resource.data.createdAt &&
-        isValidTimestamp(request.resource.data.updatedAt);
-      allow delete: if isAuthenticated() && (isOwner(resource.data.creatorId) || isAdmin());
-    }
-
-    // ✅ User Profiles & Subcollections – Enhanced validation
-    match /users/{userId} {
-      allow read: if true;
-      allow create: if isAuthenticated() && isOwner(userId) &&
-        hasRequiredFields(['email', 'displayName', 'role', 'createdAt']) &&
-        isValidEmail(request.resource.data.email) &&
-        isValidString(request.resource.data.displayName, 2, 50) &&
-        request.resource.data.role in ['artist', 'engineer', 'producer', 'studio', 'videographer', 'client'] &&
-        isValidTimestamp(request.resource.data.createdAt);
-      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin()) &&
+        isValidTimestamp(request.resource.data.updatedAt) &&
         // Protected fields that only admins can modify
         (!('tier' in request.resource.data.diff(resource.data)) || isAdmin()) &&
         (!('xp' in request.resource.data.diff(resource.data)) || isAdmin()) &&
