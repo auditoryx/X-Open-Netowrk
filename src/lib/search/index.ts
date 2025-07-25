@@ -289,7 +289,7 @@ let searchService: SearchService | null = null;
 
 export function getSearchService(): SearchService {
   if (!searchService) {
-    searchService = getSearchService();
+    searchService = getSearchServiceInternal();
   }
   return searchService;
 }
