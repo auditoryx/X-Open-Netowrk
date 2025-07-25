@@ -57,7 +57,7 @@ function validateAuditFindings() {
   const functionsExists = checkFileExists('functions');
   
   log(`✓ Multiple backends confirmed: backend/ ${backendExists ? '✓' : '✗'}, src/app/api/ ${apiExists ? '✓' : '✗'}, functions/ ${functionsExists ? '✓' : '✗'}`, 
-      backendExists && apiExists && functionsExists ? 'red' : 'green');
+      backendExists || apiExists || functionsExists ? 'red' : 'green');
 
   // Check for model duplication
   const mongooseModels = scanDirectory('backend/models').filter(f => f.endsWith('.js'));
