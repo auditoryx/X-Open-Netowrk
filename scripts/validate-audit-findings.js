@@ -64,7 +64,7 @@ function validateAuditFindings() {
   const firestoreSchema = checkFileExists('src/lib/schema.ts');
   
   log(`✓ Model duplication confirmed: Mongoose models (${mongooseModels.length}), Firestore schema ${firestoreSchema ? '✓' : '✗'}`, 
-      mongooseModels.length > 0 && firestoreSchema ? 'red' : 'green');
+      mongooseModels.length > 0 && firestoreSchema ? 'green' : 'red');
 
   // 2. Missing Search Service
   log('\n🔍 Search Service Status', 'yellow');
