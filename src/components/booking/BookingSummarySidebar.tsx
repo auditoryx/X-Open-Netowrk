@@ -1,12 +1,14 @@
 'use client';
 
 import TierBadge from '@/components/badges/TierBadge';
+import { VerifiedIcon } from '@/components/ui/VerifiedBadge';
 import { useState } from 'react';
 
 export default function BookingSummarySidebar({
   providerName,
   providerTier,
   providerLocation,
+  providerIsVerified,
   selectedTime,
   baseAmount,
   platformFee,
@@ -14,6 +16,7 @@ export default function BookingSummarySidebar({
   providerName: string;
   providerTier: 'standard' | 'verified' | 'signature';
   providerLocation: string;
+  providerIsVerified?: boolean;
   selectedTime: string;
   baseAmount: number;
   platformFee: number;
@@ -24,7 +27,10 @@ export default function BookingSummarySidebar({
   return (
     <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl text-white space-y-4">
       <div>
-        <h3 className="font-bold text-xl mb-1">{providerName}</h3>
+        <h3 className="font-bold text-xl mb-1 flex items-center gap-2">
+          {providerName}
+          {providerIsVerified && <VerifiedIcon size="sm" />}
+        </h3>
         <TierBadge tier={providerTier} />
         <p className="text-sm text-gray-400">{providerLocation}</p>
       </div>

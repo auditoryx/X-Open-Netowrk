@@ -10,6 +10,7 @@ import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
 import { RoleBadge } from '@/components/explore/RoleBadge';
 import GenreBadges from '@/components/explore/GenreBadges';
+import { VerifiedIcon } from '@/components/ui/VerifiedBadge';
 import { Translate } from '@/i18n/Translate';
 
 export default function NewExploreGrid({ filters }: { filters: any }) {
@@ -75,8 +76,9 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
           className="border border-white p-4 rounded-xl hover:bg-neutral-900 transition scroll-mt-24"
         >
           <div className="flex justify-between items-center mb-2">
-            <h2 className="font-semibold text-lg">
+            <h2 className="font-semibold text-lg flex items-center gap-2">
               {c.name || <Translate t="common.unnamed" />}
+              {c.isVerified && <VerifiedIcon size="sm" />}
             </h2>
             <SaveButton providerId={c.uid} />
           </div>

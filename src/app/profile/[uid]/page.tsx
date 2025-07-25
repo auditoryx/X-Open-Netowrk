@@ -102,7 +102,7 @@ export default function PublicProfilePage() {
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-1 flex items-center gap-2">
         {profile.name || 'Unnamed User'}
-        {profile.verified && <VerifiedBadge size="md" />}
+        {profile.isVerified && <VerifiedBadge size="md" />}
       </h1>
 
       {/* Signature Badge */}
