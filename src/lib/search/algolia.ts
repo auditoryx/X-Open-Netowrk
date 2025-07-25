@@ -54,23 +54,24 @@ export interface SearchResponse<T = any> {
 }
 
 class AlgoliaService {
-  private client: SearchClient;
+  private adminClient: SearchClient;
+  private searchClient: SearchClient;
   private usersIndex: SearchIndex;
   private servicesIndex: SearchIndex;
 
   constructor() {
     const appId = process.env.ALGOLIA_APP_ID;
-    const apiKey = process.env.NODE_ENV === 'production' 
-      ? process.env.ALGOLIA_ADMIN_KEY 
-      : process.env.ALGOLIA_SEARCH_KEY;
+    const adminKey = process.env.ALGOLIA_ADMIN_KEY;
+    const searchKey = process.env.ALGOLIA_SEARCH_KEY;
 
-    if (!appId || !apiKey) {
-      throw new Error('Algolia configuration missing. Please set ALGOLIA_APP_ID and ALGOLIA_ADMIN_KEY/ALGOLIA_SEARCH_KEY');
+    if (!appId || !adminKey || !searchKey) {
+      throw new Error('Algolia configuration missing. Please set ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY, and ALGOLIA_SEARCH_KEY');
     }
 
-    this.client = algoliasearch(appId, apiKey);
-    this.usersIndex = this.client.initIndex('users');
-    this.servicesIndex = this.client.initIndex('services');
+    this.adminClient = algoliasearch(appId, adminKey);
+    this.searchClient = algoliasearch(appId, searchKey);
+    this.usersIndex = this.searchClient.initIndex('users');
+    this.servicesIndex = this.searchClient.initIndex('services');
   }
 
   /**
