@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
       facets: {
         categories: results.facets?.role || {},
         tiers: results.facets?.tier || {},
-        priceRanges: this.buildPriceRanges(results.hits),
+        priceRanges: buildPriceRanges(results.hits),
       },
     };
 
