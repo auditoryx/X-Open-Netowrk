@@ -114,8 +114,8 @@ export async function GET(request: NextRequest) {
         roles: results.facets?.role || {},
         tiers: results.facets?.tier || {},
         verificationStatus: results.facets?.verificationStatus || {},
-        locations: this.buildLocationFacets(results.hits),
-        ratingRanges: this.buildRatingRanges(results.hits),
+        locations: buildLocationFacets(results.hits),
+        ratingRanges: buildRatingRanges(results.hits),
       },
     };
 
