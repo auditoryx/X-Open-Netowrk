@@ -172,7 +172,7 @@ function validateAuditFindings() {
 
   // Summary
   log('\n📋 Audit Summary', 'blue');
-  log('=' * 30, 'blue');
+  log('='.repeat(30), 'blue');
   
   const issues = [
     { name: 'Architecture Issues', status: 'CONFIRMED', severity: 'HIGH' },
