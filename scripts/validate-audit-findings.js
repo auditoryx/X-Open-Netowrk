@@ -47,7 +47,7 @@ function readFileContent(filePath) {
 
 function validateAuditFindings() {
   log('\n🔍 AuditoryX ON Audit Validation Report', 'blue');
-  log('=' * 50, 'blue');
+  log('='.repeat(50), 'blue');
 
   // 1. Architecture Issues
   log('\n📁 Architecture Issues', 'yellow');
