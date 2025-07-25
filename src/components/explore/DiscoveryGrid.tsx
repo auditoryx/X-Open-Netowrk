@@ -95,7 +95,7 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
           <div className="mb-2 flex items-center justify-between">
             <h2 className="flex items-center gap-1 text-lg font-bold">
               {creator.name || <Translate t="common.unnamed" />}
-              {creator.verified && <VerifiedBadge />}
+              {creator.isVerified && <VerifiedBadge />}
             </h2>
             <SaveButton providerId={creator.uid} />
           </div>
