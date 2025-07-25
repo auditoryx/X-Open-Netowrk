@@ -164,9 +164,7 @@ service cloud.firestore {
         // Cannot change creator or creation date
         request.resource.data.creatorId == resource.data.creatorId &&
         request.resource.data.createdAt == resource.data.createdAt &&
-        isValidTimestamp(request.resource.data.updatedAt);
-      allow delete: if isAuthenticated() && (isOwner(resource.data.creatorId) || isAdmin());
-    }
+        isValidTimestamp(request.resource.data.updatedAt) &&
         // Protected fields that only admins can modify
         (!('tier' in request.resource.data.diff(resource.data)) || isAdmin()) &&
         (!('xp' in request.resource.data.diff(resource.data)) || isAdmin()) &&
