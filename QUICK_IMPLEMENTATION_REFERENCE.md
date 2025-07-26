@@ -13,6 +13,7 @@ This reference provides immediate actionable steps for implementing the 10 criti
 🏆 **[Tiers & Badges System](./docs/tiers-and-badges.md)** - Detailed tier comparison and progression  
 🏗️ **[Technical Architecture](./docs/architecture-diagram.mmd)** - Complete system architecture diagram  
 📸 **[UI Screenshots](./docs/screenshots/)** - Automated tier showcase screenshots  
+🚀 **[Roadmap Snapshot](./docs/roadmap-snapshot.md)** - Implementation progress and strategic milestones  
 
 **Use Cases:**
 - Internal strategy sessions and team alignment
