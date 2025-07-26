@@ -88,7 +88,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
               {isPartiallyFilled && !interactive && (
                 <div
                   className="absolute inset-0 overflow-hidden"
-                  style={{ width: `${((displayRating - (starValue - 1)) * 100)}%` }}
+                  style={{ width: `${Math.min((displayRating - (starValue - 1)) * 100, 100)}%` }}
                 >
                   <Star
                     className={`${sizeClasses[size]} text-yellow-400 fill-current`}
