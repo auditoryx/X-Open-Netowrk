@@ -14,9 +14,8 @@ import {
   QueryDocumentSnapshot,
   DocumentData
 } from 'firebase/firestore';
-import { SCHEMA_FIELDS } from '../../lib/SCHEMA_FIELDS';
 
-export function ReviewList({ providerId }: { providerId: string }) {
+export function ReviewList({ targetId }: { targetId: string }) {
   const [reviews, setReviews] = useState<any[]>([]);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,8 +25,9 @@ export function ReviewList({ providerId }: { providerId: string }) {
   const fetchReviews = useCallback((startDoc: QueryDocumentSnapshot<DocumentData> | null = null) => {
     const baseQuery = query(
       collection(db, 'reviews'),
-      where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', providerId),
-      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
+      where('targetId', '==', targetId),
+      where('visible', '==', true),
+      orderBy('createdAt', 'desc'),
       limit(10),
       ...(startDoc ? [startAfter(startDoc)] : [])
     );
@@ -44,7 +44,7 @@ export function ReviewList({ providerId }: { providerId: string }) {
       setLastDoc(snap.docs[snap.docs.length - 1]);
       setLoading(false);
     });
-  }, [providerId]);
+  }, [targetId]);
 
   useEffect(() => {
     const unsub = fetchReviews();

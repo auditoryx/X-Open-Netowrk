@@ -24,7 +24,7 @@ describe('getRatingDistribution', () => {
       { data: () => ({ rating: 3 }) },
     ];
     mockedGetDocs.mockResolvedValue({ docs } as any);
-    const dist = await getRatingDistribution('provider');
+    const dist = await getRatingDistribution('target123');
     expect(dist).toEqual({ 1: 0, 2: 0, 3: 1, 4: 1, 5: 2 });
   });
 });

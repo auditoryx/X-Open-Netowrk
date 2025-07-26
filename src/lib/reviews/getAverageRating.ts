@@ -1,9 +1,14 @@
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
-export async function getAverageRating(providerId: string): Promise<number | null> {
+export async function getAverageRating(targetId: string): Promise<number | null> {
   const db = getFirestore(app);
-  const q = query(collection(db, 'reviews'), where(SCHEMA_FIELDS.BOOKING.PROVIDER_ID, '==', providerId));
+  const q = query(
+    collection(db, 'reviews'), 
+    where('targetId', '==', targetId),
+    where('visible', '==', true)
+  );
   const snap = await getDocs(q);
   const ratings = snap.docs.map(doc => doc.data().rating).filter(r => typeof r === 'number');
   if (ratings.length === 0) return null;

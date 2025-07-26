@@ -23,13 +23,13 @@ describe('getAverageRating', () => {
       { data: () => ({ rating: 5 }) },
     ];
     mockedGetDocs.mockResolvedValue({ docs } as any);
-    const avg = await getAverageRating('provider');
+    const avg = await getAverageRating('target123');
     expect(avg).toBe(4.7);
   });
 
   it('returns null when there are no ratings', async () => {
     mockedGetDocs.mockResolvedValue({ docs: [] } as any);
-    const avg = await getAverageRating('provider');
+    const avg = await getAverageRating('target123');
     expect(avg).toBeNull();
   });
 });
