@@ -107,7 +107,7 @@ async function postHandler(req: NextRequest & { user: any }) {
     authorId: req.user.uid,
     targetId,
     text: text.trim(),
-    rating: parseInt(rating, 10),
+    rating: parsedRating,
     createdAt: Timestamp.now(),
   };
 
