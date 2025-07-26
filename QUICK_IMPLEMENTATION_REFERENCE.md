@@ -3,6 +3,26 @@
 ## 📋 Summary
 This reference provides immediate actionable steps for implementing the 10 critical issues identified in the AuditoryX ON audit.
 
+## 📊 Executive Materials & Investor Deck
+
+### 🎯 **NEW**: Comprehensive Executive Overview & Tier Showcase
+**Complete investor-ready presentation materials now available:**
+
+📋 **[Executive Overview](./docs/executive-overview.md)** - Single-page comprehensive platform narrative  
+📊 **[Platform Overview Slides](./docs/platform-overview-slides.md)** - 15-slide investor presentation  
+🏆 **[Tiers & Badges System](./docs/tiers-and-badges.md)** - Detailed tier comparison and progression  
+🏗️ **[Technical Architecture](./docs/architecture-diagram.mmd)** - Complete system architecture diagram  
+📸 **[UI Screenshots](./docs/screenshots/)** - Automated tier showcase screenshots  
+🚀 **[Roadmap Snapshot](./docs/roadmap-snapshot.md)** - Implementation progress and strategic milestones  
+
+**Use Cases:**
+- Internal strategy sessions and team alignment
+- Investor presentations and fundraising discussions  
+- Business development and partnership meetings
+- Technical architecture reviews with stakeholders
+
+---
+
 ## 🎯 Immediate Action Items
 
 ### 🔥 HIGH PRIORITY (Foundation Complete) ✅
