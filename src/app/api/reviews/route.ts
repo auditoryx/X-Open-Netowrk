@@ -138,8 +138,8 @@ async function postHandler(req: NextRequest & { user: any }) {
         moderatedAt: Timestamp.now()
       },
       // Auto-approve if moderation confidence is high
-      status: moderationResult.isAppropriate && moderationResult.confidence > 0.8 ? 'approved' : 'pending',
-      visible: moderationResult.isAppropriate && moderationResult.confidence > 0.8
+      status: moderationResult.isAppropriate && moderationResult.confidence > CONFIDENCE_THRESHOLD ? 'approved' : 'pending',
+      visible: moderationResult.isAppropriate && moderationResult.confidence > CONFIDENCE_THRESHOLD
     };
 
     // Add the review
