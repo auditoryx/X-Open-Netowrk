@@ -1,6 +1,4 @@
 import { 
-  UnifiedUserSchema, 
-  CreateUserSchema, 
   UpdateUserSchema,
   validateUnifiedUser, 
   validateCreateUser,
@@ -13,30 +11,32 @@ import {
   canProvideServices,
   getDisplayName 
 } from '../user';
+import { SCHEMA_FIELDS } from '../../SCHEMA_FIELDS';
+
+const validUser = {
+  uid: 'test-uid-123',
+  email: 'test@example.com',
+  displayName: 'Test User',
+  role: 'client' as const,
+  tier: 'standard' as const,
+  verificationStatus: 'unverified' as const,
+  xp: 0,
+  rankScore: 0,
+  reviewCount: 0,
+  emailVerified: false,
+  paymentMethodsSetup: false,
+  isActive: true,
+  notifications: {
+    email: true,
+    push: true,
+    sms: false,
+  },
+  profileVisibility: 'public' as const,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
 
 describe('UnifiedUserSchema', () => {
-  const validUser = {
-    uid: 'test-uid-123',
-    email: 'test@example.com',
-    displayName: 'Test User',
-    role: 'client' as const,
-    tier: 'standard' as const,
-    verificationStatus: 'unverified' as const,
-    xp: 0,
-    rankScore: 0,
-    reviewCount: 0,
-    emailVerified: false,
-    paymentMethodsSetup: false,
-    isActive: true,
-    notifications: {
-      email: true,
-      push: true,
-      sms: false,
-    },
-    profileVisibility: 'public' as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
 
   describe('schema validation', () => {
     test('validates correct user data', () => {
@@ -44,7 +44,7 @@ describe('UnifiedUserSchema', () => {
     });
 
     test('requires uid', () => {
-      const { uid, ...userWithoutUid } = validUser;
+      const { uid, ...userWithoutUid } = validUser; // eslint-disable-line @typescript-eslint/no-unused-vars
       expect(() => validateUnifiedUser(userWithoutUid)).toThrow();
     });
 
@@ -150,7 +150,7 @@ describe('UnifiedUserSchema', () => {
       
       // But the schema should not allow uid field
       const schemaKeys = Object.keys(UpdateUserSchema.shape);
-      expect(schemaKeys).not.toContain('uid');
+      expect(schemaKeys).not.toContain(SCHEMA_FIELDS.USER.UID);
     });
 
     test('prevents updating email', () => {
@@ -164,7 +164,7 @@ describe('UnifiedUserSchema', () => {
       
       // But the schema should not allow email field
       const schemaKeys = Object.keys(UpdateUserSchema.shape);
-      expect(schemaKeys).not.toContain('email');
+      expect(schemaKeys).not.toContain(SCHEMA_FIELDS.USER.EMAIL);
     });
   });
 });
@@ -203,18 +203,18 @@ describe('User transformation utilities', () => {
     test('returns only public fields', () => {
       const publicUser = toPublicUser(fullUser);
       
-      expect(publicUser).toHaveProperty('uid');
+      expect(publicUser).toHaveProperty(SCHEMA_FIELDS.USER.UID);
       expect(publicUser).toHaveProperty('displayName');
-      expect(publicUser).toHaveProperty('role');
-      expect(publicUser).toHaveProperty('tier');
+      expect(publicUser).toHaveProperty(SCHEMA_FIELDS.USER.ROLE);
+      expect(publicUser).toHaveProperty(SCHEMA_FIELDS.USER.TIER);
       expect(publicUser).toHaveProperty('verificationStatus');
-      expect(publicUser).toHaveProperty('averageRating');
-      expect(publicUser).toHaveProperty('reviewCount');
+      expect(publicUser).toHaveProperty(SCHEMA_FIELDS.USER.AVERAGE_RATING);
+      expect(publicUser).toHaveProperty(SCHEMA_FIELDS.USER.REVIEW_COUNT);
       expect(publicUser).toHaveProperty('bio');
       expect(publicUser).toHaveProperty('profilePicture');
       
       // Should not have sensitive fields
-      expect(publicUser).not.toHaveProperty('email');
+      expect(publicUser).not.toHaveProperty(SCHEMA_FIELDS.USER.EMAIL);
       expect(publicUser).not.toHaveProperty('walletId');
       expect(publicUser).not.toHaveProperty('paymentMethodsSetup');
       expect(publicUser).not.toHaveProperty('notifications');
@@ -225,7 +225,7 @@ describe('User transformation utilities', () => {
     test('returns user data without sensitive financial info', () => {
       const privateUser = toPrivateUser(fullUser);
       
-      expect(privateUser).toHaveProperty('email');
+      expect(privateUser).toHaveProperty(SCHEMA_FIELDS.USER.EMAIL);
       expect(privateUser).toHaveProperty('notifications');
       expect(privateUser).toHaveProperty('profileVisibility');
       
