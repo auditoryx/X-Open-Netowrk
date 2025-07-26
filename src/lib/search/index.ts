@@ -268,7 +268,7 @@ class FirestoreSearchService implements SearchService {
 /**
  * Get the appropriate search service instance
  */
-function getSearchService(): SearchService {
+function getSearchServiceInternal(): SearchService {
   const useAlgolia = process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_ADMIN_KEY;
   
   if (useAlgolia) {
