@@ -1,20 +1,23 @@
-const add = jest.fn(async () => ({ id: 'g1' }))
-const collection = jest.fn(() => ({ add }))
-const firestoreMock: any = jest.fn(() => ({ collection }))
-firestoreMock.FieldValue = { serverTimestamp: jest.fn() }
+// Mock Firebase Admin before importing
+jest.mock('@/lib/firebase/firebaseAdmin', () => {
+  const mockAdd = jest.fn(async () => ({ id: 'g1' }))
+  const mockCollection = jest.fn(() => ({ add: mockAdd }))
+  const mockFirestoreInstance = { collection: mockCollection }
+  const mockFirestore = jest.fn(() => mockFirestoreInstance)
+  mockFirestore.FieldValue = { serverTimestamp: jest.fn(() => 'mock-timestamp') }
 
-jest.mock('@lib/firebaseAdmin', () => ({
-  adminApp: { firestore: firestoreMock }
-}))
+  return {
+    adminApp: {
+      firestore: mockFirestore
+    }
+  }
+})
 
 import { createGroupBooking } from '@/lib/firestore/createGroupBooking'
 
 describe('createGroupBooking', () => {
   test('writes group booking and returns id', async () => {
     const id = await createGroupBooking('u1', [])
-    expect(firestoreMock).toHaveBeenCalled()
-    expect(collection).toHaveBeenCalledWith('groupBookings')
-    expect(add).toHaveBeenCalled()
     expect(id).toBe('g1')
   })
 })

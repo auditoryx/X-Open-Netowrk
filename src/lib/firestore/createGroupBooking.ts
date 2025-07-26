@@ -1,4 +1,4 @@
-import { adminApp } from '@/lib/firebaseAdmin';
+import { adminApp } from '@/lib/firebase/firebaseAdmin';
 import { CartItem } from '@/context/CartContext';
 
 export async function createGroupBooking(

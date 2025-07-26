@@ -4,18 +4,21 @@
 export const SCHEMA_FIELDS = {
   // User fields
   USER: {
+    UID: 'uid',
     USER_ID: 'userId',
     EMAIL: 'email',
     DISPLAY_NAME: 'displayName',
     CREATED_AT: 'createdAt',
     UPDATED_AT: 'updatedAt',
     ROLE: 'role',
+    TIER: 'tier',
     XP: 'xp',
     VERIFICATION: 'verification',
     RANK: 'rank',
     BADGES: 'badges',
     CHALLENGES: 'challenges',
     AVERAGE_RATING: 'averageRating',
+    REVIEW_COUNT: 'reviewCount',
   },
 
   // Service fields
@@ -114,6 +117,26 @@ export const SCHEMA_FIELDS = {
     BADGES_EARNED: 'badgesEarned',
     LEVEL: 'level',
     RANK: 'rank',
+  },
+
+  // Moderation fields
+  MODERATION: {
+    STATUS: 'status',
+    MODERATOR_ID: 'moderatorId',
+    REVIEWED_AT: 'reviewedAt',
+    REASON: 'reason',
+    QUEUE_ID: 'queueId',
+  },
+
+  // Report fields
+  REPORT: {
+    STATUS: 'status',
+    REPORTER_ID: 'reporterId',
+    REPORTED_ID: 'reportedId',
+    REPORT_TYPE: 'reportType',
+    DESCRIPTION: 'description',
+    CREATED_AT: 'createdAt',
+    RESOLVED_AT: 'resolvedAt',
   },
 
   // Common fields
