@@ -38,14 +38,14 @@ export function moderateReviewText(text: string): ModerationResult {
   
   if (foundInappropriateWords.length > 0) {
     flags.push(`Contains inappropriate words: ${foundInappropriateWords.join(', ')}`);
-    confidence -= 0.4 * foundInappropriateWords.length; // Penalize more for multiple bad words
+    confidence -= INAPPROPRIATE_WORD_PENALTY * foundInappropriateWords.length; // Penalize more for multiple bad words
   }
 
   // Check for spam patterns
   for (const pattern of SPAM_PATTERNS) {
     if (pattern.test(text)) {
       flags.push('Contains spam patterns');
-      confidence -= 0.4;
+      confidence -= INAPPROPRIATE_WORD_PENALTY;
       break;
     }
   }
