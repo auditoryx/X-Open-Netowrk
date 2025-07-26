@@ -119,6 +119,26 @@ export const SCHEMA_FIELDS = {
     RANK: 'rank',
   },
 
+  // Moderation fields
+  MODERATION: {
+    STATUS: 'status',
+    MODERATOR_ID: 'moderatorId',
+    REVIEWED_AT: 'reviewedAt',
+    REASON: 'reason',
+    QUEUE_ID: 'queueId',
+  },
+
+  // Report fields
+  REPORT: {
+    STATUS: 'status',
+    REPORTER_ID: 'reporterId',
+    REPORTED_ID: 'reportedId',
+    REPORT_TYPE: 'reportType',
+    DESCRIPTION: 'description',
+    CREATED_AT: 'createdAt',
+    RESOLVED_AT: 'resolvedAt',
+  },
+
   // Common fields
   SEASON: 'season',
   AMOUNT: 'amount',

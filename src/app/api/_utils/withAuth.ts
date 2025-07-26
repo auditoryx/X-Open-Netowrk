@@ -16,7 +16,7 @@ export default function withAuth(handler: (req: any, ...args: any[]) => Promise<
 /**
  * Verify authentication for API routes
  */
-export async function verifyAuth(req: any): Promise<{ user: any } | null> {
+export async function verifyAuth(_req: any): Promise<{ user: any } | null> {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user) {

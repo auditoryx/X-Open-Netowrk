@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { AdminMiddleware } from '@/lib/auth/adminSecurityMiddleware';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 async function getModerationQueue(limit: number = 20, status?: string) {
   try {
@@ -148,7 +149,7 @@ async function handler(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const limit = parseInt(url.searchParams.get('limit') || '20');
-    const status = url.searchParams.get('status') || undefined;
+    const status = url.searchParams.get(SCHEMA_FIELDS.MODERATION.STATUS) || undefined;
 
     // Validate parameters
     if (limit > 100) {

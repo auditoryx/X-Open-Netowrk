@@ -28,22 +28,22 @@ describe('MVP Feature Validation', () => {
     expect(SCHEMA_FIELDS.USER_PROGRESS.CURRENT_STREAK).toBeDefined();
   });
 
-  test('Core services can be imported without errors', () => {
-    expect(() => {
-      require('@/lib/google/calendarSync');
+  test('Core services can be imported without errors', async () => {
+    expect(async () => {
+      await import('@/lib/google/calendarSync');
     }).not.toThrow();
     
-    expect(() => {
-      require('@/lib/stripe/escrow');
+    expect(async () => {
+      await import('@/lib/stripe/escrow');
     }).not.toThrow();
     
-    expect(() => {
-      require('@/lib/firebase/realtimeService');
+    expect(async () => {
+      await import('@/lib/firebase/realtimeService');
     }).not.toThrow();
   });
 
-  test('Real-time service classes can be instantiated', () => {
-    const { RealtimeService } = require('@/lib/firebase/realtimeService');
+  test('Real-time service classes can be instantiated', async () => {
+    const { RealtimeService } = await import('@/lib/firebase/realtimeService');
     const service = new RealtimeService();
     
     expect(service).toBeDefined();
@@ -51,8 +51,8 @@ describe('MVP Feature Validation', () => {
     expect(typeof service.updatePresence).toBe('function');
   });
 
-  test('Calendar sync service has required methods', () => {
-    const { CalendarSyncService } = require('@/lib/google/calendarSync');
+  test('Calendar sync service has required methods', async () => {
+    const { CalendarSyncService } = await import('@/lib/google/calendarSync');
     
     // Test with mock access token
     const service = new CalendarSyncService('mock-token');
@@ -62,8 +62,8 @@ describe('MVP Feature Validation', () => {
     expect(typeof service.pushAvailability).toBe('function');
   });
 
-  test('Escrow service has required methods', () => {
-    const { EscrowService } = require('@/lib/stripe/escrow');
+  test('Escrow service has required methods', async () => {
+    const { EscrowService } = await import('@/lib/stripe/escrow');
     
     const service = new EscrowService();
     
