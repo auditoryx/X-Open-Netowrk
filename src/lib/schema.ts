@@ -53,10 +53,30 @@ export const BookingSchema = z.object({
   datetime: z.string(),
   title: z.string(),
   notes: z.string().optional(),
+  amount: z.number().min(0).optional(),
+  currency: z.string().default('usd').optional(),
+  paymentIntentId: z.string().optional(),
   createdAt: z.any(), // Firestore Timestamp
   updatedAt: z.any().optional(), // Firestore Timestamp
   hasReview: z.boolean().optional(),
   paymentStatus: z.enum(['pending', 'paid', 'held', 'released']).optional(),
+  // Cancellation fields
+  cancelledAt: z.any().optional(), // Firestore Timestamp
+  cancelledBy: z.string().optional(), // User ID who cancelled
+  cancellationReason: z.string().optional(),
+  refundCalculation: z.object({
+    originalAmount: z.number(),
+    refundAmount: z.number(),
+    refundPercentage: z.number(),
+    processingFee: z.number(),
+    policyApplied: z.string()
+  }).optional(),
+  refundResult: z.object({
+    refundId: z.string(),
+    amount: z.number(),
+    status: z.string()
+  }).optional(),
+  refundError: z.string().optional(),
 });
 
 // Service schema
