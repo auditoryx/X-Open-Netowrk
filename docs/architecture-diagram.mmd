@@ -1,0 +1,128 @@
+graph TB
+    %% Client Layer
+    subgraph "Client Applications"
+        WEB[Web App<br/>Next.js 15 + React 18]
+        MOBILE[Mobile PWA<br/>Service Workers]
+        API_CLIENT[API Integrations<br/>Third-party Apps]
+    end
+
+    %% Frontend Layer
+    subgraph "Frontend Services"
+        UI[UI Components<br/>Tailwind CSS + Framer Motion]
+        STATE[State Management<br/>React Query + Context]
+        AUTH_CLIENT[Auth Client<br/>NextAuth.js]
+        SEARCH_UI[Search Interface<br/>Algolia InstantSearch]
+    end
+
+    %% API Gateway & Middleware
+    subgraph "API Layer"
+        MIDDLEWARE[Middleware<br/>Authentication & Rate Limiting]
+        API_ROUTES[API Routes<br/>Next.js API Handlers]
+        WEBHOOK[Webhooks<br/>Stripe Events + External APIs]
+    end
+
+    %% Core Backend Services
+    subgraph "Core Services"
+        AUTH_SERVICE[Authentication Service<br/>Firebase Auth + Custom Claims]
+        USER_SERVICE[User Service<br/>Unified User Model]
+        BOOKING_SERVICE[Booking Service<br/>Lifecycle Management]
+        PAYMENT_SERVICE[Payment Service<br/>Stripe Integration]
+        NOTIFICATION_SERVICE[Notification Service<br/>Multi-channel Alerts]
+        SEARCH_SERVICE[Search Service<br/>Algolia Indexing]
+    end
+
+    %% Data Layer
+    subgraph "Database Layer"
+        FIRESTORE[(Firestore<br/>Primary Database)]
+        FIREBASE_STORAGE[(Firebase Storage<br/>Media Files)]
+        ALGOLIA_INDEX[(Algolia<br/>Search Index)]
+        REDIS[(Redis Cache<br/>Session & Performance)]
+    end
+
+    %% External Services
+    subgraph "External Integrations"
+        STRIPE[Stripe<br/>Payments + Identity]
+        GOOGLE_CAL[Google Calendar<br/>Scheduling Integration]
+        SENDGRID[SendGrid<br/>Email Delivery]
+        TWILIO[Twilio<br/>SMS Notifications]
+        SENTRY[Sentry<br/>Error Monitoring]
+    end
+
+    %% Cloud Functions
+    subgraph "Serverless Functions"
+        CRON_FUNCTIONS[Scheduled Functions<br/>Cleanup + Analytics]
+        TRIGGER_FUNCTIONS[Database Triggers<br/>Real-time Updates]
+        HTTP_FUNCTIONS[HTTP Functions<br/>Webhooks + Processing]
+    end
+
+    %% Security & Monitoring
+    subgraph "Security & Monitoring"
+        FIRESTORE_RULES[Firestore Security Rules<br/>Row-Level Security]
+        ENCRYPTION[End-to-End Encryption<br/>Chat + Sensitive Data]
+        MONITORING[Performance Monitoring<br/>Analytics + Logging]
+    end
+
+    %% Data Flow Connections
+    WEB --> UI
+    MOBILE --> UI
+    API_CLIENT --> API_ROUTES
+    
+    UI --> STATE
+    STATE --> AUTH_CLIENT
+    UI --> SEARCH_UI
+    
+    AUTH_CLIENT --> MIDDLEWARE
+    SEARCH_UI --> API_ROUTES
+    MIDDLEWARE --> API_ROUTES
+    
+    API_ROUTES --> AUTH_SERVICE
+    API_ROUTES --> USER_SERVICE
+    API_ROUTES --> BOOKING_SERVICE
+    API_ROUTES --> PAYMENT_SERVICE
+    API_ROUTES --> NOTIFICATION_SERVICE
+    API_ROUTES --> SEARCH_SERVICE
+    
+    AUTH_SERVICE --> FIRESTORE
+    USER_SERVICE --> FIRESTORE
+    BOOKING_SERVICE --> FIRESTORE
+    PAYMENT_SERVICE --> STRIPE
+    SEARCH_SERVICE --> ALGOLIA_INDEX
+    NOTIFICATION_SERVICE --> SENDGRID
+    NOTIFICATION_SERVICE --> TWILIO
+    
+    WEBHOOK --> STRIPE
+    WEBHOOK --> GOOGLE_CAL
+    
+    FIRESTORE --> TRIGGER_FUNCTIONS
+    CRON_FUNCTIONS --> FIRESTORE
+    HTTP_FUNCTIONS --> EXTERNAL_APIS[External APIs]
+    
+    USER_SERVICE --> FIREBASE_STORAGE
+    SEARCH_SERVICE --> FIRESTORE
+    
+    FIRESTORE_RULES --> FIRESTORE
+    ENCRYPTION --> FIRESTORE
+    MONITORING --> SENTRY
+    
+    %% Performance Optimizations
+    STATE -.-> REDIS
+    SEARCH_SERVICE -.-> REDIS
+    
+    %% Styling
+    classDef clientLayer fill:#e1f5fe
+    classDef frontendLayer fill:#f3e5f5
+    classDef apiLayer fill:#fff3e0
+    classDef serviceLayer fill:#e8f5e8
+    classDef dataLayer fill:#fff8e1
+    classDef externalLayer fill:#fce4ec
+    classDef serverlessLayer fill:#f1f8e9
+    classDef securityLayer fill:#ffebee
+    
+    class WEB,MOBILE,API_CLIENT clientLayer
+    class UI,STATE,AUTH_CLIENT,SEARCH_UI frontendLayer
+    class MIDDLEWARE,API_ROUTES,WEBHOOK apiLayer
+    class AUTH_SERVICE,USER_SERVICE,BOOKING_SERVICE,PAYMENT_SERVICE,NOTIFICATION_SERVICE,SEARCH_SERVICE serviceLayer
+    class FIRESTORE,FIREBASE_STORAGE,ALGOLIA_INDEX,REDIS dataLayer
+    class STRIPE,GOOGLE_CAL,SENDGRID,TWILIO,SENTRY externalLayer
+    class CRON_FUNCTIONS,TRIGGER_FUNCTIONS,HTTP_FUNCTIONS serverlessLayer
+    class FIRESTORE_RULES,ENCRYPTION,MONITORING securityLayer
