@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { User, Camera, Calendar, ArrowRight, ArrowLeft, Check } from 'lucide-react';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import toast from 'react-hot-toast';
 
 interface OnboardingStep {
@@ -47,12 +48,12 @@ export default function OnboardingWizard() {
               onClick={() => setFormData(prev => ({ ...prev, role: role.value }))}
               className={`w-full p-4 border-2 rounded-lg text-left transition-all ${
                 formData.role === role.value
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-brand-500 bg-brand-500/10 text-white'
+                  : 'border-white/20 hover:border-white/40 bg-neutral-800/50 text-white'
               }`}
             >
-              <h3 className="font-semibold text-lg">{role.label}</h3>
-              <p className="text-gray-600 text-sm mt-1">{role.description}</p>
+              <h3 className="font-semibold text-lg text-white">{role.label}</h3>
+              <p className="text-gray-300 text-sm mt-1">{role.description}</p>
             </button>
           ))}
         </div>
@@ -65,7 +66,7 @@ export default function OnboardingWizard() {
       component: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Display Name
             </label>
             <input
@@ -73,12 +74,12 @@ export default function OnboardingWizard() {
               value={formData.displayName}
               onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
               placeholder="How should we call you?"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-neutral-800 border border-white/20 rounded-md text-white placeholder-gray-400 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Short Bio
             </label>
             <textarea
@@ -86,7 +87,7 @@ export default function OnboardingWizard() {
               onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
               placeholder="Tell us a bit about yourself and your work..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 bg-neutral-800 border border-white/20 rounded-md text-white placeholder-gray-400 focus:ring-brand-500 focus:border-brand-500"
             />
           </div>
 

@@ -31,7 +31,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-purple-900/20">
       <OnboardingWizard />
     </div>
   );
