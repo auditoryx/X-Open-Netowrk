@@ -21,6 +21,7 @@ import QueryProvider from '@/providers/QueryProvider';
 import { VerificationProvider } from '@/providers/VerificationProvider';
 import { ProgressiveOnboardingProvider } from '@/components/onboarding/ProgressiveOnboarding';
 import OnboardingManager from '@/components/onboarding/OnboardingManager';
+import GlobalUIProvider from '@/components/GlobalUIProvider';
 
 export const metadata = {
   title: 'AuditoryX – Global Creative Network',
@@ -47,14 +48,16 @@ export default function RootLayout({
                 <QueryProvider>
                   <VerificationProvider>
                     <ProgressiveOnboardingProvider>
-                      <Navbar />
-                      <StreakToast />
-                      <VerificationNotificationManager />
-                      <Toaster position="top-center" />
-                      <OnboardingManager />
-                      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        {children}
-                      </div>
+                      <GlobalUIProvider>
+                        <Navbar />
+                        <StreakToast />
+                        <VerificationNotificationManager />
+                        <Toaster position="top-center" />
+                        <OnboardingManager />
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                          {children}
+                        </div>
+                      </GlobalUIProvider>
                     </ProgressiveOnboardingProvider>
                   </VerificationProvider>
                 </QueryProvider>

@@ -1,231 +1,198 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
-import { 
-  Search, 
-  Calendar, 
-  Star, 
-  Music, 
-  Plus, 
-  MessageSquare,
-  Users,
-  Filter,
-  MapPin
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface EmptyStateProps {
   title: string;
   description: string;
-  icon?: LucideIcon;
-  iconName?: 'search' | 'calendar' | 'star' | 'music' | 'plus' | 'message' | 'users' | 'filter' | 'mappin';
-  ctaButton?: {
-    text: string;
-    onClick: () => void;
-    variant?: 'primary' | 'secondary' | 'outline';
-  };
+  actionText?: string;
+  actionHref?: string;
+  illustration?: React.ReactNode;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
 }
 
-const iconMap = {
-  search: Search,
-  calendar: Calendar,
-  star: Star,
-  music: Music,
-  plus: Plus,
-  message: MessageSquare,
-  users: Users,
-  filter: Filter,
-  mappin: MapPin
-};
+const DefaultIllustration = () => (
+  <motion.div 
+    className="w-48 h-48 mx-auto mb-8 relative"
+    initial={{ opacity: 0, scale: 0.8 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5, delay: 0.2 }}
+  >
+    {/* Search glass illustration */}
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center"
+      animate={{ 
+        rotate: [0, 5, -5, 0],
+        scale: [1, 1.05, 1] 
+      }}
+      transition={{ 
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    >
+      <div className="w-32 h-32 border-8 border-white rounded-full relative">
+        <div className="absolute -bottom-6 -right-6 w-16 h-8 bg-white transform rotate-45 rounded-lg"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <motion.div
+            className="text-4xl"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          >
+            🔍
+          </motion.div>
+        </div>
+      </div>
+    </motion.div>
+    
+    {/* Floating elements */}
+    <motion.div
+      className="absolute top-4 right-8 text-2xl"
+      animate={{ 
+        y: [-10, 10, -10],
+        rotate: [0, 10, -10, 0]
+      }}
+      transition={{ 
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    >
+      🎵
+    </motion.div>
+    
+    <motion.div
+      className="absolute bottom-8 left-4 text-xl"
+      animate={{ 
+        y: [10, -10, 10],
+        rotate: [0, -10, 10, 0]
+      }}
+      transition={{ 
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: 1
+      }}
+    >
+      🎤
+    </motion.div>
+    
+    <motion.div
+      className="absolute top-16 left-12 text-lg"
+      animate={{ 
+        y: [-5, 15, -5],
+        rotate: [0, 15, -15, 0]
+      }}
+      transition={{ 
+        duration: 5,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: 0.5
+      }}
+    >
+      🎧
+    </motion.div>
+  </motion.div>
+);
 
-const EmptyState: React.FC<EmptyStateProps> = ({
+export default function EmptyState({
   title,
   description,
-  icon: CustomIcon,
-  iconName = 'search',
-  ctaButton,
-  className = '',
-  size = 'md'
-}) => {
-  const Icon = CustomIcon || iconMap[iconName];
-  
-  const sizeClasses = {
-    sm: {
-      container: 'py-8',
-      icon: 'h-12 w-12',
-      title: 'text-lg',
-      description: 'text-sm',
-      button: 'px-4 py-2 text-sm'
-    },
-    md: {
-      container: 'py-12',
-      icon: 'h-16 w-16',
-      title: 'text-xl',
-      description: 'text-base',
-      button: 'px-6 py-3 text-base'
-    },
-    lg: {
-      container: 'py-16',
-      icon: 'h-20 w-20',
-      title: 'text-2xl',
-      description: 'text-lg',
-      button: 'px-8 py-4 text-lg'
-    }
-  };
-
-  const buttonVariants = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-    secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
-    outline: 'border-2 border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white hover:bg-gray-800'
-  };
-
+  actionText,
+  actionHref,
+  illustration,
+  className = ''
+}: EmptyStateProps) {
   return (
-    <div className={`flex flex-col items-center justify-center text-center ${sizeClasses[size].container} ${className}`}>
-      {/* Icon */}
-      <div className="mb-4">
-        <Icon className={`${sizeClasses[size].icon} text-gray-500 mx-auto`} />
-      </div>
+    <motion.div 
+      className={`text-center py-16 px-8 ${className}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      {illustration || <DefaultIllustration />}
+      
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <h3 className="heading-brutalist-lg mb-6">{title}</h3>
+        <p className="text-brutalist-mono opacity-80 mb-8 max-w-md mx-auto">
+          {description}
+        </p>
+        
+        {actionText && actionHref && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Link 
+              href={actionHref}
+              className="btn-brutalist inline-block"
+            >
+              {actionText}
+            </Link>
+          </motion.div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
 
-      {/* Title */}
-      <h3 className={`font-semibold text-gray-300 mb-2 ${sizeClasses[size].title}`}>
-        {title}
-      </h3>
+// Specific empty state variants
+export const NoResultsEmpty = ({ searchQuery }: { searchQuery?: string }) => (
+  <EmptyState
+    title="NO CREATORS FOUND"
+    description={searchQuery 
+      ? `No creators match "${searchQuery}". Try adjusting your filters or search terms.`
+      : "No creators match your current filters. Try broadening your search criteria."
+    }
+    actionText="CLEAR FILTERS"
+    actionHref="/explore"
+  />
+);
 
-      {/* Description */}
-      <p className={`text-gray-500 mb-6 max-w-md ${sizeClasses[size].description}`}>
-        {description}
-      </p>
-
-      {/* CTA Button */}
-      {ctaButton && (
-        <button
-          onClick={ctaButton.onClick}
-          className={`
-            ${sizeClasses[size].button}
-            ${buttonVariants[ctaButton.variant || 'primary']}
-            rounded-lg font-medium transition-colors duration-200
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900
-          `}
+export const NoServicesEmpty = () => (
+  <EmptyState
+    title="NO SERVICES AVAILABLE"
+    description="This creator hasn't listed any services yet. Check back later or explore other creators."
+    actionText="EXPLORE CREATORS"
+    actionHref="/explore"
+    illustration={
+      <div className="w-48 h-48 mx-auto mb-8 flex items-center justify-center">
+        <motion.div
+          className="text-8xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, -5, 0]
+          }}
+          transition={{ 
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         >
-          {ctaButton.text}
-        </button>
-      )}
-    </div>
-  );
-};
-
-// Pre-configured empty states for common scenarios
-export const NoCreatorsFound: React.FC<{ onClearFilters?: () => void }> = ({ onClearFilters }) => (
-  <EmptyState
-    title="No Creators Found"
-    description="We couldn't find any creators matching your criteria. Try adjusting your filters or search terms."
-    iconName="users"
-    ctaButton={onClearFilters ? {
-      text: "Clear Filters",
-      onClick: onClearFilters,
-      variant: "outline"
-    } : undefined}
+          🎵
+        </motion.div>
+      </div>
+    }
   />
 );
 
-export const NoSearchResults: React.FC<{ query: string; onClearSearch?: () => void }> = ({ query, onClearSearch }) => (
-  <EmptyState
-    title="No Results Found"
-    description={`We couldn't find any creators matching "${query}". Try different keywords or browse all creators.`}
-    iconName="search"
-    ctaButton={onClearSearch ? {
-      text: "Clear Search",
-      onClick: onClearSearch,
-      variant: "outline"
-    } : undefined}
-  />
-);
-
-export const NoBookings: React.FC<{ 
-  userRole: 'client' | 'provider';
-  onExplore?: () => void;
-  onCreateService?: () => void;
-}> = ({ userRole, onExplore, onCreateService }) => {
-  const isClient = userRole === 'client';
-  
-  return (
-    <EmptyState
-      title={isClient ? "No Bookings Yet" : "No Bookings Received"}
-      description={
-        isClient 
-          ? "Start by exploring creators and booking your first service."
-          : "Once clients book your services, they'll appear here."
-      }
-      iconName="calendar"
-      ctaButton={
-        isClient && onExplore ? {
-          text: "Explore Creators",
-          onClick: onExplore,
-          variant: "primary"
-        } : !isClient && onCreateService ? {
-          text: "Create a Service",
-          onClick: onCreateService,
-          variant: "primary"
-        } : undefined
-      }
+export const LoadingEmpty = () => (
+  <motion.div 
+    className="text-center py-16 px-8"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.3 }}
+  >
+    <motion.div 
+      className="w-16 h-16 mx-auto mb-6 border-4 border-white border-t-transparent rounded-full"
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
     />
-  );
-};
-
-export const NoServices: React.FC<{ 
-  isOwnProfile: boolean;
-  onCreateService?: () => void;
-}> = ({ isOwnProfile, onCreateService }) => (
-  <EmptyState
-    title={isOwnProfile ? "No Services Created" : "No Services Available"}
-    description={
-      isOwnProfile 
-        ? "Create your first service to start receiving bookings from clients."
-        : "This creator hasn't added any services yet."
-    }
-    iconName="music"
-    size="sm"
-    ctaButton={isOwnProfile && onCreateService ? {
-      text: "Create Service",
-      onClick: onCreateService,
-      variant: "primary"
-    } : undefined}
-  />
+    <p className="text-brutalist-mono opacity-60">LOADING CREATORS...</p>
+  </motion.div>
 );
-
-export const NoReviews: React.FC<{ 
-  isOwnProfile: boolean;
-  onRequestReview?: () => void;
-}> = ({ isOwnProfile, onRequestReview }) => (
-  <EmptyState
-    title={isOwnProfile ? "No Reviews Yet" : "No Reviews Available"}
-    description={
-      isOwnProfile 
-        ? "Complete some bookings to start receiving reviews from clients."
-        : "This creator hasn't received any reviews yet."
-    }
-    iconName="star"
-    size="sm"
-    ctaButton={isOwnProfile && onRequestReview ? {
-      text: "Request Reviews",
-      onClick: onRequestReview,
-      variant: "outline"
-    } : undefined}
-  />
-);
-
-export const NoMessages: React.FC<{ onExplore?: () => void }> = ({ onExplore }) => (
-  <EmptyState
-    title="No Messages"
-    description="Start a conversation by booking a service or reaching out to creators."
-    iconName="message"
-    ctaButton={onExplore ? {
-      text: "Find Creators",
-      onClick: onExplore,
-      variant: "primary"
-    } : undefined}
-  />
-);
-
-export default EmptyState;
-export { EmptyState };

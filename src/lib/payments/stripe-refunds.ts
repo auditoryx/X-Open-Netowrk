@@ -6,7 +6,7 @@
 
 import Stripe from 'stripe';
 import { adminDb } from '@/lib/firebase-admin';
-import { EscrowService, EscrowPayment } from './escrow';
+import { EscrowService, EscrowPayment } from '../stripe/escrow';
 import { calculateRefund, BookingData } from './refund-calculator';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
