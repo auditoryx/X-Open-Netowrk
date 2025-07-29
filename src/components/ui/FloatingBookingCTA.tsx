@@ -70,7 +70,13 @@ export default function FloatingBookingCTA({
       });
     } catch (error) {
       // Fallback to copying URL
-      navigator.clipboard.writeText(window.location.href);
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        console.log("URL copied to clipboard as a fallback.");
+      } catch (clipboardError) {
+        console.error("Failed to copy URL to clipboard:", clipboardError);
+        alert("Unable to share or copy the URL. Please try again.");
+      }
     }
   };
 
