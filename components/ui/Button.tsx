@@ -22,9 +22,12 @@ export default function Button({
   
   const classes = [baseClass, sizeClass, className].filter(Boolean).join(' ');
   
+  // Remove animate from props that go to the DOM
+  const { animate: _, ...buttonProps } = props;
+  
   if (!animate) {
     return (
-      <button className={classes} {...props}>
+      <button className={classes} {...buttonProps}>
         {children}
       </button>
     );
@@ -43,7 +46,7 @@ export default function Button({
         transition: { duration: 0.1 }
       }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-      {...props}
+      {...buttonProps}
     >
       {children}
     </motion.button>

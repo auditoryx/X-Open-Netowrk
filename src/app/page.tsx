@@ -2,6 +2,7 @@ import Button from '@/components/ui/Button';
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import AnimateOnScroll, { StaggeredReveal, CountUp } from '@/components/ui/AnimateOnScroll';
 
 export const metadata: Metadata = {
   title: 'AuditoryX - The Global Creative Network Built for Music',
@@ -69,42 +70,46 @@ export default function Home() {
           </section>
 
           {/* FEATURE TILES */}
-          <section className="grid-brutalist grid-cols-1 md:grid-cols-2 lg:grid-cols-3 spacing-brutalist-lg">
-            {[
-              {
-                title: '🎤 BOOK FEATURES FROM ARTISTS',
-                desc: 'GET VERSES FROM THOUXANBANFAUNI, UNOTHEACTIVIST, AND 500+ VERIFIED ARTISTS. FROM $800-$5K PER FEATURE.',
-              },
-              {
-                title: '🎥 HIRE TOP VIDEOGRAPHERS',
-                desc: 'WORK WITH COLE BENNETT, ZACH HURTH, AND ELITE DIRECTORS. MUSIC VIDEOS STARTING AT $2K.',
-              },
-              {
-                title: '🏢 BOOK PREMIUM STUDIOS',
-                desc: 'RECORD AT TREE SOUND, STANKONIA, AND 200+ PRO STUDIOS. $100-500/HOUR WITH ENGINEER INCLUDED.',
-              },
-              {
-                title: '🎚 WORLD-CLASS ENGINEERS',
-                desc: 'MIX WITH ALEX TUMAY, LUCA PRETOLESI, AND GRAMMY-WINNING ENGINEERS. $500-2K PER SONG.',
-              },
-              {
-                title: '🎼 EXCLUSIVE BEATS',
-                desc: 'BUY FROM METRO BOOMIN, OOGIE MANE, AND RISING PRODUCERS. EXCLUSIVE RIGHTS $300-10K.',
-              },
-              {
-                title: '🌍 GLOBAL NETWORK',
-                desc: 'ACCESS 10K+ CREATORS ACROSS 50+ COUNTRIES. ATLANTA, LA, NYC, LONDON, TOKYO, AND BEYOND.',
-              },
-            ].map((f) => (
-              <div
-                key={f.title}
-                className="card-brutalist spacing-brutalist-md hover-brutal"
-              >
-                <h2 className="heading-brutalist-sm mb-4">{f.title}</h2>
-                <p className="text-brutalist-mono opacity-80">{f.desc}</p>
-              </div>
-            ))}
-          </section>
+          <AnimateOnScroll direction="up" delay={0.2}>
+            <section className="grid-brutalist grid-cols-1 md:grid-cols-2 lg:grid-cols-3 spacing-brutalist-lg">
+              <StaggeredReveal staggerDelay={0.15} direction="up">
+                {[
+                  {
+                    title: '🎤 Book Features from Artists',
+                    desc: 'Get verses from ThouxanBanFauni, UnoTheActivist, and 500+ verified artists. From $800-$5K per feature.',
+                  },
+                  {
+                    title: '🎥 Hire Top Videographers',
+                    desc: 'Work with Cole Bennett, Zach Hurth, and elite directors. Music videos starting at $2K.',
+                  },
+                  {
+                    title: '🏢 Book Premium Studios',
+                    desc: 'Record at Tree Sound, Stankonia, and 200+ pro studios. $100-500/hour with engineer included.',
+                  },
+                  {
+                    title: '🎚 World-Class Engineers',
+                    desc: 'Mix with Alex Tumay, Luca Pretolesi, and Grammy-winning engineers. $500-2K per song.',
+                  },
+                  {
+                    title: '🎼 Exclusive Beats',
+                    desc: 'Buy from Metro Boomin, Oogie Mane, and rising producers. Exclusive rights $300-10K.',
+                  },
+                  {
+                    title: '🌍 Global Network',
+                    desc: 'Access 10K+ creators across 50+ countries. Atlanta, LA, NYC, London, Tokyo, and beyond.',
+                  },
+                ].map((f) => (
+                  <div
+                    key={f.title}
+                    className="card-brutalist spacing-brutalist-md hover-brutal"
+                  >
+                    <h2 className="heading-brutalist-sm mb-4">{f.title}</h2>
+                    <p className="text-brutalist-mono opacity-80">{f.desc}</p>
+                  </div>
+                ))}
+              </StaggeredReveal>
+            </section>
+          </AnimateOnScroll>
 
           {/* HOW IT WORKS */}
           <section className="spacing-brutalist-lg">
@@ -129,23 +134,31 @@ export default function Home() {
           </section>
 
           {/* RECENT ACTIVITY */}
-          <section className="card-brutalist spacing-brutalist-md text-center">
-            <h3 className="heading-brutalist-sm mb-8">🔥 LIVE ACTIVITY</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-6 h-6 bg-white rounded-none"></div>
-                <span className="text-brutalist-mono">23 CREATORS JOINED TODAY</span>
+          <AnimateOnScroll direction="up" delay={0.3}>
+            <section className="card-brutalist spacing-brutalist-md text-center">
+              <h3 className="heading-brutalist-sm mb-8">🔥 Live Activity</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-6 h-6 bg-white rounded-none"></div>
+                  <span className="text-brutalist-mono">
+                    <CountUp end={23} /> Creators Joined Today
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-6 h-6 bg-white rounded-none"></div>
+                  <span className="text-brutalist-mono">
+                    <CountUp end={156} /> Bookings This Week
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-6 h-6 bg-white rounded-none"></div>
+                  <span className="text-brutalist-mono">
+                    $<CountUp end={2.3} suffix="M" /> Paid Out This Month
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-6 h-6 bg-white rounded-none"></div>
-                <span className="text-brutalist-mono">156 BOOKINGS THIS WEEK</span>
-              </div>
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-6 h-6 bg-white rounded-none"></div>
-                <span className="text-brutalist-mono">$2.3M PAID OUT THIS MONTH</span>
-              </div>
-            </div>
-          </section>
+            </section>
+          </AnimateOnScroll>
 
           {/* FEATURED CREATORS (real data) */}
           <section className="spacing-brutalist-lg">
