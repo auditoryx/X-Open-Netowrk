@@ -40,6 +40,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, userData } = useAuth();
+  const userRole = userData?.role || null; // Explicitly handle null or undefined userData
 
   useEffect(() => {
     const checkMobile = () => {
