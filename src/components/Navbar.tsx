@@ -34,6 +34,17 @@ export default function Navbar() {
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex space-x-6 text-sm items-center">
+        {/* Command Palette Trigger */}
+        <button 
+          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors px-3 py-1 rounded-md border border-gray-700 hover:border-gray-500 min-h-[2.75rem]"
+          title="Press Ctrl+K to search"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <span className="text-xs">⌘K</span>
+        </button>
+        
         <Link href="/explore" id="nav-explore" className="hover:underline font-medium text-brand-400 min-h-[2.75rem] flex items-center">
           <Translate t="nav.explore" />
         </Link>

@@ -42,11 +42,11 @@ export default function Home() {
 
           {/* HERO */}
           <section className="text-center bg-brutalist-black border-b-4 border-white spacing-brutalist-xl">
-            <h1 className="heading-brutalist-xl mb-8">
-              THE GLOBAL CREATIVE NETWORK BUILT FOR MUSIC
+            <h1 className="heading-brutalist-xl mb-8 leading-tight">
+              The Global Creative Network Built for Music
             </h1>
-            <p className="text-brutalist mb-16 max-w-4xl mx-auto">
-              BOOK TALENT, SELL YOUR SERVICES, AND GET PAID.
+            <p className="text-brutalist text-xl mb-16 max-w-4xl mx-auto font-medium leading-relaxed">
+              Book talent, sell your services, and get paid.
             </p>
             <div className="flex flex-col items-center gap-8">
               {/* Primary CTA */}
@@ -54,16 +54,16 @@ export default function Home() {
                 href="/explore" 
                 className="btn-brutalist-lg"
               >
-                🔍 EXPLORE 10K+ CREATORS
+                🔍 Explore 10K+ Creators
               </Link>
-              <p className="text-brutalist-mono opacity-60">NO SIGNUP REQUIRED • BROWSE FREELY</p>
+              <p className="text-brutalist-mono opacity-60 text-sm tracking-wide">No signup required • Browse freely</p>
               
               {/* Secondary CTA */}
               <Link 
                 href="/apply" 
                 className="btn-brutalist-secondary"
               >
-                I'M A CREATOR →
+                I'm a Creator →
               </Link>
             </div>
           </section>

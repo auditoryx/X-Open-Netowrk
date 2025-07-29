@@ -1,9 +1,11 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
+  animate?: boolean;
 }
 
 export default function Button({
@@ -11,6 +13,7 @@ export default function Button({
   size = 'md',
   className = '',
   children,
+  animate = true,
   ...props
 }: ButtonProps) {
   const baseClass = variant === 'primary' ? 'btn-brutalist' : 'btn-brutalist-secondary';
@@ -19,9 +22,30 @@ export default function Button({
   
   const classes = [baseClass, sizeClass, className].filter(Boolean).join(' ');
   
+  if (!animate) {
+    return (
+      <button className={classes} {...props}>
+        {children}
+      </button>
+    );
+  }
+  
   return (
-    <button className={classes} {...props}>
+    <motion.button 
+      className={classes} 
+      whileHover={{ 
+        scale: 1.05,
+        boxShadow: variant === 'primary' ? '6px 6px 0 #333333' : '6px 6px 0 #666666',
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{ 
+        scale: 0.95,
+        transition: { duration: 0.1 }
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      {...props}
+    >
       {children}
-    </button>
+    </motion.button>
   );
 }
