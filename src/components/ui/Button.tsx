@@ -23,7 +23,7 @@ export default function Button({
   const classes = [baseClass, sizeClass, className].filter(Boolean).join(' ');
   
   // Remove animate from props that go to the DOM
-  const { animate: _, ...buttonProps } = props;
+  const { animate, ...buttonProps } = props;
   
   if (!animate) {
     return (
