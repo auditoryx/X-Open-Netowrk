@@ -36,7 +36,7 @@ export default function CreatorCard({
   return (
     <Link
       href={`/profile/${id}`}
-      className="bg-neutral-900 border border-white/10 hover:border-white/20 transition p-4 rounded-lg block"
+      className="bg-neutral-900 border border-white/10 hover:border-white/20 hover:translate-y-[-2px] hover:shadow-lg transition-all duration-200 p-4 rounded-lg block"
     >
       <div className="flex items-center gap-3 mb-3">
         {imageUrl ? (

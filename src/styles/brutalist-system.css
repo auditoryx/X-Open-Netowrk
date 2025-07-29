@@ -19,7 +19,7 @@
   --shadow-brutal-xl: 8px 8px 0 var(--brutalist-gray);
   
   /* Brutalist Transitions */
-  --transition-brutal: all 0.1s ease;
+  --transition-brutal: all 0.15s ease-in-out;
 }
 
 /* Brutalist Typography Classes */
@@ -33,14 +33,12 @@
 
 .heading-brutalist-xl {
   font: 900 4rem/0.9 var(--font-display);
-  text-transform: UPPERCASE;
   letter-spacing: -0.02em;
   color: var(--brutalist-white);
 }
 
 .heading-brutalist-lg {
   font: 800 2.5rem/1 var(--font-display);
-  text-transform: UPPERCASE;
   letter-spacing: -0.01em;
   color: var(--brutalist-white);
 }
@@ -54,8 +52,7 @@
 
 .heading-brutalist-sm {
   font: 700 1.25rem/1.2 var(--font-display);
-  text-transform: UPPERCASE;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
   color: var(--brutalist-white);
 }
 

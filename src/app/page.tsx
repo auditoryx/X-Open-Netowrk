@@ -43,7 +43,7 @@ export default function Home() {
           {/* HERO */}
           <section className="text-center bg-brutalist-black border-b-4 border-white spacing-brutalist-xl">
             <h1 className="heading-brutalist-xl mb-8">
-              THE GLOBAL CREATIVE NETWORK BUILT FOR MUSIC
+              The Global Creative Network Built for Music
             </h1>
             <p className="text-brutalist mb-16 max-w-4xl mx-auto">
               BOOK TALENT, SELL YOUR SERVICES, AND GET PAID.
