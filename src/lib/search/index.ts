@@ -296,6 +296,6 @@ export function getSearchService(): SearchService {
 
 // Export types and utilities
 export type { SearchFilters, SearchOptions, SearchResponse };
-export { SearchFilters as SearchFiltersType, SearchOptions as SearchOptionsType };
+export type { SearchFilters as SearchFiltersType, SearchOptions as SearchOptionsType };
 
 export default getSearchService;
