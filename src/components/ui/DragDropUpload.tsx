@@ -19,6 +19,11 @@ export default function DragDropUpload({ onUploadComplete }: Props) {
       return;
     }
     const files = Array.from(fileList);
+    if (!user) {
+      console.error('User is not authenticated. Cannot upload files.');
+      setUploading(false);
+      return;
+    }
     const uploadedUrls = await Promise.all(
       files.map((file) => uploadMedia(file, user.uid))
     );
