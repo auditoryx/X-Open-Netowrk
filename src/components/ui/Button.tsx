@@ -8,7 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   animate?: boolean;
 }
 
-export default function Button({
+function Button({
   variant = 'primary',
   size = 'md',
   className = '',
@@ -22,8 +22,8 @@ export default function Button({
   
   const classes = [baseClass, sizeClass, className].filter(Boolean).join(' ');
   
-  // Remove animate from props that go to the DOM
-  const { animate, ...buttonProps } = props;
+  // Props without animate already extracted above
+  const buttonProps = props;
   
   if (!animate) {
     return (
@@ -52,3 +52,7 @@ export default function Button({
     </motion.button>
   );
 }
+
+// Support both named and default exports
+export { Button };
+export default Button;
