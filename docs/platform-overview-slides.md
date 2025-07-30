@@ -90,16 +90,15 @@
 |---------|----------|----------|-----------|
 | **Trust Badge** | None | ✅ Blue check | ⭐ Gold star |
 | **Identity Verification** | Email only | Government ID | Professional validation |
-| **Platform Fee** | 5% | 5% | **2.5%** |
-| **Payout Speed** | 7 days | 3 days | **Same day** |
+| **Platform Fee** | 15 | 15% | **15%** |
+| **Payout Speed** | 1 days | same days | **Same day** |
 | **Collaborators** | Single person | Up to 5 | **Unlimited** |
 | **Search Priority** | Baseline | +1 weight | **Top placement** |
 | **Monthly Bookings** | 5 | 25 | **Unlimited** |
 
 ### 💰 **Revenue Model**
-- **Standard/Verified**: 5% transaction fees
-- **Signature**: $99/month subscription + 2.5% fees
-- **Enterprise**: Custom pricing for labels/agencies
+- **Standard/Verified/signature**: 15% transaction fees
+
 
 ---
 
