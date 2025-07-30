@@ -33,9 +33,9 @@ test.describe('Page Navigation Audit', () => {
       
       if (smokeTestCount > 0) {
         await smokeTestButton.click();
-        console.log(`✅ Smoke test clicked for ${route}`);
+        test.info().log(`✅ Smoke test clicked for ${route}`);
       } else {
-        console.log(`⚠️ No smoke test found for ${route}`);
+        test.info().log(`⚠️ No smoke test found for ${route}`);
       }
     });
   });
