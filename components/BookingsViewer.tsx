@@ -12,7 +12,7 @@ interface BookingRequest {
   status: 'pending' | 'accepted' | 'declined';
 }
 
-export default function BookingsViewer(): JSX.Element {
+export default function BookingsViewer() {
   const { data: session } = useSession();
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
 

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useAuth } from '@/src/lib/hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { useChatMessages } from '@/lib/chat/useChatMessages';
-import { sendMessage } from '@/lib/chat/sendMessage';
+import { sendMessage } from '@/lib/firestore/chat/sendMessage';
 import { format } from 'date-fns';
 
 interface Message {
@@ -55,8 +55,7 @@ const BookingChatThread: React.FC<BookingChatThreadProps> = ({ bookingId, bookin
     try {
       await sendMessage({
         bookingId,
-        senderUid: user.uid,
-        senderName: user.displayName || user.email || 'User',
+        senderId: user.uid,
         text: messageText,
       });
     } catch (error) {

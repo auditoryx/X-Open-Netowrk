@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 // Firebase admin is server-side only
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { Mentorship } from '@/lib/types/Mentorship';
 import Link from 'next/link';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
 
 export default function MentorshipListingPage() {
-  const router = useRouter();
   const [mentorships, setMentorships] = useState<Mentorship[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');

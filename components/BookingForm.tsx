@@ -1,7 +1,7 @@
 "use client";
-import { useState, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 
-export default function BookingForm(): JSX.Element {
+export default function BookingForm() {
   const [name, setName] = useState<string>("");
   const [service, setService] = useState<string>("");
 

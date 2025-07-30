@@ -4,8 +4,9 @@ import { StripeRefundService } from '@/lib/payments/stripe-refunds';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     // Authenticate user
     const user = await getServerUser(request);
@@ -16,7 +17,7 @@ export async function GET(
       );
     }
 
-    const bookingId = params.id;
+    const bookingId = id;
 
     // Initialize refund service
     const refundService = new StripeRefundService();

@@ -11,7 +11,7 @@ import { db as firestore } from '../firebase/firebaseConfig';
 import toast from 'react-hot-toast';
 import ContractViewer from '@/components/contract/ContractViewer';
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
-import { NoBookings } from '@/components/ui/EmptyState';
+import EmptyState from '@/components/ui/EmptyState';
 import SkeletonCard from '@/components/ui/SkeletonCard';
 import { useRouter } from 'next/navigation';
 
@@ -73,9 +73,11 @@ export default function ClientBookings() {
           ))}
         </div>
       ) : bookings.length === 0 ? (
-        <NoBookings 
-          userRole="client" 
-          onExplore={() => router.push('/explore')}
+        <EmptyState 
+          title="No Bookings Yet"
+          description="You haven't made any bookings yet. Explore services to get started!"
+          actionText="Explore Services"
+          actionHref="/explore"
         />
       ) : (
         bookings.map((b) => (

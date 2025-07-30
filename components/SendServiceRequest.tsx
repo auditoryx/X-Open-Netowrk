@@ -15,8 +15,6 @@ interface SendServiceRequestProps {
 
 export default function SendServiceRequest({
   serviceId = "",
-  recipientId = "",
-  recipientRole = "studio",
 }: SendServiceRequestProps): JSX.Element {
   const [formData, setFormData] = useState<FormData>({
     date: "",

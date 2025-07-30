@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { sendMessage, subscribeToMessages, markMessagesAsSeen } from '../../lib/firestore/messages';
-import { useAuth } from '@/src/lib/hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/src/firebase/firebaseConfig';
+import { storage } from '@/firebase/firebaseConfig';
 import ChatThread from './ChatThread';
 import { PaperAirplaneIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 

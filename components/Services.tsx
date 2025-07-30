@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function Services(): JSX.Element {
   return (
     <section className="py-24 bg-black text-white">
