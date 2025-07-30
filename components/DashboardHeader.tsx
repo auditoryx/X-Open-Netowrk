@@ -4,8 +4,8 @@ import { auth, db } from "../firebase/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { SCHEMA_FIELDS } from "@/src/lib/SCHEMA_FIELDS";
-import { TIER_REQUIREMENTS } from "@/src/constants/gamification";
+import { SCHEMA_FIELDS } from "@/lib/SCHEMA_FIELDS";
+import { TIER_REQUIREMENTS } from "@/constants/gamification";
 import XpProgressBar from "@/components/ui/XpProgressBar";
 import { Flame, Trophy, Star } from "lucide-react";
 

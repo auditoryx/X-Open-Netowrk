@@ -10,8 +10,9 @@ const CancelBookingSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     // Authenticate user
     const user = await getServerUser(request);
@@ -22,7 +23,7 @@ export async function POST(
       );
     }
 
-    const bookingId = params.id;
+    const bookingId = id;
     
     // Validate request body
     const body = await request.json();
@@ -78,8 +79,9 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     // Authenticate user
     const user = await getServerUser(request);
@@ -90,7 +92,7 @@ export async function GET(
       );
     }
 
-    const bookingId = params.id;
+    const bookingId = id;
 
     // Initialize refund service
     const refundService = new StripeRefundService();

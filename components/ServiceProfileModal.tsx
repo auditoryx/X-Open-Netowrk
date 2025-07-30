@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Service } from "../src/types/service";
 
 interface ServiceProfileModalProps {
