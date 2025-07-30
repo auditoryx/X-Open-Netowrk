@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
+import { db } from '@/lib/firebase';
 import { isFirebaseConfigured } from '@/lib/firebase';
 import BookingSummary from '@/components/BookingSummary';
 import { BookingType } from '@lib/pdf/generateContract';
