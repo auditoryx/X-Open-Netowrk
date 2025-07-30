@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { getLeaderboard, getTopCreators, LeaderboardEntry } from '@/lib/firestore/getLeaderboard';
 import { TierBadge } from '@/components/badges/TierBadge';
 import { SkeletonCard } from '@/components/ui/SkeletonCard';
-import { EmptyState } from '@/components/ui/EmptyState';
+import EmptyState from '@/components/ui/EmptyState';
 import { Trophy, Medal, Award, Crown, Star } from 'lucide-react';
 import { SCHEMA_FIELDS } from '../../lib/SCHEMA_FIELDS';
 

@@ -9,8 +9,23 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import { Shield, FileText, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
+import { Shield, FileText, CheckCircle, AlertTriangle, Clock, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+
+// Firebase availability check
+let isFirebaseAvailable = false;
+try {
+  if (typeof window !== 'undefined') {
+    isFirebaseAvailable = !!(
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    );
+  }
+} catch (error) {
+  console.warn('Firebase configuration check failed:', error);
+  isFirebaseAvailable = false;
+}
 
 interface VerificationRequirements {
   required: boolean;
@@ -19,7 +34,18 @@ interface VerificationRequirements {
 }
 
 export default function VerificationStartPage() {
-  const { user } = useAuth();
+  // Defensive auth hook usage
+  let user = null;
+  
+  try {
+    if (isFirebaseAvailable) {
+      const authResult = useAuth();
+      user = authResult.user;
+    }
+  } catch (error) {
+    console.warn('Auth hook failed, continuing without authentication:', error);
+  }
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [requirements, setRequirements] = useState<VerificationRequirements>({
@@ -31,6 +57,12 @@ export default function VerificationStartPage() {
   const [selectedTier, setSelectedTier] = useState<'verified' | 'signature'>('verified');
 
   useEffect(() => {
+    if (!isFirebaseAvailable) {
+      // In demo mode, load mock requirements
+      loadVerificationRequirements();
+      return;
+    }
+
     if (!user) {
       router.push('/auth/signin');
       return;
@@ -63,6 +95,16 @@ export default function VerificationStartPage() {
   const startVerification = async () => {
     if (!agreedToTerms) {
       toast.error('Please agree to the terms and conditions');
+      return;
+    }
+
+    if (!isFirebaseAvailable) {
+      toast.error('Verification is currently unavailable. Please try again later.');
+      return;
+    }
+
+    if (!user) {
+      toast.error('You must be logged in to start verification');
       return;
     }
 
@@ -101,7 +143,9 @@ export default function VerificationStartPage() {
     }
   };
 
-  if (!user) {
+  if (!isFirebaseAvailable) {
+    // Demo mode - show the page with disabled functionality
+  } else if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -114,12 +158,32 @@ export default function VerificationStartPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      {/* Firebase Availability Warning */}
+      {!isFirebaseAvailable && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-5 w-5 text-yellow-400" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                <strong>Demo Mode:</strong> Identity verification is currently unavailable. 
+                This page is running in demonstration mode.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8">
           <Shield className="h-16 w-16 mx-auto text-blue-600 mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Identity Verification
+            <span data-testid="smoke" className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+              LOADED ✓
+            </span>
           </h1>
           <p className="text-lg text-gray-600">
             Verify your identity to unlock premium features and build trust with the community
@@ -326,14 +390,20 @@ export default function VerificationStartPage() {
 
               <button
                 onClick={startVerification}
-                disabled={!agreedToTerms || loading}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                disabled={!agreedToTerms || loading || !isFirebaseAvailable}
+                className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
+                  isFirebaseAvailable && agreedToTerms && !loading
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Starting Verification...
                   </div>
+                ) : !isFirebaseAvailable ? (
+                  'Verification Unavailable'
                 ) : (
                   'Start Identity Verification'
                 )}

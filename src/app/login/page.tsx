@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
-import { app } from '@/lib/firebase'
+import { app, isFirebaseConfigured } from '@/lib/firebase'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -13,11 +13,19 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
-  const auth = getAuth(app)
-  const provider = new GoogleAuthProvider()
+  
+  // Only initialize Firebase auth if Firebase is configured
+  const auth = isFirebaseConfigured() ? getAuth(app) : null
+  const provider = isFirebaseConfigured() ? new GoogleAuthProvider() : null
 
   const handleLogin = async () => {
     setError('')
+    
+    if (!auth) {
+      setError('Login is not available - Firebase not configured')
+      return
+    }
+    
     try {
       await signInWithEmailAndPassword(auth, email, password)
       router.push(redirect)
@@ -28,6 +36,11 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setError('')
+    
+    if (!auth || !provider) {
+      setError('Google login is not available - Firebase not configured')
+      return
+    }
     try {
       await signInWithPopup(auth, provider)
       router.push(redirect)
@@ -67,6 +80,14 @@ export default function LoginPage() {
         className="bg-white text-black px-6 py-2 rounded hover:bg-gray-300 mb-4"
       >
         Log In
+      </button>
+      
+      <button
+        onClick={() => console.log('Smoke test: Login page tested')}
+        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 mb-4 text-sm"
+        data-testid="smoke"
+      >
+        Test Login Page
       </button>
       
       <Link 

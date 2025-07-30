@@ -1,4 +1,4 @@
-import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch';
+import { algoliasearch, SearchClient, SearchIndex } from 'algoliasearch';
 import { UnifiedUser } from '@/lib/unified-models/user';
 
 /**

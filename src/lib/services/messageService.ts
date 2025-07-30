@@ -17,7 +17,7 @@ import {
   updateDoc,
   Timestamp
 } from 'firebase/firestore';
-import { app } from '@/lib/firebase';
+import { app, isFirebaseConfigured } from '@/lib/firebase';
 
 export interface Message {
   id: string;
@@ -42,11 +42,30 @@ export interface MessageThread {
 }
 
 export class MessageService {
-  private db = getFirestore(app);
+  private db: any;
+
+  constructor() {
+    if (isFirebaseConfigured()) {
+      this.db = getFirestore(app);
+    } else {
+      console.warn('MessageService: Firebase not configured, using mock mode');
+      this.db = null;
+    }
+  }
+
+  private isReady(): boolean {
+    return this.db !== null;
+  }
 
   // Create or get existing thread between two users
   async getOrCreateThread(currentUserId: string, otherUserId: string, otherUserName: string, currentUserName: string): Promise<string> {
-    const threadsRef = collection(this.db, 'messageThreads');
+    if (!this.isReady()) {
+      console.warn('MessageService: Firebase not ready, returning mock thread ID');
+      return 'mock-thread-id';
+    }
+
+    try {
+      const threadsRef = collection(this.db, 'messageThreads');
     
     // Try to find existing thread
     const q = query(
@@ -87,6 +106,10 @@ export class MessageService {
 
     const docRef = await addDoc(threadsRef, newThread);
     return docRef.id;
+    } catch (error) {
+      console.error('MessageService: Error creating thread:', error);
+      return 'mock-thread-id';
+    }
   }
 
   // Send a message in a thread

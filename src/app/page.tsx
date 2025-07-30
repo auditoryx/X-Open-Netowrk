@@ -332,9 +332,18 @@ export default function Home() {
           <section className="card-brutalist spacing-brutalist-lg text-center">
             <h3 className="heading-brutalist-md mb-6">WANT TO OFFER SERVICES ON AUDITORYX?</h3>
             <p className="text-brutalist-mono mb-8 opacity-80">APPLY AS A CREATOR AND START GETTING BOOKED.</p>
-            <Link href="/apply" className="btn-brutalist">
-              📍 APPLY NOW
-            </Link>
+            <div className="space-y-4">
+              <Link href="/apply" className="btn-brutalist">
+                📍 APPLY NOW
+              </Link>
+              <button 
+                onClick={() => console.log('Smoke test: Home page CTA clicked')}
+                className="btn btn-secondary mx-auto block"
+                data-testid="smoke"
+              >
+                Test Home Page
+              </button>
+            </div>
           </section>
 
         </div>

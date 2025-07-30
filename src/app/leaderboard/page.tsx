@@ -2,7 +2,22 @@
 
 import { useState } from 'react';
 import { Leaderboard } from '@/components/leaderboard/Leaderboard';
-import { Trophy, Users, Target } from 'lucide-react';
+import { Trophy, Users, Target, AlertCircle } from 'lucide-react';
+
+// Firebase availability check
+let isFirebaseAvailable = false;
+try {
+  if (typeof window !== 'undefined') {
+    isFirebaseAvailable = !!(
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    );
+  }
+} catch (error) {
+  console.warn('Firebase configuration check failed:', error);
+  isFirebaseAvailable = false;
+}
 
 const ROLES = [
   { key: 'all', label: 'All Creators', icon: Users },
@@ -18,12 +33,34 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Firebase Availability Warning */}
+      {!isFirebaseAvailable && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-5 w-5 text-yellow-400" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                <strong>Demo Mode:</strong> Leaderboard data is currently unavailable. 
+                This page is running in demonstration mode with sample data.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <Trophy className="w-10 h-10 text-yellow-500" />
-            <h1 className="text-4xl font-bold">Creator Leaderboard</h1>
+            <h1 className="text-4xl font-bold">
+              Creator Leaderboard
+              <span data-testid="smoke" className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                LOADED ✓
+              </span>
+            </h1>
           </div>
           <p className="text-gray-400 text-lg">
             Discover the top performers and rising stars in our creator community

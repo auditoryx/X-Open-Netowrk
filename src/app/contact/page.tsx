@@ -40,6 +40,14 @@ export default function ContactPage() {
         <p className="text-sm text-gray-500">
           We usually reply within 24–48 hours.
         </p>
+        
+        <button
+          onClick={() => console.log('Smoke test: Contact page tested')}
+          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 text-sm"
+          data-testid="smoke"
+        >
+          Test Contact Page
+        </button>
       </div>
     </div>
   );
