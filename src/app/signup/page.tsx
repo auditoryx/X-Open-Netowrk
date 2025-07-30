@@ -2,34 +2,55 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import React from 'react';
 import { signIn } from 'next-auth/react';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { app, db } from '@/lib/firebase';
+import { app, db, isFirebaseConfigured } from '@/lib/firebase';
 import { getRedirectAfterSignup } from './getRedirectAfterSignup';
 
 export default function SignupPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/dashboard';
-  const auth = getAuth(app);
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [firebaseError, setFirebaseError] = useState<string | null>(null);
   const [showVerificationPrompt, setShowVerificationPrompt] = useState(false);
 
+  // Check Firebase availability on component mount
+  React.useEffect(() => {
+    if (!isFirebaseConfigured()) {
+      setFirebaseError('Authentication service is currently unavailable');
+    }
+  }, []);
+
   const handleOAuthSignup = async (provider: string) => {
+    if (!isFirebaseConfigured()) {
+      setError('Authentication service is unavailable');
+      return;
+    }
+
     try {
       await signIn(provider, { callbackUrl: redirectPath });
     } catch (err: any) {
+      console.error('OAuth signup failed:', err);
       setError(err.message || 'OAuth signup failed');
     }
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isFirebaseConfigured()) {
+      setError('Authentication service is unavailable. Please try again later.');
+      return;
+    }
+
     try {
+      const auth = getAuth(app);
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, 'users', cred.user.uid), {
         email,
@@ -53,6 +74,7 @@ export default function SignupPage() {
       // Show verification prompt instead of redirecting immediately
       setShowVerificationPrompt(true);
     } catch (err: any) {
+      console.error('Signup failed:', err);
       setError(err.message || 'Signup failed');
     }
   };
@@ -98,30 +120,46 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
+      {firebaseError && (
+        <div className="bg-red-900 text-red-100 p-4 rounded-lg mb-4 max-w-md">
+          ⚠️ {firebaseError}
+        </div>
+      )}
+      
+      {!isFirebaseConfigured() && (
+        <div className="bg-blue-900 text-blue-100 p-4 rounded-lg mb-4 max-w-md">
+          ℹ️ Authentication service unavailable - signup temporarily disabled
+        </div>
+      )}
+
       <h1 className="text-3xl font-bold mb-4">Create an Account</h1>
       <p className="text-xs text-gray-400 mb-2">No spam — we respect your data.</p>
       <div className="flex flex-col gap-2 w-full max-w-sm mb-6">
         <button
           onClick={() => handleOAuthSignup('google')}
-          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
+          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 disabled:opacity-50"
+          disabled={!isFirebaseConfigured()}
         >
           Sign up with Google
         </button>
         <button
           onClick={() => handleOAuthSignup('apple')}
-          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
+          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 disabled:opacity-50"
+          disabled={!isFirebaseConfigured()}
         >
           Sign up with Apple
         </button>
         <button
           onClick={() => handleOAuthSignup('line')}
-          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
+          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 disabled:opacity-50"
+          disabled={!isFirebaseConfigured()}
         >
           Sign up with LINE
         </button>
         <button
           onClick={() => handleOAuthSignup('kakao')}
-          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
+          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 disabled:opacity-50"
+          disabled={!isFirebaseConfigured()}
         >
           Sign up with Kakao
         </button>
@@ -129,25 +167,29 @@ export default function SignupPage() {
       <form onSubmit={handleSignup} className="w-full max-w-sm space-y-4">
         <input
           type="email"
-          className="w-full px-4 py-2 rounded bg-neutral-800 border border-neutral-700"
+          className="w-full px-4 py-2 rounded bg-neutral-800 border border-neutral-700 disabled:opacity-50"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={!isFirebaseConfigured()}
           required
         />
         <input
           type="password"
-          className="w-full px-4 py-2 rounded bg-neutral-800 border border-neutral-700"
+          className="w-full px-4 py-2 rounded bg-neutral-800 border border-neutral-700 disabled:opacity-50"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={!isFirebaseConfigured()}
           required
         />
         <button
           type="submit"
-          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200"
+          className="w-full bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 disabled:opacity-50"
+          data-testid="smoke"
+          disabled={!isFirebaseConfigured()}
         >
-          Sign Up
+          {isFirebaseConfigured() ? 'Sign Up' : 'Sign Up (Unavailable)'}
         </button>
         {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
       </form>
