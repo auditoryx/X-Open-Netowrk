@@ -5,3 +5,10 @@ export * from './cron/streakReset';
 export * from './cron/calcTierAndRank';
 export * from './payments/createCheckoutSession';
 export * from './payments/handleStripeWebhook';
+
+// AX Beta: Credibility & Badge System
+export * from './triggers/onBookingCompleted';
+export * from './triggers/onReviewCreated';
+export * from './cron/expireDynamicBadges';
+export * from './cron/recomputeCredibility';
+export * from './monitoring/detectAbusePatterns';

@@ -18,7 +18,7 @@ export const calcTierAndRank = functions.pubsub
 
     while (true) {
       let q: FirebaseFirestore.Query = usersCol
-        .where('role', '==', 'creator')
+        .where('roles', 'array-contains', 'creator')
         .orderBy(admin.firestore.FieldPath.documentId())
         .limit(batchSize)
 
