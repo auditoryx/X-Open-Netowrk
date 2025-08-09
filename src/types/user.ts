@@ -29,6 +29,26 @@ export interface UserProfile {
   tierFrozen: boolean;
   /** Rooms for studio profiles */
   rooms?: Room[];
+  
+  // AX Beta: Credibility & Badge System
+  /** Array of badge IDs assigned to this user */
+  badgeIds?: string[];
+  /** Performance and engagement statistics */
+  stats?: {
+    completedBookings?: number;
+    positiveReviewCount?: number;
+    responseRate?: number; // 0-100 percentage
+    avgResponseTimeHours?: number;
+    lastCompletedAt?: any; // Firestore Timestamp
+    distinctClients90d?: number;
+  };
+  /** Credit counts by source type */
+  counts?: {
+    axVerifiedCredits?: number;
+    clientConfirmedCredits?: number;
+  };
+  /** Computed credibility score for merit-first exposure */
+  credibilityScore?: number;
 }
 
 export interface Room {
