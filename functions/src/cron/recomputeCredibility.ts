@@ -100,7 +100,7 @@ async function recomputeAllCredibilityScores(): Promise<{ processed: number; err
 
   while (true) {
     let query: admin.firestore.Query = db.collection('users')
-      .where('role', '==', 'creator')
+      .where('roles', 'array-contains', 'creator')
       .orderBy(admin.firestore.FieldPath.documentId())
       .limit(batchSize);
 

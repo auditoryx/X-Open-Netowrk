@@ -163,17 +163,17 @@ class PlatformAnalyticsService {
       const averageOrderValue = completedBookings > 0 ? totalRevenue / completedBookings : 0;
 
       // Get creator and client counts
-      const creatorsQuery = query(usersCollection, where('role', '==', 'creator'));
+      const creatorsQuery = query(usersCollection, where('roles', 'array-contains', 'creator'));
       const creatorsSnapshot = await getDocs(creatorsQuery);
       const creatorCount = creatorsSnapshot.size;
 
-      const clientsQuery = query(usersCollection, where('role', '==', 'client'));
+      const clientsQuery = query(usersCollection, where('roles', 'array-contains', 'client'));
       const clientsSnapshot = await getDocs(clientsQuery);
       const clientCount = clientsSnapshot.size;
 
       const verifiedCreatorsQuery = query(
         usersCollection,
-        where('role', '==', 'creator'),
+        where('roles', 'array-contains', 'creator'),
         where('verificationStatus', '==', 'verified')
       );
       const verifiedCreatorsSnapshot = await getDocs(verifiedCreatorsQuery);
@@ -249,15 +249,15 @@ class PlatformAnalyticsService {
       const monthRegistrations = monthRegistrationsSnapshot.size;
 
       // User type counts
-      const creatorsQuery = query(usersCollection, where('role', '==', 'creator'));
+      const creatorsQuery = query(usersCollection, where('roles', 'array-contains', 'creator'));
       const creatorsSnapshot = await getDocs(creatorsQuery);
       const creators = creatorsSnapshot.size;
 
-      const clientsQuery = query(usersCollection, where('role', '==', 'client'));
+      const clientsQuery = query(usersCollection, where('roles', 'array-contains', 'client'));
       const clientsSnapshot = await getDocs(clientsQuery);
       const clients = clientsSnapshot.size;
 
-      const adminsQuery = query(usersCollection, where('role', '==', 'admin'));
+      const adminsQuery = query(usersCollection, where('roles', 'array-contains', 'admin'));
       const adminsSnapshot = await getDocs(adminsQuery);
       const admins = adminsSnapshot.size;
 

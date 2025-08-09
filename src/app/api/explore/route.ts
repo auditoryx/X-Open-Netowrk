@@ -152,7 +152,7 @@ async function getTopCreators(filters: ExploreFilters, resultLimit: number, opti
     const constraints = [];
 
     // Base filters
-    constraints.push(where('role', '==', filters.role || 'creator'));
+    constraints.push(where('roles', 'array-contains', filters.role || 'creator'));
     constraints.push(where('status', '==', 'approved'));
 
     // Tier filter
@@ -204,7 +204,7 @@ async function getRisingCreators(filters: ExploreFilters, resultLimit: number, o
     let baseQuery: Query = collection(db, 'users');
     const constraints = [];
 
-    constraints.push(where('role', '==', filters.role || 'creator'));
+    constraints.push(where('roles', 'array-contains', filters.role || 'creator'));
     constraints.push(where('status', '==', 'approved'));
     
     // Filter for users with rising talent badge OR recent activity
@@ -250,7 +250,7 @@ async function getNewCreators(filters: ExploreFilters, resultLimit: number, opti
     let baseQuery: Query = collection(db, 'users');
     const constraints = [];
 
-    constraints.push(where('role', '==', filters.role || 'creator'));
+    constraints.push(where('roles', 'array-contains', filters.role || 'creator'));
     constraints.push(where('status', '==', 'approved'));
     
     // Prefer users with new-this-week badge, fallback to recent creation

@@ -31,7 +31,7 @@ export const expireDynamicBadgesDaily = functions.pubsub
       
       while (true) {
         let query: admin.firestore.Query = db.collection('users')
-          .where('role', '==', 'creator')
+          .where('roles', 'array-contains', 'creator')
           .orderBy(admin.firestore.FieldPath.documentId())
           .limit(batchSize);
 

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     try {
       const creatorsQuery = query(
         collection(db, 'users'),
-        where('role', '==', 'creator'),
+        where('roles', 'array-contains', 'creator'),
         where('profileComplete', '==', true),
         where('status', '==', 'approved')
       );
