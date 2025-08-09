@@ -14,8 +14,7 @@ import {
   doc
 } from 'firebase/firestore';
 import withAuth from '@/app/api/_utils/withAuth';
-import { validateReview } from '@/lib/schema';
-import { moderateReview } from '@/lib/reviews/moderation';
+import { getFlags } from '@/lib/FeatureFlags';
 
 // GET /api/reviews - Fetch reviews with optional filtering
 export async function GET(req: NextRequest) {
@@ -81,93 +80,93 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/reviews - Create a new review
+// POST /api/reviews - Create a new review (AX Beta: text-only, post-completion reviews)
 async function postHandler(req: NextRequest & { user: any }) {
-  const { bookingId, targetId, text, rating } = await req.json();
+  const { bookingId, targetId, text } = await req.json();
 
-  if (!bookingId || !targetId || !text || !rating) {
+  if (!bookingId || !targetId || !text) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
-  // Check if review already exists for this booking
-  const existingQuery = query(
-    collection(db, 'reviews'),
-    where('bookingId', '==', bookingId),
-    where('authorId', '==', req.user.uid)
-  );
-  
-  const existingSnapshot = await getDocs(existingQuery);
-  if (!existingSnapshot.empty) {
-    return NextResponse.json({ error: 'Review already exists for this booking' }, { status: 409 });
-  }
-
-  // Validate review data
-  const reviewData = {
-    bookingId,
-    authorId: req.user.uid,
-    targetId,
-    text: text.trim(),
-    rating: parsedRating,
-    createdAt: Timestamp.now(),
-  };
-
   try {
-    // Validate using schema
-    validateReview(reviewData);
+    // Check feature flags
+    const flags = await getFlags();
     
-    // Ensure rating is within valid range
-    if (reviewData.rating < 1 || reviewData.rating > 5) {
-      return NextResponse.json({ error: 'Rating must be between 1 and 5' }, { status: 400 });
+    // Verify booking exists and is completed
+    const bookingDoc = await getDoc(doc(db, 'bookings', bookingId));
+    if (!bookingDoc.exists()) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    // Run automatic moderation
-    const moderationResult = moderateReview({
-      rating: reviewData.rating,
-      text: reviewData.text,
-      authorId: reviewData.authorId
-    });
+    const booking = bookingDoc.data();
+    
+    // AX Beta: Only allow reviews for completed bookings
+    if (booking.status !== 'completed') {
+      return NextResponse.json({ 
+        error: 'Reviews can only be created for completed bookings' 
+      }, { status: 400 });
+    }
 
-    // Add moderation data to review
-    const enhancedReviewData = {
-      ...reviewData,
-      moderation: {
-        isAppropriate: moderationResult.isAppropriate,
-        confidence: moderationResult.confidence,
-        flags: moderationResult.flags,
-        autoModerated: true,
-        moderatedAt: Timestamp.now()
-      },
-      // Auto-approve if moderation confidence is high
-      status: moderationResult.isAppropriate && moderationResult.confidence > CONFIDENCE_THRESHOLD ? 'approved' : 'pending',
-      visible: moderationResult.isAppropriate && moderationResult.confidence > CONFIDENCE_THRESHOLD
+    // AX Beta: No reviews for refunded or canceled bookings
+    if (booking.status === 'refunded' || booking.status === 'canceled') {
+      return NextResponse.json({ 
+        error: 'Reviews cannot be created for refunded or canceled bookings' 
+      }, { status: 400 });
+    }
+
+    // Verify user is authorized to review this booking (client or provider)
+    if (req.user.uid !== booking.clientId && req.user.uid !== booking.providerId) {
+      return NextResponse.json({ error: 'Unauthorized to review this booking' }, { status: 403 });
+    }
+
+    // Check if review already exists for this booking
+    const existingQuery = query(
+      collection(db, 'reviews'),
+      where('bookingId', '==', bookingId),
+      where('authorId', '==', req.user.uid)
+    );
+    
+    const existingSnapshot = await getDocs(existingQuery);
+    if (!existingSnapshot.empty) {
+      return NextResponse.json({ error: 'Review already exists for this booking' }, { status: 409 });
+    }
+
+    // AX Beta: Text-only reviews with basic validation
+    const reviewText = text.trim();
+    if (reviewText.length < 10 || reviewText.length > 1000) {
+      return NextResponse.json({ 
+        error: 'Review text must be between 10 and 1000 characters' 
+      }, { status: 400 });
+    }
+
+    // Create review data (AX Beta: no rating, text-only testimonials)
+    const reviewData = {
+      bookingId,
+      authorId: req.user.uid,
+      targetId,
+      text: reviewText,
+      type: flags.POSITIVE_REVIEWS_ONLY ? 'testimonial' : 'review',
+      createdAt: Timestamp.now(),
+      status: 'approved', // AX Beta: Auto-approve text-only reviews
+      visible: true,
+      isEditable: false, // AX Beta: Reviews cannot be edited after creation
+      source: 'ax-beta', // Track that this is from the new system
+      // Remove rating field - AX Beta is text-only
     };
 
     // Add the review
-    const docRef = await addDoc(collection(db, 'reviews'), enhancedReviewData);
+    const docRef = await addDoc(collection(db, 'reviews'), reviewData);
     
-    const response: any = { 
+    return NextResponse.json({ 
       success: true, 
       reviewId: docRef.id,
-      message: 'Review submitted successfully'
-    };
+      message: flags.POSITIVE_REVIEWS_ONLY ? 
+        'Testimonial created successfully' : 
+        'Review created successfully'
+    });
 
-    // Include moderation feedback if review needs attention
-    if (!moderationResult.isAppropriate || moderationResult.confidence <= 0.8) {
-      response.moderation = {
-        status: 'pending_review',
-        message: 'Your review is being reviewed by our moderation team',
-        suggestions: moderationResult.suggestions
-      };
-    }
-    
-    return NextResponse.json(response);
   } catch (error) {
     console.error('Error creating review:', error);
-    
-    if (error instanceof Error && error.message.includes('validation')) {
-      return NextResponse.json({ error: 'Invalid review data' }, { status: 400 });
-    }
-    
     return NextResponse.json({ error: 'Failed to create review' }, { status: 500 });
   }
 }

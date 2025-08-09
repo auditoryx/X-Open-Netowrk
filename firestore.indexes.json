@@ -21,6 +21,35 @@
     "collectionGroup": "users", 
     "queryScope": "COLLECTION",
     "fields": [
+      { "fieldPath": "roles", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "tier", "order": "ASCENDING" },
+      { "fieldPath": "credibilityScore", "order": "DESCENDING" }
+    ]
+  },
+  {
+    "collectionGroup": "users",
+    "queryScope": "COLLECTION", 
+    "fields": [
+      { "fieldPath": "roles", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "credibilityScore", "order": "DESCENDING" }
+    ]
+  },
+  {
+    "collectionGroup": "users",
+    "queryScope": "COLLECTION", 
+    "fields": [
+      { "fieldPath": "roles", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "badgeIds", "arrayConfig": "CONTAINS_ANY" },
+      { "fieldPath": "credibilityScore", "order": "DESCENDING" }
+    ]
+  },
+  {
+    "collectionGroup": "users", 
+    "queryScope": "COLLECTION",
+    "fields": [
       { "fieldPath": "role", "order": "ASCENDING" },
       { "fieldPath": "tier", "order": "ASCENDING" },
       { "fieldPath": "credibilityScore", "order": "DESCENDING" }

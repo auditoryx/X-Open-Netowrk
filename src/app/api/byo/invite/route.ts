@@ -26,11 +26,13 @@ export interface ByoInvite {
  * GET /api/byo/invite?code=xyz - Validate invite
  * PUT /api/byo/invite - Update invite status
  */
+const CREATOR_ROLES = ['artist', 'producer', 'engineer', 'videographer', 'studio'] as const;
+
 export async function POST(request: NextRequest) {
   try {
     const user = await getServerUser(request);
-    if (!user || user.role !== 'creator') {
-      return NextResponse.json({ error: 'Creator access required' }, { status: 403 });
+    if (!user || !Array.isArray(user.roles) || !user.roles.some(r => CREATOR_ROLES.includes(r as any))) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const { clientEmail, clientName, notes, expiresInDays = 30 } = await request.json();
@@ -97,7 +99,7 @@ export async function GET(request: NextRequest) {
     } else if (creatorId) {
       // Get creator's invites (requires auth)
       const user = await getServerUser(request);
-      if (!user || (user.uid !== creatorId && user.role !== 'admin')) {
+      if (!user || (user.uid !== creatorId && !user.roles?.includes('admin'))) {
         return NextResponse.json({ error: 'Access denied' }, { status: 403 });
       }
 
@@ -134,7 +136,7 @@ export async function PUT(request: NextRequest) {
     const invite = inviteDoc.data() as ByoInvite;
 
     // Authorize update
-    if (user.uid !== invite.creatorId && user.role !== 'admin') {
+    if (user.uid !== invite.creatorId && !user.roles?.includes('admin')) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 

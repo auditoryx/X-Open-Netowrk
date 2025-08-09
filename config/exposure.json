@@ -1,0 +1,72 @@
+{
+  "featureFlags": {
+    "EXPOSE_SCORE_V1": true,
+    "BYO_LINKS": true,
+    "FIRST_SCREEN_MIX": false,
+    "LANE_NUDGES": false,
+    "CASE_STUDIES": false,
+    "POSITIVE_REVIEWS_ONLY": false
+  },
+  "tierWeights": {
+    "signature": 1000,
+    "verified": 500,
+    "standard": 100
+  },
+  "creditMultipliers": {
+    "axVerified": 3.0,
+    "clientConfirmed": 2.0,
+    "selfReported": 1.0
+  },
+  "distinctClientCaps": {
+    "maxImpact": 100,
+    "perClientScore": 5,
+    "windowDays": 90
+  },
+  "recencyWindows": {
+    "veryRecent": 7,
+    "recent": 30,
+    "somewhatRecent": 90,
+    "inactivityThreshold": 90,
+    "heavyPenaltyThreshold": 180
+  },
+  "recencyBoosts": {
+    "veryRecent": 50,
+    "recent": 25,
+    "somewhatRecent": 10
+  },
+  "inactivityPenalties": {
+    "moderate": -50,
+    "heavy": -100
+  },
+  "dynamicBadgeTTL": {
+    "risingTalent": 30,
+    "trendingNow": 7,
+    "hotStreak": 14,
+    "newThisWeek": 7
+  },
+  "exploreComposition": {
+    "top": 0.7,
+    "rising": 0.2,
+    "newThisWeek": 0.1
+  },
+  "diminishingReturns": {
+    "threshold": 50,
+    "logScaling": 10
+  },
+  "responseMetrics": {
+    "excellentResponseRate": 95,
+    "goodResponseRate": 90,
+    "decentResponseRate": 80,
+    "fastResponseTime": 1,
+    "goodResponseTime": 4,
+    "okResponseTime": 12,
+    "bonuses": {
+      "excellentResponse": 30,
+      "goodResponse": 20,
+      "decentResponse": 10,
+      "fastTime": 25,
+      "goodTime": 15,
+      "okTime": 5
+    }
+  }
+}

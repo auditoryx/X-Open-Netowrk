@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, collection, query, where, orderBy, limit, getDocs, Query } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { UserProfile } from '@/types/user';
+import { getFlags } from '@/lib/FeatureFlags';
 
 const db = getFirestore(app);
 
@@ -57,10 +58,11 @@ export async function GET(request: NextRequest) {
     };
 
     // Parse options and feature flags
+    const flags = await getFlags();
     const options: ExploreOptions = {
-      enableFirstScreenMix: process.env.FIRST_SCREEN_MIX === 'true',
-      enableLaneNudges: process.env.LANE_NUDGES === 'true', 
-      enableTierPrecedence: process.env.EXPOSE_SCORE_V1 === 'true',
+      enableFirstScreenMix: !!flags.FIRST_SCREEN_MIX,
+      enableLaneNudges: !!flags.LANE_NUDGES,
+      enableTierPrecedence: !!flags.EXPOSE_SCORE_V1,
       limit: parseInt(searchParams.get('limit') || '30')
     };
 
@@ -183,7 +185,7 @@ async function getTopCreators(filters: ExploreFilters, resultLimit: number, opti
 
     // Apply lane nudges if enabled
     if (options.enableLaneNudges && filters.role) {
-      results = applyLaneNudges(results, filters.role);
+      results = applyLaneNudges(results, filters.role, options.enableLaneNudges);
     }
 
     // Return up to the requested limit
@@ -227,7 +229,7 @@ async function getRisingCreators(filters: ExploreFilters, resultLimit: number, o
     // Apply filters and lane nudges
     results = applyAdditionalFilters(results, filters);
     if (options.enableLaneNudges && filters.role) {
-      results = applyLaneNudges(results, filters.role);
+      results = applyLaneNudges(results, filters.role, options.enableLaneNudges);
     }
 
     return results.slice(0, resultLimit);
@@ -317,8 +319,8 @@ function applyAdditionalFilters(results: UserProfile[], filters: ExploreFilters)
 /**
  * Apply lane nudges for role-specific boosts
  */
-function applyLaneNudges(results: UserProfile[], role: string): UserProfile[] {
-  if (!process.env.LANE_NUDGES) return results;
+function applyLaneNudges(results: UserProfile[], role: string, enabled: boolean): UserProfile[] {
+  if (!enabled) return results;
 
   // Apply small boosts based on role-specific criteria
   return results.map(profile => {

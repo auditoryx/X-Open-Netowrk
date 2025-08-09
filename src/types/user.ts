@@ -23,6 +23,8 @@ export interface UserProfile {
   status: 'approved' | 'rejected';
   createdAt: any;
   timezone: string; // ✅ Required for isProfileComplete
+  /** Multi-role support for users with multiple responsibilities */
+  roles?: ('creator' | 'admin' | 'user' | 'artist' | 'producer' | 'engineer' | 'videographer' | 'studio' | 'client')[];
   xp: number;
   rankScore: number;
   lateDeliveries: number;
@@ -66,7 +68,8 @@ export interface User {
   displayName: string;
   photoURL: string;
   providerId: string;
-  role: 'creator' | 'admin' | 'user';
+  role: 'creator' | 'admin' | 'user'; // Legacy single role - kept for backward compatibility
+  roles?: ('creator' | 'admin' | 'user' | 'artist' | 'producer' | 'engineer' | 'videographer' | 'studio' | 'client')[]; // Multi-role support
   isVisible?: boolean; // ✅ Optional for isProfileComplete
   xp: number;
   rankScore: number;
