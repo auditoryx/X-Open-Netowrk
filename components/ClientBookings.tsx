@@ -1,13 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getUserBookings } from '@/lib/firestore/getUserBookings';
 import { doc, updateDoc } from 'firebase/firestore';
-// Update the import path below to the correct relative path where your firebaseConfig.ts is located.
-// For example, if firebaseConfig.ts is in /workspaces/X-Open-Netowrk/firebase/firebaseConfig.ts, use:
 import { db as firestore } from '../firebase/firebaseConfig';
-// Or adjust the path as needed based on your project structure.
 import toast from 'react-hot-toast';
 import ContractViewer from '@/components/contract/ContractViewer';
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
@@ -17,18 +14,17 @@ import { useRouter } from 'next/navigation';
 
 export default function ClientBookings() {
   const { user } = useAuth();
-  const router = useRouter();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviewText, setReviewText] = useState<{ [key: string]: string }>({});
   const [ratings, setRatings] = useState<{ [key: string]: number }>({});
 
-  const fetch = () => {
+  const fetch = useCallback(() => {
     setLoading(true);
     return getUserBookings(user.uid, 'client')
       .then(setBookings)
       .finally(() => setLoading(false));
-  };
+  }, [user?.uid]);
 
   useEffect(() => {
     if (user?.uid) fetch();

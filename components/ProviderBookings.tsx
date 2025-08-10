@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { getUserBookings } from '@/lib/firestore/getUserBookings';
 import { updateBookingStatus } from '@/lib/firestore/updateBookingStatus';
@@ -21,17 +21,17 @@ export default function ProviderBookings() {
   const [loading, setLoading] = useState(true);
   const [provider, setProvider] = useState<any>(null);
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     setLoading(true);
     const data = await getUserBookings(user.uid, 'provider');
     setBookings(data);
     setLoading(false);
-  };
+  }, [user?.uid]);
 
-  const fetchProvider = async () => {
+  const fetchProvider = useCallback(async () => {
     const providerData = await getUserBookings(user.uid, 'provider'); // Adjust if needed
     setProvider(providerData);
-  };
+  }, [user?.uid]);
 
   useEffect(() => {
     fetchBookings();
