@@ -1,9 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { calculateCredibilityScore, extractCredibilityFactors } from '../../../src/lib/credibility';
-import { CORE_BADGE_DEFINITIONS } from '../../../src/lib/badges/coreBadges';
-import { BadgeDefinition } from '../../../src/types/badge';
-import { UserProfile } from '../../../src/types/user';
+import { calculateCredibilityScore, extractCredibilityFactors } from '../shared/credibility/calculateCredibilityScore';
+import { BadgeDefinition, UserProfile } from '../shared/credibility/types';
+import { CORE_BADGE_DEFINITIONS } from '../shared/credibility/badges';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -15,7 +14,7 @@ const db = admin.firestore();
  * Recompute credibility score for a user or all users
  * Can be called manually or as part of maintenance
  */
-export const recomputeCredibilityScore = functions.https.onCall(async (data, context) => {
+export const recomputeCredibilityScore = functions.https.onCall(async (data: any, context: functions.https.CallableContext) => {
   const { userId, batchMode = false } = data;
 
   // Require authentication for this sensitive operation
@@ -100,7 +99,7 @@ async function recomputeAllCredibilityScores(): Promise<{ processed: number; err
 
   while (true) {
     let query: admin.firestore.Query = db.collection('users')
-      .where('roles', 'array-contains', 'creator')
+      .where('roles', 'array-contains-any', ['artist', 'producer', 'engineer', 'videographer', 'studio'])
       .orderBy(admin.firestore.FieldPath.documentId())
       .limit(batchSize);
 
@@ -163,7 +162,7 @@ async function getActiveBadgesForUser(userId: string, userData?: UserProfile): P
 
     // For now, return core badges that match user's badge IDs
     // In the future, this could fetch from badgeDefinitions collection
-    return CORE_BADGE_DEFINITIONS.filter(badge => 
+    return CORE_BADGE_DEFINITIONS.filter((badge: BadgeDefinition) => 
       userData?.badgeIds?.includes(badge.id)
     );
   } catch (error) {

@@ -1,8 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CORE_BADGE_DEFINITIONS } from '../../../src/lib/badges/coreBadges';
-import { BadgeDefinition } from '../../../src/types/badge';
-import { UserProfile } from '../../../src/types/user';
+import { BadgeDefinition, UserProfile } from '../shared/credibility/types';
+import { CORE_BADGE_DEFINITIONS } from '../shared/credibility/badges';
+import { calculateCredibilityScore, extractCredibilityFactors } from '../shared/credibility/calculateCredibilityScore';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -31,7 +31,7 @@ export const expireDynamicBadgesDaily = functions.pubsub
       
       while (true) {
         let query: admin.firestore.Query = db.collection('users')
-          .where('roles', 'array-contains', 'creator')
+          .where('roles', 'array-contains-any', ['artist', 'producer', 'engineer', 'videographer', 'studio'])
           .orderBy(admin.firestore.FieldPath.documentId())
           .limit(batchSize);
 
@@ -93,17 +93,29 @@ async function processDynamicBadgesForUser(userId: string, userData: UserProfile
   let expiredCount = 0;
   let assignedCount = 0;
 
-  // Check for expired dynamic badges
-  const dynamicBadges = CORE_BADGE_DEFINITIONS.filter(badge => 
-    badge.category === 'dynamic' && currentBadgeIds.includes(badge.id)
-  );
-
-  for (const badge of dynamicBadges) {
-    if (await shouldExpireBadge(userId, badge)) {
-      updatedBadgeIds = updatedBadgeIds.filter(id => id !== badge.id);
+  // Check for expired dynamic badges using expiresAt field
+  const now = new Date();
+  
+  // Get user's badge records to check expiresAt
+  const userBadgesQuery = db.collection('userBadges')
+    .where('userId', '==', userId)
+    .where('expiresAt', '<=', admin.firestore.Timestamp.fromDate(now))
+    .where('status', '==', 'active');
+    
+  const expiredBadgesSnap = await userBadgesQuery.get();
+  
+  for (const badgeDoc of expiredBadgesSnap.docs) {
+    const badgeData = badgeDoc.data();
+    const badgeId = badgeData.badgeId;
+    
+    if (currentBadgeIds.includes(badgeId)) {
+      updatedBadgeIds = updatedBadgeIds.filter(id => id !== badgeId);
       hasChanges = true;
       expiredCount++;
-      console.log(`Expired badge ${badge.id} for user ${userId}`);
+      
+      // Update badge status to expired
+      await badgeDoc.ref.update({ status: 'expired' });
+      console.log(`Expired badge ${badgeId} for user ${userId}`);
     }
   }
 
@@ -113,17 +125,52 @@ async function processDynamicBadgesForUser(userId: string, userData: UserProfile
     updatedBadgeIds.push(...newBadges);
     hasChanges = true;
     assignedCount = newBadges.length;
+    
+    // Create userBadge records with expiresAt for dynamic badges
+    for (const badgeId of newBadges) {
+      const badge = CORE_BADGE_DEFINITIONS.find((b: BadgeDefinition) => b.id === badgeId);
+      if (badge && badge.type === 'dynamic') {
+        const expiresAt = new Date();
+        let ttlDays = 30; // default
+        
+        // Set TTL based on badge type
+        switch (badgeId) {
+          case 'trending-now':
+            ttlDays = 7;
+            break;
+          case 'rising-talent':
+            ttlDays = 30;
+            break;
+          case 'new-this-week':
+            ttlDays = 14;
+            break;
+        }
+        
+        expiresAt.setDate(expiresAt.getDate() + ttlDays);
+        
+        await db.collection('userBadges').add({
+          userId,
+          badgeId,
+          assignedAt: admin.firestore.FieldValue.serverTimestamp(),
+          status: 'active',
+          expiresAt: admin.firestore.Timestamp.fromDate(expiresAt),
+          metadata: {
+            autoAssigned: true
+          }
+        });
+      }
+    }
+    
     console.log(`Assigned dynamic badges to user ${userId}:`, newBadges);
   }
 
   // Recompute credibility score if badges changed
   let updatedCredibilityScore = userData.credibilityScore || 0;
   if (hasChanges) {
-    const activeBadges = CORE_BADGE_DEFINITIONS.filter(badge => updatedBadgeIds.includes(badge.id));
-    const { calculateCredibilityScore, extractCredibilityFactors } = require('../../../src/lib/credibility');
+    const activeBadges = CORE_BADGE_DEFINITIONS.filter((badge: BadgeDefinition) => updatedBadgeIds.includes(badge.id));
     
     updatedCredibilityScore = calculateCredibilityScore(
-      extractCredibilityFactors(userData, activeBadges, userData.createdAt?.toDate())
+      extractCredibilityFactors(userData, activeBadges, userData.createdAt?.toDate?.() || new Date())
     );
   }
 
@@ -249,7 +296,7 @@ async function getRecentBookingCount(userId: string, days: number): Promise<numb
 /**
  * Manually assign badges if eligible (can be called by other functions)
  */
-export const assignBadgesIfEligible = functions.https.onCall(async (data, context) => {
+export const assignBadgesIfEligible = functions.https.onCall(async (data: any, context: functions.https.CallableContext) => {
   // Require authentication and admin role for manual badge assignment
   if (!context.auth?.uid) {
     throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
