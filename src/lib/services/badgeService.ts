@@ -16,6 +16,7 @@ import {
   runTransaction 
 } from 'firebase/firestore';
 import { xpService } from './xpService';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 // Badge metadata and criteria definitions
 export interface BadgeDefinition {

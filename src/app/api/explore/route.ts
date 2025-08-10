@@ -6,6 +6,16 @@ import { getFlags } from '@/lib/FeatureFlags';
 
 const db = getFirestore(app);
 
+// Simple in-memory cache for explore results
+interface CacheEntry {
+  data: ExploreResult;
+  timestamp: number;
+  key: string;
+}
+
+const exploreCache = new Map<string, CacheEntry>();
+const CACHE_TTL = 90 * 1000; // 90 seconds
+
 export interface ExploreFilters {
   role?: string;
   tier?: string;
@@ -13,6 +23,21 @@ export interface ExploreFilters {
   genres?: string[];
   minRating?: number;
   onlyAvailable?: boolean;
+  
+  // AX Beta: Offer-based filters
+  hasOffers?: boolean;
+  priceRange?: [number, number];
+  maxTurnaround?: number;
+  
+  // Role-specific offer filters
+  licenseOptions?: string[]; // Producer
+  bpmRange?: [number, number]; // Producer
+  service?: string; // Engineer
+  stemTier?: string; // Engineer
+  category?: string; // Videographer
+  drone?: boolean; // Videographer
+  roomType?: string; // Studio
+  engineerIncluded?: boolean; // Studio
 }
 
 export interface ExploreOptions {
@@ -47,6 +72,19 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     
+    // Create cache key from search params
+    const sortedParams = Array.from(searchParams.entries())
+      .sort(([a], [b]) => a.localeCompare(b));
+    const cacheKey = sortedParams.map(([k, v]) => `${k}=${v}`).join('&');
+    
+    // Check cache first
+    const now = Date.now();
+    const cached = exploreCache.get(cacheKey);
+    if (cached && (now - cached.timestamp) < CACHE_TTL) {
+      console.log('Explore API: Cache hit for key:', cacheKey);
+      return NextResponse.json(cached.data);
+    }
+    
     // Parse filters
     const filters: ExploreFilters = {
       role: searchParams.get('role') || undefined,
@@ -54,7 +92,24 @@ export async function GET(request: NextRequest) {
       location: searchParams.get('location') || undefined,
       genres: searchParams.get('genres')?.split(',').filter(Boolean) || undefined,
       minRating: searchParams.get('minRating') ? parseFloat(searchParams.get('minRating')!) : undefined,
-      onlyAvailable: searchParams.get('onlyAvailable') === 'true'
+      onlyAvailable: searchParams.get('onlyAvailable') === 'true',
+      
+      // AX Beta: Offer-based filters
+      hasOffers: searchParams.get('hasOffers') === 'true',
+      priceRange: searchParams.get('priceRange') ? 
+        searchParams.get('priceRange')!.split(',').map(Number) as [number, number] : undefined,
+      maxTurnaround: searchParams.get('maxTurnaround') ? parseInt(searchParams.get('maxTurnaround')!) : undefined,
+      
+      // Role-specific offer filters
+      licenseOptions: searchParams.get('licenseOptions')?.split(',').filter(Boolean) || undefined,
+      bpmRange: searchParams.get('bpmRange') ? 
+        searchParams.get('bpmRange')!.split(',').map(Number) as [number, number] : undefined,
+      service: searchParams.get('service') || undefined,
+      stemTier: searchParams.get('stemTier') || undefined,
+      category: searchParams.get('category') || undefined,
+      drone: searchParams.get('drone') === 'true' ? true : (searchParams.get('drone') === 'false' ? false : undefined),
+      roomType: searchParams.get('roomType') || undefined,
+      engineerIncluded: searchParams.get('engineerIncluded') === 'true' ? true : (searchParams.get('engineerIncluded') === 'false' ? false : undefined)
     };
 
     // Parse options and feature flags
@@ -70,6 +125,20 @@ export async function GET(request: NextRequest) {
 
     // Get explore results using server-side composition
     const result = await getExploreResults(filters, options);
+    
+    // Cache the result
+    exploreCache.set(cacheKey, {
+      data: result,
+      timestamp: now,
+      key: cacheKey
+    });
+    
+    // Clean up old cache entries (keep cache size reasonable)
+    if (exploreCache.size > 100) {
+      const oldestKey = Array.from(exploreCache.entries())
+        .sort(([, a], [, b]) => a.timestamp - b.timestamp)[0][0];
+      exploreCache.delete(oldestKey);
+    }
     
     return NextResponse.json(result);
 
@@ -181,7 +250,7 @@ async function getTopCreators(filters: ExploreFilters, resultLimit: number, opti
     })) as UserProfile[];
 
     // Apply additional filters
-    results = applyAdditionalFilters(results, filters);
+    results = await applyAdditionalFilters(results, filters);
 
     // Apply lane nudges if enabled
     if (options.enableLaneNudges && filters.role) {
@@ -227,7 +296,7 @@ async function getRisingCreators(filters: ExploreFilters, resultLimit: number, o
     })) as UserProfile[];
 
     // Apply filters and lane nudges
-    results = applyAdditionalFilters(results, filters);
+    results = await applyAdditionalFilters(results, filters);
     if (options.enableLaneNudges && filters.role) {
       results = applyLaneNudges(results, filters.role, options.enableLaneNudges);
     }
@@ -273,7 +342,7 @@ async function getNewCreators(filters: ExploreFilters, resultLimit: number, opti
     })) as UserProfile[];
 
     // Apply filters
-    results = applyAdditionalFilters(results, filters);
+    results = await applyAdditionalFilters(results, filters);
 
     return results;
 
@@ -284,10 +353,15 @@ async function getNewCreators(filters: ExploreFilters, resultLimit: number, opti
 }
 
 /**
- * Apply additional client-side filters
+ * Apply additional client-side filters including offer-based criteria
  */
-function applyAdditionalFilters(results: UserProfile[], filters: ExploreFilters): UserProfile[] {
-  return results.filter(profile => {
+async function applyAdditionalFilters(results: UserProfile[], filters: ExploreFilters): Promise<UserProfile[]> {
+  // If we have offer-specific filters, we need to fetch and check offers
+  const hasOfferFilters = filters.hasOffers || filters.priceRange || filters.maxTurnaround || 
+    filters.licenseOptions || filters.bpmRange || filters.service || filters.stemTier || 
+    filters.category || filters.drone !== undefined || filters.roomType || filters.engineerIncluded !== undefined;
+
+  let filteredResults = results.filter(profile => {
     // Location filter
     if (filters.location) {
       // TODO: Implement location-based filtering
@@ -314,6 +388,133 @@ function applyAdditionalFilters(results: UserProfile[], filters: ExploreFilters)
 
     return true;
   });
+
+  // Apply offer-based filters if needed
+  if (hasOfferFilters) {
+    const userOfferMap = new Map<string, any[]>();
+    
+    // Fetch offers for all users in batch
+    const userIds = filteredResults.map(p => p.uid);
+    if (userIds.length > 0) {
+      const offersQuery = query(
+        collection(db, 'offers'),
+        where('userId', 'in', userIds.slice(0, 10)), // Firestore limit
+        where('active', '==', true)
+      );
+      
+      const offersSnapshot = await getDocs(offersQuery);
+      
+      offersSnapshot.docs.forEach(doc => {
+        const offer = doc.data();
+        if (!userOfferMap.has(offer.userId)) {
+          userOfferMap.set(offer.userId, []);
+        }
+        userOfferMap.get(offer.userId)!.push(offer);
+      });
+    }
+
+    // Filter based on offer criteria
+    filteredResults = filteredResults.filter(profile => {
+      const userOffers = userOfferMap.get(profile.uid) || [];
+
+      // Has offers filter
+      if (filters.hasOffers && userOffers.length === 0) {
+        return false;
+      }
+
+      // If user has no offers but we have offer-specific filters, exclude them
+      if (userOffers.length === 0 && hasOfferFilters && !filters.hasOffers) {
+        return false;
+      }
+
+      // Role-specific offer filters
+      const roleOffers = userOffers.filter(offer => offer.role === filters.role);
+      
+      if (roleOffers.length === 0 && (filters.role && hasOfferFilters)) {
+        return false;
+      }
+
+      // Price range filter
+      if (filters.priceRange) {
+        const [minPrice, maxPrice] = filters.priceRange;
+        const hasMatchingPrice = roleOffers.some(offer => 
+          offer.price >= minPrice && offer.price <= maxPrice
+        );
+        if (!hasMatchingPrice) return false;
+      }
+
+      // Max turnaround filter
+      if (filters.maxTurnaround) {
+        const hasMatchingTurnaround = roleOffers.some(offer => 
+          offer.turnaroundDays <= filters.maxTurnaround!
+        );
+        if (!hasMatchingTurnaround) return false;
+      }
+
+      // Producer-specific filters
+      if (filters.role === 'producer') {
+        if (filters.licenseOptions && filters.licenseOptions.length > 0) {
+          const hasMatchingLicense = roleOffers.some(offer => 
+            offer.licenseOptions && filters.licenseOptions!.some(option => 
+              offer.licenseOptions.includes(option)
+            )
+          );
+          if (!hasMatchingLicense) return false;
+        }
+
+        if (filters.bpmRange) {
+          const [minBpm, maxBpm] = filters.bpmRange;
+          const hasMatchingBpm = roleOffers.some(offer => 
+            offer.bpm && offer.bpm >= minBpm && offer.bpm <= maxBpm
+          );
+          if (!hasMatchingBpm) return false;
+        }
+      }
+
+      // Engineer-specific filters
+      if (filters.role === 'engineer') {
+        if (filters.service) {
+          const hasMatchingService = roleOffers.some(offer => offer.service === filters.service);
+          if (!hasMatchingService) return false;
+        }
+
+        if (filters.stemTier) {
+          const hasMatchingStemTier = roleOffers.some(offer => offer.stemTier === filters.stemTier);
+          if (!hasMatchingStemTier) return false;
+        }
+      }
+
+      // Videographer-specific filters
+      if (filters.role === 'videographer') {
+        if (filters.category) {
+          const hasMatchingCategory = roleOffers.some(offer => offer.category === filters.category);
+          if (!hasMatchingCategory) return false;
+        }
+
+        if (filters.drone !== undefined) {
+          const hasMatchingDrone = roleOffers.some(offer => offer.drone === filters.drone);
+          if (!hasMatchingDrone) return false;
+        }
+      }
+
+      // Studio-specific filters
+      if (filters.role === 'studio') {
+        if (filters.roomType) {
+          const hasMatchingRoomType = roleOffers.some(offer => offer.roomType === filters.roomType);
+          if (!hasMatchingRoomType) return false;
+        }
+
+        if (filters.engineerIncluded !== undefined) {
+          const hasMatchingEngineer = roleOffers.some(offer => offer.engineerIncluded === filters.engineerIncluded);
+          if (!hasMatchingEngineer) return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
+  return filteredResults;
 }
 
 /**

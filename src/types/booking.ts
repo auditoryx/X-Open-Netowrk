@@ -34,4 +34,19 @@ export interface Booking {
   completedAt?: any; // Firestore Timestamp
   /** Whether credit has been awarded for this booking */
   creditAwarded?: boolean;
+  
+  // AX Beta: Offer integration
+  /** Reference to the offer this booking was created from */
+  offerId?: string;
+  /** Snapshot of offer details at time of booking for audit trail */
+  offerSnapshot?: {
+    title: string;
+    price: number;
+    currency: string;
+    turnaroundDays: number;
+    revisions: number;
+    deliverables: string[];
+    selectedAddons?: { name: string; price: number }[];
+    totalPrice?: number;
+  };
 }

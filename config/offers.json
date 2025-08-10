@@ -1,0 +1,616 @@
+{
+  "meta": {
+    "version": "1.0",
+    "lastUpdated": "2024-01-20",
+    "description": "Role-specific offer templates for X-Open-Network Beta. Available to all tiers.",
+    "beta": {
+      "tierGating": false,
+      "uniformLimits": true,
+      "maxActiveOffersPerUser": 5
+    }
+  },
+  "limits": {
+    "maxActiveOffers": 5,
+    "maxTotalOffers": 20,
+    "maxMediaPerOffer": 10,
+    "maxDeliverables": 15,
+    "maxAddons": 8
+  },
+  "templates": {
+    "producer": [
+      {
+        "id": "producer_beat_store",
+        "name": "Beat Store Basics",
+        "description": "Professional beats ready for lease or exclusive purchase. Perfect for artists looking for high-quality instrumentals.",
+        "category": "Beats & Instrumentals",
+        "defaultPrice": 50,
+        "currency": "USD",
+        "defaultTurnaround": 1,
+        "defaultRevisions": 2,
+        "defaultDeliverables": [
+          "Mixed instrumental (MP3 320kbps)",
+          "WAV stems (8-16 tracks)",
+          "Beat license agreement"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Exclusive Rights",
+            "price": 500,
+            "description": "Full exclusive ownership of the beat"
+          },
+          {
+            "name": "Tracked Out Stems",
+            "price": 25,
+            "description": "Individual track stems for mixing"
+          },
+          {
+            "name": "Custom Mix",
+            "price": 75,
+            "description": "Personalized mix for your vocals"
+          }
+        ],
+        "usagePolicyTemplate": "Non-exclusive lease allows unlimited streaming, up to 5,000 sales. Credit required as 'Prod. by [Producer Name]'.",
+        "roleSpecific": {
+          "licenseOptions": ["Non-Exclusive", "Exclusive"],
+          "bpm": 120,
+          "key": "C Major",
+          "tags": ["Hip Hop", "Trap", "R&B"],
+          "stemCount": 12,
+          "instrumentalIncluded": true
+        },
+        "isPopular": true,
+        "isRecommended": true
+      },
+      {
+        "id": "producer_custom_production",
+        "name": "Custom Production",
+        "description": "Fully custom beat production tailored to your vision. From concept to final master.",
+        "category": "Custom Production",
+        "defaultPrice": 300,
+        "currency": "USD",
+        "defaultTurnaround": 7,
+        "defaultRevisions": 3,
+        "defaultDeliverables": [
+          "Custom beat production",
+          "Full exclusive rights",
+          "Mixed and mastered version",
+          "Trackout stems",
+          "Producer tag removal"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Rush Delivery (3 days)",
+            "price": 100,
+            "description": "Express production timeline"
+          },
+          {
+            "name": "Additional Versions",
+            "price": 50,
+            "description": "Hook only, no hook, instrumental versions"
+          },
+          {
+            "name": "Live Recording Session",
+            "price": 200,
+            "description": "Remote collaboration session"
+          }
+        ],
+        "usagePolicyTemplate": "Full exclusive rights transfer upon completion. No credit required but appreciated.",
+        "roleSpecific": {
+          "licenseOptions": ["Exclusive"],
+          "stemCount": 16,
+          "instrumentalIncluded": true,
+          "exclusivePrice": 300
+        },
+        "isRecommended": true
+      }
+    ],
+    "engineer": [
+      {
+        "id": "engineer_mixing",
+        "name": "Professional Mixing",
+        "description": "Transform your raw recordings into polished, radio-ready tracks with professional mixing services.",
+        "category": "Mixing",
+        "defaultPrice": 150,
+        "currency": "USD",
+        "defaultTurnaround": 5,
+        "defaultRevisions": 3,
+        "defaultDeliverables": [
+          "Mixed track (24-bit WAV)",
+          "MP3 320kbps master",
+          "Mix notes and processing summary"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Vocal Tuning",
+            "price": 50,
+            "description": "Professional vocal pitch correction"
+          },
+          {
+            "name": "Stem Mixes",
+            "price": 75,
+            "description": "Separate instrumental and vocal stems"
+          },
+          {
+            "name": "Rush Delivery (48hrs)",
+            "price": 100,
+            "description": "Priority mixing with 48-hour turnaround"
+          }
+        ],
+        "roleSpecific": {
+          "service": "Mix",
+          "stemTier": "Standard",
+          "maxTracks": 64,
+          "includesMastering": false,
+          "includesTuning": false,
+          "formatOptions": ["WAV", "MP3"],
+          "referenceTracksRequired": true
+        },
+        "isPopular": true,
+        "isRecommended": true
+      },
+      {
+        "id": "engineer_mastering",
+        "name": "Audio Mastering",
+        "description": "Final polish for your mixed tracks. Optimize loudness, clarity, and translation across all playback systems.",
+        "category": "Mastering",
+        "defaultPrice": 75,
+        "currency": "USD",
+        "defaultTurnaround": 3,
+        "defaultRevisions": 2,
+        "defaultDeliverables": [
+          "Mastered track (24-bit WAV)",
+          "Distribution-ready MP3",
+          "LUFS and technical analysis report"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Vinyl Master",
+            "price": 50,
+            "description": "Specialized master for vinyl pressing"
+          },
+          {
+            "name": "Streaming Optimized",
+            "price": 25,
+            "description": "Multiple versions for different platforms"
+          }
+        ],
+        "roleSpecific": {
+          "service": "Master",
+          "maxTracks": 1,
+          "analogGear": ["SSL Compressor", "Manley Variable Mu"],
+          "formatOptions": ["WAV", "MP3", "FLAC"]
+        },
+        "isRecommended": true
+      },
+      {
+        "id": "engineer_mix_master_bundle",
+        "name": "Mix + Master Bundle",
+        "description": "Complete audio production package. From raw tracks to release-ready master.",
+        "category": "Full Production",
+        "defaultPrice": 200,
+        "currency": "USD",
+        "defaultTurnaround": 7,
+        "defaultRevisions": 3,
+        "defaultDeliverables": [
+          "Professional mix (24-bit WAV)",
+          "Mastered final version",
+          "MP3 320kbps distribution copy",
+          "Detailed processing notes"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Vocal Production",
+            "price": 100,
+            "description": "Comping, tuning, and vocal treatment"
+          },
+          {
+            "name": "Instrumental Stems",
+            "price": 50,
+            "description": "TV/Radio mix and instrumental version"
+          }
+        ],
+        "roleSpecific": {
+          "service": "Bundle",
+          "stemTier": "Standard",
+          "maxTracks": 64,
+          "includesMastering": true,
+          "includesTuning": true
+        },
+        "isPopular": true
+      }
+    ],
+    "videographer": [
+      {
+        "id": "videographer_music_video",
+        "name": "Music Video Production",
+        "description": "Professional music video from concept to final edit. Bring your musical vision to life.",
+        "category": "Music Videos",
+        "defaultPrice": 800,
+        "currency": "USD",
+        "defaultTurnaround": 14,
+        "defaultRevisions": 2,
+        "defaultDeliverables": [
+          "Final music video (4K)",
+          "Behind-the-scenes footage",
+          "Social media cuts (15s, 30s, 60s)",
+          "Color-graded final edit"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Drone Footage",
+            "price": 200,
+            "description": "Aerial cinematography with licensed drone"
+          },
+          {
+            "name": "Additional Location",
+            "price": 150,
+            "description": "Second filming location"
+          },
+          {
+            "name": "Raw Footage Package",
+            "price": 100,
+            "description": "All unedited footage for personal use"
+          }
+        ],
+        "roleSpecific": {
+          "category": "Promo",
+          "locations": 1,
+          "crew": 2,
+          "drone": false,
+          "editingIncluded": true,
+          "rawFootageIncluded": false,
+          "shootingDays": 1,
+          "videoLength": 4,
+          "revisionRounds": 2
+        },
+        "isPopular": true,
+        "isRecommended": true
+      },
+      {
+        "id": "videographer_performance",
+        "name": "Live Performance Video",
+        "description": "Multi-camera live performance capture. Perfect for concerts, showcases, and studio sessions.",
+        "category": "Live Performance",
+        "defaultPrice": 600,
+        "currency": "USD",
+        "defaultTurnaround": 10,
+        "defaultRevisions": 2,
+        "defaultDeliverables": [
+          "Multi-camera edited performance",
+          "Professional audio sync",
+          "Full-length performance video",
+          "Highlight reel (2-3 minutes)"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Live Stream Setup",
+            "price": 300,
+            "description": "Real-time streaming to platforms"
+          },
+          {
+            "name": "Multi-Song Package",
+            "price": 200,
+            "description": "Coverage of full 45-60 minute set"
+          }
+        ],
+        "roleSpecific": {
+          "category": "Performance",
+          "locations": 1,
+          "crew": 3,
+          "editingIncluded": true,
+          "shootingDays": 1,
+          "videoLength": 15
+        },
+        "isRecommended": true
+      },
+      {
+        "id": "videographer_lyric_video",
+        "name": "Lyric Video Creation",
+        "description": "Animated lyric videos with motion graphics and visual effects to accompany your track.",
+        "category": "Lyric Videos",
+        "defaultPrice": 250,
+        "currency": "USD",
+        "defaultTurnaround": 7,
+        "defaultRevisions": 3,
+        "defaultDeliverables": [
+          "Animated lyric video (HD)",
+          "Multiple aspect ratios (16:9, 9:16, 1:1)",
+          "Source project files",
+          "YouTube-optimized export"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Custom Animations",
+            "price": 100,
+            "description": "Bespoke motion graphics and effects"
+          },
+          {
+            "name": "Brand Integration",
+            "price": 75,
+            "description": "Logo and brand color integration"
+          }
+        ],
+        "roleSpecific": {
+          "category": "Lyric",
+          "editingIncluded": true,
+          "videoLength": 4,
+          "revisionRounds": 3
+        }
+      }
+    ],
+    "studio": [
+      {
+        "id": "studio_recording_session",
+        "name": "Recording Session",
+        "description": "Professional recording studio with top-tier equipment and acoustics. Engineer included.",
+        "category": "Recording",
+        "defaultPrice": 150,
+        "currency": "USD",
+        "defaultTurnaround": 1,
+        "defaultRevisions": 0,
+        "defaultDeliverables": [
+          "Multi-track recordings (24-bit/96kHz)",
+          "Session files and project backup",
+          "Basic rough mix for reference"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Additional Hours",
+            "price": 75,
+            "description": "Extend session beyond base package"
+          },
+          {
+            "name": "Producer Services",
+            "price": 200,
+            "description": "In-house producer for creative direction"
+          },
+          {
+            "name": "Same-Day Mix",
+            "price": 150,
+            "description": "Quick mix completed same day"
+          }
+        ],
+        "roleSpecific": {
+          "hourlyRate": 75,
+          "minBookingHours": 2,
+          "maxBookingHours": 12,
+          "engineerIncluded": true,
+          "engineerRate": 0,
+          "depositPct": 50,
+          "cancelWindowHours": 24,
+          "equipment": ["Neumann U87", "SSL Console", "Pro Tools HDX"],
+          "roomType": "A-Room"
+        },
+        "isPopular": true,
+        "isRecommended": true
+      },
+      {
+        "id": "studio_mixing_room",
+        "name": "Mixing Room Rental", 
+        "description": "Access to professional mixing room with high-end monitors and outboard gear.",
+        "category": "Mixing",
+        "defaultPrice": 100,
+        "currency": "USD",
+        "defaultTurnaround": 1,
+        "defaultRevisions": 0,
+        "defaultDeliverables": [
+          "Studio time (4-hour minimum)",
+          "Access to all outboard gear",
+          "Session backup and storage"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Engineer Assistance",
+            "price": 50,
+            "description": "Per hour engineer consultation"
+          },
+          {
+            "name": "Overnight Lock-out",
+            "price": 500,
+            "description": "12-hour exclusive access"
+          }
+        ],
+        "roleSpecific": {
+          "hourlyRate": 50,
+          "minBookingHours": 4,
+          "engineerIncluded": false,
+          "engineerRate": 50,
+          "equipment": ["Focal Utopia", "SSL Bus Compressor", "Distressor"],
+          "roomType": "Mix Room"
+        }
+      },
+      {
+        "id": "studio_podcast_video",
+        "name": "Podcast/Video Recording",
+        "description": "Multi-camera podcast and video content recording with professional audio.",
+        "category": "Podcast",
+        "defaultPrice": 200,
+        "currency": "USD",
+        "defaultTurnaround": 3,
+        "defaultRevisions": 1,
+        "defaultDeliverables": [
+          "Multi-camera video recording",
+          "High-quality audio recording",
+          "Basic edited final product",
+          "Social media clips"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Live Streaming",
+            "price": 150,
+            "description": "Real-time streaming to platforms"
+          },
+          {
+            "name": "Advanced Post-Production",
+            "price": 300,
+            "description": "Graphics, titles, and advanced editing"
+          }
+        ],
+        "roleSpecific": {
+          "hourlyRate": 100,
+          "minBookingHours": 2,
+          "engineerIncluded": true,
+          "equipment": ["Multi-camera setup", "Podcast microphones", "Video lighting"],
+          "roomType": "Video Studio"
+        }
+      }
+    ],
+    "artist": [
+      {
+        "id": "artist_feature_vocals",
+        "name": "Feature Vocals",
+        "description": "Professional vocal feature for your track. Bring unique style and energy to your music.",
+        "category": "Features",
+        "defaultPrice": 300,
+        "currency": "USD",
+        "defaultTurnaround": 7,
+        "defaultRevisions": 2,
+        "defaultDeliverables": [
+          "Lead vocal recording (comped and edited)",
+          "Harmony and ad-lib layers",
+          "Dry vocals (unprocessed)",
+          "Reference mix with vocals"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Songwriting Contribution",
+            "price": 200,
+            "description": "Co-write lyrics and melody"
+          },
+          {
+            "name": "Social Media Promotion",
+            "price": 100,
+            "description": "Cross-promotion on artist's platforms"
+          },
+          {
+            "name": "Music Video Appearance",
+            "price": 500,
+            "description": "Appear in official music video"
+          }
+        ],
+        "roleSpecific": {
+          "featureType": "Vocals",
+          "lyricsIncluded": false,
+          "melodyIncluded": true,
+          "harmonyIncluded": true,
+          "maxSongLength": 4,
+          "keyRange": "G3-C6",
+          "languagesOffered": ["English"],
+          "creditRequirements": "Feat. [Artist Name]",
+          "publishingShare": 0
+        },
+        "isPopular": true,
+        "isRecommended": true
+      },
+      {
+        "id": "artist_songwriting",
+        "name": "Songwriting & Topline",
+        "description": "Complete songwriting services including lyrics, melody, and vocal arrangement.",
+        "category": "Songwriting",
+        "defaultPrice": 400,
+        "currency": "USD",
+        "defaultTurnaround": 10,
+        "defaultRevisions": 3,
+        "defaultDeliverables": [
+          "Complete song lyrics",
+          "Vocal melody demo",
+          "Song structure and arrangement",
+          "Lead sheet with chords and melody"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Demo Recording",
+            "price": 150,
+            "description": "Professional demo with vocals"
+          },
+          {
+            "name": "Multiple Versions",
+            "price": 100,
+            "description": "Alternative lyrics or melody versions"
+          },
+          {
+            "name": "Publishing Split",
+            "price": 0,
+            "description": "Negotiate publishing percentage"
+          }
+        ],
+        "roleSpecific": {
+          "featureType": "Songwriting",
+          "lyricsIncluded": true,
+          "melodyIncluded": true,
+          "harmonyIncluded": true,
+          "maxSongLength": 5,
+          "languagesOffered": ["English"],
+          "publishingShare": 50
+        },
+        "isRecommended": true
+      },
+      {
+        "id": "artist_rap_feature",
+        "name": "Rap Feature",
+        "description": "Professional rap verse to elevate your track. Bringing bars, flow, and energy.",
+        "category": "Rap",
+        "defaultPrice": 250,
+        "currency": "USD", 
+        "defaultTurnaround": 5,
+        "defaultRevisions": 2,
+        "defaultDeliverables": [
+          "16-32 bar rap verse",
+          "Multiple vocal takes and comps",
+          "Ad-libs and vocal layers",
+          "Dry vocal stems"
+        ],
+        "defaultAddons": [
+          {
+            "name": "Custom Lyrics",
+            "price": 100,
+            "description": "Personalized lyrics about your topic"
+          },
+          {
+            "name": "Hook/Chorus",
+            "price": 150,
+            "description": "Add a catchy hook or chorus"
+          }
+        ],
+        "roleSpecific": {
+          "featureType": "Rap",
+          "lyricsIncluded": true,
+          "melodyIncluded": false,
+          "maxSongLength": 4,
+          "languagesOffered": ["English"],
+          "creditRequirements": "Feat. [Artist Name]"
+        },
+        "isPopular": true
+      }
+    ]
+  },
+  "pricing": {
+    "recommendedRanges": {
+      "producer": {
+        "beats": [25, 300],
+        "custom": [200, 1000],
+        "mixing": [50, 200]
+      },
+      "engineer": {
+        "mixing": [75, 400],
+        "mastering": [50, 200],
+        "bundle": [150, 600]
+      },
+      "videographer": {
+        "musicVideo": [500, 3000],
+        "performance": [300, 1500],
+        "lyricVideo": [150, 800]
+      },
+      "studio": {
+        "recording": [50, 200],
+        "mixing": [40, 150],
+        "hourly": [25, 100]
+      },
+      "artist": {
+        "feature": [150, 1000],
+        "songwriting": [200, 800],
+        "topline": [150, 600]
+      }
+    }
+  }
+}

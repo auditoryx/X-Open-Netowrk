@@ -3,6 +3,9 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 
+// AX Beta: Star ratings are deprecated for public use (text-only reviews)
+// This component is kept for internal analytics but should not be used in public UI
+
 interface RatingStarsProps {
   rating: number;
   maxRating?: number;
@@ -11,6 +14,8 @@ interface RatingStarsProps {
   interactive?: boolean;
   onRatingChange?: (rating: number) => void;
   className?: string;
+  // AX Beta: Internal use only flag
+  internalUseOnly?: boolean;
 }
 
 const RatingStars: React.FC<RatingStarsProps> = ({
@@ -20,8 +25,17 @@ const RatingStars: React.FC<RatingStarsProps> = ({
   showValue = false,
   interactive = false,
   onRatingChange,
-  className = ''
+  className = '',
+  internalUseOnly = false
 }) => {
+  // AX Beta: Prevent public use of star ratings
+  if (!internalUseOnly) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('RatingStars: Star ratings are deprecated for public use in AX Beta. Use text-only reviews instead.');
+    }
+    return null; // Don't render for public use
+  }
+
   const [hoveredRating, setHoveredRating] = React.useState(0);
 
   const sizeClasses = {
