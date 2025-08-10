@@ -2,6 +2,9 @@
  * Platform Analytics API
  * 
  * Provides comprehensive platform metrics and analytics data
+ * 
+ * ⚠️ FEATURE FLAGGED: This endpoint is disabled in production
+ * until data privacy compliance and security review is complete.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -9,6 +12,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import { platformAnalytics } from '@/lib/analytics/platform-metrics';
 import { z } from 'zod';
+import { requireFeatureFlag } from '@/lib/featureFlags';
 
 const AnalyticsQuerySchema = z.object({
   type: z.enum(['platform', 'users', 'bookings', 'revenue']).default('platform'),
@@ -17,7 +21,7 @@ const AnalyticsQuerySchema = z.object({
   interval: z.enum(['day', 'week', 'month']).default('month'),
 });
 
-export async function GET(request: NextRequest) {
+export const GET = requireFeatureFlag('ENABLE_ANALYTICS_DASHBOARD')(async (request: NextRequest) => {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user) {
@@ -88,4 +92,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

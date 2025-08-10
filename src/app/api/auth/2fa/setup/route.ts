@@ -6,12 +6,13 @@ import { logger } from '@/lib/logger';
 import { authenticator } from 'otplib';
 import QRCode from 'qrcode';
 import { z } from 'zod';
+import { requireFeatureFlag } from '@/lib/featureFlags';
 
 const setupTwoFASchema = z.object({
   userId: z.string().min(1, 'User ID is required')
 });
 
-export async function POST(req: NextRequest) {
+export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) => {
   try {
     if (!admin) {
       return NextResponse.json(
@@ -91,4 +92,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

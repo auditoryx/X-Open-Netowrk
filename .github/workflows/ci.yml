@@ -47,10 +47,15 @@ jobs:
         # run: npm ci --legacy-peer-deps  # (replaced by pnpm)
 
       - name: Run linting
-        run: npm run lint
+        run: pnpm lint
 
       - name: Run type checking
-        run: npm run type-check
+        run: pnpm type-check
+
+      - name: Run vitest tests
+        run: pnpm test:vitest
+        env:
+          NODE_OPTIONS: "--trace-uncaught --trace-warnings"
 
       - name: Start Firebase emulators
         run: |

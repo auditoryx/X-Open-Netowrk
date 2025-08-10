@@ -3,14 +3,18 @@
  * 
  * POST /api/kyc/webhook
  * Handles webhook events from Stripe Identity verification
+ * 
+ * ⚠️ FEATURE FLAGGED: This endpoint is disabled in production
+ * until Stripe Identity integration security audit is complete.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { processVerificationWebhook } from '@/lib/kyc/stripe-identity';
 import { updateVerificationRecord } from '@/lib/kyc/verification-logic';
+import { requireFeatureFlag } from '@/lib/featureFlags';
 
-export async function POST(request: NextRequest) {
+export const POST = requireFeatureFlag('ENABLE_KYC_WEBHOOK')(async (request: NextRequest) => {
   try {
     // Get webhook signature from headers
     const headersList = headers();
@@ -71,7 +75,7 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 
 /**
  * Send notification to user about verification status change
