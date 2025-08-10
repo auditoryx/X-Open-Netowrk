@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, collection, query, where, orderBy, limit, getDocs, Query } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 import { UserProfile } from '@/types/user';
-import { getFlags } from '@/lib/FeatureFlags';
+import { getFlags } from '@/lib/featureFlags';
 
 const db = getFirestore(app);
 
