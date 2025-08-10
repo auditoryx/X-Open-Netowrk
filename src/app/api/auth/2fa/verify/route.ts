@@ -6,6 +6,7 @@ import { logger } from '@/lib/logger';
 import { authenticator } from 'otplib';
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
+import { requireFeatureFlag } from '@/lib/featureFlags';
 
 const verifyTwoFASchema = z.object({
   token: z.string().length(6, 'Token must be 6 digits').regex(/^\d+$/, 'Token must contain only numbers')
@@ -21,7 +22,7 @@ function generateBackupCodes(count: number = 8): string[] {
   return codes;
 }
 
-export async function POST(req: NextRequest) {
+export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) => {
   try {
     if (!admin) {
       return NextResponse.json(
@@ -132,4 +133,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

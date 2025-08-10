@@ -31,11 +31,8 @@ service cloud.firestore {
       return fields.toSet().isSubsetOf(request.resource.data.keys().toSet());
     }
 
-    // Rate limiting function (simple time-based check)
-    function isWithinRateLimit(collection, timeWindow) {
-      // This is a simplified rate limit - in production you'd want more sophisticated logic
-      return true; // Placeholder for now
-    }
+    // Rate limiting is handled at application layer via Redis/Upstash
+    // Firestore rules focus on authorization, not rate limiting
 
     // 🆕 UNIFIED USERS COLLECTION - Enhanced validation
     match /users/{userId} {
@@ -302,8 +299,8 @@ service cloud.firestore {
          isOwner(get(/databases/$(database)/documents/bookings/$(bookingId)).data.providerUid)) &&
         hasRequiredFields(['senderUid', 'content', 'timestamp']) &&
         isValidString(request.resource.data.content, 1, 1000) &&
-        isValidTimestamp(request.resource.data.timestamp) &&
-        isWithinRateLimit('chats', 60); // Simple rate limiting
+        isValidTimestamp(request.resource.data.timestamp);
+        // Rate limiting handled at application layer
       allow update, delete: if false; // Messages are immutable
     }
 
@@ -326,8 +323,8 @@ service cloud.firestore {
         request.resource.data.isEncrypted is bool &&
         isValidTimestamp(request.resource.data.timestamp) &&
         request.resource.data.messageType in ['text', 'system'] &&
-        request.resource.data.seen is bool &&
-        isWithinRateLimit('encryptedChat', 60);
+        request.resource.data.seen is bool;
+        // Rate limiting handled at application layer
       allow update: if isAuthenticated() && 
         isOwner(resource.data.recipientId) &&
         // Only allow updating seen status
