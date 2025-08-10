@@ -19,6 +19,25 @@ export const CORE_BADGE_IDS = {
   TRENDING_NOW: 'trending-now',
   NEW_THIS_WEEK: 'new-this-week',
   
+  // AX Beta: Role-specific badges
+  // Producer badges
+  BEAT_STORE_ACTIVE: 'beat-store-active',
+  FIFTY_PLUS_LEASES: 'fifty-plus-leases', 
+  EXCLUSIVE_SALE: 'exclusive-sale',
+  
+  // Videographer badges
+  DELIVERED_MEDIA_ATTACHED: 'delivered-media-attached',
+  
+  // Engineer badges
+  ON_TIME_STREAK_10: 'on-time-streak-10',
+  TWENTY_MIX_MASTER_60D: 'twenty-mix-master-60d',
+  
+  // Artist badges
+  FIVE_VERIFIED_FEATURES: 'five-verified-features',
+  
+  // Studio badges
+  HIGH_END_GEAR_VERIFIED: 'high-end-gear-verified',
+  
   // Prestige badges (admin-only)
   VERIFIED_PRO: 'verified-pro',
   SIGNATURE_ARTIST: 'signature-artist',
@@ -111,6 +130,81 @@ export const CORE_BADGE_DEFINITIONS: BadgeDefinition[] = [
     description: 'Recently joined AuditoryX',
     type: 'dynamic',
     scoreImpact: 15
+  },
+
+  // AX Beta: Role-specific badges
+  // Producer badges
+  {
+    id: CORE_BADGE_IDS.BEAT_STORE_ACTIVE,
+    name: 'Beat Store Active',
+    description: 'Active beat store with regular uploads',
+    type: 'achievement',
+    scoreImpact: 20,
+    role: 'producer'
+  },
+  {
+    id: CORE_BADGE_IDS.FIFTY_PLUS_LEASES,
+    name: '50+ Leases',
+    description: 'Achieved 50+ beat leases',
+    type: 'achievement',
+    scoreImpact: 40,
+    role: 'producer'
+  },
+  {
+    id: CORE_BADGE_IDS.EXCLUSIVE_SALE,
+    name: 'Exclusive Sale',
+    description: 'Made your first exclusive beat sale',
+    type: 'achievement',
+    scoreImpact: 30,
+    role: 'producer'
+  },
+
+  // Videographer badges
+  {
+    id: CORE_BADGE_IDS.DELIVERED_MEDIA_ATTACHED,
+    name: 'Media Master',
+    description: 'Consistently delivers final video with all assets',
+    type: 'performance',
+    scoreImpact: 25,
+    role: 'videographer'
+  },
+
+  // Engineer badges
+  {
+    id: CORE_BADGE_IDS.ON_TIME_STREAK_10,
+    name: 'On-Time Streak',
+    description: '10+ consecutive on-time deliveries',
+    type: 'performance',
+    scoreImpact: 35,
+    role: 'engineer'
+  },
+  {
+    id: CORE_BADGE_IDS.TWENTY_MIX_MASTER_60D,
+    name: 'Mix & Master Pro',
+    description: '20+ mix/master projects in 60 days',
+    type: 'performance',
+    scoreImpact: 45,
+    role: 'engineer'
+  },
+
+  // Artist badges
+  {
+    id: CORE_BADGE_IDS.FIVE_VERIFIED_FEATURES,
+    name: 'Feature Artist',
+    description: '5+ verified feature collaborations',
+    type: 'achievement',
+    scoreImpact: 40,
+    role: 'artist'
+  },
+
+  // Studio badges
+  {
+    id: CORE_BADGE_IDS.HIGH_END_GEAR_VERIFIED,
+    name: 'High-End Gear',
+    description: 'Studio verified with professional equipment',
+    type: 'achievement',
+    scoreImpact: 50,
+    role: 'studio'
   },
 
   // Prestige badges (admin-only)

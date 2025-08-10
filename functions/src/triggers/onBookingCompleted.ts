@@ -62,7 +62,12 @@ export const onBookingCompleted = functions.firestore
         };
 
         // Update provider stats and credits
-        await updateProviderStats(providerId, clientId, creditSource, bookingId);
+        await updateProviderStats(providerId, clientId, creditSource, bookingId, after);
+        
+        // Check for role-specific badge eligibility if booking was from an offer
+        if (after.offerId) {
+          await checkOfferBasedBadgeEligibility(providerId, after);
+        }
         
         // Mark booking as processed
         await db.collection('bookings').doc(bookingId).update(bookingUpdateData);
@@ -85,7 +90,7 @@ export const onBookingCompleted = functions.firestore
 /**
  * Update provider statistics and credit counts
  */
-async function updateProviderStats(providerId: string, clientId: string, creditSource: string, bookingId: string) {
+async function updateProviderStats(providerId: string, clientId: string, creditSource: string, bookingId: string, bookingData: any) {
   const userRef = db.collection('users').doc(providerId);
   
   await db.runTransaction(async (transaction) => {
@@ -262,6 +267,226 @@ async function checkBadgeEligibility(userId: string) {
 
   } catch (error) {
     console.error('Error checking badge eligibility:', error);
+  }
+}
+
+/**
+ * Check for role-specific badge eligibility based on offer bookings
+ */
+async function checkOfferBasedBadgeEligibility(userId: string, bookingData: any) {
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    if (!userDoc.exists) return;
+
+    const userData = userDoc.data() as UserProfile;
+    const currentBadgeIds = userData.badgeIds || [];
+    const newBadgeIds: string[] = [];
+    const now = admin.firestore.Timestamp.now();
+    
+    // Get offer details if available
+    let offerDoc = null;
+    if (bookingData.offerId) {
+      offerDoc = await db.collection('offers').doc(bookingData.offerId).get();
+    }
+    
+    const offer = offerDoc?.data();
+    const role = offer?.role || bookingData.serviceRole;
+    
+    // Role-specific badge checks
+    switch (role) {
+      case 'producer':
+        // Beat Store Active: Has active beat offers
+        if (!currentBadgeIds.includes('beat-store-active')) {
+          const activeBeats = await db.collection('offers')
+            .where('userId', '==', userId)
+            .where('role', '==', 'producer')
+            .where('active', '==', true)
+            .get();
+            
+          if (activeBeats.size >= 3) {
+            newBadgeIds.push('beat-store-active');
+          }
+        }
+        
+        // 50+ Leases: Count non-exclusive bookings
+        if (!currentBadgeIds.includes('fifty-plus-leases')) {
+          const leaseBookings = await db.collection('bookings')
+            .where('providerId', '==', userId)
+            .where('status', '==', 'completed')
+            .get();
+            
+          const leaseCount = leaseBookings.docs.filter(doc => {
+            const data = doc.data();
+            return data.offerSnapshot?.licenseOptions?.includes('Non-Exclusive') || 
+                   !data.offerSnapshot?.licenseOptions?.includes('Exclusive');
+          }).length;
+          
+          if (leaseCount >= 50) {
+            newBadgeIds.push('fifty-plus-leases');
+          }
+        }
+        
+        // Exclusive Sale: Made at least one exclusive sale
+        if (!currentBadgeIds.includes('exclusive-sale')) {
+          const exclusiveBookings = await db.collection('bookings')
+            .where('providerId', '==', userId)
+            .where('status', '==', 'completed')
+            .get();
+            
+          const hasExclusive = exclusiveBookings.docs.some(doc => {
+            const data = doc.data();
+            return data.offerSnapshot?.licenseOptions?.includes('Exclusive');
+          });
+          
+          if (hasExclusive) {
+            newBadgeIds.push('exclusive-sale');
+          }
+        }
+        break;
+        
+      case 'videographer':
+        // Delivered Media Attached: Consistently delivers with media attachments
+        if (!currentBadgeIds.includes('delivered-media-attached')) {
+          const videoBookings = await db.collection('bookings')
+            .where('providerId', '==', userId)
+            .where('status', '==', 'completed')
+            .limit(10)
+            .get();
+            
+          const withMedia = videoBookings.docs.filter(doc => {
+            const data = doc.data();
+            return data.deliveredMedia && data.deliveredMedia.length > 0;
+          }).length;
+          
+          if (videoBookings.size >= 5 && withMedia / videoBookings.size >= 0.9) {
+            newBadgeIds.push('delivered-media-attached');
+          }
+        }
+        break;
+        
+      case 'engineer':
+        // On-Time Streak 10: Check delivery times
+        if (!currentBadgeIds.includes('on-time-streak-10')) {
+          const recentBookings = await db.collection('bookings')
+            .where('providerId', '==', userId)
+            .where('status', '==', 'completed')
+            .orderBy('completedAt', 'desc')
+            .limit(10)
+            .get();
+            
+          const onTimeCount = recentBookings.docs.filter(doc => {
+            const data = doc.data();
+            const deliveredOnTime = data.deliveredOnTime !== false; // Assume on time unless marked otherwise
+            return deliveredOnTime;
+          }).length;
+          
+          if (recentBookings.size >= 10 && onTimeCount === 10) {
+            newBadgeIds.push('on-time-streak-10');
+          }
+        }
+        
+        // 20 Mix+Master in 60d: Count recent mix/master work
+        if (!currentBadgeIds.includes('twenty-mix-master-60d')) {
+          const sixtyDaysAgo = new Date();
+          sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+          
+          const recentWork = await db.collection('bookings')
+            .where('providerId', '==', userId)
+            .where('status', '==', 'completed')
+            .where('completedAt', '>=', admin.firestore.Timestamp.fromDate(sixtyDaysAgo))
+            .get();
+            
+          const mixMasterCount = recentWork.docs.filter(doc => {
+            const data = doc.data();
+            return data.offerSnapshot?.service === 'Mix' || 
+                   data.offerSnapshot?.service === 'Master' ||
+                   data.offerSnapshot?.service === 'Bundle';
+          }).length;
+          
+          if (mixMasterCount >= 20) {
+            newBadgeIds.push('twenty-mix-master-60d');
+          }
+        }
+        break;
+        
+      case 'artist':
+        // 5 Verified Features: Count feature collaborations
+        if (!currentBadgeIds.includes('five-verified-features')) {
+          const featureBookings = await db.collection('bookings')
+            .where('providerId', '==', userId)
+            .where('status', '==', 'completed')
+            .get();
+            
+          const featureCount = featureBookings.docs.filter(doc => {
+            const data = doc.data();
+            return data.offerSnapshot?.featureType === 'Vocals' || 
+                   data.offerSnapshot?.featureType === 'Rap' ||
+                   data.creditSource === 'ax-verified';
+          }).length;
+          
+          if (featureCount >= 5) {
+            newBadgeIds.push('five-verified-features');
+          }
+        }
+        break;
+        
+      case 'studio':
+        // High-End Gear Verified: Check if studio has verified equipment
+        if (!currentBadgeIds.includes('high-end-gear-verified')) {
+          const studioOffers = await db.collection('offers')
+            .where('userId', '==', userId)
+            .where('role', '==', 'studio')
+            .get();
+            
+          const hasHighEndGear = studioOffers.docs.some(doc => {
+            const data = doc.data();
+            return data.equipment && data.equipment.some((item: string) => 
+              item.includes('SSL') || 
+              item.includes('Neve') || 
+              item.includes('API') ||
+              item.includes('Neumann') ||
+              item.includes('Pro Tools HDX')
+            );
+          });
+          
+          if (hasHighEndGear) {
+            newBadgeIds.push('high-end-gear-verified');
+          }
+        }
+        break;
+    }
+    
+    // Award new badges with expiration for dynamic ones
+    if (newBadgeIds.length > 0) {
+      await db.collection('users').doc(userId).update({
+        badgeIds: admin.firestore.FieldValue.arrayUnion(...newBadgeIds)
+      });
+      
+      // Set expiration for dynamic badges
+      const badgeUpdates = newBadgeIds.map(async (badgeId) => {
+        const isTimeLimited = ['on-time-streak-10', 'twenty-mix-master-60d'].includes(badgeId);
+        if (isTimeLimited) {
+          const expiresAt = new Date();
+          expiresAt.setDate(expiresAt.getDate() + 90); // 90 day expiration
+          
+          await db.collection('userBadges').add({
+            userId,
+            badgeId,
+            awardedAt: now,
+            expiresAt: admin.firestore.Timestamp.fromDate(expiresAt),
+            awardedBy: 'system',
+            source: 'offer-completion'
+          });
+        }
+      });
+      
+      await Promise.all(badgeUpdates);
+      
+      console.log(`Awarded offer-based badges to user ${userId}:`, newBadgeIds);
+    }
+    
+  } catch (error) {
+    console.error('Error checking offer-based badge eligibility:', error);
   }
 }
 
