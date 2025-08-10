@@ -53,9 +53,12 @@ service cloud.firestore {
         isOwner(userId) || isAdmin()
       ) && 
       // Validate required fields
-      hasRequiredFields(['email', 'role', 'tier', 'verificationStatus']) &&
+      hasRequiredFields(['email', 'roles', 'tier', 'verificationStatus']) &&
       isValidEmail(request.resource.data.email) &&
-      request.resource.data.role in ['client', 'creator', 'admin', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'moderator'] &&
+      request.resource.data.roles is list &&
+      request.resource.data.roles.size() > 0 &&
+      // Ensure all roles are valid
+      request.resource.data.roles.toSet().isSubsetOf(['client', 'artist', 'producer', 'engineer', 'studio', 'videographer', 'moderator', 'admin'].toSet()) &&
       request.resource.data.tier in ['standard', 'verified', 'signature'] &&
       request.resource.data.verificationStatus in ['unverified', 'pending', 'verified', 'rejected'] &&
       request.resource.data.xp is number && request.resource.data.xp >= 0 &&
@@ -67,9 +70,13 @@ service cloud.firestore {
       allow update: if isAuthenticated() && (
         // Users can update their own profile (except sensitive fields)
         (isOwner(userId) && 
-         !('role' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('roles' in request.resource.data.diff(resource.data).affectedKeys()) &&
          !('verificationStatus' in request.resource.data.diff(resource.data).affectedKeys()) &&
          !('tier' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('badgeIds' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('credibilityScore' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('stats' in request.resource.data.diff(resource.data).affectedKeys()) &&
+         !('counts' in request.resource.data.diff(resource.data).affectedKeys()) &&
          !('xp' in request.resource.data.diff(resource.data).affectedKeys()) &&
          !('walletId' in request.resource.data.diff(resource.data).affectedKeys()) &&
          !('isActive' in request.resource.data.diff(resource.data).affectedKeys())
@@ -129,10 +136,23 @@ service cloud.firestore {
         request.resource.data.rating >= 1 && request.resource.data.rating <= 5 &&
         isValidString(request.resource.data.comment, 10, 1000) &&
         isValidTimestamp(request.resource.data.createdAt) &&
+        // Reviews are text-only, no media attachments allowed
+        !('media' in request.resource.data) &&
+        !('attachments' in request.resource.data) &&
+        // Only allow after booking is paid and completed
+        bookingIsPaidAndCompleted(request.resource.data.bookingId, request.resource.data.authorId) &&
         // Prevent duplicate reviews for same booking
         !exists(/databases/$(database)/documents/reviews/$(reviewId));
       allow update: if false; // Reviews cannot be updated once created
       allow delete: if isAdmin(); // Only admins can delete reviews
+    }
+
+    // Helper function to verify booking is paid and completed and author is client
+    function bookingIsPaidAndCompleted(bookingId, authorId) {
+      let booking = get(/databases/$(database)/documents/bookings/$(bookingId)).data;
+      return booking.status == 'completed' &&
+             booking.isPaid == true &&
+             booking.clientId == authorId;
     }
 
     // ✅ Booking Requests – Enhanced security

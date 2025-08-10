@@ -1,7 +1,25 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
-import { calcRankScore } from '../../../src/lib/rank'
-import { TIER_WEIGHT } from '../../../src/constants/gamification'
+
+// Simplified rank calculation (moved inline to avoid dependency issues)
+function calcRankScore(factors: {
+  tier: string;
+  rating: number;
+  reviews: number;
+  xp: number;
+  responseHrs: number;
+  proximityKm: number;
+}): number {
+  const tierWeights = { signature: 1000, verified: 500, standard: 100 };
+  const tierWeight = tierWeights[factors.tier as keyof typeof tierWeights] || 100;
+  
+  const ratingScore = factors.rating * 20;
+  const reviewScore = Math.min(factors.reviews * 2, 100);
+  const xpScore = Math.min(factors.xp / 10, 200);
+  const responseBonus = factors.responseHrs <= 2 ? 50 : 0;
+  
+  return tierWeight + ratingScore + reviewScore + xpScore + responseBonus;
+}
 
 if (!admin.apps.length) {
   admin.initializeApp()
@@ -18,7 +36,7 @@ export const calcTierAndRank = functions.pubsub
 
     while (true) {
       let q: FirebaseFirestore.Query = usersCol
-        .where('roles', 'array-contains', 'creator')
+        .where('roles', 'array-contains-any', ['artist', 'producer', 'engineer', 'videographer', 'studio'])
         .orderBy(admin.firestore.FieldPath.documentId())
         .limit(batchSize)
 

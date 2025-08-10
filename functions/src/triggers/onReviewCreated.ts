@@ -1,9 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { calculateCredibilityScore, extractCredibilityFactors } from '../../../src/lib/credibility';
-import { CORE_BADGE_DEFINITIONS } from '../../../src/lib/badges/coreBadges';
-import { BadgeDefinition } from '../../../src/types/badge';
-import { UserProfile } from '../../../src/types/user';
+import { calculateCredibilityScore, extractCredibilityFactors } from '../shared/credibility/calculateCredibilityScore';
+import { BadgeDefinition, UserProfile } from '../shared/credibility/types';
+import { CORE_BADGE_DEFINITIONS } from '../shared/credibility/badges';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -125,8 +124,8 @@ async function getActiveBadgesForUser(userId: string): Promise<BadgeDefinition[]
     }
 
     // For now, return core badges that match user's badge IDs
-    return CORE_BADGE_DEFINITIONS.filter(badge => 
-      userData.badgeIds?.includes(badge.id)
+    return CORE_BADGE_DEFINITIONS.filter((badge: BadgeDefinition) => 
+      userData?.badgeIds?.includes(badge.id)
     );
   } catch (error) {
     console.error('Error getting user badges:', error);
@@ -174,7 +173,7 @@ async function checkReviewBadgeEligibility(userId: string) {
 
       // Recompute credibility score with new badges
       const allBadgeIds = [...currentBadgeIds, ...newBadgeIds];
-      const badges = CORE_BADGE_DEFINITIONS.filter(badge => allBadgeIds.includes(badge.id));
+      const badges = CORE_BADGE_DEFINITIONS.filter((badge: BadgeDefinition) => allBadgeIds.includes(badge.id));
       
       const credibilityScore = calculateCredibilityScore(
         extractCredibilityFactors(userData, badges, userData.createdAt?.toDate())

@@ -1,0 +1,20 @@
+import { BadgeDefinition } from './types';
+export declare const CORE_BADGE_IDS: {
+    readonly FIRST_BOOKING: "first-booking";
+    readonly MILESTONE_10_BOOKINGS: "milestone-10-bookings";
+    readonly MILESTONE_50_BOOKINGS: "milestone-50-bookings";
+    readonly MILESTONE_100_BOOKINGS: "milestone-100-bookings";
+    readonly FIVE_STAR_STREAK: "five-star-streak";
+    readonly FAST_RESPONDER: "fast-responder";
+    readonly HIGH_COMPLETION_RATE: "high-completion-rate";
+    readonly CLIENT_FAVORITE: "client-favorite";
+    readonly RISING_TALENT: "rising-talent";
+    readonly TRENDING_NOW: "trending-now";
+    readonly NEW_THIS_WEEK: "new-this-week";
+    readonly VERIFIED_PRO: "verified-pro";
+    readonly SIGNATURE_ARTIST: "signature-artist";
+    readonly PLATFORM_PIONEER: "platform-pioneer";
+    readonly COMMUNITY_LEADER: "community-leader";
+};
+export type CoreBadgeId = typeof CORE_BADGE_IDS[keyof typeof CORE_BADGE_IDS];
+export declare const CORE_BADGE_DEFINITIONS: BadgeDefinition[];
