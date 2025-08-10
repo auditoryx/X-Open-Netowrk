@@ -44,7 +44,7 @@ export default function ExplorePage() {
     lat: searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined,
     lng: searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined,
     radiusKm: searchParams.get('radiusKm') ? parseInt(searchParams.get('radiusKm')!, 10) : 50,
-    sort: (searchParams.get('sort') as 'recommended' | 'rating' | 'distance' | 'popularity') || 'recommended',
+    sort: (searchParams.get('sort') as 'recommended' | 'credibility' | 'distance' | 'popularity') || 'recommended',
   });
 
   useEffect(() => {

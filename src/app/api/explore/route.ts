@@ -6,6 +6,16 @@ import { getFlags } from '@/lib/FeatureFlags';
 
 const db = getFirestore(app);
 
+// Simple in-memory cache for explore results
+interface CacheEntry {
+  data: ExploreResult;
+  timestamp: number;
+  key: string;
+}
+
+const exploreCache = new Map<string, CacheEntry>();
+const CACHE_TTL = 90 * 1000; // 90 seconds
+
 export interface ExploreFilters {
   role?: string;
   tier?: string;
@@ -62,6 +72,19 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     
+    // Create cache key from search params
+    const sortedParams = Array.from(searchParams.entries())
+      .sort(([a], [b]) => a.localeCompare(b));
+    const cacheKey = sortedParams.map(([k, v]) => `${k}=${v}`).join('&');
+    
+    // Check cache first
+    const now = Date.now();
+    const cached = exploreCache.get(cacheKey);
+    if (cached && (now - cached.timestamp) < CACHE_TTL) {
+      console.log('Explore API: Cache hit for key:', cacheKey);
+      return NextResponse.json(cached.data);
+    }
+    
     // Parse filters
     const filters: ExploreFilters = {
       role: searchParams.get('role') || undefined,
@@ -102,6 +125,20 @@ export async function GET(request: NextRequest) {
 
     // Get explore results using server-side composition
     const result = await getExploreResults(filters, options);
+    
+    // Cache the result
+    exploreCache.set(cacheKey, {
+      data: result,
+      timestamp: now,
+      key: cacheKey
+    });
+    
+    // Clean up old cache entries (keep cache size reasonable)
+    if (exploreCache.size > 100) {
+      const oldestKey = Array.from(exploreCache.entries())
+        .sort(([, a], [, b]) => a.timestamp - b.timestamp)[0][0];
+      exploreCache.delete(oldestKey);
+    }
     
     return NextResponse.json(result);
 

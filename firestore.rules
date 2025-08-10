@@ -548,9 +548,11 @@ service cloud.firestore {
 
     match /userBadges/{userBadgeId} {
       allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isAdmin() &&
+      allow create: if (isAdmin() || request.auth.token.system == true) &&
         hasRequiredFields(['userId', 'badgeId', 'awardedAt', 'awardedBy']) &&
-        isValidTimestamp(request.resource.data.awardedAt);
+        isValidTimestamp(request.resource.data.awardedAt) &&
+        // Optional expiration for dynamic badges
+        (!('expiresAt' in request.resource.data) || isValidTimestamp(request.resource.data.expiresAt));
       allow update, delete: if false; // User badges are immutable once awarded
     }
 

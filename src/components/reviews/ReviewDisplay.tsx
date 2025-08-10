@@ -94,10 +94,8 @@ const ReviewDisplay: React.FC<ReviewDisplayProps> = ({
         </div>
       </div>
 
-      {/* Rating */}
-      <div className="mb-3">
-        <RatingStars rating={review.rating} size="sm" showValue />
-      </div>
+      {/* AX Beta: No ratings in public reviews - text-only testimonials */}
+      {/* Star ratings removed to comply with text-only review system */}
 
       {/* Service info */}
       {showService && review.serviceTitle && (
