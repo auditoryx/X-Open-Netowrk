@@ -3,8 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { admin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
-import { authenticator } from 'otplib';
-import QRCode from 'qrcode';
+import { generateTwoFactorSecret } from '@/lib/auth/twoFactor';
 import { z } from 'zod';
 import { requireFeatureFlag } from '@/lib/featureFlags';
 
@@ -58,20 +57,15 @@ export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) =>
       );
     }
 
-    // Generate secret for TOTP
-    const secret = authenticator.generateSecret();
-    const serviceName = 'X-Open-Network';
-    const accountName = userRecord.email || userId;
-
-    // Create the TOTP URL for QR code
-    const otpUrl = authenticator.keyuri(accountName, serviceName, secret);
-
-    // Generate QR code
-    const qrCodeDataURL = await QRCode.toDataURL(otpUrl);
+    // Generate secret and QR code using utility
+    const twoFactorData = await generateTwoFactorSecret(
+      userRecord.email || userId,
+      'X-Open-Network'
+    );
 
     // Store the secret temporarily (not yet enabled)
     await db.collection('users').doc(userId).set({
-      twoFactorSecret: secret,
+      twoFactorSecret: twoFactorData.secret,
       twoFactorEnabled: false,
       twoFactorSetupInProgress: true
     }, { merge: true });
@@ -79,8 +73,8 @@ export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) =>
     logger.info('2FA setup initiated', { userId, email: userRecord.email });
 
     return NextResponse.json({
-      secret,
-      qrCode: qrCodeDataURL,
+      secret: twoFactorData.secret,
+      qrCode: twoFactorData.qrCodeDataURL,
       backupCodes: [], // We'll generate these when 2FA is confirmed
       message: 'Two-factor authentication setup initiated. Scan the QR code with your authenticator app.'
     });

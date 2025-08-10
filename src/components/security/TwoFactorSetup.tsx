@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+import BackupCodeManager from './BackupCodeManager';
+import DisableTwoFactor from './DisableTwoFactor';
 
 export default function TwoFactorSetup() {
   const auth = getAuth(app);
@@ -20,6 +22,7 @@ export default function TwoFactorSetup() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showBackupCodeManagement, setShowBackupCodeManagement] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -199,10 +202,17 @@ export default function TwoFactorSetup() {
 
               <div className="space-y-2">
                 <button
-                  onClick={() => setSetupStep('setup')}
+                  onClick={() => setShowBackupCodeManagement(true)}
                   className="w-full btn btn-secondary"
                 >
-                  View Settings
+                  Manage Backup Codes
+                </button>
+                
+                <button
+                  onClick={() => setSetupStep('setup')}
+                  className="w-full text-sm text-gray-600 hover:text-gray-500"
+                >
+                  View Advanced Settings
                 </button>
               </div>
             </div>

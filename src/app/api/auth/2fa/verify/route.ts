@@ -3,24 +3,15 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { admin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
-import { authenticator } from 'otplib';
+import { verifyTwoFactorToken, generateBackupCodes, twoFactorRateLimiter } from '@/lib/auth/twoFactor';
 import { z } from 'zod';
-import { randomBytes } from 'crypto';
 import { requireFeatureFlag } from '@/lib/featureFlags';
 
 const verifyTwoFASchema = z.object({
-  token: z.string().length(6, 'Token must be 6 digits').regex(/^\d+$/, 'Token must contain only numbers')
+  token: z.string().min(6, 'Token must be at least 6 characters').max(8, 'Token must be at most 8 characters')
 });
 
-// Generate backup codes
-function generateBackupCodes(count: number = 8): string[] {
-  const codes: string[] = [];
-  for (let i = 0; i < count; i++) {
-    const code = randomBytes(4).toString('hex').toUpperCase();
-    codes.push(code);
-  }
-  return codes;
-}
+
 
 export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) => {
   try {
@@ -55,6 +46,20 @@ export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) =>
     }
 
     const userId = decodedToken.uid;
+
+    // Check rate limiting
+    if (twoFactorRateLimiter.isRateLimited(userId)) {
+      const resetTime = twoFactorRateLimiter.getResetTime(userId);
+      logger.warn('2FA verification rate limited', { userId, resetTime });
+      return NextResponse.json(
+        { 
+          error: 'Too many failed attempts. Please try again later.',
+          resetTime: Math.ceil(resetTime / 1000 / 60) // minutes
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { token: totpToken } = verifyTwoFASchema.parse(body);
 
@@ -84,15 +89,20 @@ export const POST = requireFeatureFlag('ENABLE_2FA')(async (req: NextRequest) =>
       );
     }
 
-    // Verify the TOTP token
-    const isValid = authenticator.check(totpToken, secret);
+    // Verify the TOTP token using utility
+    const verificationResult = verifyTwoFactorToken(totpToken, secret);
     
-    if (!isValid) {
+    if (!verificationResult.isValid) {
+      twoFactorRateLimiter.recordFailedAttempt(userId);
+      logger.warn('Failed 2FA setup verification', { userId });
       return NextResponse.json(
         { error: 'Invalid verification code. Please try again.' },
         { status: 400 }
       );
     }
+
+    // Reset rate limiting on successful verification
+    twoFactorRateLimiter.resetAttempts(userId);
 
     // Generate backup codes
     const backupCodes = generateBackupCodes();
