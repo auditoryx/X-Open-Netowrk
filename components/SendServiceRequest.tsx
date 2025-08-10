@@ -1,5 +1,6 @@
 "use client";
 import { useState, FormEvent, ChangeEvent } from "react";
+import toast from "react-hot-toast";
 
 interface FormData {
   date: string;
@@ -21,6 +22,7 @@ export default function SendServiceRequest({
     time: "",
     notes: "",
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -28,6 +30,7 @@ export default function SendServiceRequest({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const res = await fetch('/api/book', {
         method: 'POST',
@@ -43,10 +46,12 @@ export default function SendServiceRequest({
       if (!res.ok) throw new Error('Request failed');
 
       setFormData({ date: '', time: '', notes: '' });
-      alert('Request sent successfully');
+      toast.success('Request sent successfully!');
     } catch (err) {
-      console.error(err);
-      alert('Failed to send request');
+      console.error('Failed to send request:', err);
+      toast.error('Failed to send request. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +80,13 @@ export default function SendServiceRequest({
         className="p-3 rounded-md w-full bg-gray-800 border border-gray-700 text-white"
       />
 
-      <button type="submit" className="btn btn-primary w-full">Send Request</button>
+      <button 
+        type="submit" 
+        className="btn btn-primary w-full"
+        disabled={isLoading}
+      >
+        {isLoading ? "Sending..." : "Send Request"}
+      </button>
     </form>
   );
 }

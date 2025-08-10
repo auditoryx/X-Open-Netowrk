@@ -36,7 +36,7 @@ export default function ProviderBookings() {
   useEffect(() => {
     fetchBookings();
     fetchProvider();
-  }, [user]);
+  }, [user, fetchBookings, fetchProvider]);
 
   const handleStatusChange = async (id: string, status: 'accepted' | 'rejected' | 'completed', dateTime?: string) => {
     await updateBookingStatus(id, status);

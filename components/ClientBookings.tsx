@@ -32,7 +32,7 @@ export default function ClientBookings() {
 
   useEffect(() => {
     if (user?.uid) fetch();
-  }, [user]);
+  }, [user, fetch]);
 
   const submitReview = async (bookingId: string) => {
     const text = reviewText[bookingId];
