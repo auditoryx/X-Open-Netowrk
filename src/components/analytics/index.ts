@@ -4,7 +4,12 @@
  * Exports all analytics-related components and utilities
  */
 
-// Components
+// Enhanced Analytics Components (Phase 4)
+export { default as AnimatedMetric } from './AnimatedMetric';
+export { default as ProgressRing } from './ProgressRing';
+export { default as TrendIndicator } from './TrendIndicator';
+
+// Legacy Analytics Components
 export { default as MetricsCard } from './MetricsCard';
 export { default as ChartComponent } from './ChartComponent';
 export { default as ReportExport } from './ReportExport';
