@@ -3,6 +3,9 @@ import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import AnimateOnScroll, { StaggeredReveal, CountUp } from '@/components/ui/AnimateOnScroll';
+import HeroSection from '@/components/hero/HeroSection';
+import AnimatedButton from '@/components/ui/AnimatedButton';
+import Typography from '@/components/ui/Typography';
 
 export const metadata: Metadata = {
   title: 'AuditoryX - The Global Creative Network Built for Music',
@@ -41,33 +44,41 @@ export default function Home() {
       <main className="min-h-screen bg-brutalist-black text-white">
         <div className="mx-auto max-w-7xl">
 
-          {/* HERO */}
-          <section className="text-center bg-brutalist-black border-b-4 border-white spacing-brutalist-xl">
-            <h1 className="heading-brutalist-xl mb-8 leading-tight">
-              The Global Creative Network Built for Music
-            </h1>
-            <p className="text-brutalist text-xl mb-16 max-w-4xl mx-auto font-medium leading-relaxed">
-              Book talent, sell your services, and get paid.
-            </p>
+          {/* HERO - Enhanced with HeroSection component */}
+          <HeroSection
+            title="The Global Creative Network Built for Music"
+            subtitle="Book talent, sell your services, and get paid."
+            variant="minimal"
+          >
             <div className="flex flex-col items-center gap-8">
               {/* Primary CTA */}
-              <Link 
-                href="/explore" 
-                className="btn-brutalist-lg"
+              <AnimatedButton
+                variant="primary"
+                size="lg"
+                animationType="glow"
+                asChild
               >
-                🔍 Explore 10K+ Creators
-              </Link>
-              <p className="text-brutalist-mono opacity-60 text-sm tracking-wide">No signup required • Browse freely</p>
+                <Link href="/explore">
+                  🔍 Explore 10K+ Creators
+                </Link>
+              </AnimatedButton>
+              <Typography variant="caption" className="opacity-60 tracking-wide">
+                No signup required • Browse freely
+              </Typography>
               
               {/* Secondary CTA */}
-              <Link 
-                href="/apply" 
-                className="btn-brutalist-secondary"
+              <AnimatedButton
+                variant="outline"
+                size="md"
+                animationType="hover"
+                asChild
               >
-                I'm a Creator →
-              </Link>
+                <Link href="/apply">
+                  I'm a Creator →
+                </Link>
+              </AnimatedButton>
             </div>
-          </section>
+          </HeroSection>
 
           {/* FEATURE TILES */}
           <AnimateOnScroll direction="up" delay={0.2}>
@@ -113,7 +124,9 @@ export default function Home() {
 
           {/* HOW IT WORKS */}
           <section className="spacing-brutalist-lg">
-            <h2 className="heading-brutalist-lg text-center mb-12">HOW AUDITORYX WORKS</h2>
+            <Typography variant="h2" className="text-center mb-12" animate>
+              HOW AUDITORYX WORKS
+            </Typography>
             <div className="card-brutalist spacing-brutalist-md max-w-4xl mx-auto">
               <ol className="space-y-6">
                 {[
@@ -162,7 +175,9 @@ export default function Home() {
 
           {/* FEATURED CREATORS (real data) */}
           <section className="spacing-brutalist-lg">
-            <h2 className="heading-brutalist-lg mb-12">FEATURED CREATORS</h2>
+            <Typography variant="h2" className="mb-12" animate animateDelay={0.3}>
+              FEATURED CREATORS
+            </Typography>
             <div className="grid-brutalist grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
               {/* Oogie Mane - Producer */}
               <Link href="/profile/oogie-mane" className="card-brutalist card-brutalist-interactive spacing-brutalist-md">
@@ -228,7 +243,9 @@ export default function Home() {
 
           {/* TESTIMONIALS */}
           <section className="spacing-brutalist-lg">
-            <h2 className="heading-brutalist-lg text-center mb-12">WHAT CREATORS ARE SAYING</h2>
+            <Typography variant="h2" className="text-center mb-12" animate animateDelay={0.4}>
+              WHAT CREATORS ARE SAYING
+            </Typography>
             <div className="grid-brutalist grid-cols-1 md:grid-cols-3">
               <div className="card-brutalist spacing-brutalist-md">
                 <div className="flex items-center gap-4 mb-6">
@@ -288,7 +305,9 @@ export default function Home() {
 
           {/* BROWSE BY ROLE */}
           <section className="spacing-brutalist-lg">
-            <h2 className="heading-brutalist-lg text-center mb-12">BROWSE BY ROLE</h2>
+            <Typography variant="h2" className="text-center mb-12" animate animateDelay={0.5}>
+              BROWSE BY ROLE
+            </Typography>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
               {[
                 { icon: '🎤', role: 'ARTIST' },
@@ -311,7 +330,9 @@ export default function Home() {
 
           {/* BROWSE BY LOCATION */}
           <section className="spacing-brutalist-lg">
-            <h2 className="heading-brutalist-lg text-center mb-12">POPULAR LOCATIONS</h2>
+            <Typography variant="h2" className="text-center mb-12" animate animateDelay={0.6}>
+              POPULAR LOCATIONS
+            </Typography>
             <div className="flex flex-wrap justify-center gap-6">
               {[
                 'ATLANTA', 'LA', 'NYC', 'MIAMI', 'CHICAGO', 
