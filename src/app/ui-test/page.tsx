@@ -5,6 +5,9 @@ import AdvancedLoader from '@/components/ui/AdvancedLoader';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import Typography from '@/components/ui/Typography';
 import PageTransition from '@/components/ui/PageTransition';
+import AnimatedNav from '@/components/navigation/AnimatedNav';
+import HeroSection from '@/components/hero/HeroSection';
+import AnimatedButton from '@/components/ui/AnimatedButton';
 import { useLoadingState } from '@/hooks/useLoadingState';
 
 export default function UITestPage() {
@@ -15,6 +18,14 @@ export default function UITestPage() {
     autoComplete: true,
     duration: 3000,
   });
+
+  const navItems = [
+    { label: 'Dashboard', href: '/dashboard', isActive: true },
+    { label: 'Analytics', href: '/analytics' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Team', href: '/team' },
+    { label: 'Settings', href: '/settings' },
+  ];
 
   const handleStartDemo = () => {
     setShowOverlay(true);
@@ -28,18 +39,105 @@ export default function UITestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
+    <div className="min-h-screen bg-black text-white">
       <PageTransition isLoading={isPageLoading}>
-        <div className="max-w-4xl mx-auto space-y-12">
-          {/* Header */}
-          <div className="text-center space-y-6">
-            <Typography variant="h1" animate className="text-brand-500">
-              UI Enhancement Demo
-            </Typography>
-            <Typography variant="body" animate animateDelay={0.3} className="text-gray-300">
-              Showcasing the new Multiplayer Labs-inspired design system
-            </Typography>
+        {/* Hero Section */}
+        <HeroSection
+          title="UI Enhancement Demo"
+          subtitle="Showcasing the new Multiplayer Labs-inspired design system"
+          variant="minimal"
+        >
+          <div className="flex flex-wrap gap-4 justify-center mt-8">
+            <AnimatedButton
+              variant="primary"
+              size="lg"
+              onClick={handleStartDemo}
+              animationType="glow"
+            >
+              Demo Loading Overlay
+            </AnimatedButton>
+            <AnimatedButton
+              variant="outline"
+              size="lg"
+              onClick={handlePageTransition}
+              animationType="hover"
+            >
+              Demo Page Transition
+            </AnimatedButton>
           </div>
+        </HeroSection>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-16">
+          {/* Navigation Demo */}
+          <section className="space-y-8">
+            <Typography variant="h2">Navigation System</Typography>
+            
+            <div className="space-y-8">
+              <div>
+                <Typography variant="h3" className="mb-4">Horizontal Navigation</Typography>
+                <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                  <AnimatedNav
+                    items={navItems}
+                    orientation="horizontal"
+                    onItemClick={(item) => console.log('Clicked:', item.label)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Typography variant="h3" className="mb-4">Vertical Navigation</Typography>
+                <div className="bg-gray-900 p-6 rounded-xl border border-gray-800 max-w-xs">
+                  <AnimatedNav
+                    items={navItems}
+                    orientation="vertical"
+                    onItemClick={(item) => console.log('Clicked:', item.label)}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Button Variants */}
+          <section className="space-y-8">
+            <Typography variant="h2">Button Components</Typography>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <Typography variant="h4" className="mb-4">Primary Buttons</Typography>
+                <div className="space-y-3">
+                  <AnimatedButton variant="primary" size="sm">Small Button</AnimatedButton>
+                  <AnimatedButton variant="primary" size="md">Medium Button</AnimatedButton>
+                  <AnimatedButton variant="primary" size="lg">Large Button</AnimatedButton>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <Typography variant="h4" className="mb-4">Button Variants</Typography>
+                <div className="space-y-3">
+                  <AnimatedButton variant="secondary">Secondary</AnimatedButton>
+                  <AnimatedButton variant="outline">Outline</AnimatedButton>
+                  <AnimatedButton variant="ghost">Ghost</AnimatedButton>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <Typography variant="h4" className="mb-4">Animation Types</Typography>
+                <div className="space-y-3">
+                  <AnimatedButton variant="primary" animationType="hover">Hover Effect</AnimatedButton>
+                  <AnimatedButton variant="primary" animationType="glow">Glow Effect</AnimatedButton>
+                  <AnimatedButton variant="primary" animationType="press">Press Effect</AnimatedButton>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">
+                <Typography variant="h4" className="mb-4">Loading States</Typography>
+                <div className="space-y-3">
+                  <AnimatedButton variant="primary" isLoading>Loading...</AnimatedButton>
+                  <AnimatedButton variant="secondary" disabled>Disabled</AnimatedButton>
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* Typography Showcase */}
           <section className="space-y-6">
@@ -104,27 +202,9 @@ export default function UITestPage() {
             </div>
           </section>
 
-          {/* Interactive Demo */}
-          <section className="space-y-6">
-            <Typography variant="h2">Interactive Demos</Typography>
-            
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={handleStartDemo}
-                className="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:scale-105 animate-hover-lift"
-              >
-                Demo Loading Overlay
-              </button>
-              
-              <button
-                onClick={handlePageTransition}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:scale-105 animate-hover-lift"
-              >
-                Demo Page Transition
-              </button>
-            </div>
-
-            {loadingState.isLoading && (
+          {/* Auto-Loading Demo */}
+          {loadingState.isLoading && (
+            <section className="space-y-6">
               <div className="bg-gray-900 p-6 rounded-xl border border-gray-800">
                 <Typography variant="h4" className="mb-4">Auto-Loading Demo</Typography>
                 <AdvancedLoader
@@ -133,8 +213,8 @@ export default function UITestPage() {
                   showProgress
                 />
               </div>
-            )}
-          </section>
+            </section>
+          )}
 
           {/* Animation CSS Classes */}
           <section className="space-y-6">
