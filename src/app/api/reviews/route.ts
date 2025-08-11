@@ -19,35 +19,35 @@ import { getFlags } from '@/lib/featureFlags';
 // GET /api/reviews - Fetch reviews with optional filtering
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const targetId = searchParams.get(SCHEMA_FIELDS.REVIEW.TARGET_ID);
-  const authorId = searchParams.get(SCHEMA_FIELDS.REVIEW.AUTHOR_ID);
-  const bookingId = searchParams.get(SCHEMA_FIELDS.REVIEW.BOOKING_ID);
+  const targetId = searchParams.get('targetId');
+  const authorId = searchParams.get('authorId');
+  const bookingId = searchParams.get('bookingId');
   const limitParam = searchParams.get('limit');
   const after = searchParams.get('after');
 
   try {
-    const q = collection(db, 'reviews');
+    let q = collection(db, 'reviews');
 
     // Build query with filters
     const constraints = [];
     
     if (targetId) {
-      constraints.push(where(SCHEMA_FIELDS.REVIEW.TARGET_ID, '==', targetId));
+      constraints.push(where('targetId', '==', targetId));
     }
     
     if (authorId) {
-      constraints.push(where(SCHEMA_FIELDS.REVIEW.AUTHOR_ID, '==', authorId));
+      constraints.push(where('authorId', '==', authorId));
     }
     
     if (bookingId) {
-      constraints.push(where(SCHEMA_FIELDS.REVIEW.BOOKING_ID, '==', bookingId));
+      constraints.push(where('bookingId', '==', bookingId));
     }
 
     // Only show visible reviews by default
     constraints.push(where('visible', '==', true));
 
     // Add ordering and pagination
-    constraints.push(orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
+    constraints.push(orderBy('createdAt', 'desc'));
     
     if (limitParam) {
       constraints.push(limit(parseInt(limitParam, 10)));
@@ -122,8 +122,8 @@ async function postHandler(req: NextRequest & { user: any }) {
     // Check if review already exists for this booking
     const existingQuery = query(
       collection(db, 'reviews'),
-      where(SCHEMA_FIELDS.REVIEW.BOOKING_ID, '==', bookingId),
-      where(SCHEMA_FIELDS.REVIEW.AUTHOR_ID, '==', req.user.uid)
+      where('bookingId', '==', bookingId),
+      where('authorId', '==', req.user.uid)
     );
     
     const existingSnapshot = await getDocs(existingQuery);

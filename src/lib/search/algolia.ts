@@ -123,7 +123,7 @@ class AlgoliaService {
     try {
       const results = await index.search(query, {
         hitsPerPage: 5,
-        attributesToRetrieve: ['displayName', SCHEMA_FIELDS.BOOKING.TITLE, SCHEMA_FIELDS.USER.ROLE, SCHEMA_FIELDS.SERVICE.CATEGORY],
+        attributesToRetrieve: ['displayName', 'title', 'role', 'category'],
         attributesToHighlight: [],
       });
 
@@ -221,20 +221,20 @@ class AlgoliaService {
       await this.usersIndex.setSettings({
         searchableAttributes: [
           'displayName',
-          SCHEMA_FIELDS.USER.NAME,
+          'name',
           'bio',
           'location',
-          SCHEMA_FIELDS.USER.ROLE,
+          'role',
           'genres',
           'services',
         ],
         attributesForFaceting: [
-          SCHEMA_FIELDS.USER.ROLE,
-          SCHEMA_FIELDS.USER.TIER,
+          'role',
+          'tier',
           'verificationStatus',
           'location',
           'genres',
-          SCHEMA_FIELDS.USER.AVERAGE_RATING,
+          'averageRating',
         ],
         ranking: [
           'typo',
@@ -267,17 +267,17 @@ class AlgoliaService {
       // Services index configuration
       await this.servicesIndex.setSettings({
         searchableAttributes: [
-          SCHEMA_FIELDS.BOOKING.TITLE,
-          SCHEMA_FIELDS.SERVICE.DESCRIPTION,
-          SCHEMA_FIELDS.SERVICE.CATEGORY,
+          'title',
+          'description',
+          'category',
           'tags',
           'creatorName',
         ],
         attributesForFaceting: [
-          SCHEMA_FIELDS.SERVICE.CATEGORY,
-          SCHEMA_FIELDS.SERVICE.PRICE,
-          SCHEMA_FIELDS.SERVICE.DURATION,
-          SCHEMA_FIELDS.USER.TIER,
+          'category',
+          'price',
+          'duration',
+          'tier',
           'creatorRole',
         ],
         ranking: [
@@ -297,9 +297,9 @@ class AlgoliaService {
           'desc(createdAt)',
         ],
         attributesToHighlight: [
-          SCHEMA_FIELDS.BOOKING.TITLE,
-          SCHEMA_FIELDS.SERVICE.DESCRIPTION,
-          SCHEMA_FIELDS.SERVICE.CATEGORY,
+          'title',
+          'description',
+          'category',
         ],
         attributesToSnippet: [
           'description:30',
@@ -379,8 +379,8 @@ class AlgoliaService {
     // Sorting
     if (options.sortBy && options.sortBy !== 'relevance') {
       const sortMapping: Record<string, string> = {
-        SCHEMA_FIELDS.REVIEW.RATING: 'users_rating_desc',
-        SCHEMA_FIELDS.SERVICE.PRICE: 'services_price_asc',
+        'rating': 'users_rating_desc',
+        'price': 'services_price_asc',
         'distance': 'users_geo',
         'created_at': 'users_created_desc',
       };

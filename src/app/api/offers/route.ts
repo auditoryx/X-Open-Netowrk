@@ -44,28 +44,28 @@ const CreateOfferSchema = z.object({
   roleSpecific: z.record(z.any()).optional().default({})
 });
 
-const UpdateOfferSchema = CreateOfferSchema.partial().omit([SCHEMA_FIELDS.USER.ROLE]);
+const UpdateOfferSchema = CreateOfferSchema.partial().omit(['role']);
 
 // GET /api/offers - List offers with filtering
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get(SCHEMA_FIELDS.NOTIFICATION.USER_ID);
-  const role = searchParams.get(SCHEMA_FIELDS.USER.ROLE);
+  const userId = searchParams.get('userId');
+  const role = searchParams.get('role');
   const active = searchParams.get('active');
   const limitParam = searchParams.get('limit');
   const after = searchParams.get('after');
 
   try {
-    const q = collection(db, 'offers');
+    let q = collection(db, 'offers');
     const constraints = [];
 
     // Apply filters
     if (userId) {
-      constraints.push(where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', userId));
+      constraints.push(where('userId', '==', userId));
     }
     
     if (role) {
-      constraints.push(where(SCHEMA_FIELDS.USER.ROLE, '==', role));
+      constraints.push(where('role', '==', role));
     }
     
     if (active !== null) {
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Default ordering
-    constraints.push(orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
+    constraints.push(orderBy('createdAt', 'desc'));
     
     // Pagination
     if (limitParam) {
@@ -117,7 +117,7 @@ async function createOfferHandler(req: NextRequest & { user: any }) {
     // Check user's active offer count against config limits
     const userOffersQuery = query(
       collection(db, 'offers'),
-      where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', req.user.uid),
+      where('userId', '==', req.user.uid),
       where('active', '==', true)
     );
     

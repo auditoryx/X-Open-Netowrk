@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const { type, format, startDate, endDate } = ExportQuerySchema.parse({
-      type: searchParams.get(SCHEMA_FIELDS.NOTIFICATION.TYPE),
+      type: searchParams.get('type'),
       format: searchParams.get('format') || 'csv',
       startDate: searchParams.get('startDate') || undefined,
       endDate: searchParams.get('endDate') || undefined,

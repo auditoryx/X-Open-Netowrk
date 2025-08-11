@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
-    const creatorId = searchParams.get(SCHEMA_FIELDS.SERVICE.CREATOR_ID);
+    const creatorId = searchParams.get('creatorId');
 
     if (code) {
       // Validate invite code
@@ -232,8 +232,8 @@ async function getCreatorInvites(creatorId: string) {
   try {
     const invitesQuery = query(
       collection(db, 'byoInvites'),
-      where(SCHEMA_FIELDS.SERVICE.CREATOR_ID, '==', creatorId),
-      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
+      where('creatorId', '==', creatorId),
+      orderBy('createdAt', 'desc'),
       limit(50)
     );
     const snapshot = await getDocs(invitesQuery);

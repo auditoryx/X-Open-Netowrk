@@ -358,8 +358,8 @@ export class StripeRefundService {
     try {
       // Get user's bookings that were refunded
       const bookingsSnapshot = await adminDb.collection('bookings')
-        .where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'cancelled')
-        .where(SCHEMA_FIELDS.BOOKING.PAYMENT_STATUS, '==', 'refunded')
+        .where('status', '==', 'cancelled')
+        .where('paymentStatus', '==', 'refunded')
         .orderBy('refundedAt', 'desc')
         .limit(limit)
         .get();

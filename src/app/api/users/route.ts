@@ -28,8 +28,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
-    const role = searchParams.get(SCHEMA_FIELDS.USER.ROLE);
-    const tier = searchParams.get(SCHEMA_FIELDS.USER.TIER);
+    const role = searchParams.get('role');
+    const tier = searchParams.get('tier');
     const limit = parseInt(searchParams.get('limit') || '20');
     const offset = parseInt(searchParams.get('offset') || '0');
     const publicOnly = searchParams.get('public') === 'true';
@@ -45,14 +45,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Build Firestore query
-    let query = admin.firestore().collection('users').where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true);
+    let query = admin.firestore().collection('users').where('isActive', '==', true);
 
     // Apply filters
     if (role) {
-      query = query.where(SCHEMA_FIELDS.USER.ROLE, '==', role);
+      query = query.where('role', '==', role);
     }
     if (tier) {
-      query = query.where(SCHEMA_FIELDS.USER.TIER, '==', tier);
+      query = query.where('tier', '==', tier);
     }
 
     // Apply search (simplified - in production use search service)

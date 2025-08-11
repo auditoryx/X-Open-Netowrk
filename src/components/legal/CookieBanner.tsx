@@ -339,7 +339,7 @@ export const trackEvent = (eventName: string, properties?: Record<string, any>) 
   try {
     const preferences = JSON.parse(consent);
     if (preferences.analytics && typeof window !== 'undefined' && window.gtag) {
-      window.gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, eventName, properties);
+      window.gtag('event', eventName, properties);
     }
   } catch (error) {
     console.warn('Cookie consent check failed:', error);

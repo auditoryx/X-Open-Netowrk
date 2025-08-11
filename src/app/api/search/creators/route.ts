@@ -19,12 +19,12 @@ export async function GET(request: NextRequest) {
     // Creator-specific filters
     const filters: SearchFilters = {};
     
-    if (searchParams.get(SCHEMA_FIELDS.USER.ROLE)) {
-      filters.role = searchParams.get(SCHEMA_FIELDS.USER.ROLE)!;
+    if (searchParams.get('role')) {
+      filters.role = searchParams.get('role')!;
     }
     
-    if (searchParams.get(SCHEMA_FIELDS.USER.TIER)) {
-      filters.tier = searchParams.get(SCHEMA_FIELDS.USER.TIER)!;
+    if (searchParams.get('tier')) {
+      filters.tier = searchParams.get('tier')!;
     }
     
     if (searchParams.get('verificationStatus')) {

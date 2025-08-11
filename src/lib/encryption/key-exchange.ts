@@ -155,8 +155,8 @@ class ChatKeyExchange {
     const q = query(
       sessionsRef,
       where('participants', 'array-contains-any', [userId1, userId2]),
-      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'established'),
-      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'),
+      where('status', '==', 'established'),
+      orderBy('createdAt', 'desc'),
       limit(1)
     );
 

@@ -10,7 +10,7 @@ import DisableTwoFactor from './DisableTwoFactor';
 export default function TwoFactorSetup() {
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
-  const [setupStep, setSetupStep] = useState<'status' | 'setup' | 'verify' | 'complete'>(SCHEMA_FIELDS.BOOKING.STATUS);
+  const [setupStep, setSetupStep] = useState<'status' | 'setup' | 'verify' | 'complete'>('status');
   const [qrCode, setQrCode] = useState('');
   const [secret, setSecret] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -143,7 +143,7 @@ export default function TwoFactorSetup() {
 
       if (response.ok) {
         setTwoFAStatus({ ...twoFAStatus, enabled: false });
-        setSetupStep(SCHEMA_FIELDS.BOOKING.STATUS);
+        setSetupStep('status');
       } else {
         setError(result.error || 'Failed to disable 2FA');
       }
@@ -285,7 +285,7 @@ export default function TwoFactorSetup() {
               </button>
               
               <button
-                onClick={() => setSetupStep(SCHEMA_FIELDS.BOOKING.STATUS)}
+                onClick={() => setSetupStep('status')}
                 className="w-full btn btn-secondary"
               >
                 Cancel
@@ -320,7 +320,7 @@ export default function TwoFactorSetup() {
             </div>
 
             <button
-              onClick={() => setSetupStep(SCHEMA_FIELDS.BOOKING.STATUS)}
+              onClick={() => setSetupStep('status')}
               className="w-full btn btn-primary"
             >
               Complete Setup

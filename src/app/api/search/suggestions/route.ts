@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q') || '';
-    const type = searchParams.get(SCHEMA_FIELDS.NOTIFICATION.TYPE) as 'users' | 'services' || 'users';
+    const type = searchParams.get('type') as 'users' | 'services' || 'users';
 
     if (query.length < 2) {
       return NextResponse.json({

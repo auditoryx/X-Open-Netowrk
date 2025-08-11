@@ -132,13 +132,13 @@ export function useFilterChips() {
     const filters: FilterChip[] = [];
     
     // Add role filter
-    const role = searchParams.get(SCHEMA_FIELDS.USER.ROLE);
+    const role = searchParams.get('role');
     if (role) {
       filters.push({
-        id: SCHEMA_FIELDS.USER.ROLE,
+        id: 'role',
         label: `Role: ${role.toUpperCase()}`,
         value: role,
-        category: SCHEMA_FIELDS.USER.ROLE
+        category: 'role'
       });
     }
     
@@ -168,13 +168,13 @@ export function useFilterChips() {
     }
     
     // Add tier filter
-    const tier = searchParams.get(SCHEMA_FIELDS.USER.TIER);
+    const tier = searchParams.get('tier');
     if (tier && tier !== 'all') {
       filters.push({
-        id: SCHEMA_FIELDS.USER.TIER,
+        id: 'tier',
         label: `Tier: ${tier.toUpperCase()}`,
         value: tier,
-        category: SCHEMA_FIELDS.USER.TIER
+        category: 'tier'
       });
     }
     

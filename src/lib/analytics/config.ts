@@ -337,7 +337,7 @@ export class Analytics {
   private static sendToProviders(event: AnalyticsEvent) {
     // Google Analytics
     if (analyticsConfig.providers.googleAnalytics.enabled && typeof window !== 'undefined' && window.gtag) {
-      window.gtag(SCHEMA_FIELDS.XP_TRANSACTION.EVENT, event.action, {
+      window.gtag('event', event.action, {
         event_category: event.category,
         event_label: event.label,
         value: event.value,
@@ -475,7 +475,7 @@ export class ABTesting {
   
   // Get user's variant for an experiment
   static getUserVariant(experimentId: string, variants: string[]): string {
-    const userId = Analytics[SCHEMA_FIELDS.NOTIFICATION.USER_ID] || 'anonymous';
+    const userId = Analytics['userId'] || 'anonymous';
     const hash = this.hashString(`${experimentId}_${userId}`);
     const variantIndex = hash % variants.length;
     return variants[variantIndex];

@@ -140,14 +140,14 @@ class FirestoreSearchService implements SearchService {
     
     let firestoreQuery = admin.firestore()
       .collection('users')
-      .where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true);
+      .where('isActive', '==', true);
 
     if (filters.role) {
-      firestoreQuery = firestoreQuery.where(SCHEMA_FIELDS.USER.ROLE, '==', filters.role);
+      firestoreQuery = firestoreQuery.where('role', '==', filters.role);
     }
 
     if (filters.tier) {
-      firestoreQuery = firestoreQuery.where(SCHEMA_FIELDS.USER.TIER, '==', filters.tier);
+      firestoreQuery = firestoreQuery.where('tier', '==', filters.tier);
     }
 
     if (filters.verificationStatus) {
@@ -193,13 +193,13 @@ class FirestoreSearchService implements SearchService {
     
     let firestoreQuery = admin.firestore()
       .collection('services')
-      .where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true);
+      .where('isActive', '==', true);
 
     // Basic text search on title
     if (query) {
       firestoreQuery = firestoreQuery
-        .where(SCHEMA_FIELDS.BOOKING.TITLE, '>=', query)
-        .where(SCHEMA_FIELDS.BOOKING.TITLE, '<=', query + '\uf8ff');
+        .where('title', '>=', query)
+        .where('title', '<=', query + '\uf8ff');
     }
 
     firestoreQuery = firestoreQuery.limit(options.hitsPerPage || 20);

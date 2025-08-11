@@ -71,7 +71,7 @@ async function updateOfferHandler(req: NextRequest & { user: any }, { params }: 
     if (validatedData.active === true && !existingOffer.active) {
       const userOffersQuery = query(
         collection(db, 'offers'),
-        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, '==', req.user.uid),
+        where('userId', '==', req.user.uid),
         where('active', '==', true)
       );
       

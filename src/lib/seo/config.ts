@@ -130,10 +130,10 @@ export const structuredData = {
   organization: {
     "@context": "https://schema.org",
     "@type": "Organization",
-    SCHEMA_FIELDS.USER.NAME: "X Open Network",
+    "name": "X Open Network",
     "url": seoConfig.siteUrl,
     "logo": `${seoConfig.siteUrl}/images/logo.png`,
-    SCHEMA_FIELDS.SERVICE.DESCRIPTION: seoConfig.defaultDescription,
+    "description": seoConfig.defaultDescription,
     "sameAs": [
       `https://twitter.com/${seoConfig.social.twitter.replace('@', '')}`,
       `https://facebook.com/${seoConfig.social.facebook}`,
@@ -144,7 +144,7 @@ export const structuredData = {
       "@type": "ContactPoint",
       "telephone": "+1-555-0123",
       "contactType": "customer service",
-      SCHEMA_FIELDS.USER.EMAIL: "support@x-open-network.com",
+      "email": "support@x-open-network.com",
       "availableLanguage": "English"
     }
   },
@@ -152,9 +152,9 @@ export const structuredData = {
   website: {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    SCHEMA_FIELDS.USER.NAME: seoConfig.siteName,
+    "name": seoConfig.siteName,
     "url": seoConfig.siteUrl,
-    SCHEMA_FIELDS.SERVICE.DESCRIPTION: seoConfig.defaultDescription,
+    "description": seoConfig.defaultDescription,
     "potentialAction": {
       "@type": "SearchAction",
       "target": `${seoConfig.siteUrl}/search?q={search_term_string}`,
@@ -165,37 +165,37 @@ export const structuredData = {
   service: {
     "@context": "https://schema.org",
     "@type": "Service",
-    SCHEMA_FIELDS.USER.NAME: "Creative Professional Marketplace",
-    SCHEMA_FIELDS.SERVICE.DESCRIPTION: "Platform connecting clients with verified creative professionals including music producers, video editors, and graphic designers",
+    "name": "Creative Professional Marketplace",
+    "description": "Platform connecting clients with verified creative professionals including music producers, video editors, and graphic designers",
     "provider": {
       "@type": "Organization",
-      SCHEMA_FIELDS.USER.NAME: "X Open Network"
+      "name": "X Open Network"
     },
     "serviceType": "Creative Services Marketplace",
     "areaServed": "Worldwide",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      SCHEMA_FIELDS.USER.NAME: "Creative Services",
+      "name": "Creative Services",
       "itemListElement": [
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            SCHEMA_FIELDS.USER.NAME: "Music Production Services"
+            "name": "Music Production Services"
           }
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            SCHEMA_FIELDS.USER.NAME: "Video Editing Services"
+            "name": "Video Editing Services"
           }
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            SCHEMA_FIELDS.USER.NAME: "Graphic Design Services"
+            "name": "Graphic Design Services"
           }
         }
       ]
@@ -206,20 +206,20 @@ export const structuredData = {
   generatePersonSchema: (creator) => ({
     "@context": "https://schema.org",
     "@type": "Person",
-    SCHEMA_FIELDS.USER.NAME: creator.name,
-    SCHEMA_FIELDS.SERVICE.DESCRIPTION: creator.bio,
+    "name": creator.name,
+    "description": creator.bio,
     "url": `${seoConfig.siteUrl}/profile/${creator.uid}`,
     "image": creator.photoURL,
     "jobTitle": creator.primarySkill,
     "worksFor": {
       "@type": "Organization",
-      SCHEMA_FIELDS.USER.NAME: "X Open Network"
+      "name": "X Open Network"
     },
     "knowsAbout": creator.skills,
     "aggregateRating": creator.rating ? {
       "@type": "AggregateRating",
       "ratingValue": creator.rating.average,
-      SCHEMA_FIELDS.USER.REVIEW_COUNT: creator.rating.count,
+      "reviewCount": creator.rating.count,
       "bestRating": 5,
       "worstRating": 1
     } : undefined
@@ -237,12 +237,12 @@ export const structuredData = {
     },
     "author": {
       "@type": "Person",
-      SCHEMA_FIELDS.USER.NAME: review.clientName
+      "name": review.clientName
     },
     "reviewBody": review.comment,
     "itemReviewed": {
       "@type": "Person",
-      SCHEMA_FIELDS.USER.NAME: creator.name
+      "name": creator.name
     },
     "datePublished": review.createdAt
   })

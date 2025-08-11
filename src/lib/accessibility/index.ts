@@ -73,7 +73,7 @@ export const a11yUtils = {
       if (labelElement) return labelElement.textContent || '';
     }
     
-    const id = element.getAttribute(SCHEMA_FIELDS.USER.ID);
+    const id = element.getAttribute('id');
     if (id) {
       const label = document.querySelector(`label[for="${id}"]`);
       if (label) return label.textContent || '';

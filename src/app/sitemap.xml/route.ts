@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
         collection(db, 'users'),
         where('roles', 'array-contains', 'creator'),
         where('profileComplete', '==', true),
-        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'approved')
+        where('status', '==', 'approved')
       );
       
       const creatorsSnapshot = await getDocs(creatorsQuery);

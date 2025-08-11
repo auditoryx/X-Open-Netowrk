@@ -3,7 +3,7 @@ import { getAverageRating, getReviewCount, getRatingDistribution } from '@/lib/r
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const targetId = searchParams.get(SCHEMA_FIELDS.REVIEW.TARGET_ID);
+  const targetId = searchParams.get('targetId');
 
   if (!targetId) {
     return NextResponse.json({ error: 'targetId is required' }, { status: 400 });

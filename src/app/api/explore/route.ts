@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
     
     // Parse filters
     const filters: ExploreFilters = {
-      role: searchParams.get(SCHEMA_FIELDS.USER.ROLE) || undefined,
-      tier: searchParams.get(SCHEMA_FIELDS.USER.TIER) || undefined,
+      role: searchParams.get('role') || undefined,
+      tier: searchParams.get('tier') || undefined,
       location: searchParams.get('location') || undefined,
       genres: searchParams.get('genres')?.split(',').filter(Boolean) || undefined,
       minRating: searchParams.get('minRating') ? parseFloat(searchParams.get('minRating')!) : undefined,
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
         searchParams.get('bpmRange')!.split(',').map(Number) as [number, number] : undefined,
       service: searchParams.get('service') || undefined,
       stemTier: searchParams.get('stemTier') || undefined,
-      category: searchParams.get(SCHEMA_FIELDS.SERVICE.CATEGORY) || undefined,
+      category: searchParams.get('category') || undefined,
       drone: searchParams.get('drone') === 'true' ? true : (searchParams.get('drone') === 'false' ? false : undefined),
       roomType: searchParams.get('roomType') || undefined,
       engineerIncluded: searchParams.get('engineerIncluded') === 'true' ? true : (searchParams.get('engineerIncluded') === 'false' ? false : undefined)
@@ -219,26 +219,26 @@ async function getExploreResults(filters: ExploreFilters, options: ExploreOption
  */
 async function getTopCreators(filters: ExploreFilters, resultLimit: number, options: ExploreOptions): Promise<UserProfile[]> {
   try {
-    const baseQuery: Query = collection(db, 'users');
+    let baseQuery: Query = collection(db, 'users');
     const constraints = [];
 
     // Base filters
     constraints.push(where('roles', 'array-contains', filters.role || 'creator'));
-    constraints.push(where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'approved'));
+    constraints.push(where('status', '==', 'approved'));
 
     // Tier filter
     if (filters.tier) {
-      constraints.push(where(SCHEMA_FIELDS.USER.TIER, '==', filters.tier));
+      constraints.push(where('tier', '==', filters.tier));
     }
 
     // Apply tier precedence ordering if enabled
     if (options.enableTierPrecedence) {
       // Order by tier (ASC) then credibilityScore (DESC) for tier precedence
-      constraints.push(orderBy(SCHEMA_FIELDS.USER.TIER, 'asc'));
+      constraints.push(orderBy('tier', 'asc'));
       constraints.push(orderBy('credibilityScore', 'desc'));
     } else {
       // Fallback to existing rankScore
-      constraints.push(orderBy(SCHEMA_FIELDS.USER.RANK_SCORE, 'desc'));
+      constraints.push(orderBy('rankScore', 'desc'));
     }
 
     constraints.push(limit(resultLimit * 2)); // Get extra for filtering
@@ -272,11 +272,11 @@ async function getTopCreators(filters: ExploreFilters, resultLimit: number, opti
 async function getRisingCreators(filters: ExploreFilters, resultLimit: number, options: ExploreOptions): Promise<UserProfile[]> {
   try {
     // Look for creators with rising talent badge or recent high activity
-    const baseQuery: Query = collection(db, 'users');
+    let baseQuery: Query = collection(db, 'users');
     const constraints = [];
 
     constraints.push(where('roles', 'array-contains', filters.role || 'creator'));
-    constraints.push(where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'approved'));
+    constraints.push(where('status', '==', 'approved'));
     
     // Filter for users with rising talent badge OR recent activity
     constraints.push(where('badgeIds', 'array-contains-any', ['rising-talent', 'trending-now']));
@@ -284,7 +284,7 @@ async function getRisingCreators(filters: ExploreFilters, resultLimit: number, o
     if (options.enableTierPrecedence) {
       constraints.push(orderBy('credibilityScore', 'desc'));
     } else {
-      constraints.push(orderBy(SCHEMA_FIELDS.USER.RANK_SCORE, 'desc'));
+      constraints.push(orderBy('rankScore', 'desc'));
     }
 
     constraints.push(limit(resultLimit * 2));
@@ -318,11 +318,11 @@ async function getNewCreators(filters: ExploreFilters, resultLimit: number, opti
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const baseQuery: Query = collection(db, 'users');
+    let baseQuery: Query = collection(db, 'users');
     const constraints = [];
 
     constraints.push(where('roles', 'array-contains', filters.role || 'creator'));
-    constraints.push(where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'approved'));
+    constraints.push(where('status', '==', 'approved'));
     
     // Prefer users with new-this-week badge, fallback to recent creation
     constraints.push(where('badgeIds', 'array-contains', 'new-this-week'));
@@ -330,7 +330,7 @@ async function getNewCreators(filters: ExploreFilters, resultLimit: number, opti
     if (options.enableTierPrecedence) {
       constraints.push(orderBy('credibilityScore', 'desc'));
     } else {
-      constraints.push(orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc'));
+      constraints.push(orderBy('createdAt', 'desc'));
     }
 
     constraints.push(limit(resultLimit));
@@ -398,7 +398,7 @@ async function applyAdditionalFilters(results: UserProfile[], filters: ExploreFi
     if (userIds.length > 0) {
       const offersQuery = query(
         collection(db, 'offers'),
-        where(SCHEMA_FIELDS.NOTIFICATION.USER_ID, 'in', userIds.slice(0, 10)), // Firestore limit
+        where('userId', 'in', userIds.slice(0, 10)), // Firestore limit
         where('active', '==', true)
       );
       

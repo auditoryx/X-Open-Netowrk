@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
     // Service-specific filters
     const filters: SearchFilters = {};
     
-    if (searchParams.get(SCHEMA_FIELDS.SERVICE.CATEGORY)) {
+    if (searchParams.get('category')) {
       // Map to role for services (services are categorized by creator role)
-      filters.role = searchParams.get(SCHEMA_FIELDS.SERVICE.CATEGORY)!;
+      filters.role = searchParams.get('category')!;
     }
     
     if (searchParams.get('minPrice')) {
@@ -39,8 +39,8 @@ export async function GET(request: NextRequest) {
       filters.location = searchParams.get('location')!;
     }
     
-    if (searchParams.get(SCHEMA_FIELDS.USER.TIER)) {
-      filters.tier = searchParams.get(SCHEMA_FIELDS.USER.TIER)!;
+    if (searchParams.get('tier')) {
+      filters.tier = searchParams.get('tier')!;
     }
 
     // Geographic search

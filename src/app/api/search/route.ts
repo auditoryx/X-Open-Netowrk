@@ -42,19 +42,19 @@ export async function GET(request: NextRequest) {
     // Get search parameters
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q') || '';
-    const type = searchParams.get(SCHEMA_FIELDS.NOTIFICATION.TYPE) || 'users'; // 'users' or 'services'
+    const type = searchParams.get('type') || 'users'; // 'users' or 'services'
     const page = parseInt(searchParams.get('page') || '0');
     const limit = parseInt(searchParams.get('limit') || '20');
 
     // Build filters from query parameters
     const filters: SearchFilters = {};
     
-    if (searchParams.get(SCHEMA_FIELDS.USER.ROLE)) {
-      filters.role = searchParams.get(SCHEMA_FIELDS.USER.ROLE)!;
+    if (searchParams.get('role')) {
+      filters.role = searchParams.get('role')!;
     }
     
-    if (searchParams.get(SCHEMA_FIELDS.USER.TIER)) {
-      filters.tier = searchParams.get(SCHEMA_FIELDS.USER.TIER)!;
+    if (searchParams.get('tier')) {
+      filters.tier = searchParams.get('tier')!;
     }
     
     if (searchParams.get('verificationStatus')) {

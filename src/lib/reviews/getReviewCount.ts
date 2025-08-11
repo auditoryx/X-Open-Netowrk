@@ -6,7 +6,7 @@ export async function getReviewCount(targetId: string): Promise<number> {
   const ref = collection(db, 'reviews');
   const q = query(
     ref, 
-    where(SCHEMA_FIELDS.REVIEW.TARGET_ID, '==', targetId),
+    where('targetId', '==', targetId),
     where('visible', '==', true)
   );
   const snapshot = await getCountFromServer(q);

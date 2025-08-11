@@ -189,7 +189,7 @@ export const useFocusAnnouncements = () => {
 
   const announceFocus = useCallback((element: HTMLElement) => {
     const tagName = element.tagName.toLowerCase();
-    const role = element.getAttribute(SCHEMA_FIELDS.USER.ROLE);
+    const role = element.getAttribute('role');
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledBy = element.getAttribute('aria-labelledby');
     
@@ -219,7 +219,7 @@ export const useFocusAnnouncements = () => {
           announcement += ', link';
           break;
         case 'input':
-          const inputType = element.getAttribute(SCHEMA_FIELDS.NOTIFICATION.TYPE) || 'text';
+          const inputType = element.getAttribute('type') || 'text';
           announcement += `, ${inputType} input`;
           break;
         case 'select':

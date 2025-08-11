@@ -86,8 +86,8 @@ describe('BYO Invite System', () => {
         expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
       };
 
-      expect(mockByoInvite).toHaveProperty(SCHEMA_FIELDS.USER.ID);
-      expect(mockByoInvite).toHaveProperty(SCHEMA_FIELDS.SERVICE.CREATOR_ID);
+      expect(mockByoInvite).toHaveProperty('id');
+      expect(mockByoInvite).toHaveProperty('creatorId');
       expect(mockByoInvite).toHaveProperty('inviteCode');
       expect(mockByoInvite.status).toMatch(/^(pending|accepted|expired|used)$/);
       expect(mockByoInvite.expiresAt.getTime()).toBeGreaterThan(mockByoInvite.createdAt.getTime());

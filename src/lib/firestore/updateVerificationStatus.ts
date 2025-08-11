@@ -64,8 +64,8 @@ export async function getAllPendingVerifications(): Promise<VerificationRequest[
     const verificationsRef = collection(db, 'verifications');
     const q = query(
       verificationsRef,
-      where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'pending'),
-      orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
+      where('status', '==', 'pending'),
+      orderBy('createdAt', 'desc')
     );
 
     const snapshot = await getDocs(q);
@@ -96,13 +96,13 @@ export async function getAllVerifications(
     if (status) {
       q = query(
         verificationsRef,
-        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', status),
-        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
+        where('status', '==', status),
+        orderBy('createdAt', 'desc')
       );
     } else {
       q = query(
         verificationsRef,
-        orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'desc')
+        orderBy('createdAt', 'desc')
       );
     }
 

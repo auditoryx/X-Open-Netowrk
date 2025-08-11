@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
     switch (action) {
       case 'getPublicKey': {
         const { userId } = GetPublicKeySchema.parse({
-          userId: searchParams.get(SCHEMA_FIELDS.NOTIFICATION.USER_ID),
+          userId: searchParams.get('userId'),
         });
 
         const publicKey = await keyExchange.getUserPublicKey(userId);
