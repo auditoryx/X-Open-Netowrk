@@ -6,7 +6,7 @@ export async function getRatingDistribution(targetId: string): Promise<Record<nu
   const db = getFirestore(app);
   const q = query(
     collection(db, 'reviews'), 
-    where('targetId', '==', targetId),
+    where(SCHEMA_FIELDS.REVIEW.TARGET_ID, '==', targetId),
     where('visible', '==', true)
   );
   const snap = await getDocs(q);

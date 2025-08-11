@@ -87,7 +87,7 @@ describe('StripeRefundService', () => {
       expect(preview).toHaveProperty('refundAmount');
       expect(preview).toHaveProperty('processingFee');
       expect(preview).toHaveProperty('refundPercentage');
-      expect(preview).toHaveProperty('reason');
+      expect(preview).toHaveProperty(SCHEMA_FIELDS.DISPUTE.REASON);
       expect(preview).toHaveProperty('hoursUntilBooking');
     });
 

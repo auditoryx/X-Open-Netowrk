@@ -146,7 +146,7 @@ class PlatformAnalyticsService {
 
       const completedBookingsQuery = query(
         bookingsCollection,
-        where('status', '==', 'completed')
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed')
       );
       const completedBookingsSnapshot = await getDocs(completedBookingsQuery);
       const completedBookings = completedBookingsSnapshot.size;
@@ -229,21 +229,21 @@ class PlatformAnalyticsService {
       // Registration metrics
       const todayRegistrationsQuery = query(
         usersCollection,
-        where('createdAt', '>=', today)
+        where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', today)
       );
       const todayRegistrationsSnapshot = await getDocs(todayRegistrationsQuery);
       const todayRegistrations = todayRegistrationsSnapshot.size;
 
       const weekRegistrationsQuery = query(
         usersCollection,
-        where('createdAt', '>=', weekAgo)
+        where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', weekAgo)
       );
       const weekRegistrationsSnapshot = await getDocs(weekRegistrationsQuery);
       const weekRegistrations = weekRegistrationsSnapshot.size;
 
       const monthRegistrationsQuery = query(
         usersCollection,
-        where('createdAt', '>=', monthAgo)
+        where(SCHEMA_FIELDS.USER.CREATED_AT, '>=', monthAgo)
       );
       const monthRegistrationsSnapshot = await getDocs(monthRegistrationsQuery);
       const monthRegistrations = monthRegistrationsSnapshot.size;
@@ -373,7 +373,7 @@ class PlatformAnalyticsService {
       const bookingsCollection = collection(db, 'bookings');
       const completedBookingsQuery = query(
         bookingsCollection,
-        where('status', '==', 'completed')
+        where(SCHEMA_FIELDS.BOOKING.STATUS, '==', 'completed')
       );
       const completedBookingsSnapshot = await getDocs(completedBookingsQuery);
 

@@ -4,7 +4,7 @@ import { getCancellationPolicy, getPolicySummary, DEFAULT_POLICIES } from '@/lib
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const tier = searchParams.get('tier') || 'standard';
+    const tier = searchParams.get(SCHEMA_FIELDS.USER.TIER) || 'standard';
 
     // Validate tier
     if (!['standard', 'verified', 'signature'].includes(tier)) {

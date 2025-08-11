@@ -23,7 +23,7 @@ async function getAuditLogs(limit: number = 20, offset: number = 0) {
         success: true,
         ip: '192.168.1.1',
         details: {
-          changes: ['role', 'email'],
+          changes: [SCHEMA_FIELDS.USER.ROLE, SCHEMA_FIELDS.USER.EMAIL],
           oldRole: 'user',
           newRole: 'creator'
         }

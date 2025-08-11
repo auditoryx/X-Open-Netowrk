@@ -30,7 +30,7 @@ interface VerifiedCreator {
 export default function VerifiedDirectoryPage() {
   const [creators, setCreators] = useState<VerifiedCreator[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState<'xp' | 'rating'>('xp');
+  const [sortBy, setSortBy] = useState<'xp' | 'rating'>(SCHEMA_FIELDS.USER.XP);
 
   useEffect(() => {
     fetchVerifiedCreators();

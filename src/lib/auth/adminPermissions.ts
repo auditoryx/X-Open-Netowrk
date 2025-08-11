@@ -56,7 +56,7 @@ export const ADMIN_PERMISSIONS: Record<string, AdminPermission> = {
   'users:read': {
     id: 'users:read',
     resource: 'users',
-    action: 'read',
+    action: SCHEMA_FIELDS.NOTIFICATION.READ,
     description: 'View user profiles and basic information'
   },
   'users:write': {

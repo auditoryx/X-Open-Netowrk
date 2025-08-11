@@ -494,7 +494,7 @@ function validateBeatCategory(beatData: any): { valid: boolean; reason?: string 
 
 function validateMetadata(content: any): number {
   let score = 0;
-  const fields = ['title', 'description', 'tags', 'category'];
+  const fields = [SCHEMA_FIELDS.BOOKING.TITLE, SCHEMA_FIELDS.SERVICE.DESCRIPTION, 'tags', SCHEMA_FIELDS.SERVICE.CATEGORY];
   
   fields.forEach(field => {
     if (content.data[field] && content.data[field].length > 0) {

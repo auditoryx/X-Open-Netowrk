@@ -132,8 +132,8 @@ async function getAvailableSlots(request: NextRequest, currentUserId: string) {
     const queryData = {
       startDate: searchParams.get('startDate'),
       endDate: searchParams.get('endDate'),
-      duration: searchParams.get('duration') ? parseInt(searchParams.get('duration')!) : undefined,
-      userId: searchParams.get('userId') || currentUserId
+      duration: searchParams.get(SCHEMA_FIELDS.SERVICE.DURATION) ? parseInt(searchParams.get(SCHEMA_FIELDS.SERVICE.DURATION)!) : undefined,
+      userId: searchParams.get(SCHEMA_FIELDS.NOTIFICATION.USER_ID) || currentUserId
     };
 
     if (!queryData.startDate || !queryData.endDate) {
@@ -229,7 +229,7 @@ async function checkSlotAvailability(request: NextRequest, currentUserId: string
     const checkData = {
       startTime: searchParams.get('startTime'),
       endTime: searchParams.get('endTime'),
-      userId: searchParams.get('userId') || currentUserId
+      userId: searchParams.get(SCHEMA_FIELDS.NOTIFICATION.USER_ID) || currentUserId
     };
 
     if (!checkData.startTime || !checkData.endTime) {

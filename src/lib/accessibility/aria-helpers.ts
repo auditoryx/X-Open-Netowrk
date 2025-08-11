@@ -138,7 +138,7 @@ export const getAriaAttributes = {
   }),
   
   link: (current?: boolean) => ({
-    role: 'link',
+    role: SCHEMA_FIELDS.NOTIFICATION.LINK,
     'aria-current': current ? 'page' : undefined,
   }),
   
@@ -177,7 +177,7 @@ export const getAriaAttributes = {
   }),
   
   status: (live: AriaLiveRegion = 'polite') => ({
-    role: 'status',
+    role: SCHEMA_FIELDS.BOOKING.STATUS,
     'aria-live': live,
     'aria-atomic': true,
   }),

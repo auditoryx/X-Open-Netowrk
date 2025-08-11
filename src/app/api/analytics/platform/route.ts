@@ -35,7 +35,7 @@ export const GET = requireFeatureFlag('ENABLE_ANALYTICS_DASHBOARD')(async (reque
 
     const { searchParams } = new URL(request.url);
     const { type, startDate, endDate, interval } = AnalyticsQuerySchema.parse({
-      type: searchParams.get('type') || 'platform',
+      type: searchParams.get(SCHEMA_FIELDS.NOTIFICATION.TYPE) || 'platform',
       startDate: searchParams.get('startDate') || undefined,
       endDate: searchParams.get('endDate') || undefined,
       interval: searchParams.get('interval') || 'month',

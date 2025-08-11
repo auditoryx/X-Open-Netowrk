@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       encryptedContent,
       isEncrypted,
       timestamp: serverTimestamp(),
-      messageType: 'text',
+      messageType: SCHEMA_FIELDS.REVIEW.TEXT,
       sessionId: encryptionSessionId,
       seen: false,
       senderName: session.user.name || session.user.email || 'User',
@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const { bookingId, limit, before } = GetMessagesSchema.parse({
-      bookingId: searchParams.get('bookingId'),
+      bookingId: searchParams.get(SCHEMA_FIELDS.REVIEW.BOOKING_ID),
       limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 50,
       before: searchParams.get('before') || undefined,
     });
@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
     const messagesRef = collection(db, 'encryptedChatMessages');
     let q = query(
       messagesRef,
-      where('bookingId', '==', bookingId),
+      where(SCHEMA_FIELDS.REVIEW.BOOKING_ID, '==', bookingId),
       orderBy('timestamp', 'desc')
     );
 

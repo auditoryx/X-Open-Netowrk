@@ -134,7 +134,7 @@ export class SearchIndexingService {
       
       const usersSnapshot = await admin.firestore()
         .collection('users')
-        .where('isActive', '==', true)
+        .where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true)
         .limit(limit)
         .get();
 
@@ -191,7 +191,7 @@ export class SearchIndexingService {
       
       const servicesSnapshot = await admin.firestore()
         .collection('services')
-        .where('isActive', '==', true)
+        .where(SCHEMA_FIELDS.SERVICE.IS_ACTIVE, '==', true)
         .limit(limit)
         .get();
 

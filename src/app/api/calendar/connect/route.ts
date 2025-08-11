@@ -6,7 +6,7 @@ import { z } from 'zod';
 const ConnectRequestSchema = z.object({
   provider: z.enum(['google']),
   code: z.string().optional(),
-  action: z.enum(['authorize', 'callback', 'disconnect', 'status'])
+  action: z.enum(['authorize', 'callback', 'disconnect', SCHEMA_FIELDS.BOOKING.STATUS])
 });
 
 // Initialize Google Calendar service

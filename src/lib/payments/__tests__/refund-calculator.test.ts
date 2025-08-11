@@ -241,16 +241,16 @@ describe('Cancellation Policies', () => {
 
     it('should have properly structured policies', () => {
       Object.values(DEFAULT_POLICIES).forEach(policy => {
-        expect(policy).toHaveProperty('id');
-        expect(policy).toHaveProperty('name');
-        expect(policy).toHaveProperty('description');
+        expect(policy).toHaveProperty(SCHEMA_FIELDS.USER.ID);
+        expect(policy).toHaveProperty(SCHEMA_FIELDS.USER.NAME);
+        expect(policy).toHaveProperty(SCHEMA_FIELDS.SERVICE.DESCRIPTION);
         expect(policy).toHaveProperty('rules');
         expect(Array.isArray(policy.rules)).toBe(true);
         
         policy.rules.forEach(rule => {
           expect(rule).toHaveProperty('hoursBeforeBooking');
           expect(rule).toHaveProperty('refundPercentage');
-          expect(rule).toHaveProperty('description');
+          expect(rule).toHaveProperty(SCHEMA_FIELDS.SERVICE.DESCRIPTION);
           expect(typeof rule.hoursBeforeBooking).toBe('number');
           expect(typeof rule.refundPercentage).toBe('number');
           expect(rule.refundPercentage).toBeGreaterThanOrEqual(0);

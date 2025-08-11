@@ -115,14 +115,14 @@ describe('Badge System', () => {
   describe('Core Badge Definitions', () => {
     it('should have all required badge properties', () => {
       CORE_BADGE_DEFINITIONS.forEach(badge => {
-        expect(badge).toHaveProperty('id');
-        expect(badge).toHaveProperty('name');
-        expect(badge).toHaveProperty('description');
-        expect(badge).toHaveProperty('category');
+        expect(badge).toHaveProperty(SCHEMA_FIELDS.USER.ID);
+        expect(badge).toHaveProperty(SCHEMA_FIELDS.USER.NAME);
+        expect(badge).toHaveProperty(SCHEMA_FIELDS.SERVICE.DESCRIPTION);
+        expect(badge).toHaveProperty(SCHEMA_FIELDS.SERVICE.CATEGORY);
         expect(badge).toHaveProperty('assignmentType');
         expect(badge).toHaveProperty('icon');
         expect(badge).toHaveProperty('scoreImpact');
-        expect(badge).toHaveProperty('isActive');
+        expect(badge).toHaveProperty(SCHEMA_FIELDS.SERVICE.IS_ACTIVE);
       });
     });
 
