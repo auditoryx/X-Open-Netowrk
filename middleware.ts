@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getPatternBasedRateLimit } from '@/middleware/rateLimiting'
+import { analyzeTrafficPattern, logSecurityEvent } from '@/lib/security/ddosProtection'
 
 /**
  * Route-level auth used to run here using Firebase Admin to verify session
@@ -10,6 +12,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * This middleware now handles:
  * 1. Feature flag-based route protection
  * 2. Basic request processing
+ * 3. Rate limiting and DDoS protection
  */
 
 // Feature flag route mapping (duplicated from lib/featureFlags.ts for edge runtime)
@@ -86,8 +89,83 @@ function isRouteAccessible(pathname: string, flags: Record<string, boolean>): bo
   return true;
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  
+  // Apply DDoS protection for all requests
+  try {
+    const ddosAnalysis = await analyzeTrafficPattern(req);
+    
+    if (ddosAnalysis.action === 'block') {
+      logSecurityEvent({
+        type: 'ddos_attempt',
+        ip: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown',
+        userAgent: req.headers.get('user-agent') || '',
+        severity: 'critical',
+        details: {
+          reasons: ddosAnalysis.reasons,
+          confidence: ddosAnalysis.confidence,
+          pathname
+        }
+      });
+      
+      return new NextResponse(
+        JSON.stringify({ 
+          error: 'Request blocked due to suspicious activity',
+          retryAfter: 300 
+        }),
+        { 
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'Retry-After': '300',
+          }
+        }
+      );
+    }
+    
+    if (ddosAnalysis.action === 'throttle') {
+      logSecurityEvent({
+        type: 'suspicious_activity',
+        ip: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown',
+        userAgent: req.headers.get('user-agent') || '',
+        severity: 'medium',
+        details: {
+          reasons: ddosAnalysis.reasons,
+          confidence: ddosAnalysis.confidence,
+          pathname
+        }
+      });
+    }
+  } catch (error) {
+    console.warn('DDoS protection error:', error);
+  }
+  
+  // Apply rate limiting to API routes
+  if (pathname.startsWith('/api/')) {
+    try {
+      const rateLimitMiddleware = getPatternBasedRateLimit(pathname);
+      const rateLimitResult = await rateLimitMiddleware(req);
+      
+      if (rateLimitResult && rateLimitResult.status === 429) {
+        logSecurityEvent({
+          type: 'rate_limit_exceeded',
+          ip: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown',
+          userAgent: req.headers.get('user-agent') || '',
+          severity: 'medium',
+          details: { pathname }
+        });
+        
+        return rateLimitResult;
+      }
+      
+      if (rateLimitResult) {
+        return rateLimitResult;
+      }
+    } catch (error) {
+      console.warn('Rate limiting error:', error);
+    }
+  }
   
   // Parse feature flags
   const featureFlags = parseFeatureFlags();
@@ -110,6 +188,7 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    '/api/:path*', // Apply rate limiting to all API routes
     '/dashboard/:path*',
     '/admin/:path*',
     '/leaderboard/:path*',
