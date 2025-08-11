@@ -80,7 +80,8 @@ function getClientIP(req: NextRequest): string {
   if (realIp) return realIp;
   if (forwarded) return forwarded.split(',')[0].trim();
   
-  return req.ip || 'unknown';
+  // NextRequest doesn't have ip property in edge runtime, so fallback to forwarded headers
+  return 'unknown';
 }
 
 // Analyze user agent for suspicious patterns
@@ -325,7 +326,7 @@ export function cleanupDDoSMemoryStores(): void {
   const now = Date.now();
   const maxAge = 60 * 60 * 1000; // 1 hour
   
-  for (const [key, value] of ddosMemoryStore.entries()) {
+  for (const [key, value] of Array.from(ddosMemoryStore.entries())) {
     if (Array.isArray(value)) {
       const filtered = value.filter((timestamp: number) => timestamp > now - maxAge);
       if (filtered.length === 0) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRecentSecurityEvents, getTrafficMetrics } from '@/lib/security/ddosProtection';
+import { getRecentSecurityEvents, getTrafficMetrics } from '../../../lib/security/ddosProtection';
 
 export async function GET(req: NextRequest) {
   try {

@@ -55,7 +55,7 @@ const memoryStore = new Map<string, { count: number; resetTime: number }>();
 // Default IP-based key generator
 function defaultKeyGenerator(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+  const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
   return `rate_limit:${ip}`;
 }
 
@@ -110,7 +110,7 @@ export function createRateLimit(config: RateLimitConfig) {
     
     // Extract IP for whitelist/blacklist check
     const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.ip || 'unknown';
+    const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
     
     // Check blacklist first
     if (isIPBlacklisted(ip)) {
