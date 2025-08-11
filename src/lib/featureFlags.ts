@@ -11,6 +11,13 @@ export interface FeatureFlags {
   ENABLE_ANALYTICS_DASHBOARD: boolean;
   ENABLE_ADVANCED_SEARCH: boolean;
   ENABLE_CHAT_ENCRYPTION: boolean;
+  // AX Beta feature flags
+  EXPOSE_SCORE_V1?: boolean;
+  BYO_LINKS?: boolean;
+  FIRST_SCREEN_MIX?: boolean;
+  LANE_NUDGES?: boolean;
+  CASE_STUDIES?: boolean;
+  POSITIVE_REVIEWS_ONLY?: boolean;
 }
 
 /**
@@ -33,8 +40,23 @@ export function getFeatureFlags(): FeatureFlags {
     ENABLE_ADVANCED_SEARCH: process.env.ENABLE_ADVANCED_SEARCH !== 'false',
     
     // Chat encryption enabled for testing
-    ENABLE_CHAT_ENCRYPTION: process.env.ENABLE_CHAT_ENCRYPTION !== 'false'
+    ENABLE_CHAT_ENCRYPTION: process.env.ENABLE_CHAT_ENCRYPTION !== 'false',
+    
+    // AX Beta feature flags
+    EXPOSE_SCORE_V1: process.env.NEXT_PUBLIC_EXPOSE_SCORE_V1 === 'true',
+    BYO_LINKS: process.env.NEXT_PUBLIC_BYO_LINKS === 'true',
+    FIRST_SCREEN_MIX: process.env.NEXT_PUBLIC_FIRST_SCREEN_MIX === 'true',
+    LANE_NUDGES: process.env.NEXT_PUBLIC_LANE_NUDGES === 'true',
+    CASE_STUDIES: process.env.NEXT_PUBLIC_CASE_STUDIES === 'true',
+    POSITIVE_REVIEWS_ONLY: process.env.NEXT_PUBLIC_POSITIVE_REVIEWS_ONLY === 'true',
   };
+}
+
+/**
+ * Get flags for server-side usage (async for compatibility)
+ */
+export async function getFlags(): Promise<FeatureFlags> {
+  return getFeatureFlags();
 }
 
 /**

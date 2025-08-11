@@ -3,7 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { admin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
-import { authenticator } from 'otplib';
+import { verifyTwoFactorToken, twoFactorRateLimiter } from '@/lib/auth/twoFactor';
 import { z } from 'zod';
 
 const verifyLoginSchema = z.object({
@@ -43,6 +43,20 @@ export async function POST(req: NextRequest) {
     }
 
     const userId = decodedToken.uid;
+
+    // Check rate limiting
+    if (twoFactorRateLimiter.isRateLimited(userId)) {
+      const resetTime = twoFactorRateLimiter.getResetTime(userId);
+      logger.warn('2FA login verification rate limited', { userId, resetTime });
+      return NextResponse.json(
+        { 
+          error: 'Too many failed attempts. Please try again later.',
+          resetTime: Math.ceil(resetTime / 1000 / 60) // minutes
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { token: totpToken } = verifyLoginSchema.parse(body);
 
@@ -60,33 +74,24 @@ export async function POST(req: NextRequest) {
     const secret = userData.twoFactorSecret;
     const backupCodes = userData.twoFactorBackupCodes || [];
 
-    // Check if token is a TOTP code or backup code
-    let isValid = false;
-    let usedBackupCode = null;
+    // Verify token using utility
+    const verificationResult = verifyTwoFactorToken(totpToken, secret, backupCodes);
 
-    if (totpToken.length === 6 && /^\d+$/.test(totpToken)) {
-      // TOTP token
-      isValid = authenticator.check(totpToken, secret);
-    } else if (totpToken.length === 8 && /^[A-F0-9]+$/i.test(totpToken)) {
-      // Backup code
-      const upperToken = totpToken.toUpperCase();
-      if (backupCodes.includes(upperToken)) {
-        isValid = true;
-        usedBackupCode = upperToken;
-      }
-    }
-
-    if (!isValid) {
-      logger.warn('Failed 2FA verification attempt', { userId });
+    if (!verificationResult.isValid) {
+      twoFactorRateLimiter.recordFailedAttempt(userId);
+      logger.warn('Failed 2FA login verification attempt', { userId });
       return NextResponse.json(
         { error: 'Invalid verification code or backup code' },
         { status: 400 }
       );
     }
 
+    // Reset rate limiting on successful verification
+    twoFactorRateLimiter.resetAttempts(userId);
+
     // Remove backup code if used
-    if (usedBackupCode) {
-      const remainingBackupCodes = backupCodes.filter((code: string) => code !== usedBackupCode);
+    if (verificationResult.usedBackupCode) {
+      const remainingBackupCodes = backupCodes.filter((code: string) => code !== verificationResult.usedBackupCode);
       await db.collection('users').doc(userId).set({
         twoFactorBackupCodes: remainingBackupCodes
       }, { merge: true });
@@ -110,8 +115,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: 'Two-factor authentication verified successfully',
       verified: true,
-      usedBackupCode: !!usedBackupCode,
-      backupCodesRemaining: usedBackupCode ? backupCodes.length - 1 : backupCodes.length
+      usedBackupCode: !!verificationResult.usedBackupCode,
+      backupCodesRemaining: verificationResult.usedBackupCode ? 
+        verificationResult.remainingBackupCodes : backupCodes.length
     });
 
   } catch (error) {

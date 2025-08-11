@@ -14,7 +14,7 @@ import {
   doc
 } from 'firebase/firestore';
 import withAuth from '@/app/api/_utils/withAuth';
-import { getFlags } from '@/lib/FeatureFlags';
+import { getFlags } from '@/lib/featureFlags';
 
 // GET /api/reviews - Fetch reviews with optional filtering
 export async function GET(req: NextRequest) {
