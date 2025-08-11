@@ -180,6 +180,114 @@
   transform: translateZ(0);
 }
 
+/* Scroll and parallax animations */
+@keyframes scrollFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scrollSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scrollSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes parallaxFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Utility classes for scroll animations */
+.animate-scroll-fade-in {
+  animation: scrollFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scroll-slide-left {
+  animation: scrollSlideLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scroll-slide-right {
+  animation: scrollSlideRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-parallax-float {
+  animation: parallaxFloat 6s ease-in-out infinite;
+}
+
+.animate-background-shift {
+  background-size: 200% 200%;
+  animation: backgroundShift 10s ease infinite;
+}
+
+/* Advanced effects utilities */
+.animate-stagger-children > * {
+  animation-delay: calc(var(--stagger-delay, 0.1s) * var(--index, 0));
+}
+
+.animate-reveal-mask {
+  mask: linear-gradient(90deg, transparent, black 20%, black 80%, transparent);
+  mask-size: 200% 100%;
+  animation: revealMask 2s ease-in-out forwards;
+}
+
+@keyframes revealMask {
+  0% {
+    mask-position: -100% 0;
+  }
+  100% {
+    mask-position: 100% 0;
+  }
+}
+
+/* Performance optimizations for effects */
+.animate-parallax {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.animate-smooth-scroll {
+  scroll-behavior: smooth;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .animate-text-reveal,
@@ -192,14 +300,28 @@
   .animate-page-out,
   .animate-overlay-in,
   .animate-button-press,
-  .animate-hover-lift {
+  .animate-hover-lift,
+  .animate-scroll-fade-in,
+  .animate-scroll-slide-left,
+  .animate-scroll-slide-right,
+  .animate-parallax-float,
+  .animate-background-shift,
+  .animate-reveal-mask {
     animation: none;
     transition: none;
   }
   
   .animate-text-reveal,
-  .animate-text-reveal-char {
+  .animate-text-reveal-char,
+  .animate-scroll-fade-in,
+  .animate-scroll-slide-left,
+  .animate-scroll-slide-right {
     opacity: 1;
+    transform: none;
+  }
+  
+  .animate-parallax {
+    will-change: auto;
     transform: none;
   }
 }
