@@ -2,9 +2,9 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { getCollabPackageById } from '@/src/lib/firestore/getCollabPackages';
-import { createCollabBooking } from '@/src/lib/firestore/createCollabBooking';
-import { CollabPackage, getPackageMembers, formatPackageDuration, formatPackagePrice } from '@/src/lib/types/CollabPackage';
+import { getCollabPackageById } from '@/lib/firestore/getCollabPackages';
+import { createCollabBooking } from '@/lib/firestore/createCollabBooking';
+import { CollabPackage, getPackageMembers, formatPackageDuration, formatPackagePrice } from '@/lib/types/CollabPackage';
 import { 
   ArrowLeft, 
   Users, 

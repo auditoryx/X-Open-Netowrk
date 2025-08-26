@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { SplitBookingForm } from '@/src/components/booking/SplitBookingForm';
-import { SplitBookingsList } from '@/src/components/dashboard/SplitBookingsList';
-import { TalentRequestModal } from '@/src/components/booking/TalentRequestModal';
+import { SplitBookingForm } from '@/components/booking/SplitBookingForm';
+import { SplitBookingsList } from '@/components/dashboard/SplitBookingsList';
+import { TalentRequestModal } from '@/components/booking/TalentRequestModal';
 import { Users, Calendar, Music, DollarSign, Bell, ArrowRight } from 'lucide-react';
 
 // Mock data for demonstration

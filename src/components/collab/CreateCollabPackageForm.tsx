@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { createCollabPackage, CreateCollabPackageData } from '@/src/lib/firestore/createCollabPackage';
-import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
+import { createCollabPackage, CreateCollabPackageData } from '@/lib/firestore/createCollabPackage';
+import { getUserProfile } from '@/lib/firestore/getUserProfile';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { 
   Users, 
@@ -19,7 +19,7 @@ import {
   X,
   AlertCircle
 } from 'lucide-react';
-import { CollabPackage } from '@/src/lib/types/CollabPackage';
+import { CollabPackage } from '@/lib/types/CollabPackage';
 import toast from 'react-hot-toast';
 
 interface CreateCollabPackageFormProps {

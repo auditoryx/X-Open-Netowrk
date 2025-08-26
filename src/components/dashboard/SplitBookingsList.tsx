@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { SplitBooking } from '@/src/lib/types/Booking';
-import { getSplitBookingsForUser } from '@/src/lib/firestore/getSplitBookings';
-import { useSplitBookingsForUser } from '@/src/lib/hooks/useSplitBookingUpdates';
+import { SplitBooking } from '@/lib/types/Booking';
+import { getSplitBookingsForUser } from '@/lib/firestore/getSplitBookings';
+import { useSplitBookingsForUser } from '@/lib/hooks/useSplitBookingUpdates';
 import { SplitBookingCard } from './SplitBookingCard';
 import { TalentRequestModal } from '../booking/TalentRequestModal';
 import { useAuth } from '@/lib/hooks/useAuth';

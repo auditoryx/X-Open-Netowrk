@@ -9,9 +9,9 @@ import {
   increment,
   Timestamp 
 } from 'firebase/firestore';
-import { CollabBooking, CollabPackage, calculateRevenueSplit } from '@/src/lib/types/CollabPackage';
+import { CollabBooking, CollabPackage, calculateRevenueSplit } from '@/lib/types/CollabPackage';
 import { getCollabPackageById } from './getCollabPackages';
-import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
+import { getUserProfile } from '@/lib/firestore/getUserProfile';
 
 export interface CreateCollabBookingData {
   collabPackageId: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookingNotification } from '@/src/lib/types/Booking';
+import { BookingNotification } from '@/lib/types/Booking';
 import { Users, Music, Headphones, Mic, CheckCircle, XCircle, Clock, DollarSign } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 

@@ -1,6 +1,6 @@
 import { db } from '@/lib/firebase';
 import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
-import { SplitBooking, isUserInSplitBooking } from '@/src/lib/types/Booking';
+import { SplitBooking, isUserInSplitBooking } from '@/lib/types/Booking';
 
 /**
  * Get all split bookings for a specific user

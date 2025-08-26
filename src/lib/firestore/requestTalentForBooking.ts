@@ -1,8 +1,8 @@
 import { db } from '@/lib/firebase';
 import { doc, updateDoc, serverTimestamp, addDoc, collection } from 'firebase/firestore';
 import { getSplitBookingById } from './getSplitBookings';
-import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
-import { BookingNotification } from '@/src/lib/types/Booking';
+import { getUserProfile } from '@/lib/firestore/getUserProfile';
+import { BookingNotification } from '@/lib/types/Booking';
 
 /**
  * Update talent response to a booking request

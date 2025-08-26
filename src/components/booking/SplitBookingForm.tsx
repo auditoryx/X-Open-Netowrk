@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { createSplitBooking } from '@/src/lib/firestore/createSplitBooking';
-import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
+import { createSplitBooking } from '@/lib/firestore/createSplitBooking';
+import { getUserProfile } from '@/lib/firestore/getUserProfile';
 import { Users, Calendar, Clock, DollarSign, Search, Plus, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 

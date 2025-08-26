@@ -1,5 +1,5 @@
 import React from 'react';
-import { SplitBooking } from '@/src/lib/types/Booking';
+import { SplitBooking } from '@/lib/types/Booking';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { 
   Calendar, 

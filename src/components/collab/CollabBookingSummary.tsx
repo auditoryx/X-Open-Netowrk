@@ -1,5 +1,5 @@
 import React from 'react';
-import { CollabBooking, CollabPackage, formatPackageDuration, formatPackagePrice } from '@/src/lib/types/CollabPackage';
+import { CollabBooking, CollabPackage, formatPackageDuration, formatPackagePrice } from '@/lib/types/CollabPackage';
 import { 
   Calendar, 
   Clock, 

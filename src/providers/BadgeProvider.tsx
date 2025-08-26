@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { useAuthContext } from '@/providers/AuthProvider';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { useBadgeData } from '@/lib/hooks/useBadgeData';
 import { badgeService } from '@/lib/services/badgeService';
 import BadgeNotification from '@/components/gamification/BadgeNotification';
@@ -39,7 +39,7 @@ interface BadgeProviderProps {
 }
 
 export function BadgeProvider({ children }: BadgeProviderProps) {
-  const { user } = useAuthContext();
+  const { user } = useAuth();
   const { badges, refreshBadgeData } = useBadgeData();
   
   const [currentNotification, setCurrentNotification] = useState<BadgeNotificationData | null>(null);

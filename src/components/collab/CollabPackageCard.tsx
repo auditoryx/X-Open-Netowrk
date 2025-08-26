@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { CollabPackage, getPackageMembers, formatPackageDuration, formatPackagePrice } from '@/src/lib/types/CollabPackage';
+import { CollabPackage, getPackageMembers, formatPackageDuration, formatPackagePrice } from '@/lib/types/CollabPackage';
 import { 
   Music, 
   Headphones, 

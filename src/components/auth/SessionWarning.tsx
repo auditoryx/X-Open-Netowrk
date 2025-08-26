@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useSession } from '@/hooks/useSession';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function SessionWarning() {
   const { sessionStatus, showWarning, extendSession } = useSession();
