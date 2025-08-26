@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { ErrorReport } from '../../../lib/monitoring/errorMonitor';
+import { ErrorReport } from '@/lib/monitoring/errorMonitor';
 
 export async function POST(request: NextRequest) {
   try {

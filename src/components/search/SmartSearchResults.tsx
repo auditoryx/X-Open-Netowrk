@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Star, MapPin, Clock, Shield, Award, TrendingUp, 
-  Heart, MessageCircle, Calendar, Play, Pause,
-  Filter, Grid, List, ArrowUpDown, Zap, Crown
+import {
+  Star, MapPin, Clock, Award, TrendingUp,
+  Heart, MessageCircle, Calendar,
+  Grid, List, Zap, Crown
 } from 'lucide-react';
 import { SmartRecommendation } from '@/lib/services/advancedSearchService';
 import Image from 'next/image';
-import Link from 'next/link';
+import CreatorCard from '@/components/cards/CreatorCard';
 
 interface SmartSearchResultsProps {
   results: SmartRecommendation[];
@@ -238,14 +238,22 @@ export const SmartSearchResults: React.FC<SmartSearchResultsProps> = ({
               layout
             >
               {viewMode === 'grid' ? (
-                <CreatorCard 
-                  recommendation={result} 
-                  onSave={onSaveCreator}
-                  onMessage={onMessageCreator}
-                  onBook={onBookCreator}
+                <CreatorCard
+                  id={result.creator.id}
+                  name={result.creator.displayName}
+                  tagline={result.creator.tagline}
+                  price={result.creator.pricing?.hourlyRate}
+                  location={result.creator.location}
+                  imageUrl={result.creator.avatar}
+                  rating={result.creator.rating}
+                  reviewCount={result.creator.reviewCount}
+                  tier={result.creator.tier}
+                  xp={result.creator.xp}
+                  tierFrozen={result.creator.tierFrozen}
+                  signature={result.creator.signature}
                 />
               ) : (
-                <CreatorListItem 
+                <CreatorListItem
                   recommendation={result}
                   onSave={onSaveCreator}
                   onMessage={onMessageCreator}
@@ -260,168 +268,15 @@ export const SmartSearchResults: React.FC<SmartSearchResultsProps> = ({
   );
 };
 
-// Creator Card Component for Grid View
-interface CreatorCardProps {
+// Creator List Item Component for List View
+interface CreatorListItemProps {
   recommendation: SmartRecommendation;
   onSave?: (creatorId: string) => void;
   onMessage?: (creatorId: string) => void;
   onBook?: (creatorId: string) => void;
 }
 
-const CreatorCard: React.FC<CreatorCardProps> = ({
-  recommendation,
-  onSave,
-  onMessage,
-  onBook
-}) => {
-  const { creator, matchScore, reasons, confidence, tags } = recommendation;
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow group">
-      {/* Header with Image and Match Score */}
-      <div className="relative h-48 bg-gradient-to-br from-blue-500 to-purple-600">
-        {creator.avatar ? (
-          <Image
-            src={creator.avatar}
-            alt={creator.displayName}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-white text-2xl font-bold">
-            {creator.displayName?.charAt(0)}
-          </div>
-        )}
-        
-        {/* Match Score Badge */}
-        <div className="absolute top-4 right-4">
-          <div className={`px-3 py-1 rounded-full text-sm font-medium ${getMatchScoreColor(matchScore)}`}>
-            {Math.round(matchScore)}% match
-          </div>
-        </div>
-
-        {/* Confidence Indicator */}
-        <div className="absolute top-4 left-4">
-          {getConfidenceIcon(confidence)}
-        </div>
-
-        {/* Online Status */}
-        {creator.isOnline && (
-          <div className="absolute bottom-4 left-4">
-            <div className="flex items-center space-x-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-              <span>Online</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        {/* Creator Info */}
-        <div className="mb-4">
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-900 truncate">
-              {creator.displayName}
-            </h3>
-            <button
-              onClick={() => onSave?.(creator.id)}
-              className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-            >
-              <Heart className="w-5 h-5" />
-            </button>
-          </div>
-          
-          <p className="text-gray-600 text-sm mb-2">{creator.bio}</p>
-          
-          <div className="flex items-center space-x-4 text-sm text-gray-500">
-            {creator.rating && (
-              <div className="flex items-center space-x-1">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span>{creator.rating}</span>
-              </div>
-            )}
-            {creator.location && (
-              <div className="flex items-center space-x-1">
-                <MapPin className="w-4 h-4" />
-                <span>{creator.location}</span>
-              </div>
-            )}
-            {creator.availability?.immediate && (
-              <div className="flex items-center space-x-1 text-green-600">
-                <Clock className="w-4 h-4" />
-                <span>Available</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* AI Insights */}
-        <div className="mb-4">
-          <div className="text-sm font-medium text-gray-700 mb-2">Why this match:</div>
-          <div className="space-y-1">
-            {reasons.slice(0, 2).map((reason, index) => (
-              <div key={index} className="flex items-start space-x-2 text-sm text-gray-600">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{reason}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Tags */}
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-1">
-            {tags.slice(0, 3).map(tag => (
-              <span
-                key={tag}
-                className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-            {tags.length > 3 && (
-              <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
-                +{tags.length - 3} more
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Pricing */}
-        {creator.pricing && (
-          <div className="mb-4 text-sm">
-            <span className="text-gray-600">Starting at </span>
-            <span className="font-semibold text-gray-900">
-              ${creator.pricing.hourlyRate}/hour
-            </span>
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="flex space-x-2">
-          <button
-            onClick={() => onMessage?.(creator.id)}
-            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
-          >
-            <MessageCircle className="w-4 h-4 inline mr-2" />
-            Message
-          </button>
-          <button
-            onClick={() => onBook?.(creator.id)}
-            className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
-          >
-            <Calendar className="w-4 h-4 inline mr-2" />
-            Book
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Creator List Item Component for List View
-const CreatorListItem: React.FC<CreatorCardProps> = ({
+const CreatorListItem: React.FC<CreatorListItemProps> = ({
   recommendation,
   onSave,
   onMessage,
