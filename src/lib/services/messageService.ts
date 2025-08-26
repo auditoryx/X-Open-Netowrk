@@ -1,267 +1,98 @@
-// Core messaging service for general creator-client communication
-// Extends existing booking chat to support standalone conversations
-
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  serverTimestamp,
-  updateDoc,
-  Timestamp
+  collection, addDoc, query, where, orderBy,
+  onSnapshot, doc, getDoc, getDocs, serverTimestamp, updateDoc
 } from 'firebase/firestore';
-import { app, isFirebaseConfigured } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 
-export interface Message {
+export type Message = {
   id: string;
   threadId: string;
   senderId: string;
   receiverId: string;
   text: string;
-  mediaUrl?: string;
-  createdAt: Timestamp;
-  readAt?: Timestamp;
+  createdAt: any;
   isRead: boolean;
-}
+};
 
-export interface MessageThread {
+export type MessageThread = {
   id: string;
   participants: string[];
-  participantNames: { [userId: string]: string };
+  participantNames: Record<string, string>;
   lastMessage: string;
-  lastMessageAt: Timestamp;
-  createdAt: Timestamp;
-  unreadCount: { [userId: string]: number };
-}
+  lastMessageAt: any;
+  unreadCount: Record<string, number>;
+};
 
-export class MessageService {
-  private db: any;
+class MessageService {
+  private db = db!;
 
-  constructor() {
-    if (isFirebaseConfigured()) {
-      this.db = getFirestore(app);
-    } else {
-      console.warn('MessageService: Firebase not configured, using mock mode');
-      this.db = null;
-    }
-  }
-
-  private isReady(): boolean {
-    return this.db !== null;
-  }
-
-  // Create or get existing thread between two users
-  async getOrCreateThread(currentUserId: string, otherUserId: string, otherUserName: string, currentUserName: string): Promise<string> {
-    if (!this.isReady()) {
-      console.warn('MessageService: Firebase not ready, returning mock thread ID');
-      return 'mock-thread-id';
-    }
-
-    try {
-      const threadsRef = collection(this.db, 'messageThreads');
-    
-    // Try to find existing thread
+  async ensureThread(a: string, b: string, names: Record<string, string>) {
     const q = query(
-      threadsRef,
-      where('participants', 'array-contains', currentUserId)
+      collection(this.db, 'messageThreads'),
+      where('participants', 'array-contains', a)
     );
-    
-    const querySnapshot = await getDocs(q);
-    
-    // Check if any thread contains both users
-    let existingThread = null;
-    querySnapshot.forEach((doc) => {
-      const thread = doc.data() as MessageThread;
-      if (thread.participants.includes(otherUserId)) {
-        existingThread = { id: doc.id, ...thread };
-      }
+    const snap = await getDocs(q);
+    const found = snap.docs.find(d => {
+      const p = d.data().participants as string[];
+      return p.includes(a) && p.includes(b);
     });
+    if (found) return found.id;
 
-    if (existingThread) {
-      return existingThread.id;
-    }
-
-    // Create new thread
-    const newThread: Omit<MessageThread, 'id'> = {
-      participants: [currentUserId, otherUserId],
-      participantNames: {
-        [currentUserId]: currentUserName,
-        [otherUserId]: otherUserName
-      },
+    const ref = await addDoc(collection(this.db, 'messageThreads'), {
+      participants: [a, b],
+      participantNames: names,
       lastMessage: '',
-      lastMessageAt: serverTimestamp() as Timestamp,
-      createdAt: serverTimestamp() as Timestamp,
-      unreadCount: {
-        [currentUserId]: 0,
-        [otherUserId]: 0
-      }
-    };
-
-    const docRef = await addDoc(threadsRef, newThread);
-    return docRef.id;
-    } catch (error) {
-      console.error('MessageService: Error creating thread:', error);
-      return 'mock-thread-id';
-    }
+      lastMessageAt: serverTimestamp(),
+      unreadCount: { [a]: 0, [b]: 0 },
+    });
+    return ref.id;
   }
 
-  // Send a message in a thread
-  async sendMessage(
-    threadId: string,
-    senderId: string,
-    receiverId: string,
-    text: string,
-    mediaUrl?: string
-  ): Promise<void> {
-    const messagesRef = collection(this.db, 'messageThreads', threadId, 'messages');
-    
-    const message: Omit<Message, 'id'> = {
-      threadId,
-      senderId,
-      receiverId,
-      text,
-      mediaUrl,
-      createdAt: serverTimestamp() as Timestamp,
-      isRead: false
-    };
+  listenToThreads(userId: string, cb: (threads: MessageThread[]) => void) {
+    const q = query(
+      collection(this.db, 'messageThreads'),
+      where('participants', 'array-contains', userId),
+      orderBy('lastMessageAt', 'desc')
+    );
+    return onSnapshot(q, (snap) => {
+      const threads = snap.docs.map(d => ({ id: d.id, ...(d.data() as any) })) as MessageThread[];
+      cb(threads);
+    });
+  }
 
-    // Add message
-    await addDoc(messagesRef, message);
+  listenToMessages(threadId: string, cb: (msgs: Message[]) => void) {
+    const q = query(
+      collection(this.db, 'messageThreads', threadId, 'messages'),
+      orderBy('createdAt', 'asc')
+    );
+    return onSnapshot(q, (snap) => {
+      const msgs = snap.docs.map(d => ({ id: d.id, ...(d.data() as any) })) as Message[];
+      cb(msgs);
+    });
+  }
 
-    // Update thread with last message info
-    const threadRef = doc(this.db, 'messageThreads', threadId);
-    
-    // Get current unread count for receiver
-    const threadDoc = await getDoc(threadRef);
-    const currentThread = threadDoc.data() as MessageThread;
-    const currentUnreadCount = currentThread?.unreadCount?.[receiverId] || 0;
-    
-    await updateDoc(threadRef, {
+  async sendMessage(threadId: string, senderId: string, receiverId: string, text: string) {
+    const msgRef = await addDoc(collection(this.db, 'messageThreads', threadId, 'messages'), {
+      threadId, senderId, receiverId, text,
+      createdAt: serverTimestamp(),
+      isRead: false,
+    });
+    const tRef = doc(this.db, 'messageThreads', threadId);
+    await updateDoc(tRef, {
       lastMessage: text,
       lastMessageAt: serverTimestamp(),
-      [`unreadCount.${receiverId}`]: currentUnreadCount + 1
+      [`unreadCount.${receiverId}`]: (await getDoc(tRef)).data()?.unreadCount?.[receiverId] + 1 || 1,
     });
-
-    // Send notification to receiver
-    this.sendMessageNotification(receiverId, senderId, text, threadId);
+    return msgRef.id;
   }
 
-  // Listen to messages in a thread
-  listenToMessages(threadId: string, callback: (messages: Message[]) => void): () => void {
-    const messagesRef = collection(this.db, 'messageThreads', threadId, 'messages');
-    const q = query(messagesRef, orderBy(SCHEMA_FIELDS.USER.CREATED_AT, 'asc'));
-
-    return onSnapshot(q, (snapshot) => {
-      const messages: Message[] = [];
-      snapshot.forEach((doc) => {
-        messages.push({ id: doc.id, ...doc.data() } as Message);
-      });
-      callback(messages);
-    });
-  }
-
-  // Get user's message threads
-  async getUserThreads(userId: string): Promise<MessageThread[]> {
-    const threadsRef = collection(this.db, 'messageThreads');
-    const q = query(
-      threadsRef,
-      where('participants', 'array-contains', userId),
-      orderBy('lastMessageAt', 'desc')
-    );
-
-    const querySnapshot = await getDocs(q);
-    const threads: MessageThread[] = [];
-    
-    querySnapshot.forEach((doc) => {
-      threads.push({ id: doc.id, ...doc.data() } as MessageThread);
-    });
-
-    return threads;
-  }
-
-  // Listen to user's message threads with real-time updates
-  listenToUserThreads(userId: string, callback: (threads: MessageThread[]) => void): () => void {
-    const threadsRef = collection(this.db, 'messageThreads');
-    const q = query(
-      threadsRef,
-      where('participants', 'array-contains', userId),
-      orderBy('lastMessageAt', 'desc')
-    );
-
-    return onSnapshot(q, (snapshot) => {
-      const threads: MessageThread[] = [];
-      snapshot.forEach((doc) => {
-        threads.push({ id: doc.id, ...doc.data() } as MessageThread);
-      });
-      callback(threads);
-    });
-  }
-
-  // Mark messages as read
-  async markMessagesAsRead(threadId: string, userId: string): Promise<void> {
-    const messagesRef = collection(this.db, 'messageThreads', threadId, 'messages');
-    const q = query(
-      messagesRef,
-      where('receiverId', '==', userId),
-      where('isRead', '==', false)
-    );
-
-    const querySnapshot = await getDocs(q);
-    const updatePromises: Promise<void>[] = [];
-
-    querySnapshot.forEach((doc) => {
-      updatePromises.push(
-        updateDoc(doc.ref, {
-          isRead: true,
-          readAt: serverTimestamp()
-        })
-      );
-    });
-
-    await Promise.all(updatePromises);
-
-    // Reset unread count for this user
-    const threadRef = doc(this.db, 'messageThreads', threadId);
-    await updateDoc(threadRef, {
-      [`unreadCount.${userId}`]: 0
-    });
-  }
-
-  // Send notification (integrate with existing notification system)
-  private async sendMessageNotification(
-    receiverId: string,
-    senderId: string,
-    messageText: string,
-    threadId: string
-  ): Promise<void> {
-    try {
-      await fetch('/api/notifications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          toUid: receiverId,
-          type: SCHEMA_FIELDS.NOTIFICATION.MESSAGE,
-          payload: {
-            title: 'New Message',
-            message: messageText.substring(0, 100) + (messageText.length > 100 ? '...' : ''),
-            senderId,
-            threadId,
-            timestamp: new Date().toISOString()
-          }
-        })
-      });
-    } catch (error) {
-      console.error('Failed to send message notification:', error);
+  async markMessagesAsRead(threadId: string, userId: string) {
+    const tRef = doc(this.db, 'messageThreads', threadId);
+    const tSnap = await getDoc(tRef);
+    if (tSnap.exists()) {
+      await updateDoc(tRef, { [`unreadCount.${userId}`]: 0 });
     }
   }
 }
 
-// Singleton instance
 export const messageService = new MessageService();
