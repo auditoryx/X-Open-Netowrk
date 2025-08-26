@@ -29,18 +29,13 @@ export default function ThreadPage() {
   const send = async () => {
     if (!text.trim() || !user) return;
 
-    // Safely read thread participants to find the other user
     let receiverId = 'unknown';
-    if (db) {
-      try {
-        const tSnap = await getDoc(doc(db, 'messageThreads', threadId));
-        if (tSnap.exists()) {
-          const participants = (tSnap.data().participants || []) as string[];
-          receiverId = participants.find(p => p !== user.uid) || 'unknown';
-        }
-      } catch (e) {
-        console.error('[thread] failed to fetch thread doc:', e);
-      }
+    try {
+      const tSnap = await getDoc(doc(db!, 'messageThreads', threadId));
+      const participants = (tSnap.data()?.participants ?? []) as string[];
+      receiverId = participants.find(p => p !== user.uid) ?? 'unknown';
+    } catch (e) {
+      console.error('[thread] failed to fetch thread doc:', e);
     }
 
     await messageService.sendMessage(threadId, user.uid, receiverId, text.trim());
