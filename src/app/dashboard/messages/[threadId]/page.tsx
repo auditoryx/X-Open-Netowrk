@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { messageService, type Message } from '@/lib/services/messageService';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function ThreadPage() {
   const { threadId } = useParams<{ threadId: string }>();
@@ -25,10 +27,23 @@ export default function ThreadPage() {
   if (!user) return <div>Please sign in.</div>;
 
   const send = async () => {
-    if (!text.trim()) return;
-    // naive pick: the other participant is anyone not me we see from the thread (optional: fetch thread doc here)
-    const other = messages.find(m => m.senderId !== user.uid)?.senderId || 'unknown';
-    await messageService.sendMessage(threadId, user.uid, other, text.trim());
+    if (!text.trim() || !user) return;
+
+    // Safely read thread participants to find the other user
+    let receiverId = 'unknown';
+    if (db) {
+      try {
+        const tSnap = await getDoc(doc(db, 'messageThreads', threadId));
+        if (tSnap.exists()) {
+          const participants = (tSnap.data().participants || []) as string[];
+          receiverId = participants.find(p => p !== user.uid) || 'unknown';
+        }
+      } catch (e) {
+        console.error('[thread] failed to fetch thread doc:', e);
+      }
+    }
+
+    await messageService.sendMessage(threadId, user.uid, receiverId, text.trim());
     setText('');
   };
 
