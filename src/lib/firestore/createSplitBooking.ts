@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
-import { SplitBooking, calculatePaymentShares, BookingNotification } from '@/src/lib/types/Booking';
-import { getUserProfile } from '@/src/lib/firestore/getUserProfile';
+import { SplitBooking, calculatePaymentShares, BookingNotification } from '@/lib/types/Booking';
+import { getUserProfile } from '@/lib/firestore/getUserProfile';
 
 export interface CreateSplitBookingData {
   studioId: string;

@@ -1,4 +1,4 @@
-import { SplitBooking } from '@/src/lib/types/Booking';
+import { SplitBooking } from '@/lib/types/Booking';
 
 export interface StripeCheckoutOptions {
   bookingId: string;

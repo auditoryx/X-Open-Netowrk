@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { getFeaturedCollabPackages, getCollabPackages } from '@/src/lib/firestore/getCollabPackages';
-import { CollabPackageCard } from '@/src/components/collab/CollabPackageCard';
-import { CollabPackage } from '@/src/lib/types/CollabPackage';
+import { getFeaturedCollabPackages, getCollabPackages } from '@/lib/firestore/getCollabPackages';
+import { CollabPackageCard } from '@/components/collab/CollabPackageCard';
+import { CollabPackage } from '@/lib/types/CollabPackage';
 import { 
   PlusIcon, 
   StarIcon, 

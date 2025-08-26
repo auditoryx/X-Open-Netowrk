@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, where, onSnapshot, orderBy, Unsubscribe } from 'firebase/firestore';
-import { SplitBooking, BookingNotification } from '@/src/lib/types/Booking';
+import { SplitBooking, BookingNotification } from '@/lib/types/Booking';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface UseSplitBookingUpdatesProps {

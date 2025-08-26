@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getFeaturedCreators, searchCreators } from '@/lib/firestore/explore/queryCreators';
 import { useRankedCreators } from '@/hooks/useRankedCreators';
-import type { SearchableCreator } from '@/lib/types/Creator';
+import type { SearchableCreator } from '@/lib/utils/filterByKeyword';
 
 export default function ExplorePage() {
   const searchParams = useSearchParams();

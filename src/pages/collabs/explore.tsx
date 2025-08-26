@@ -6,13 +6,13 @@ import {
   getCollabPackages, 
   getCollabPackagesWithFilters, 
   getFeaturedCollabPackages 
-} from '@/src/lib/firestore/getCollabPackages';
-import { CollabPackageCard } from '@/src/components/collab/CollabPackageCard';
+} from '@/lib/firestore/getCollabPackages';
+import { CollabPackageCard } from '@/components/collab/CollabPackageCard';
 import { 
   CollabPackage, 
   CollabPackageFilters, 
   formatPackagePrice 
-} from '@/src/lib/types/CollabPackage';
+} from '@/lib/types/CollabPackage';
 import toast from 'react-hot-toast';
 import { 
   MagnifyingGlassIcon, 

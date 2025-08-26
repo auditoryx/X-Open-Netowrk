@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreateCollabPackageForm } from '@/src/components/collab/CreateCollabPackageForm';
+import { CreateCollabPackageForm } from '@/components/collab/CreateCollabPackageForm';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/router';
 import { ArrowLeft, Users, Lightbulb, Target, Zap } from 'lucide-react';

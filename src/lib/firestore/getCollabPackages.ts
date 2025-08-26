@@ -13,7 +13,7 @@ import {
   updateDoc,
   increment
 } from 'firebase/firestore';
-import { CollabPackage, CollabPackageFilters } from '@/src/lib/types/CollabPackage';
+import { CollabPackage, CollabPackageFilters } from '@/lib/types/CollabPackage';
 import { SCHEMA_FIELDS } from "../SCHEMA_FIELDS";
 
 /**

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { updateTalentResponse } from '@/src/lib/firestore/requestTalentForBooking';
-import { getSplitBookingById } from '@/src/lib/firestore/getSplitBookings';
+import { updateTalentResponse } from '@/lib/firestore/requestTalentForBooking';
+import { getSplitBookingById } from '@/lib/firestore/getSplitBookings';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { X, Music, Headphones, Mic, Calendar, Clock, Users, MapPin } from 'lucide-react';
-import { SplitBooking } from '@/src/lib/types/Booking';
+import { SplitBooking } from '@/lib/types/Booking';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
