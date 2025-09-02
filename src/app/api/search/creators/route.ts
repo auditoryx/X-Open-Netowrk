@@ -39,8 +39,8 @@ export async function GET(request: NextRequest) {
       filters.genres = searchParams.get('genres')!.split(',').filter(Boolean);
     }
     
-    if (searchParams.get('minRating')) {
-      filters.minRating = parseFloat(searchParams.get('minRating')!);
+    if (searchParams.get('minCredibility')) {
+      filters.minCredibility = parseFloat(searchParams.get('minCredibility')!);
     }
     
     if (searchParams.get('verifiedOnly') === 'true') {
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const sortBy = searchParams.get('sort') as 'relevance' | 'rating' | 'distance' | 'created_at' || 'relevance';
+    const sortBy = searchParams.get('sort') as 'relevance' | 'credibility' | 'distance' | 'created_at' || 'relevance';
 
     const options = {
       hitsPerPage: Math.min(limit, 50),
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
         tiers: results.facets?.tier || {},
         verificationStatus: results.facets?.verificationStatus || {},
         locations: buildLocationFacets(results.hits),
-        ratingRanges: buildRatingRanges(results.hits),
+        credibilityRanges: buildCredibilityRanges(results.hits),
       },
     };
 
@@ -161,24 +161,22 @@ function buildLocationFacets(hits: any[]): Record<string, number> {
 }
 
 /**
- * Build rating range facets from search results
+ * Build credibility range facets from search results
  */
-function buildRatingRanges(hits: any[]): Record<string, number> {
+function buildCredibilityRanges(hits: any[]): Record<string, number> {
   const ranges = {
-    '4.5-plus': 0,
-    '4.0-4.5': 0,
-    '3.5-4.0': 0,
-    '3.0-3.5': 0,
-    'under-3.0': 0,
+    'high': 0,      // 1000+
+    'moderate': 0,  // 500-999
+    'standard': 0,  // 100-499
+    'new': 0        // Under 100
   };
 
   hits.forEach(hit => {
-    const rating = hit.averageRating || 0;
-    if (rating >= 4.5) ranges['4.5-plus']++;
-    else if (rating >= 4.0) ranges['4.0-4.5']++;
-    else if (rating >= 3.5) ranges['3.5-4.0']++;
-    else if (rating >= 3.0) ranges['3.0-3.5']++;
-    else if (rating > 0) ranges['under-3.0']++;
+    const credibility = hit.credibilityScore || 0;
+    if (credibility >= 1000) ranges['high']++;
+    else if (credibility >= 500) ranges['moderate']++;
+    else if (credibility >= 100) ranges['standard']++;
+    else ranges['new']++;
   });
 
   return ranges;

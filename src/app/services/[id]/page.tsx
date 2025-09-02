@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
-import { getAverageRating, getReviewCount } from '@/lib/reviews';
+import { getPositiveReviewCount } from '@/lib/reviews';
 import { useCart } from '@/context/CartContext';
 import { SaveButton } from '@/components/profile/SaveButton';
 
@@ -15,8 +15,7 @@ export default function ServiceDetailPage() {
   const { addItem } = useCart();
 
   const [service, setService] = useState<any>(null);
-  const [rating, setRating] = useState<number | null>(null);
-  const [reviewCount, setReviewCount] = useState<number>(0);
+  const [positiveReviewCount, setPositiveReviewCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,12 +27,8 @@ export default function ServiceDetailPage() {
       if (snap.exists()) {
         const data = snap.data();
         setService(data);
-        const [avg, count] = await Promise.all([
-          getAverageRating(id),
-          getReviewCount(id),
-        ]);
-        setRating(avg);
-        setReviewCount(count);
+        const count = await getPositiveReviewCount(id);
+        setPositiveReviewCount(count);
       } else {
         setService(null);
       }
@@ -49,8 +44,8 @@ export default function ServiceDetailPage() {
     <div className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-4xl py-12 px-6 space-y-6">
         <h1 className="text-4xl font-bold">{service.title}</h1>
-        {rating !== null && (
-          <p className="text-sm text-yellow-400">⭐ {rating.toFixed(1)} ({reviewCount})</p>
+        {positiveReviewCount > 0 && (
+          <p className="text-sm text-green-400">✅ {positiveReviewCount} positive reviews</p>
         )}
 
         <p className="text-gray-400">{service.description}</p>

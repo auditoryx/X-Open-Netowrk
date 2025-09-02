@@ -38,7 +38,7 @@ export default function ServicesPage() {
             },
             {
               title: '🌍 Global Booking Network',
-              desc: 'Get discovered by location, role, and rating. Connect worldwide, not just in your city.',
+              desc: 'Get discovered by location, role, and credibility. Connect worldwide, not just in your city.',
             },
           ].map((s, idx) => (
             <div

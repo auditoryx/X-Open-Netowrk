@@ -14,7 +14,7 @@ export interface SearchFilters {
   verificationStatus?: string;
   location?: string;
   genres?: string[];
-  minRating?: number;
+  minCredibility?: number;
   maxPrice?: number;
   minPrice?: number;
   availableNow?: boolean;
@@ -28,7 +28,7 @@ export interface SearchFilters {
 export interface SearchOptions {
   hitsPerPage?: number;
   page?: number;
-  sortBy?: 'relevance' | 'rating' | 'price' | 'distance' | 'created_at';
+  sortBy?: 'relevance' | 'credibility' | 'price' | 'distance' | 'created_at';
   facetFilters?: string[];
   numericFilters?: string[];
   aroundLatLng?: string;
