@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPatternBasedRateLimit } from '@/middleware/rateLimiting'
-import { analyzeTrafficPattern, logSecurityEvent } from '@/lib/security/ddosProtection'
 
 /**
  * Route-level auth used to run here using Firebase Admin to verify session
@@ -12,7 +10,7 @@ import { analyzeTrafficPattern, logSecurityEvent } from '@/lib/security/ddosProt
  * This middleware now handles:
  * 1. Feature flag-based route protection
  * 2. Basic request processing
- * 3. Rate limiting and DDoS protection
+ * 3. Rate limiting and DDoS protection (disabled in development)
  */
 
 // Feature flag route mapping (duplicated from lib/featureFlags.ts for edge runtime)
@@ -92,79 +90,95 @@ function isRouteAccessible(pathname: string, flags: Record<string, boolean>): bo
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   
-  // Apply DDoS protection for all requests
-  try {
-    const ddosAnalysis = await analyzeTrafficPattern(req);
-    
-    if (ddosAnalysis.action === 'block') {
-      logSecurityEvent({
-        type: 'ddos_attempt',
-        ip: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown',
-        userAgent: req.headers.get('user-agent') || '',
-        severity: 'critical',
-        details: {
-          reasons: ddosAnalysis.reasons,
-          confidence: ddosAnalysis.confidence,
-          pathname
-        }
-      });
-      
-      return new NextResponse(
-        JSON.stringify({ 
-          error: 'Request blocked due to suspicious activity',
-          retryAfter: 300 
-        }),
-        { 
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'Retry-After': '300',
-          }
-        }
-      );
-    }
-    
-    if (ddosAnalysis.action === 'throttle') {
-      logSecurityEvent({
-        type: 'suspicious_activity',
-        ip: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown',
-        userAgent: req.headers.get('user-agent') || '',
-        severity: 'medium',
-        details: {
-          reasons: ddosAnalysis.reasons,
-          confidence: ddosAnalysis.confidence,
-          pathname
-        }
-      });
-    }
-  } catch (error) {
-    console.warn('DDoS protection error:', error);
-  }
+  // Security features are disabled in development to avoid Redis dependency issues
+  const isDevelopment = process.env.NODE_ENV === 'development';
   
-  // Apply rate limiting to API routes
-  if (pathname.startsWith('/api/')) {
+  if (!isDevelopment) {
+    // Dynamic imports for production to avoid edge runtime issues in development
     try {
-      const rateLimitMiddleware = getPatternBasedRateLimit(pathname);
-      const rateLimitResult = await rateLimitMiddleware(req);
+      const { getPatternBasedRateLimit } = await import('@/middleware/rateLimiting');
+      const { analyzeTrafficPattern, logSecurityEvent } = await import('@/lib/security/ddosProtection');
       
-      if (rateLimitResult && rateLimitResult.status === 429) {
-        logSecurityEvent({
-          type: 'rate_limit_exceeded',
-          ip: req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip || 'unknown',
-          userAgent: req.headers.get('user-agent') || '',
-          severity: 'medium',
-          details: { pathname }
-        });
+      // Apply DDoS protection for all requests
+      try {
+        const ddosAnalysis = await analyzeTrafficPattern(req);
         
-        return rateLimitResult;
+        if (ddosAnalysis.action === 'block') {
+          logSecurityEvent({
+            type: 'ddos_attempt',
+            ip: req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown',
+            userAgent: req.headers.get('user-agent') || '',
+            severity: 'critical',
+            details: {
+              reasons: ddosAnalysis.reasons,
+              confidence: ddosAnalysis.confidence,
+              pathname
+            }
+          });
+          
+          return new NextResponse(
+            JSON.stringify({ 
+              error: 'Request blocked due to suspicious activity',
+              retryAfter: 300 
+            }),
+            { 
+              status: 429,
+              headers: {
+                'Content-Type': 'application/json',
+                'Retry-After': '300',
+              }
+            }
+          );
+        }
+        
+        if (ddosAnalysis.action === 'throttle') {
+          logSecurityEvent({
+            type: 'suspicious_activity',
+            ip: req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown',
+            userAgent: req.headers.get('user-agent') || '',
+            severity: 'medium',
+            details: {
+              reasons: ddosAnalysis.reasons,
+              confidence: ddosAnalysis.confidence,
+              pathname
+            }
+          });
+        }
+      } catch (error) {
+        console.warn('DDoS protection error:', error);
       }
       
-      if (rateLimitResult) {
-        return rateLimitResult;
+      // Apply rate limiting to API routes
+      if (pathname.startsWith('/api/')) {
+        try {
+          const rateLimitMiddleware = getPatternBasedRateLimit(pathname);
+          const rateLimitResult = await rateLimitMiddleware(req);
+          
+          if (rateLimitResult && rateLimitResult.status === 429) {
+            logSecurityEvent({
+              type: 'rate_limit_exceeded',
+              ip: req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown',
+              userAgent: req.headers.get('user-agent') || '',
+              severity: 'medium',
+              details: { pathname }
+            });
+            
+            return rateLimitResult;
+          }
+          
+          if (rateLimitResult) {
+            return rateLimitResult;
+          }
+        } catch (error) {
+          console.warn('Rate limiting error:', error);
+        }
       }
     } catch (error) {
-      console.warn('Rate limiting error:', error);
+      console.warn('Security middleware initialization error:', error);
     }
+  } else {
+    // In development, just log that security features are disabled
+    console.log(`[DEV] Middleware: Security features disabled for development (${pathname})`);
   }
   
   // Parse feature flags
