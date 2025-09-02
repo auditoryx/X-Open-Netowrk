@@ -11,7 +11,7 @@ interface ServiceFormData {
   description: string;
 }
 
-export default function ServiceManager(): JSX.Element {
+export default function ServiceManager() {
   const { data: session } = useSession();
   const [services, setServices] = useState<Service[]>([]);
   const [form, setForm] = useState<ServiceFormData>({

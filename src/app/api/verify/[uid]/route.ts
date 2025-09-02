@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth/authOptions';
 import { adminDb } from '@/lib/firebase-admin';
 import { checkAdminAccess } from '@/lib/auth/withAdminCheck';
@@ -13,11 +13,12 @@ const verifyUserSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ uid: string }> }
+  context: { params: Promise<{ uid: string }> }
 ) {
   try {
+    const params = await context.params;
     const session = await getServerSession(authOptions);
-    const { uid } = await params;
+    const { uid } = params;
     
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -143,11 +144,12 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ uid: string }> }
+  context: { params: Promise<{ uid: string }> }
 ) {
   try {
+    const params = await context.params;
     const session = await getServerSession(authOptions);
-    const { uid } = await params;
+    const { uid } = params;
     
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

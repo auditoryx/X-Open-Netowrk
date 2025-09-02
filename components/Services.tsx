@@ -1,4 +1,4 @@
-export default function Services(): JSX.Element {
+export default function Services() {
   return (
     <section className="py-24 bg-black text-white">
       <h2 className="text-center text-4xl font-bold">Why Join AuditoryX?</h2>

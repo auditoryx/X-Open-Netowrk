@@ -26,8 +26,9 @@ const UpdateOfferSchema = z.object({
 });
 
 // GET /api/offers/[id] - Get specific offer
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
+    const params = await context.params;
     const offerDoc = await getDoc(doc(db, 'offers', params.id));
     
     if (!offerDoc.exists()) {
@@ -48,8 +49,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // PATCH /api/offers/[id] - Update offer
-async function updateOfferHandler(req: NextRequest & { user: any }, { params }: { params: { id: string } }) {
+async function updateOfferHandler(req: NextRequest & { user: any }, context: { params: Promise<{ id: string }> }) {
   try {
+    const params = await context.params;
     const body = await req.json();
     const validatedData = UpdateOfferSchema.parse(body);
 
@@ -125,8 +127,9 @@ async function updateOfferHandler(req: NextRequest & { user: any }, { params }: 
 }
 
 // DELETE /api/offers/[id] - Delete offer
-async function deleteOfferHandler(req: NextRequest & { user: any }, { params }: { params: { id: string } }) {
+async function deleteOfferHandler(req: NextRequest & { user: any }, context: { params: Promise<{ id: string }> }) {
   try {
+    const params = await context.params;
     // Get existing offer
     const offerDoc = await getDoc(doc(db, 'offers', params.id));
     

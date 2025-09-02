@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function FloatingCTA(): JSX.Element {
+export default function FloatingCTA() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

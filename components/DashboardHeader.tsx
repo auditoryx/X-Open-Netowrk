@@ -17,7 +17,7 @@ interface UserProgress {
   tier?: 'standard' | 'verified' | 'signature';
 }
 
-export default function DashboardHeader(): JSX.Element {
+export default function DashboardHeader() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<string>("");

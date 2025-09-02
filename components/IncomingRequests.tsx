@@ -13,7 +13,7 @@ interface IncomingRequestsProps {
   userId: string;
 }
 
-export default function IncomingRequests({ userId }: IncomingRequestsProps): JSX.Element {
+export default function IncomingRequests({ userId }: IncomingRequestsProps) {
   const [requests, setRequests] = useState<Request[]>([]);
 
   useEffect(() => {

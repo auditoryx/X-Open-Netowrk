@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import { startVerification } from '@/lib/kyc/stripe-identity';
 import { createVerificationRecord, canRetryVerification, incrementRetryCount } from '@/lib/kyc/verification-logic';

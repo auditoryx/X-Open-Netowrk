@@ -8,7 +8,7 @@ import { updateAvailability } from '@/lib/firestore/updateAvailability';
 import { markBookingAsCompleted } from '@/lib/firestore/bookings/markBookingAsCompleted';
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
 import ContractViewer from '@/components/contract/ContractViewer';
-import { NoBookings } from '@/components/ui/EmptyState';
+import NoBookings from '@/components/ui/EmptyState';
 import SkeletonCard from '@/components/ui/SkeletonCard';
 import toast from 'react-hot-toast';
 import StripeCheckout from './StripeCheckout';

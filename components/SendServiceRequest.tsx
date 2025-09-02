@@ -16,7 +16,7 @@ interface SendServiceRequestProps {
 
 export default function SendServiceRequest({
   serviceId = "",
-}: SendServiceRequestProps): JSX.Element {
+}: SendServiceRequestProps) {
   const [formData, setFormData] = useState<FormData>({
     date: "",
     time: "",

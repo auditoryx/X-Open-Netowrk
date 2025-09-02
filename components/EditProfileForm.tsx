@@ -4,7 +4,7 @@ import { auth, db } from "../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 
-export default function EditProfileForm(): JSX.Element {
+export default function EditProfileForm() {
   const [displayName, setDisplayName] = useState<string>("Zenji");
   const [bio, setBio] = useState<string>("Music visionary. A&R. Creator of vibes.");
   const [isLoading, setIsLoading] = useState<boolean>(false);

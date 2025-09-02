@@ -10,7 +10,7 @@ interface ServiceItem {
   availability: string;
 }
 
-export default function ServiceManager(): JSX.Element {
+export default function ServiceManager() {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [newService, setNewService] = useState<ServiceItem>({ name: '', description: '', price: '', availability: '' });
 

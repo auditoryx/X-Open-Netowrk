@@ -22,25 +22,66 @@ declare module 'next-auth/jwt' {
   }
 }
 
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import AppleProvider from 'next-auth/providers/apple';
+import LineProvider from 'next-auth/providers/line';
+import KakaoProvider from 'next-auth/providers/kakao';
+import { NextAuthOptions } from 'next-auth';
+
+// ✅ Extend JWT and Session to allow accessToken
+declare module 'next-auth' {
+  interface Session {
+    accessToken?: string;
+  }
+
+  interface User {
+    id: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    accessToken?: string;
+  }
+}
+
+const providers = [] as NextAuthOptions["providers"];
+
+// Google (optional in dev)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(GoogleProvider({
+    clientId: process.env.GOOGLE_CLIENT_ID!,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  }));
+}
+
+// Apple (optional in dev)
+if (process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET) {
+  providers.push(AppleProvider({
+    clientId: process.env.APPLE_CLIENT_ID!,
+    clientSecret: process.env.APPLE_CLIENT_SECRET!,
+  }));
+}
+
+// Line (optional in dev)
+if (process.env.LINE_CLIENT_ID && process.env.LINE_CLIENT_SECRET) {
+  providers.push(LineProvider({
+    clientId: process.env.LINE_CLIENT_ID!,
+    clientSecret: process.env.LINE_CLIENT_SECRET!,
+  }));
+}
+
+// Kakao (optional in dev)
+if (process.env.KAKAO_CLIENT_ID && process.env.KAKAO_CLIENT_SECRET) {
+  providers.push(KakaoProvider({
+    clientId: process.env.KAKAO_CLIENT_ID!,
+    clientSecret: process.env.KAKAO_CLIENT_SECRET!,
+  }));
+}
+
 export const authOptions: NextAuthOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    AppleProvider({
-      clientId: process.env.APPLE_CLIENT_ID!,
-      clientSecret: process.env.APPLE_CLIENT_SECRET!,
-    }),
-    LineProvider({
-      clientId: process.env.LINE_CLIENT_ID!,
-      clientSecret: process.env.LINE_CLIENT_SECRET!,
-    }),
-    KakaoProvider({
-      clientId: process.env.KAKAO_CLIENT_ID!,
-      clientSecret: process.env.KAKAO_CLIENT_SECRET!,
-    }),
-  ],
+  providers,
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === 'google' && account.access_token) {

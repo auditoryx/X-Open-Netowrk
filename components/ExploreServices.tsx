@@ -7,7 +7,7 @@ import { Service } from "../src/types/service";
 
 type RoleFilter = "" | "artist" | "engineer" | "producer" | "studio" | "videographer";
 
-export default function ExploreServices(): JSX.Element {
+export default function ExploreServices() {
   const [services, setServices] = useState<Service[]>([]);
   const [filter, setFilter] = useState<RoleFilter>("");
 
@@ -20,7 +20,7 @@ export default function ExploreServices(): JSX.Element {
   }, []);
 
   const filtered = filter
-    ? services.filter(s => s.role === filter)
+    ? services.filter(s => s.category === filter || s.tags?.includes(filter))
     : services;
 
   return (
@@ -49,7 +49,7 @@ export default function ExploreServices(): JSX.Element {
           <SendServiceRequest
             serviceId={service.id}
             recipientId={service.userId}
-            recipientRole={service.role || 'user'}
+            recipientRole={service.role === 'creator' ? 'creator' : service.role === 'admin' ? 'admin' : 'provider'}
           />
         </div>
       ))}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function CreativeDropdown(): JSX.Element {
+export default function CreativeDropdown() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (

@@ -5,7 +5,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { Translate } from "@/i18n/Translate";
 
-export default function ServiceSubmissionForm(): JSX.Element {
+export default function ServiceSubmissionForm() {
   const { data: session } = useSession();
   const [serviceName, setServiceName] = useState<string>("");
   const [description, setDescription] = useState<string>("");

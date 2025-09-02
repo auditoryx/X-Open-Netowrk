@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
-export default function DarkModeToggle(): JSX.Element {
+export default function DarkModeToggle() {
   const [theme, setTheme] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") || "dark";

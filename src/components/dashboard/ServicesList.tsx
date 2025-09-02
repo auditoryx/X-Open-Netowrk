@@ -16,7 +16,7 @@ interface ServicesListProps {
   isOwnProfile?: boolean;
 }
 
-export default function ServicesList({ isOwnProfile = true }: ServicesListProps): JSX.Element {
+export default function ServicesList({ isOwnProfile = true }: ServicesListProps) {
   const { user } = useAuth();
   const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);

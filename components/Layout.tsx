@@ -6,7 +6,7 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps): JSX.Element {
+export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Navbar />

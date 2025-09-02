@@ -7,7 +7,7 @@ interface AvailabilityFormProps {
   userRole: string;
 }
 
-export default function AvailabilityForm({ userRole }: AvailabilityFormProps): JSX.Element {
+export default function AvailabilityForm({ userRole }: AvailabilityFormProps) {
   const [timeSlot, setTimeSlot] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
 

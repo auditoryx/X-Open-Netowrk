@@ -13,7 +13,7 @@ interface BookingRequestFormProps {
   serviceId: string;
 }
 
-export default function BookingRequestForm({ userId, serviceId }: BookingRequestFormProps): JSX.Element {
+export default function BookingRequestForm({ userId, serviceId }: BookingRequestFormProps) {
   const [form, setForm] = useState<BookingForm>({ name: "", contact: "", message: "" });
   const [success, setSuccess] = useState<boolean>(false);
 

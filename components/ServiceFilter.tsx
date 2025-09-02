@@ -5,7 +5,7 @@ interface ServiceFilterProps {
   onChange: (role: string) => void;
 }
 
-export default function ServiceFilter({ selectedRole, onChange }: ServiceFilterProps): JSX.Element {
+export default function ServiceFilter({ selectedRole, onChange }: ServiceFilterProps) {
   const roles = ["all", "artist", "engineer", "producer", "studio", "videographer"];
 
   return (
