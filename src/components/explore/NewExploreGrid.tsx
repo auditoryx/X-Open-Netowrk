@@ -3,8 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getAverageRating } from '@/lib/reviews/getAverageRating';
-import { getReviewCount } from '@/lib/reviews/getReviewCount';
+import { getFlags } from '@/lib/featureFlags';
 import { SaveButton } from '@/components/profile/SaveButton';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
 import { PointsBadge } from '@/components/profile/PointsBadge';
@@ -30,15 +29,33 @@ export default function NewExploreGrid({ filters }: { filters: any }) {
       if (pageParam) params.append('cursor', pageParam as string);
       const res = await fetch(`/api/search?${params.toString()}`);
       const json = await res.json();
-      const withRatings = await Promise.all(
+      
+      // Check feature flags to determine what stats to fetch
+      const flags = await getFlags();
+      const withStats = await Promise.all(
         json.results.map(async (c: any) => {
-          const averageRating = await getAverageRating(c.uid);
-          const reviewCount = await getReviewCount(c.uid);
           const completion = getProfileCompletion(c);
-          return { ...c, averageRating, reviewCount, completion };
+          
+          if (flags.POSITIVE_REVIEWS_ONLY) {
+            // New approach: use credibility and positive review count
+            return { 
+              ...c, 
+              completion,
+              positiveReviewCount: c.stats?.positiveReviewCount || 0,
+              completedBookings: c.stats?.completedBookings || 0,
+              credibilityScore: c.credibilityScore || 0
+            };
+          } else {
+            // Legacy approach: fetch rating data
+            const { getAverageRating } = await import('@/lib/reviews/getAverageRating');
+            const { getReviewCount } = await import('@/lib/reviews/getReviewCount');
+            const averageRating = await getAverageRating(c.uid);
+            const reviewCount = await getReviewCount(c.uid);
+            return { ...c, averageRating, reviewCount, completion };
+          }
         })
       );
-      return { results: withRatings, nextCursor: json.nextCursor };
+      return { results: withStats, nextCursor: json.nextCursor };
     },
     getNextPageParam: last => last.nextCursor ?? undefined,
   });

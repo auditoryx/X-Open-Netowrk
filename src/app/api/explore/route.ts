@@ -114,10 +114,12 @@ export async function GET(request: NextRequest) {
 
     // Parse options and feature flags
     const flags = await getFlags();
+    const isDebugMode = searchParams.get('debug') === 'rankScore';
     const options: ExploreOptions = {
       enableFirstScreenMix: !!flags.FIRST_SCREEN_MIX,
       enableLaneNudges: !!flags.LANE_NUDGES,
-      enableTierPrecedence: !!flags.EXPOSE_SCORE_V1,
+      // Default to tier+credibility ordering, unless debug mode forces rankScore
+      enableTierPrecedence: !isDebugMode && (flags.CREDIBILITY_VISIBILITY || flags.EXPOSE_SCORE_V1),
       limit: parseInt(searchParams.get('limit') || '30')
     };
 
