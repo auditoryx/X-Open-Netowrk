@@ -156,7 +156,14 @@ export function ProgressiveOnboardingProvider({ children }: { children: React.Re
 export function useProgressiveOnboarding() {
   const context = useContext(OnboardingContext);
   if (!context) {
-    throw new Error('useProgressiveOnboarding must be used within ProgressiveOnboardingProvider');
+    // Provide fallback for pages that don't have the provider
+    return {
+      trackAction: () => {},
+      currentStep: '',
+      isCompleted: false,
+      completedSteps: [],
+      totalSteps: 0
+    };
   }
   return context;
 }
