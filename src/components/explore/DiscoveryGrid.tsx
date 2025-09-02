@@ -6,9 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import { track } from '@/lib/analytics/track';
 import { getNextAvailable } from '@/lib/firestore/getNextAvailable';
-import { getAverageRating } from '@/lib/reviews/getAverageRating';
-import { getReviewCount } from '@/lib/reviews/getReviewCount';
 import { getProfileCompletion } from '@/lib/profile/getProfileCompletion';
+import { getFlags } from '@/lib/featureFlags';
 
 import { Translate } from '@/i18n/Translate';
 import { SaveButton } from '@/components/profile/SaveButton';
@@ -40,13 +39,31 @@ export default function DiscoveryGrid({ filters }: { filters: any }) {
       const res = await fetch(`/api/search?${params.toString()}`);
       const json = await res.json();
 
+      // Check feature flags to determine what stats to fetch
+      const flags = await getFlags();
       const withMeta = await Promise.all(
         json.results.map(async (c: any) => {
-          const next        = await getNextAvailable(c.uid);
-          const rating      = await getAverageRating(c.uid);
-          const count       = await getReviewCount(c.uid);
-          const completion  = getProfileCompletion(c);
-          return { ...c, next, rating, count, completion };
+          const next = await getNextAvailable(c.uid);
+          const completion = getProfileCompletion(c);
+          
+          if (flags.POSITIVE_REVIEWS_ONLY) {
+            // New approach: use credibility and positive review count
+            return { 
+              ...c, 
+              next, 
+              completion,
+              positiveReviewCount: c.stats?.positiveReviewCount || 0,
+              completedBookings: c.stats?.completedBookings || 0,
+              credibilityScore: c.credibilityScore || 0
+            };
+          } else {
+            // Legacy approach: fetch rating data
+            const { getAverageRating } = await import('@/lib/reviews/getAverageRating');
+            const { getReviewCount } = await import('@/lib/reviews/getReviewCount');
+            const rating = await getAverageRating(c.uid);
+            const count = await getReviewCount(c.uid);
+            return { ...c, next, rating, count, completion };
+          }
         }),
       );
 

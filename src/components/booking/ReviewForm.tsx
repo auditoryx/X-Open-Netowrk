@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { submitReview } from '@/lib/firestore/reviews/submitReview';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { toast } from 'sonner';
+import { getFlags } from '@/lib/featureFlags';
 
 interface ReviewFormProps {
   bookingId: string;
@@ -23,6 +24,15 @@ export default function ReviewForm({
   const [rating, setRating] = useState<number>(5);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [positiveReviewsOnly, setPositiveReviewsOnly] = useState(false);
+
+  useEffect(() => {
+    const checkFlags = async () => {
+      const flags = await getFlags();
+      setPositiveReviewsOnly(!!flags.POSITIVE_REVIEWS_ONLY);
+    };
+    checkFlags();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,9 +46,10 @@ export default function ReviewForm({
         clientId: user.uid,
         contractId,
         text: text.trim(),
-        rating,
+        // Only include rating if not in positive-only mode
+        rating: positiveReviewsOnly ? undefined : rating,
       });
-      toast.success('Review submitted!');
+      toast.success('Thank you for your feedback!');
       setSubmitted(true);
       onSubmitSuccess?.();
     } catch (err) {
@@ -56,12 +67,12 @@ export default function ReviewForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4 border rounded bg-white text-black">
       <label htmlFor="review-text" className="text-sm font-medium">
-        Your Review
+        {positiveReviewsOnly ? 'Share Your Experience' : 'Your Review'}
       </label>
       <textarea
         id="review-text"
-        aria-label="Leave a review"
-        placeholder="Write at least 3 characters..."
+        aria-label={positiveReviewsOnly ? "Share your experience" : "Leave a review"}
+        placeholder={positiveReviewsOnly ? "Tell us about your experience working together..." : "Write at least 3 characters..."}
         maxLength={500}
         value={text}
         onChange={(e) => setText(e.target.value.replace(/\s{2,}/g, ' '))}
@@ -71,23 +82,27 @@ export default function ReviewForm({
       />
       <div className="text-xs text-right text-gray-500">{text.length}/500</div>
 
-      <label htmlFor="review-rating" className="text-sm font-medium">
-        Rating
-      </label>
-      <select
-        id="review-rating"
-        aria-label="Rating out of 5"
-        value={rating}
-        onChange={(e) => setRating(Number(e.target.value))}
-        className="input-base"
-        disabled={loading}
-      >
-        {[5, 4, 3, 2, 1].map((n) => (
-          <option key={n} value={n}>
-            {n} Stars
-          </option>
-        ))}
-      </select>
+      {!positiveReviewsOnly && (
+        <>
+          <label htmlFor="review-rating" className="text-sm font-medium">
+            Rating
+          </label>
+          <select
+            id="review-rating"
+            aria-label="Rating out of 5"
+            value={rating}
+            onChange={(e) => setRating(Number(e.target.value))}
+            className="input-base"
+            disabled={loading}
+          >
+            {[5, 4, 3, 2, 1].map((n) => (
+              <option key={n} value={n}>
+                {n} Stars
+              </option>
+            ))}
+          </select>
+        </>
+      )}
 
       <button
         type="submit"
@@ -95,7 +110,7 @@ export default function ReviewForm({
         disabled={loading || text.trim().length < 3}
         className={`btn btn-primary ${loading ? 'cursor-not-allowed opacity-60' : ''}`}
       >
-        {loading ? 'Submitting...' : 'Submit Review'}
+        {loading ? 'Submitting...' : (positiveReviewsOnly ? 'Share Feedback' : 'Submit Review')}
       </button>
     </form>
   );

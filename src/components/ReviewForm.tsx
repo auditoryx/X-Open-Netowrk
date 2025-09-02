@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Star, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Send } from 'lucide-react';
+import { getFlags } from '@/lib/featureFlags';
 
 interface ReviewFormProps {
   bookingId: string;
@@ -23,6 +24,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   const [comment, setComment] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [positiveReviewsOnly, setPositiveReviewsOnly] = useState(false);
+
+  useEffect(() => {
+    const checkFlags = async () => {
+      const flags = await getFlags();
+      setPositiveReviewsOnly(!!flags.POSITIVE_REVIEWS_ONLY);
+    };
+    checkFlags();
+  }, []);
 
   const handleStarClick = (starRating: number) => {
     setRating(starRating);
@@ -39,7 +49,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (rating === 0) {
+    // In positive-only mode, skip rating validation
+    if (!positiveReviewsOnly && rating === 0) {
       setError('Please select a rating');
       return;
     }
@@ -60,7 +71,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         bookingId,
         providerUid,
         clientUid,
-        rating,
+        rating: positiveReviewsOnly ? undefined : rating, // Skip rating if positive-only
         comment: comment.trim(),
         serviceTitle: serviceTitle || 'Service'
       });

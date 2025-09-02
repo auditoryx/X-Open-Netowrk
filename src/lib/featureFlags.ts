@@ -18,6 +18,7 @@ export interface FeatureFlags {
   LANE_NUDGES?: boolean;
   CASE_STUDIES?: boolean;
   POSITIVE_REVIEWS_ONLY?: boolean;
+  CREDIBILITY_VISIBILITY?: boolean;
 }
 
 /**
@@ -49,6 +50,7 @@ export function getFeatureFlags(): FeatureFlags {
     LANE_NUDGES: process.env.NEXT_PUBLIC_LANE_NUDGES === 'true',
     CASE_STUDIES: process.env.NEXT_PUBLIC_CASE_STUDIES === 'true',
     POSITIVE_REVIEWS_ONLY: process.env.NEXT_PUBLIC_POSITIVE_REVIEWS_ONLY === 'true',
+    CREDIBILITY_VISIBILITY: process.env.NEXT_PUBLIC_CREDIBILITY_VISIBILITY === 'true',
   };
 }
 

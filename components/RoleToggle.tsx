@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 
 type UserRole = "client" | "provider";
 
-export default function RoleToggle() | null {
+export default function RoleToggle() {
   const { data: session } = useSession();
   const [role, setRole] = useState<UserRole | null>(null);
 

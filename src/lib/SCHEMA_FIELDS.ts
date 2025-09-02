@@ -16,9 +16,15 @@ export const SCHEMA_FIELDS = {
     VERIFICATION: 'verification',
     RANK: 'rank',
     BADGES: 'badges',
+    BADGE_IDS: 'badgeIds',
     CHALLENGES: 'challenges',
     AVERAGE_RATING: 'averageRating',
     REVIEW_COUNT: 'reviewCount',
+    CREDIBILITY_SCORE: 'credibilityScore',
+    POSITIVE_REVIEW_COUNT: 'positiveReviewCount',
+    COMPLETED_BOOKINGS: 'completedBookings',
+    STATS: 'stats',
+    COUNTS: 'counts',
   },
 
   // Service fields

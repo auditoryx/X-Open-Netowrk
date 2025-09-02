@@ -23,13 +23,7 @@ export const onReviewCreated = functions.firestore
     try {
       console.log(`Processing new review: ${reviewId}`);
 
-      // Only count positive reviews (4+ stars)
-      if (!reviewData.rating || reviewData.rating < 4) {
-        console.log(`Review ${reviewId} not positive (rating: ${reviewData.rating}) - skipping`);
-        return null;
-      }
-
-      // Only count visible reviews
+      // Praise-only reviews: require visibility + approval + completed booking
       if (!reviewData.visible || reviewData.status !== 'approved') {
         console.log(`Review ${reviewId} not visible/approved - skipping`);
         return null;
@@ -51,7 +45,7 @@ export const onReviewCreated = functions.firestore
       const providerId = reviewData.targetId;
       
       // Update provider stats
-      await updateProviderReviewStats(providerId, reviewData.rating);
+      await updateProviderReviewStats(providerId);
 
       console.log(`Successfully processed review creation for ${reviewId}`);
       return null;
@@ -65,7 +59,7 @@ export const onReviewCreated = functions.firestore
 /**
  * Update provider's review statistics and credibility
  */
-async function updateProviderReviewStats(providerId: string, rating: number) {
+async function updateProviderReviewStats(providerId: string) {
   const userRef = db.collection('users').doc(providerId);
   
   await db.runTransaction(async (transaction) => {
