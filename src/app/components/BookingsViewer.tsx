@@ -16,7 +16,7 @@ interface BookingData {
   };
 }
 
-export default function BookingsViewer(): JSX.Element {
+export default function BookingsViewer() {
   const [bookings, setBookings] = useState<BookingData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);

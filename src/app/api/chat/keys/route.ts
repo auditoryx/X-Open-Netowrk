@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import { keyExchange, initializeChatEncryption } from '@/lib/encryption/key-exchange';
 import { z } from 'zod';

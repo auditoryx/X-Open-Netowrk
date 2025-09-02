@@ -1,5 +1,5 @@
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import { logActivity } from '@/lib/firestore/logging/logActivity';
 import { NextRequest, NextResponse } from 'next/server';

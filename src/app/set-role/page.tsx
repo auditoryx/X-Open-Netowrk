@@ -7,7 +7,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 
 type Role = "artist" | "engineer" | "producer" | "videographer" | "studio";
 
-export default function SetRolePage(): JSX.Element {
+export default function SetRolePage() {
   const [user, setUser] = useState<User | null>(null);
   const [firebaseError, setFirebaseError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);

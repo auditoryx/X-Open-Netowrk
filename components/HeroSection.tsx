@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function HeroSection(): JSX.Element {
+export default function HeroSection() {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   return (

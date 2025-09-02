@@ -49,8 +49,9 @@ export async function GET(req: NextRequest, context: { params: Promise<{ id: str
 }
 
 // PATCH /api/offers/[id] - Update offer
-async function updateOfferHandler(req: NextRequest & { user: any }, { params }: { params: { id: string } }) {
+async function updateOfferHandler(req: NextRequest & { user: any }, context: { params: Promise<{ id: string }> }) {
   try {
+    const params = await context.params;
     const body = await req.json();
     const validatedData = UpdateOfferSchema.parse(body);
 

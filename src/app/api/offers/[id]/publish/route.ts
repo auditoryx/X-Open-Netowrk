@@ -5,8 +5,9 @@ import withAuth from '@/app/api/_utils/withAuth';
 import offersConfig from '@/../config/offers.json';
 
 // POST /api/offers/[id]/publish - Toggle offer active status
-async function publishOfferHandler(req: NextRequest & { user: any }, { params }: { params: { id: string } }) {
+async function publishOfferHandler(req: NextRequest & { user: any }, context: { params: Promise<{ id: string }> }) {
   try {
+    const params = await context.params;
     return await runTransaction(db, async (transaction) => {
       // Get existing offer within transaction
       const offerRef = doc(db, 'offers', params.id);

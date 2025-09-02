@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import { adminDb } from '@/lib/firebase-admin';
 import { getStorage, ref, deleteObject } from 'firebase/storage';

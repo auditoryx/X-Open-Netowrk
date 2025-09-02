@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Navbar(): JSX.Element {
+export default function Navbar() {
   return (
     <header className="nav-brutalist w-full flex items-center justify-between">
       <h1 className="heading-brutalist-lg">

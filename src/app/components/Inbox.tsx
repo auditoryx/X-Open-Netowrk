@@ -7,7 +7,7 @@ interface Message {
   message: string;
 }
 
-export default function Inbox(): JSX.Element {
+export default function Inbox() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {

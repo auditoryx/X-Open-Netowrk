@@ -41,7 +41,8 @@
     "phase2b:performance": "npm run analyze:bundle && npm run perf:audit",
     "phase2b:validate": "npm run phase2b:performance && npm run phase2b:test",
     "bundle:analyze": "ANALYZE=true npm run build",
-    "bundle:size": "npm run build && du -sh .next/static"
+    "bundle:size": "npm run build && du -sh .next/static",
+    "check:dev": "tsx scripts/dev-health.ts"
   },
   "dependencies": {
     "@algolia/client-search": "^5.34.1",
@@ -132,6 +133,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
+    "@types/leaflet": "^1.9.20",
     "@types/luxon": "^3.6.2",
     "@types/node": "^24.3.0",
     "@types/nodemailer": "^6.4.17",

@@ -19,7 +19,7 @@ interface ProviderBooking {
   providerId: string;
 }
 
-export default function ProviderBookings(): JSX.Element {
+export default function ProviderBookings() {
   const [bookings, setBookings] = useState<ProviderBooking[]>([]);
 
   useEffect(() => {

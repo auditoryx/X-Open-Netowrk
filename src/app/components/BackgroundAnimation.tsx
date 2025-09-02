@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function BackgroundAnimation(): JSX.Element {
+export default function BackgroundAnimation() {
   return (
     <motion.div
       initial={{ opacity: 0 }}

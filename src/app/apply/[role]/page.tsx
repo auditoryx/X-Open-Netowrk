@@ -176,7 +176,7 @@ export default function ApplyRolePage() {
 
   const stepName = steps[stepIndex];
 
-  const stepContent: Record<string, JSX.Element> = {
+  const stepContent: Record<string, React.JSX.Element> = {
     basic: (
       <>
         <div>

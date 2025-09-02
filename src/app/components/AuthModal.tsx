@@ -3,7 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { loginUser, registerUser } from '../services/authService';
 
-export default function AuthModal(): JSX.Element {
+export default function AuthModal() {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');

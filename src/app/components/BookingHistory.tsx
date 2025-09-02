@@ -16,7 +16,7 @@ interface BookingHistoryProps {
   userId: string;
 }
 
-export default function BookingHistory({ userId }: BookingHistoryProps): JSX.Element {
+export default function BookingHistory({ userId }: BookingHistoryProps) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
   const [loading, setLoading] = useState<boolean>(false);

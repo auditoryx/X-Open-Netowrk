@@ -17,7 +17,7 @@ interface ClientBooking {
   clientId: string;
 }
 
-export default function ClientBookings(): JSX.Element {
+export default function ClientBookings() {
   const [bookings, setBookings] = useState<ClientBooking[]>([]);
 
   useEffect(() => {

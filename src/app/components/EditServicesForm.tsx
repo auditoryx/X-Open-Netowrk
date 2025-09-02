@@ -8,7 +8,7 @@ interface ServiceItem {
   price: number;
 }
 
-export default function EditServicesForm(): JSX.Element {
+export default function EditServicesForm() {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Hero(): JSX.Element {
+export default function Hero() {
   return (
     <section className="text-center bg-brutalist-black border-brutalist-thick border-b-4 spacing-brutalist-xl">
       <h1 className="heading-brutalist-xl mb-8">

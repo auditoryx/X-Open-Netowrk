@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ComponentType } from 'react';
 
 export function withRoleProtection<T extends object>(Component: ComponentType<T>, allowedRoles: string[]) {
-  return function ProtectedPage(props: T): JSX.Element {
+  return function ProtectedPage(props: T) {
     const router = useRouter();
 
     useEffect(() => {

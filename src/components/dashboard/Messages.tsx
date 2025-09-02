@@ -1,4 +1,4 @@
-export default function Messages(): JSX.Element {
+export default function Messages() {
   return (
     <div className="p-4 bg-gray-900 rounded-lg shadow">
       <h2 className="text-xl font-semibold">Messages</h2>

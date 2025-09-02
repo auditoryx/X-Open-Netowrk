@@ -85,7 +85,6 @@ export default function ClientBookings() {
 
           {b.contract && (
             <ContractViewer
-              bookingId={b.id}
               terms={b.contract.terms}
               agreedByClient={b.contract.agreedByClient}
               agreedByProvider={b.contract.agreedByProvider}

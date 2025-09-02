@@ -1,4 +1,4 @@
-export default function ProfileCard(): JSX.Element {
+export default function ProfileCard() {
   return (
     <div className="p-4 bg-neutral-dark rounded-lg shadow">
       <h2 className="text-xl font-semibold">Profile</h2>

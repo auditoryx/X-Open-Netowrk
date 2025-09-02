@@ -8,7 +8,7 @@ interface ServiceFormProps {
   role: 'creator' | 'admin' | 'user';
 }
 
-export default function ServiceForm({ userId, role }: ServiceFormProps): JSX.Element {
+export default function ServiceForm({ userId, role }: ServiceFormProps) {
   const [title, setTitle] = useState<string>("");
   const [price, setPrice] = useState<string>("");
   const [desc, setDesc] = useState<string>("");

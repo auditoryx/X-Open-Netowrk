@@ -18,7 +18,7 @@ interface ServiceListProps {
   userId: string;
 }
 
-export default function ServiceList({ userId }: ServiceListProps): JSX.Element {
+export default function ServiceList({ userId }: ServiceListProps) {
   const [services, setServices] = useState<ServiceData[]>([]);
 
   useEffect(() => {

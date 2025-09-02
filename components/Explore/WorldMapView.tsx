@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { getCoordsFromCity } from '@/lib/utils/getCoordsFromCity';
+import { getCoordsFromCity } from '@lib/utils/getCoordsFromCity';
 import styles from './WorldMapView.module.css';
 
 // Fix Leaflet default icon issue
@@ -150,8 +150,8 @@ const WorldMapView: React.FC<WorldMapViewProps> = ({ creators, onCreatorClick, c
           center={[20, 0]} // Default center (middle of the world)
           zoom={2}
           style={{ height: '100%', width: '100%' }}
-          whenReady={(map) => {
-            mapRef.current = map.target;
+          whenReady={() => {
+            // Map ready callback
           }}
         >
           <TileLayer
