@@ -70,6 +70,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Use standalone output for server-side features  
+  output: 'standalone',
+  // Move firebase-admin to external packages for Next.js 15
+  serverExternalPackages: ['firebase-admin'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
