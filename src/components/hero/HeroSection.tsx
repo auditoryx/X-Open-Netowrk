@@ -108,6 +108,30 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 };
 
 const BackgroundPattern: React.FC = () => {
+  // Use deterministic positions to avoid hydration mismatches
+  const dotPositions = [
+    { left: 15.5, top: 25.3 },
+    { left: 78.2, top: 45.8 },
+    { left: 35.9, top: 67.4 },
+    { left: 92.1, top: 12.7 },
+    { left: 48.6, top: 89.2 },
+    { left: 65.3, top: 34.6 },
+    { left: 23.7, top: 78.9 },
+    { left: 87.4, top: 56.1 },
+    { left: 41.8, top: 19.5 },
+    { left: 74.2, top: 83.7 },
+    { left: 28.9, top: 52.4 },
+    { left: 95.6, top: 37.8 },
+    { left: 52.1, top: 71.3 },
+    { left: 18.4, top: 94.6 },
+    { left: 83.7, top: 28.2 },
+    { left: 39.3, top: 63.9 },
+    { left: 76.8, top: 15.7 },
+    { left: 31.5, top: 85.4 },
+    { left: 89.2, top: 42.6 },
+    { left: 56.7, top: 73.1 },
+  ];
+
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Grid Pattern */}
@@ -126,22 +150,22 @@ const BackgroundPattern: React.FC = () => {
 
       {/* Animated Dots */}
       <div className="absolute inset-0">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {dotPositions.map((position, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-brand-500 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${position.left}%`,
+              top: `${position.top}%`,
             }}
             animate={{
               opacity: [0.3, 0.8, 0.3],
               scale: [1, 1.5, 1],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 3 + (i % 3), // Deterministic duration based on index
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: i * 0.2, // Deterministic delay based on index
             }}
           />
         ))}
