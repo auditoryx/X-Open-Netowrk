@@ -1,5 +1,7 @@
 import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getAuth } from 'firebase-admin/auth';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { adminApp } from '@lib/firebaseAdmin';
 import { app } from '@/lib/firebase';
 import { NextRequest, NextResponse } from 'next/server';

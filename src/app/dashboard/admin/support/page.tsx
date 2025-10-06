@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getDocs, collection, query, orderBy } from 'firebase/firestore';
 import { db } from '@/firebase/firebaseConfig';
 import withAdminProtection from '@/middleware/withAdminProtection';

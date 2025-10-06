@@ -1,5 +1,7 @@
 import { adminApp } from '@lib/firebaseAdmin';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase-admin/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getAuth } from 'firebase-admin/auth';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getAllCreators } from '@/lib/firestore/getAllCreators';
 import { cityToCoords } from '@/lib/utils/cityToCoords';
 import 'mapbox-gl/dist/mapbox-gl.css';
