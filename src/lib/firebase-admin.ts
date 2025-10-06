@@ -20,7 +20,11 @@ if (process.env.SKIP_FIREBASE_INIT === 'true') {
       // Ensure private key looks like a valid PEM format (and not a mock)
       process.env.FIREBASE_PRIVATE_KEY.includes('BEGIN PRIVATE KEY') &&
       !process.env.FIREBASE_PRIVATE_KEY.includes('MOCK') &&
-      !process.env.FIREBASE_PRIVATE_KEY.includes('BUILD_PURPOSES')
+      !process.env.FIREBASE_PRIVATE_KEY.includes('BUILD_PURPOSES') &&
+      !process.env.FIREBASE_PRIVATE_KEY.includes('YOUR_PRIVATE_KEY_CONTENT_HERE') &&
+      !process.env.FIREBASE_PRIVATE_KEY.includes('placeholder') &&
+      process.env.FIREBASE_PROJECT_ID !== 'your_project_id' &&
+      process.env.FIREBASE_PROJECT_ID !== 'placeholder'
     ) {
       app = getApps().length
         ? getApp()

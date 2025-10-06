@@ -20,7 +20,13 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 export const authOptions: AuthOptions = {
   providers,
-  adapter: process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY
+  adapter: process.env.FIREBASE_PROJECT_ID && 
+    process.env.FIREBASE_CLIENT_EMAIL && 
+    process.env.FIREBASE_PRIVATE_KEY &&
+    process.env.FIREBASE_PROJECT_ID !== 'your_project_id' &&
+    process.env.FIREBASE_PROJECT_ID !== 'placeholder' &&
+    !process.env.FIREBASE_PRIVATE_KEY.includes('YOUR_PRIVATE_KEY_CONTENT_HERE') &&
+    !process.env.FIREBASE_PRIVATE_KEY.includes('placeholder')
     ? FirestoreAdapter({
         credential: cert({
           projectId: process.env.FIREBASE_PROJECT_ID,

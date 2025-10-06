@@ -3,6 +3,7 @@ import { collection, query, where, orderBy, limit, startAfter, getDocs, Document
 import { db } from '@/lib/firebase';
 import { logger } from '@/lib/logger';
 import { z } from 'zod';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 // In-memory cache for search results
 interface CacheEntry {

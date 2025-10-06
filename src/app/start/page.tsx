@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
+export const dynamic = 'force-dynamic';
+
 const MOCK_CREATORS = [
   { name: 'DJ Hikari', role: 'Producer', location: 'Tokyo', img: '/placeholder1.jpg' },
   { name: 'Nova Joon', role: 'Videographer', location: 'Seoul', img: '/placeholder2.jpg' },
@@ -11,10 +13,11 @@ const MOCK_CREATORS = [
 
 export default function StartPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const session = useSession();
+  const sessionData = session?.data;
 
   const handleJoin = () => {
-    if (session?.user) {
+    if (sessionData?.user) {
       router.push('/create-profile');
     } else {
       router.push('/signup?redirect=/create-profile');

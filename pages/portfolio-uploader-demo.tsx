@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import PortfolioUploader from '@/components/PortfolioUploader';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
 
 const PortfolioUploaderDemo: NextPage = () => {
   const { data: session } = useSession();
@@ -63,6 +64,10 @@ const PortfolioUploaderDemo: NextPage = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
 };
 
 export default PortfolioUploaderDemo;
