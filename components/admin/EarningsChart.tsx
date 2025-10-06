@@ -28,7 +28,7 @@ const EarningsChart: React.FC<EarningsChartProps> = ({ data, period, className =
   // Format period label
   const formatPeriodLabel = (key: string) => {
     if (period === 'weekly') {
-      const [year, week] = key.split('-W');
+      const [, week] = key.split('-W');
       return `Week ${week}`;
     } else {
       const [year, month] = key.split('-');
@@ -60,7 +60,7 @@ const EarningsChart: React.FC<EarningsChartProps> = ({ data, period, className =
         {/* Simple Bar Chart */}
         <div className="relative">
           <div className="flex items-end space-x-2 h-64">
-            {dataPoints.map(([key, value], index) => {
+            {dataPoints.map(([key, value]) => {
               const height = maxValue > 0 ? (value / maxValue) * 240 : 0;
               const isHighest = value === maxValue;
               

@@ -7,7 +7,7 @@ interface ServiceProfileModalProps {
   service: Service | null;
 }
 
-export default function ServiceProfileModal({ isOpen, onClose, service }: ServiceProfileModalProps) | null {
+export default function ServiceProfileModal({ isOpen, onClose, service }: ServiceProfileModalProps): JSX.Element | null {
   if (!isOpen || !service) return null;
 
   return (

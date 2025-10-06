@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { useRouter } from 'next/navigation';
 
 // ✅ Define the stripePromise using your public key
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -13,8 +12,6 @@ interface Props {
 }
 
 export default function StripeCheckout({ amount, bookingId }: Props) {
-  const router = useRouter();
-
   const handleClick = async () => {
     const res = await fetch('/api/create-checkout-session', {
       method: 'POST',

@@ -1,5 +1,5 @@
 {
-  "name": "X-Open-Network",
+  "name": "x-open-network",
   "scripts": {
     "dev": "next dev",
     "build": "NODE_OPTIONS='--max-old-space-size=3072' next build",
@@ -77,7 +77,7 @@
     "dotenv": "^16.4.7",
     "express-rate-limit": "^8.0.1",
     "firebase": "^11.6.1",
-    "firebase-admin": "^11.11.1",
+    "firebase-admin": "^13.5.0",
     "framer-motion": "^12.18.1",
     "googleapis": "^148.0.0",
     "ioredis": "^5.7.0",

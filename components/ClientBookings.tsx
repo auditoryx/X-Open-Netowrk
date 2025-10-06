@@ -10,7 +10,6 @@ import ContractViewer from '@/components/contract/ContractViewer';
 import { agreeToContract } from '@/lib/firestore/contracts/agreeToContract';
 import EmptyState from '@/components/ui/EmptyState';
 import SkeletonCard from '@/components/ui/SkeletonCard';
-import { useRouter } from 'next/navigation';
 
 export default function ClientBookings() {
   const { user } = useAuth();

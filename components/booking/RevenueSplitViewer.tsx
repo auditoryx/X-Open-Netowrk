@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Booking } from '@/src/lib/types/Booking';
 import { useContractPdf } from '@/hooks/useContractPdf';
 import { FileText, Download, Eye, Loader } from 'lucide-react';
@@ -8,8 +8,7 @@ interface RevenueSplitViewerProps {
 }
 
 export default function RevenueSplitViewer({ booking }: RevenueSplitViewerProps) {
-  const { contractUrl, isLoading, downloadContract, openContract } = useContractPdf(booking);
-  const [isOpen, setIsOpen] = useState(false);
+  const { isLoading, downloadContract, openContract } = useContractPdf(booking);
 
   // Calculate percentages for visual representation
   const splitPercentages = booking.revenueSplit 
@@ -77,7 +76,7 @@ export default function RevenueSplitViewer({ booking }: RevenueSplitViewerProps)
         
         {/* Split details */}
         <div className="space-y-1">
-          {splitPercentages.map((split, index) => (
+          {splitPercentages.map((split) => (
             <div key={split.role} className="flex justify-between text-sm">
               <span className="text-gray-700 capitalize">{split.role}:</span>
               <span className="font-medium">{split.percentage}</span>

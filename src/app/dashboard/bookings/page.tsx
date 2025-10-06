@@ -8,6 +8,10 @@ import ReleaseFundsButton from '@/components/booking/ReleaseFundsButton';
 import ReviewForm from '@/components/booking/ReviewForm';
 import DisputeForm from '@/components/disputes/DisputeForm';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
+import { getUserBookings } from '@/lib/firestore/getUserBookings';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -18,13 +22,22 @@ export default function DashboardBookingsPage() {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const res = await fetch('/api/bookings');
-      const data = await res.json();
-      setBookings(data);
+      if (!user?.uid) return;
+      
+      try {
+        // Use client-side Firebase to get user bookings
+        const data = await getUserBookings(user.uid, 'both', 20);
+        setBookings(data);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        setBookings([]);
+      }
+      
       setLoading(false);
     };
+    
     fetchBookings();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const targetId = searchParams?.get(SCHEMA_FIELDS.REVIEW.BOOKING_ID);
@@ -36,12 +49,18 @@ export default function DashboardBookingsPage() {
   }, [bookings, searchParams]);
 
   const handleUpdateStatus = async (id: string, status: string) => {
-    await fetch('/api/bookings', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, status }),
-    });
-    setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
+    if (!user) return;
+    
+    try {
+      // Update booking status directly in Firestore
+      const bookingRef = doc(db, 'bookings', id);
+      await updateDoc(bookingRef, { status });
+      
+      // Update local state
+      setBookings(prev => prev.map(b => (b.id === id ? { ...b, status } : b)));
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
   };
 
   const getStatusBanner = (status: string) => {
