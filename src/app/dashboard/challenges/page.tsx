@@ -2,7 +2,15 @@
  * Challenge Dashboard Page
  * 
  * Temporarily disabled to allow build completion.
+ * 
  * TODO: Fix prerendering issues with complex client components
+ * - Issue: Next.js 15 attempts to prerender client components during build
+ * - Error: Tabs component and hooks (useChallengeData, useAuth) fail during SSR
+ * - Solution Options:
+ *   1. Use route groups to disable prerendering for /dashboard
+ *   2. Refactor to use server components with client islands
+ *   3. Wait for Next.js updates to improve client component handling
+ * - Related: ChallengeDashboardClient.tsx contains full implementation
  */
 
 'use client';
