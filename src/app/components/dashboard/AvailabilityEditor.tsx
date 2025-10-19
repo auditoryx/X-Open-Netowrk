@@ -25,7 +25,8 @@ export default function AvailabilityEditor() {
     lastSynced,
   } = useAvailability();
 
-  const { data: session } = useSession();
+  const sessionResult = useSession();
+  const session = sessionResult?.data;
 
   useEffect(() => {
     const autoSync = async () => {

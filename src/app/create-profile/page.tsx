@@ -6,8 +6,12 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db, isFirebaseConfigured } from '@/lib/firebase';
 import CompletionNotice from '@/components/onboarding/CompletionNotice';
 
+export const dynamic = 'force-dynamic';
+
 export default function CreateProfilePage() {
-  const { data: session, status } = useSession();
+  const sessionResult = useSession();
+  const session = sessionResult?.data;
+  const status = sessionResult?.status;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [firebaseError, setFirebaseError] = useState<string | null>(null);

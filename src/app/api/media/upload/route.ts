@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getServerSession } from 'next-auth/next';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { authOptions } from '@/lib/authOptions';
 import { adminDb } from '@/lib/firebase-admin';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';

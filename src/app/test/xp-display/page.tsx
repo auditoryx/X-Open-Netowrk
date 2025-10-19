@@ -10,6 +10,8 @@ import { useXPServiceWithNotifications } from '@/lib/services/xpServiceWithNotif
 import { useXPNotificationContext } from '@/providers/XPNotificationProvider';
 import { XP_VALUES } from '@/lib/services/xpService';
 
+export const dynamic = 'force-dynamic';
+
 export default function XPTestPage() {
   const { user } = useAuth();
   const { userProgress, loading, refreshData } = useXPData();

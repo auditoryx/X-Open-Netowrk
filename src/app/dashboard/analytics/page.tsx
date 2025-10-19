@@ -32,6 +32,10 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+// Note: This page uses Recharts, not ChartJS
+// The ChartJS registration code below has been commented out as it's not needed
+// TODO: Remove ChartJS-related code if confirmed unused
+/*
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -44,6 +48,7 @@ ChartJS.register(
   Legend,
   ArcElement
 );
+*/
 
 export default function CreatorAnalyticsPage() {
   const { user } = useAuth();

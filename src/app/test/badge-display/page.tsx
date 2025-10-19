@@ -7,6 +7,7 @@ import BadgeProgress from '@/components/gamification/BadgeProgress';
 import BadgeNotification from '@/components/gamification/BadgeNotification';
 import { useBadgeData } from '@/lib/hooks/useBadgeData';
 import { Timestamp } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 
 // Mock badge data for testing
 const mockBadges = [
