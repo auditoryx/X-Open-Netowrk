@@ -1,3 +1,5 @@
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
+
 export interface PortfolioTheme {
   id: string;
   name: string;
