@@ -8,16 +8,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from "@/components/ui/Button";
 import { Badge } from '@/components/ui/badge';
-
-// Dynamic import to avoid SSR issues
-const Tabs = dynamic(() => import('@/components/ui/tabs').then(mod => ({ default: mod.Tabs })), { ssr: false });
-const TabsContent = dynamic(() => import('@/components/ui/tabs').then(mod => ({ default: mod.TabsContent })), { ssr: false });
-const TabsList = dynamic(() => import('@/components/ui/tabs').then(mod => ({ default: mod.TabsList })), { ssr: false });
-const TabsTrigger = dynamic(() => import('@/components/ui/tabs').then(mod => ({ default: mod.TabsTrigger })), { ssr: false });
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
