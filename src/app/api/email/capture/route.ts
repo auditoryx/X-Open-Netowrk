@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { app } from '@/lib/firebase';
 
 export async function POST(request: NextRequest) {

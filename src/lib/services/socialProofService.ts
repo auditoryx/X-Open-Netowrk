@@ -10,6 +10,7 @@ import {
   limit,
   serverTimestamp
 } from 'firebase/firestore';
+import { SCHEMA_FIELDS } from '@/lib/SCHEMA_FIELDS';
 import { testimonialService, Testimonial } from './testimonialService';
 
 export interface SocialProofMetrics {
